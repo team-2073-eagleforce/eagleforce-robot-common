@@ -5,16 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.usfirst.frc.team2073.robot;
+package org.usfirst.frc.team2073;
 
 import org.usfirst.frc.team2073.conf.AppConstants.RobotPorts;
-import org.usfirst.frc.team2073.conf.AppConstants.Subsystems.BallIntake;
 import org.usfirst.frc.team2073.conf.AppConstants.Subsystems.Drivetrain;
-import org.usfirst.frc.team2073.subsystems.IntakeSubsystem;
 import org.usfirst.frc.team2073.subsystems.DrivetrainSubsystem;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -27,10 +26,13 @@ public class RobotMap {
 	private static Solenoid driveSolenoid1 = new Solenoid(RobotPorts.DRIVE_SOLENOID_1);
 	private static Solenoid driveSolenoid2 = new Solenoid(RobotPorts.DRIVE_SOLENOID_2);
 	private static TalonSRX intakeMotor = new TalonSRX(RobotPorts.INTAKEMOTOR);
+	private static ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+	
+	public static ADXRS450_Gyro getGyro() {
+		return gyro;
+	}
+
 	private static boolean intakeForwards = false;
-	
-	private static IntakeSubsystem intake;
-	
 
 	public static TalonSRX getIntakeMotor() {
 		return intakeMotor;
@@ -40,16 +42,10 @@ public class RobotMap {
 		return intakeForwards;
 	}
 
-	public static IntakeSubsystem getIntake() {
-		return intake;
-	}
-
 	static void init() {
 		drivetrain = new DrivetrainSubsystem();
-		intake = new IntakeSubsystem();
 
 		SmartDashboard.putData(Drivetrain.NAME, drivetrain);
-		SmartDashboard.putData(BallIntake.NAME, intake);
 	}
 
 	public static DrivetrainSubsystem getDrivetrain() {

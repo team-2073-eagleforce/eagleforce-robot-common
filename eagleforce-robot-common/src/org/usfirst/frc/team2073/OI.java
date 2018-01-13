@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.usfirst.frc.team2073.robot;
+package org.usfirst.frc.team2073;
 
 
 import org.usfirst.frc.team2073.conf.AppConstants.Controllers.DriveWheel;

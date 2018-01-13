@@ -51,6 +51,8 @@ public abstract class AppConstants {
 	}
 	public abstract class Defaults {
 		public static final double FGAIN = 0;
+		public static final double DEFAULT_INVERSE = .2;
+		public static final double DEFAULT_SENSE = .7;
 		
 	}
 	public abstract class Subsystems {

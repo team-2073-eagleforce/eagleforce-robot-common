@@ -46,7 +46,6 @@ public class MotionProfileGenerator {
 			f1List.add(sumF1Count);
 			f2 = calculateF2(t2, i, interval, f1List, f2);
 
-			tPoint.profileSlotSelect = 0;
 //			tPoint.timeDurMs = interval;
 			tPoint.velocity = calculateVelocity(maxVel, f1List, f2, i, t2, interval);
 			tPoint.position = (prevTp.position + calculatePosition(tPoint, prevTp, interval));
