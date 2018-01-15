@@ -48,11 +48,15 @@ public abstract class AppConstants {
 		public static final String SET_I = "Set I";
 		public static final String SET_D = "Set D";
 		public static final String FGAIN = "Fgain";
+		public static final String LEFT_DRIVE_F_GAIN = "LeftDrive FGain";
+		public static final String RIGHT_DRIVE_F_GAIN = "RightDrive FGain";
 	}
 	public abstract class Defaults {
 		public static final double FGAIN = 0;
 		public static final double DEFAULT_INVERSE = .2;
 		public static final double DEFAULT_SENSE = .7;
+		public static final double LEFT_DRIVE_F_GAIN = 2;
+		public static final double RIGHT_DRIVE_F_GAIN = 2;
 		
 	}
 	public abstract class Subsystems {

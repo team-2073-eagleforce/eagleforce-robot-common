@@ -1,6 +1,6 @@
 package org.usfirst.frc.team2073.subsystems;
 
-import org.usfirst.frc.team2073.commands.DriveWithJoystickCommand;
+import org.usfirst.frc.team2073.commands.drive.DriveWithJoystickCommand;
 import org.usfirst.frc.team2073.interfaces.AbstractMotionProfileDriveSubsystem;
 
 public class DrivetrainSubsystem extends AbstractMotionProfileDriveSubsystem{

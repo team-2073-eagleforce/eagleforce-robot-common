@@ -6,6 +6,7 @@ import java.util.List;
 import org.usfirst.frc.team2073.domain.MotionProfileConfiguration;
 
 import com.ctre.phoenix.motion.TrajectoryPoint;
+import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;
 
 public class MotionProfileGenerator {
 	private static final int ACCELERATION_CURVE = 3000;
@@ -16,7 +17,8 @@ public class MotionProfileGenerator {
 		// Store config in easy to access variables
 		final double maxVel = mpc.getMaxVel();
 		final double endDistance = mpc.getEndDistance();
-		final int interval = mpc.getInterval();
+		final int intervalVal = mpc.getIntervalVal();
+		final TrajectoryDuration interval =  mpc.getInterval();
 		final double maxAcc = mpc.getMaxAcc();
 		final boolean isVelocityOnly = mpc.isVelocityOnly();
 
@@ -41,14 +43,14 @@ public class MotionProfileGenerator {
 			TrajectoryPoint tPoint = new TrajectoryPoint();
 			TrajectoryPoint prevTp = tpList.get(i - 1);
 
-			posOrNeg = increasingOrDecreasing(i, endDistance, maxVel, interval, t1);
+			posOrNeg = increasingOrDecreasing(i, endDistance, maxVel, intervalVal, t1);
 			double sumF1Count = Math.max(0, Math.min(1, (f1List.get(i - 1) + posOrNeg)));
 			f1List.add(sumF1Count);
-			f2 = calculateF2(t2, i, interval, f1List, f2);
+			f2 = calculateF2(t2, i, intervalVal, f1List, f2);
 
 //			tPoint.timeDurMs = interval;
-			tPoint.velocity = calculateVelocity(maxVel, f1List, f2, i, t2, interval);
-			tPoint.position = (prevTp.position + calculatePosition(tPoint, prevTp, interval));
+			tPoint.velocity = calculateVelocity(maxVel, f1List, f2, i, t2, intervalVal);
+			tPoint.position = (prevTp.position + calculatePosition(tPoint, prevTp, intervalVal));
 
 			tpList.add(tPoint);
 			System.out.println(i + "\t" + tPoint.velocity + "\t" + tPoint.position );
@@ -63,9 +65,9 @@ public class MotionProfileGenerator {
 
 	// Private helper methods
 	// ====================================================================================================
-	private static TrajectoryPoint initialTp(int interval) {
+	private static TrajectoryPoint initialTp(TrajectoryDuration interval) {
 		TrajectoryPoint tp = new TrajectoryPoint();
-//		tp.timeDurMs = interval;
+		tp.timeDur = interval;
 		tp.position = 0;
 		tp.velocity = 0;
 		tp.zeroPos = true;
