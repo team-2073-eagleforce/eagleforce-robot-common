@@ -37,8 +37,9 @@ public abstract class AbstractMotionProfileDriveSubsystem extends AbstractSystem
 	public MotionProfileConfiguration driveStraigtConfig(double linearDistInInches) {
 		MotionProfileConfiguration configuration = new MotionProfileConfiguration();
 		double rotationDist = (8 * Drivetrain.LOW_GEAR_RATIO * linearDistInInches) / (Drivetrain.WHEEL_DIAMETER * 5);
+		double encoderTics = rotationDist*Drivetrain.ENCODER_EDGES_PER_REVOLUTION;
 		// TODO: check if high gear is enabled
-		configuration.setEndDistance(rotationDist);
+		configuration.setEndDistance(encoderTics);
 		configuration.setIntervalVal(10);
 		configuration.setInterval(TrajectoryDuration.Trajectory_Duration_10ms);
 		configuration.setMaxVel(Drivetrain.AUTONOMOUS_MAX_VELOCITY);
@@ -51,7 +52,8 @@ public abstract class AbstractMotionProfileDriveSubsystem extends AbstractSystem
 		MotionProfileConfiguration configuration = new MotionProfileConfiguration();
 		double linearDist = (angleTurn / 360) * (Drivetrain.ROBOT_WIDTH * Math.PI);
 		double rotationDist = (8 * Drivetrain.LOW_GEAR_RATIO * linearDist) / (Drivetrain.WHEEL_DIAMETER * 5);
-		configuration.setEndDistance(rotationDist);
+		double encoderTics = rotationDist*Drivetrain.ENCODER_EDGES_PER_REVOLUTION;
+		configuration.setEndDistance(encoderTics);
 		configuration.setIntervalVal(10);
 		configuration.setInterval(TrajectoryDuration.Trajectory_Duration_10ms);
 		configuration.setMaxVel(Drivetrain.AUTONOMOUS_MAX_VELOCITY);
@@ -71,8 +73,10 @@ public abstract class AbstractMotionProfileDriveSubsystem extends AbstractSystem
 				/ (Drivetrain.WHEEL_DIAMETER * 5);
 		double insideRotations = (7.8 * Drivetrain.LOW_GEAR_RATIO * linearDistanceInInches)
 				/ (Drivetrain.WHEEL_DIAMETER * 5);
-		configuration1.setEndDistance(outsideRotations);
-		configuration2.setEndDistance(insideRotations);
+		double outsiddeEncoderTics = outsideRotations*Drivetrain.ENCODER_EDGES_PER_REVOLUTION;
+		double insideEncoderTics = insideRotations*Drivetrain.ENCODER_EDGES_PER_REVOLUTION;
+		configuration1.setEndDistance(outsiddeEncoderTics);
+		configuration2.setEndDistance(insideEncoderTics);
 		configuration1.setIntervalVal(10);
 		configuration1.setInterval(TrajectoryDuration.Trajectory_Duration_10ms);
 		configuration1.setMaxVel(Drivetrain.AUTONOMOUS_MAX_VELOCITY);
@@ -105,10 +109,12 @@ public abstract class AbstractMotionProfileDriveSubsystem extends AbstractSystem
 				/ (Drivetrain.WHEEL_DIAMETER * 5);
 		double time = outsideRotations / Drivetrain.AUTONOMOUS_MAX_VELOCITY;
 		double interiorVelocity = insideRotations / time;
+		double outsiddeEncoderTics = outsideRotations*Drivetrain.ENCODER_EDGES_PER_REVOLUTION;
+		double insideEncoderTics = insideRotations*Drivetrain.ENCODER_EDGES_PER_REVOLUTION;
 
-		configuration1.setEndDistance(outsideRotations);
+		configuration1.setEndDistance(outsiddeEncoderTics);
 		configuration1.setMaxVel(Drivetrain.AUTONOMOUS_MAX_VELOCITY);
-		configuration2.setEndDistance(insideRotations);
+		configuration2.setEndDistance(insideEncoderTics);
 		configuration2.setMaxVel(interiorVelocity);
 
 		configuration1.setForwards(true);
