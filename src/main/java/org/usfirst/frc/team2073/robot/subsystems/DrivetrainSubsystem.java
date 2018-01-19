@@ -2,7 +2,6 @@ package org.usfirst.frc.team2073.robot.subsystems;
 
 import org.usfirst.frc.team2073.robot.RobotMap;
 import org.usfirst.frc.team2073.robot.commands.drive.DriveWithJoystickCommand;
-import org.usfirst.frc.team2073.robot.interfaces.AbstractMotionProfileDriveSubsystem;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 

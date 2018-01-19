@@ -1,4 +1,4 @@
-package org.usfirst.frc.team2073.robot.interfaces;
+package org.usfirst.frc.team2073.robot.subsystems;
 
 import org.usfirst.frc.team2073.robot.RobotMap;
 import org.usfirst.frc.team2073.robot.conf.AppConstants;
