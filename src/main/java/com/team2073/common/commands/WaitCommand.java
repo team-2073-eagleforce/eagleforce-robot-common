@@ -1,4 +1,4 @@
-package org.usfirst.frc.team2073.robot.commands;
+package com.team2073.common.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.InstantCommand;

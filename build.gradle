@@ -3,6 +3,7 @@ plugins {
     id "eclipse"
     id "idea"
     id "jaci.openrio.gradle.GradleRIO" version "2018.01.15"
+    id "maven-publish"
 }
 
 def TEAM = 2073
@@ -29,7 +30,6 @@ repositories {
 dependencies {
     compile wpilib()
     compile ctre()
-    compile openrio.powerup.matchData()
     compile group: 'org.json', name: 'json', version: '20171018'
 }
 
@@ -40,4 +40,16 @@ jar {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'com.team2073.common'
+            artifactId 'common'
+            version '1.0'
+
+            from components.java
+        }
+    }
 }

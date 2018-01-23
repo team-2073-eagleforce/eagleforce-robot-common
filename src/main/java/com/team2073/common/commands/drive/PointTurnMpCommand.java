@@ -1,17 +1,16 @@
-package org.usfirst.frc.team2073.robot.commands.drive;
+package com.team2073.common.commands.drive;
 
-import org.usfirst.frc.team2073.robot.RobotMap;
-import org.usfirst.frc.team2073.robot.subsystems.DrivetrainSubsystem;
+import com.team2073.common.subsystems.AbstractMotionProfileDriveSubsystem;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class PointTurnMpCommand extends Command {
+	private final AbstractMotionProfileDriveSubsystem drivetrain;
 	private final double angle;
-	private final DrivetrainSubsystem drivetrain;
 
-	public PointTurnMpCommand(double angle) {
+	public PointTurnMpCommand(AbstractMotionProfileDriveSubsystem drivetrain, double angle) {
+		this.drivetrain = drivetrain;
 		this.angle = angle;
-		drivetrain = RobotMap.getDrivetrain();
 		requires(drivetrain);
 	}
 

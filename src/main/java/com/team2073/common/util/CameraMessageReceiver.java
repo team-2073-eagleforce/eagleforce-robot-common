@@ -1,10 +1,10 @@
-package org.usfirst.frc.team2073.robot.util;
+package com.team2073.common.util;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-import org.usfirst.frc.team2073.robot.domain.CameraMessage;
+import com.team2073.common.domain.CameraMessage;
 
 public class CameraMessageReceiver {
 	private static final int RECEIVE_PORT = 2073;

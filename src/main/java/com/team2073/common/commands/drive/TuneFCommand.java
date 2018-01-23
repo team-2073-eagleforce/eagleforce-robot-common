@@ -1,26 +1,25 @@
-package org.usfirst.frc.team2073.robot.commands.drive;
+package com.team2073.common.commands.drive;
 
-import org.usfirst.frc.team2073.robot.RobotMap;
-import org.usfirst.frc.team2073.robot.subsystems.DrivetrainSubsystem;
+import com.team2073.common.subsystems.AbstractMotionProfileDriveSubsystem;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class TuneFCommand extends Command {
-	private final DrivetrainSubsystem drive;
+	private final AbstractMotionProfileDriveSubsystem drivetrain;
 	private double startingGyro = 0;
 
-	public TuneFCommand() {
-		drive = RobotMap.getDrivetrain();
+	public TuneFCommand(AbstractMotionProfileDriveSubsystem drivetrain) {
+		this.drivetrain = drivetrain;
 	}
 
 	@Override
 	protected void initialize() {
-		startingGyro = drive.getGyroAngle();
+		startingGyro = drivetrain.getGyroAngle();
 	}
 
 	@Override
 	protected void execute() {
-		drive.adjustF(startingGyro);
+		drivetrain.adjustF(startingGyro);
 	}
 
 	@Override

@@ -1,12 +1,11 @@
-package org.usfirst.frc.team2073.robot.util;
+package com.team2073.common.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.usfirst.frc.team2073.robot.domain.MotionProfileConfiguration;
-
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;
+import com.team2073.common.domain.MotionProfileConfiguration;
 
 public class MotionProfileGenerator {
 	private static final int ACCELERATION_CURVE = 3000;

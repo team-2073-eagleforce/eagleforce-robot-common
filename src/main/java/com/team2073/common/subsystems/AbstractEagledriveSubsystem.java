@@ -1,23 +1,24 @@
-package org.usfirst.frc.team2073.robot.subsystems;
-
-import org.usfirst.frc.team2073.robot.RobotMap;
-import org.usfirst.frc.team2073.robot.conf.AppConstants;
-import org.usfirst.frc.team2073.robot.conf.AppConstants.DashboardKeys;
-import org.usfirst.frc.team2073.robot.util.TalonHelper;
+package com.team2073.common.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team2073.common.util.TalonHelper;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public abstract class AbstractEagledriveSubsystem extends Subsystem {
-	TalonSRX leftMotor = RobotMap.getLeftMotor();
-	TalonSRX rightMotor = RobotMap.getRightMotor();
-	TalonSRX leftMotorSlave = RobotMap.getLeftMotorSlave();
-	TalonSRX rightMotorSlave = RobotMap.getRightMotorSlave();
+	protected final TalonSRX leftMotor;
+	protected final TalonSRX rightMotor;
+	protected final TalonSRX leftMotorSlave;
+	protected final TalonSRX rightMotorSlave;
 	
-	public AbstractEagledriveSubsystem() {
+	public AbstractEagledriveSubsystem(
+			TalonSRX leftMotor, TalonSRX rightMotor,
+			TalonSRX leftMotorSlave, TalonSRX rightMotorSlave) {
+		this.leftMotor = leftMotor;
+		this.rightMotor = rightMotor;
+		this.leftMotorSlave = leftMotorSlave;
+		this.rightMotorSlave = rightMotorSlave;
 		setSlaves();
 	}
 	
@@ -26,13 +27,17 @@ public abstract class AbstractEagledriveSubsystem extends Subsystem {
 		TalonHelper.setFollowerOf(rightMotorSlave, rightMotor);
 	}
 	
+	protected abstract double getSense();
+	
 	public double turnSense(double ptart) {
-		double sense = SmartDashboard.getNumber(DashboardKeys.SENSE, AppConstants.Defaults.DEFAULT_SENSE);
+		double sense = getSense();
 		return sense * ptart * ptart * ptart + ptart * (1 - sense);
 	}
+	
+	protected abstract double getInverse();
 
 	public double inverse(double start) {
-		double inverse = SmartDashboard.getNumber(DashboardKeys.INVERSE, AppConstants.Defaults.DEFAULT_INVERSE);
+		double inverse = getInverse();
 		return (start) * inverse + start;
 	}
 
@@ -40,13 +45,14 @@ public abstract class AbstractEagledriveSubsystem extends Subsystem {
 		rightMotor.set(ControlMode.PercentOutput, -turn);
 		leftMotor.set(ControlMode.PercentOutput, -turn);
 	}
+	
+	protected abstract boolean isBallIntakeForwards();
 
 	public void move(double speed, double turn) {
-
 		double rightSide = -(inverse(speed) - (inverse(speed) * turnSense(turn)));
 		double leftSide = inverse(speed) + (inverse(speed) * turnSense(turn));
 
-		if (RobotMap.isBallIntakeForwards()) {
+		if (isBallIntakeForwards()) {
 			rightMotor.set(ControlMode.PercentOutput, rightSide);
 			leftMotor.set(ControlMode.PercentOutput, leftSide);
 		} else {

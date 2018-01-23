@@ -1,4 +1,4 @@
-package org.usfirst.frc.team2073.robot.triggers;
+package com.team2073.common.triggers;
 
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.buttons.Trigger;

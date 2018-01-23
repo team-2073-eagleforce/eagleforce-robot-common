@@ -1,4 +1,4 @@
-package org.usfirst.frc.team2073.robot.domain;
+package com.team2073.common.domain;
 
 public class CameraMessage {
 	private double angleToTarget = 0;

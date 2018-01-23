@@ -1,17 +1,22 @@
-package org.usfirst.frc.team2073.robot.subsystems;
-
-import org.usfirst.frc.team2073.robot.RobotMap;
+package com.team2073.common.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public abstract class AbstractSystemsControlDriveSubsystem extends AbstractTwoSpeedDriveSubsystem {
+	private final ADXRS450_Gyro gyro;
 	
-	ADXRS450_Gyro gyro = RobotMap.getGyro();
-
-	public AbstractSystemsControlDriveSubsystem() {
+	public AbstractSystemsControlDriveSubsystem(
+			TalonSRX leftMotor, TalonSRX rightMotor,
+			TalonSRX leftMotorSlave, TalonSRX rightMotorSlave,
+			Solenoid solenoid1, Solenoid solenoid2,
+			ADXRS450_Gyro gyro) {
+		super(leftMotor, rightMotor, leftMotorSlave, rightMotorSlave, solenoid1, solenoid2);
+		this.gyro = gyro;
 		configEncoders();
 		enableBrakeMode();
 	}
@@ -36,5 +41,4 @@ public abstract class AbstractSystemsControlDriveSubsystem extends AbstractTwoSp
 	public double getGyroAngle() {
 		return gyro.getAngle();
 	}
-
 }

@@ -1,4 +1,4 @@
-package org.usfirst.frc.team2073.robot.domain;
+package com.team2073.common.domain;
 
 import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;
 

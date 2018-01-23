@@ -1,17 +1,16 @@
-package org.usfirst.frc.team2073.robot.commands.drive;
+package com.team2073.common.commands.drive;
 
-import org.usfirst.frc.team2073.robot.RobotMap;
-import org.usfirst.frc.team2073.robot.subsystems.DrivetrainSubsystem;
+import com.team2073.common.subsystems.AbstractMotionProfileDriveSubsystem;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class MoveForwardMpCommand extends Command {
+	private final AbstractMotionProfileDriveSubsystem drivetrain;
 	private final double distance;
-	private final DrivetrainSubsystem drivetrain;
 
-	public MoveForwardMpCommand(double distance) {
+	public MoveForwardMpCommand(AbstractMotionProfileDriveSubsystem drivetrain, double distance) {
+		this.drivetrain = drivetrain;
 		this.distance = distance;
-		drivetrain = RobotMap.getDrivetrain();
 		requires(drivetrain);
 	}
 

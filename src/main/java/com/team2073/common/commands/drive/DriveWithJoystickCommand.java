@@ -1,22 +1,25 @@
-package org.usfirst.frc.team2073.robot.commands.drive;
+package com.team2073.common.commands.drive;
 
-import org.usfirst.frc.team2073.robot.OI;
-import org.usfirst.frc.team2073.robot.RobotMap;
-import org.usfirst.frc.team2073.robot.subsystems.DrivetrainSubsystem;
+import com.team2073.common.subsystems.AbstractEagledriveSubsystem;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveWithJoystickCommand extends Command {
-	private final DrivetrainSubsystem drivetrain;
+	private final AbstractEagledriveSubsystem drivetrain;
+	private final Joystick joystick;
+	private final Joystick wheel;
 
-	public DriveWithJoystickCommand() {
-		drivetrain = RobotMap.getDrivetrain();
+	public DriveWithJoystickCommand(AbstractEagledriveSubsystem drivetrain, Joystick joystick, Joystick wheel) {
+		this.drivetrain = drivetrain;
+		this.joystick = joystick;
+		this.wheel = wheel;
 		requires(drivetrain);
 	}
 
 	@Override
 	protected void execute() {
-		drivetrain.move(OI.getJoystick().getY(), OI.getWheel().getX());
+		drivetrain.move(joystick.getY(), wheel.getX());
 	}
 
 	@Override
