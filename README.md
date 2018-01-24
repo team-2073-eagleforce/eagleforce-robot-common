@@ -4,7 +4,7 @@
 
 ### Eclipse
 
-1. Clone this repository and import it as a Gradle project. (`File > Import... > Gradle > Existing Gradle Project`)
+1. Clone this repository and import it as a Gradle project. (`File > Import... > Gradle > Gradle Project`)
 2. In the `Gradle Tasks` view, expand and run `eagleforce-robot-common > publishing > publishToMavenLocal`.
 3. In the robot project's `build.gradle` file, add these lines in `repositories` and `dependencies`:
 
