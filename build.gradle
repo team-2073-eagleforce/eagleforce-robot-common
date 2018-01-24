@@ -20,12 +20,20 @@ task wrapper(type: Wrapper) {
     gradleVersion = '4.4'
 }
 
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
 publishing {
     publications {
         maven(MavenPublication) {
             groupId 'com.team2073.common'
             artifactId 'common'
             version '1.0'
+
+            artifact sourceJar {
+                classifier "sources"
+            }
 
             from components.java
         }
