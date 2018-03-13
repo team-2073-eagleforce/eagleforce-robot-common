@@ -45,7 +45,7 @@ public class PathFollower {
 	
 	
 	private double changeInGyro() {
-		return gryo.getAbsoluteCompassHeading() - lastAngle;
+		return gryo.getCompassHeading() - lastAngle;
 	}
 	
 	private double changeInLeftDistance() {
