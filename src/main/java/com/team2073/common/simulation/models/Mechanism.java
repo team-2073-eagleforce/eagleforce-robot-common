@@ -1,4 +1,4 @@
-package org.usfirst.frc.team2073.robot.simulation.models;
+package com.team2073.common.simulation.models;
 
 public interface Mechanism {
 

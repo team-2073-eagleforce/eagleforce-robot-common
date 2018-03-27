@@ -1,13 +1,14 @@
-package org.usfirst.frc.team2073.robot.simulation.models;
+package com.team2073.common.simulation.models;
 
-import org.usfirst.frc.team2073.robot.conf.AppConstants.Motors;
+import com.team2073.common.conf.AppConstants.Motors;
 
 public class LinearMotionMechanism implements Mechanism{
 	
+	private static final double fudgeFactor = 3.4;
 	private final double gearRatio;
 	private final MotorType motor;
 	private final int motorCount;
-	private final double massOnSystem;
+	private double massOnSystem;
 	private double velocityConstant; 
 	private double torqueConstant;
 	private double pullyRadius;
@@ -23,13 +24,11 @@ public class LinearMotionMechanism implements Mechanism{
 	}
 	
 	public static void main(String args[]) {
-		LinearMotionMechanism LMM = new LinearMotionMechanism(25, MotorType.PRO, 2, 40, .855);
-		for(int i = 0; i < Math.pow(2, 8); i++) {
-			LMM.updateVoltage(i*12/(Math.pow(2, 8)));
-			LMM.periodic(100);
-			System.out.println("Position: " + LMM.getCurrentMechanismPosition());
-			System.out.println("Velocity: " + LMM.getCurrentMechanismVelocity());
-			System.out.println("Acceleration: " + LMM.getCurrentMechanismAcceleration());
+		LinearMotionMechanism LMM = new LinearMotionMechanism(25., MotorType.PRO, 2, 30/2, .855);
+		for(int i = 0; LMM.getCurrentMechanismPosition() < 40; i++) {
+			LMM.updateVoltage(10.2);
+			LMM.periodic(5);
+			System.out.println(i+":" + "\tPosition: " + LMM.getCurrentMechanismPosition() + " \t Velocity: " + LMM.getCurrentMechanismVelocity() + "\t Acceleration: " + LMM.getCurrentMechanismAcceleration());
 		}
 	}
 	
@@ -84,7 +83,7 @@ public class LinearMotionMechanism implements Mechanism{
 			break;
 		}
 		
-		torqueConstant *= motorCount;
+		torqueConstant = torqueConstant * motorCount;
 	}
 	
 	public void updateVoltage(double voltage) {
@@ -93,40 +92,44 @@ public class LinearMotionMechanism implements Mechanism{
 	
 	@Override
 	public void periodic(int intervalInMs) {
-		calculateMechanismAcceleration(currentVoltage, intervalInMs);
-		calculateMechanismVelocity(currentVoltage, intervalInMs);
-		calculateNewMotorVelocity(currentVoltage, intervalInMs);
 		calculateDistance(intervalInMs);
+		calculateMechanismVelocity(intervalInMs, currentVoltage);
+//		calculateMechanismAcceleration(currentVoltage);
+//		calculateNewMotorVelocity(currentVoltage, intervalInMs);
 	}
 	
-	private void calculateMechanismAcceleration(double voltage, double motorSpeed) {
-		double term1 = -motorSpeed * (gearRatio / pullyRadius * velocityConstant);
-		double term2 = voltage;
-		double denominator = gearRatio * torqueConstant;
-		double coef = (motorResitance * pullyRadius * massOnSystem);
-		double last = (coef * (term1 + term2)) / (denominator);
-		currentMechanismAcceleration = last;
+	private double calculateMechanismAcceleration(double voltage) {
+		currentMechanismAcceleration = (-torqueConstant * gearRatio * gearRatio
+				/ (velocityConstant * motorResitance * pullyRadius * pullyRadius * massOnSystem)
+				* currentMechanismVelocity
+				+ gearRatio * torqueConstant / (motorResitance * pullyRadius * massOnSystem) * voltage);
+				
+		return currentMechanismAcceleration;
+//				-Kt * kG * kG / (Kv * kResistance * kr * kr * kMass) * velocity_ +
+//		           kG * Kt / (kResistance * kr * kMass) * voltage;
 	}
 
-	private void calculateNewMotorVelocity(double voltage, int intervalInMs) {
-		// TODO: Check units
-		// InInchesPerMinute^2 at the mechanism
-		currentMechanismVelocity += currentMechanismAcceleration * msToMinutes(intervalInMs);
-		double motorVelocity = (currentMechanismVelocity * gearRatio) / (pullyRadius * Math.PI * 2);
-		currentMotorSpeed = motorVelocity;
+//	private void calculateNewMotorVelocity(double voltage, int intervalInMs) {
+//		// TODO: Check units
+//		// InInchesPerMinute^2 at the mechanism
+//		currentMechanismVelocity += currentMechanismAcceleration * msToMinutes(intervalInMs);
+//		double motorVelocity = (currentMechanismVelocity * gearRatio) / (pullyRadius * Math.PI * 2);
+//		currentMotorSpeed = motorVelocity;
+//	}
+	
+	private void calculateMechanismVelocity(int intervalInMs, double voltage) {
+//		currentMechanismVelocity =  currentMechanismVelocity + currentMechanismAcceleration * msToSeconds(intervalInMs);
+		currentMechanismVelocity += msToSeconds(intervalInMs) * calculateMechanismAcceleration(voltage);
 	}
 	
-	private void calculateMechanismVelocity(int intervalInMs) {
-		currentMechanismVelocity =  currentMechanismVelocity + currentMechanismAcceleration * msToMinutes(intervalInMs);
-	}
-	
-	private double msToMinutes(int timeInMs) {
-		return timeInMs / 1/*60000*/;
+	private double msToSeconds(int timeInMs) {
+		return timeInMs * 0.001;
 	}
 	
 	private void calculateDistance(int intervalInMs) {
-		currentMechanismPosition = currentMechanismVelocity * msToMinutes(intervalInMs)
-				+ (1 / 2) * currentMechanismAcceleration * Math.pow(msToMinutes(intervalInMs), 2);
+//		currentMechanismPosition += currentMechanismVelocity * msToSeconds(intervalInMs)
+//				+ (1 / 2) * currentMechanismAcceleration * Math.pow(msToSeconds(intervalInMs), 2);
+		currentMechanismPosition += msToSeconds(intervalInMs)*currentMechanismVelocity;
 	}
 
 

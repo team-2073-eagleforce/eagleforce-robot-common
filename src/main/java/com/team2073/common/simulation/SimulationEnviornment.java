@@ -1,11 +1,11 @@
-package org.usfirst.frc.team2073.robot.simulation;
+package com.team2073.common.simulation;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.usfirst.frc.team2073.robot.simulation.models.Mechanism;
+import com.team2073.common.simulation.models.Mechanism;
 
 public class SimulationEnviornment {
 	private List<Mechanism> mechanismList = new ArrayList<>();
