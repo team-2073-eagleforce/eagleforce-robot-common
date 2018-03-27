@@ -7,7 +7,7 @@ import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2073.common.simulation.models.Mechanism;
 
-public class EagleSRX extends TalonSRX {
+public class SimulationEagleSRX extends TalonSRX {
 	private double outputVoltage;
 	private double maxOutputForward;
 	private double maxOutputReverse;
@@ -43,7 +43,7 @@ public class EagleSRX extends TalonSRX {
 	 *            super if the method is handled elsewhere. </post>
 	 */
 	
-	public EagleSRX(int deviceNumber, String name, Mechanism mechanism, int encoderTicsPerUnitOfMechanism) {
+	public SimulationEagleSRX(int deviceNumber, String name, Mechanism mechanism, int encoderTicsPerUnitOfMechanism) {
 			super(deviceNumber);
 			this.mechanism = mechanism;
 			this.name = name;

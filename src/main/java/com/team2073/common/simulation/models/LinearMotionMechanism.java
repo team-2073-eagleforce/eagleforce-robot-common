@@ -4,7 +4,6 @@ import com.team2073.common.conf.AppConstants.Motors;
 
 public class LinearMotionMechanism implements Mechanism{
 	
-	private static final double fudgeFactor = 3.4;
 	private final double gearRatio;
 	private final MotorType motor;
 	private final int motorCount;
@@ -13,7 +12,6 @@ public class LinearMotionMechanism implements Mechanism{
 	private double torqueConstant;
 	private double pullyRadius;
 	private double motorResitance;
-	private double currentMotorSpeed = 0;
 	private double currentVoltage = 0;
 	private double currentMechanismPosition = 0;
 	private double currentMechanismVelocity = 0;
@@ -26,9 +24,10 @@ public class LinearMotionMechanism implements Mechanism{
 	public static void main(String args[]) {
 		LinearMotionMechanism LMM = new LinearMotionMechanism(25., MotorType.PRO, 2, 30/2, .855);
 		for(int i = 0; LMM.getCurrentMechanismPosition() < 40; i++) {
-			LMM.updateVoltage(10.2);
-			LMM.periodic(5);
-			System.out.println(i+":" + "\tPosition: " + LMM.getCurrentMechanismPosition() + " \t Velocity: " + LMM.getCurrentMechanismVelocity() + "\t Acceleration: " + LMM.getCurrentMechanismAcceleration());
+			LMM.updateVoltage(10);
+			LMM.periodic(1);
+			if(i%100 == 0)
+				System.out.println(i+":" + "\tPosition: " + LMM.getCurrentMechanismPosition() + " \t Velocity: " + LMM.getCurrentMechanismVelocity() + "\t Acceleration: " + LMM.getCurrentMechanismAcceleration());
 		}
 	}
 	
@@ -145,6 +144,11 @@ public class LinearMotionMechanism implements Mechanism{
 
 	public double getCurrentMechanismAcceleration() {
 		return currentMechanismAcceleration;
+	}
+
+	@Override
+	public double position() {
+		return currentMechanismPosition;
 	}
 	
 	
