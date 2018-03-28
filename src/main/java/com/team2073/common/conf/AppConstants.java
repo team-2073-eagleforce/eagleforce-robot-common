@@ -88,7 +88,7 @@ public abstract class AppConstants {
 			public static final double STALL_CURRENT = 134;
 			public static final double MOTOR_KT = STALL_TORQUE / STALL_CURRENT;
 			public static final double RESISTANCE = 12/STALL_CURRENT;
-			public static final double MOTOR_KV = (FREE_SPEED_RPM/60*Math.PI*2)/(12-RESISTANCE*FREE_CURRENT);
+			public static final double MOTOR_KV = ((FREE_SPEED_RPM/60)*Math.PI*2)/(12-RESISTANCE*FREE_CURRENT);
 		}
 
 		public abstract class Bag {
@@ -99,7 +99,7 @@ public abstract class AppConstants {
 			public static final double STALL_CURRENT = 53;
 			public static final double MOTOR_KT = STALL_TORQUE / STALL_CURRENT;
 			public static final double RESISTANCE = 12/STALL_CURRENT;
-			public static final double MOTOR_KV = (FREE_SPEED_RPM/60*Math.PI*2)/(12-RESISTANCE*FREE_CURRENT);
+			public static final double MOTOR_KV = ((FREE_SPEED_RPM/60)*Math.PI*2)/(12-RESISTANCE*FREE_CURRENT);
 		}
 
 		public abstract class Cim {
@@ -110,7 +110,7 @@ public abstract class AppConstants {
 			public static final double STALL_CURRENT = 131;
 			public static final double MOTOR_KT = STALL_TORQUE / STALL_CURRENT;
 			public static final double RESISTANCE = 12/STALL_CURRENT;
-			public static final double MOTOR_KV = (FREE_SPEED_RPM/60*Math.PI*2)/(12-RESISTANCE*FREE_CURRENT);
+			public static final double MOTOR_KV = ((FREE_SPEED_RPM/60)*Math.PI*2)/(12-RESISTANCE*FREE_CURRENT);
 		}
 
 		public abstract class MiniCim {
@@ -121,7 +121,7 @@ public abstract class AppConstants {
 			public static final double STALL_CURRENT = 89;
 			public static final double MOTOR_KT = STALL_TORQUE / STALL_CURRENT;
 			public static final double RESISTANCE = 12/STALL_CURRENT;
-			public static final double MOTOR_KV = (FREE_SPEED_RPM/60*Math.PI*2)/(12-RESISTANCE*FREE_CURRENT);
+			public static final double MOTOR_KV = ((FREE_SPEED_RPM/60)*Math.PI*2)/(12-RESISTANCE*FREE_CURRENT);
 		}
 
 	}
