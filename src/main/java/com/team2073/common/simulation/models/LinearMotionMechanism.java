@@ -22,15 +22,14 @@ public class LinearMotionMechanism implements Mechanism{
 	}
 	
 	public static void main(String args[]) {
-		LinearMotionMechanism LMM = new LinearMotionMechanism(25., MotorType.PRO, 2, 30/2, .855);
+		LinearMotionMechanism LMM = new LinearMotionMechanism(25., MotorType.CIM, 2, 30, .855);
 		for(int i = 0; LMM.getCurrentMechanismPosition() < 40; i++) {
-			LMM.updateVoltage(10);
+			LMM.updateVoltage(12);
 			LMM.periodic(1);
 			if(i%100 == 0)
 				System.out.println(i+":" + "\tPosition: " + LMM.getCurrentMechanismPosition() + " \t Velocity: " + LMM.getCurrentMechanismVelocity() + "\t Acceleration: " + LMM.getCurrentMechanismAcceleration());
 		}
 	}
-	
 	
 	/**
 	 * For Systems like elevators =)
@@ -82,7 +81,8 @@ public class LinearMotionMechanism implements Mechanism{
 			break;
 		}
 		
-		torqueConstant = torqueConstant * motorCount;
+//		Halves the stall current and doubles the stall torque
+		torqueConstant = torqueConstant * 2 * motorCount;
 	}
 	
 	public void updateVoltage(double voltage) {
@@ -131,16 +131,13 @@ public class LinearMotionMechanism implements Mechanism{
 		currentMechanismPosition += msToSeconds(intervalInMs)*currentMechanismVelocity;
 	}
 
-
 	public double getCurrentMechanismPosition() {
 		return currentMechanismPosition;
 	}
 
-
 	public double getCurrentMechanismVelocity() {
 		return currentMechanismVelocity;
 	}
-
 
 	public double getCurrentMechanismAcceleration() {
 		return currentMechanismAcceleration;
