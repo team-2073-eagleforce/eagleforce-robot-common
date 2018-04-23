@@ -10,7 +10,7 @@ import com.sun.javafx.geom.Vec2d;
 import edu.wpi.first.wpilibj.drive.Vector2d;
 
 public class DeadReckoningTracker {
-	private Point2D currentRobotLocation;
+	private Point2D currentRobotLocation = new Point2D.Double();
 	private Vec2d currentRobotVector = new Vec2d(0, 0);
 	private PigeonIMU gyro;
 	private TalonSRX leftMotor;
