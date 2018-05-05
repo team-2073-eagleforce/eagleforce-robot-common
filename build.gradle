@@ -13,7 +13,7 @@ repositories {
 dependencies {
     compile wpilib()
     compile ctre()
-    compile group: 'org.json', name: 'json', version: '20171018'
+    compile group: 'org.json', name: 'json', version: '20180130'
 }
 
 task wrapper(type: Wrapper) {
