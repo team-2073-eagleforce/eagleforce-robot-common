@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/eagleforce-robot-common.iml" filepath="$PROJECT_DIR$/eagleforce-robot-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/eagleforce-robot-common_main.iml" filepath="$PROJECT_DIR$/.idea/modules/eagleforce-robot-common_main.iml" group="eagleforce-robot-common" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/eagleforce-robot-common_test.iml" filepath="$PROJECT_DIR$/.idea/modules/eagleforce-robot-common_test.iml" group="eagleforce-robot-common" />
+    </modules>
+  </component>
+</project>

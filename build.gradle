@@ -14,6 +14,10 @@ dependencies {
     compile wpilib()
     compile ctre()
     compile group: 'org.json', name: 'json', version: '20171018'
+    compile group: 'com.google.inject', name: 'guice', version: '4.1.0'
+    compile group: 'com.google.inject.extensions', name: 'guice-assistedinject', version: '4.1.0'
+    compile group: 'com.google.inject.extensions', name: 'guice-throwingproviders', version: '4.1.0'
+    compile group: 'com.mycila.guice.extensions', name: 'mycila-guice-jsr250', version: '4.0.rc1'
 }
 
 task wrapper(type: Wrapper) {
