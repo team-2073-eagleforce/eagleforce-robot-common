@@ -1,4 +1,4 @@
-package com.team2073.common.svc.camera;
+package com.team2073.common.camera;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

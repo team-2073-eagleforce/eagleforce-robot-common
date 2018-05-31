@@ -1,18 +1,20 @@
 package com.team2073.common.robot;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.LinkedHashSet;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.team2073.common.AppConstants;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.smartdashboard.SmartDashboardAwareRegistry;
 import com.team2073.common.util.ExceptionUtil;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.usfirst.frc.team2073.robot.conf.AppConstants;
-
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.LinkedHashSet;
 
 public class PeriodicRegistry implements SmartDashboardAware {
 	

@@ -1,6 +1,4 @@
-package org.usfirst.frc.team2073.robot.conf;
-
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+package com.team2073.common;
 
 public abstract class AppConstants {
     public abstract class Controllers {

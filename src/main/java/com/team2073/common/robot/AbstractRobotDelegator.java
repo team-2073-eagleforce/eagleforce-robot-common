@@ -1,14 +1,16 @@
 package com.team2073.common.robot;
 
+import java.text.DecimalFormat;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.team2073.common.AppConstants;
 import com.team2073.common.util.ExceptionUtil;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.usfirst.frc.team2073.robot.conf.AppConstants;
-
-import java.text.DecimalFormat;
 
 /**
  * Extend this class and simply pass in an implementation of
