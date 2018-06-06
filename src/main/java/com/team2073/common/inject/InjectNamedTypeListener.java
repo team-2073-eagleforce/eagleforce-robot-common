@@ -1,13 +1,13 @@
 package com.team2073.common.inject;
 
+import java.lang.reflect.Field;
+
 import com.google.inject.Key;
 import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
-
-import java.lang.reflect.Field;
 
 public class InjectNamedTypeListener implements TypeListener {
 	@Override

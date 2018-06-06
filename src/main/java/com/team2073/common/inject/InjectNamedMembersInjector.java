@@ -1,9 +1,9 @@
 package com.team2073.common.inject;
 
+import java.lang.reflect.Field;
+
 import com.google.inject.MembersInjector;
 import com.google.inject.Provider;
-
-import java.lang.reflect.Field;
 
 public class InjectNamedMembersInjector<T> implements MembersInjector<T> {
 	private final Field field;
