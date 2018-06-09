@@ -1,5 +1,7 @@
 package com.team2073.common.util;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -7,15 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.inject.Inject;
+import com.team2073.common.registries.interfaces.PeriodicAware;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-public class EagleSRX extends TalonSRX{
+public class EagleSRX extends TalonSRX implements PeriodicAware {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private String name;
 	private boolean isTestingEnabled = false;
@@ -32,14 +33,15 @@ public class EagleSRX extends TalonSRX{
 	private double lastkISlot1 = 0;
 	private double lastkDSlot1 = 0;
 	private double lastkFSlot1 = 0;
-	private boolean enabledTestingMode = false;
 	private int currentPidIdx = 0;
 
 	public enum DataType {
 		POSITION, VELOCITY, VOLTAGE, CURRENT;
 	}
 
-	private LoadingCache<DataType, Double> dataCache;
+	private LoadingCache<DataType, Double> talonDataCache;
+	private Timer outputTimer = new Timer();
+	private TalonOutputTask talonOutputTask;
 
 	/**
 	 * 
@@ -53,24 +55,27 @@ public class EagleSRX extends TalonSRX{
 		super(deviceNumber);
 		this.name = name;
 		this.safePercentage = safePercentage;
-		dataCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MILLISECONDS).maximumSize(100)
+		talonDataCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MILLISECONDS).maximumSize(100)
 				.build(new CacheLoader<DataType, Double>() {
 					public Double load(DataType key) throws Exception {
 						switch (key) {
 						case POSITION:
 							return (double) getSelectedSensorPositionInternal(currentPidIdx);
 						case VOLTAGE:
-							return getMotorOutputVoltage();
+							return getMotorOutputVoltageInternal();
 						case CURRENT:
-							return getOutputCurrent();
+							return getOutputCurrentInternal();
 						case VELOCITY:
-							return (double) getSelectedSensorVelocity(currentPidIdx);
+							return (double) getSelectedSensorVelocityInternal(currentPidIdx);
 						default:
 							throw new IllegalStateException("Unknown value [" + key + "]");
 						}
 
 					}
 				});
+		talonOutputTask = new TalonOutputTask();
+
+		logger.info(name + " Talon has been initialized on port " + deviceNumber);
 	}
 
 	/**
@@ -79,24 +84,24 @@ public class EagleSRX extends TalonSRX{
 	private int getSelectedSensorPositionInternal(int pidIdx) {
 		return super.getSelectedSensorPosition(pidIdx);
 	}
-	
+
 	private double getMotorOutputVoltageInternal() {
 		return super.getMotorOutputVoltage();
 	}
-	
+
 	private double getOutputCurrentInternal() {
 		return super.getOutputCurrent();
 	}
-	
+
 	private int getSelectedSensorVelocityInternal(int pidIdx) {
 		return super.getSelectedSensorVelocity(pidIdx);
 	}
-	
+
 	@Override
 	public int getSelectedSensorPosition(int pidIdx) {
 		this.currentPidIdx = pidIdx;
 		try {
-			return (int) Math.round(dataCache.get(DataType.POSITION));
+			return (int) Math.round(talonDataCache.get(DataType.POSITION));
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 			return -1;
@@ -107,17 +112,17 @@ public class EagleSRX extends TalonSRX{
 	public int getSelectedSensorVelocity(int pidIdx) {
 		this.currentPidIdx = pidIdx;
 		try {
-			return (int) Math.round(dataCache.get(DataType.VELOCITY));
+			return (int) Math.round(talonDataCache.get(DataType.VELOCITY));
 		} catch (ExecutionException e) {
 			e.printStackTrace();
-			return 0;
+			return -1;
 		}
 	}
 
 	@Override
 	public double getMotorOutputVoltage() {
 		try {
-			return (int) Math.round(dataCache.get(DataType.VOLTAGE));
+			return (int) Math.round(talonDataCache.get(DataType.VOLTAGE));
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 			return 0;
@@ -127,7 +132,7 @@ public class EagleSRX extends TalonSRX{
 	@Override
 	public double getOutputCurrent() {
 		try {
-			return (int) Math.round(dataCache.get(DataType.CURRENT));
+			return (int) Math.round(talonDataCache.get(DataType.CURRENT));
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 			return 0;
@@ -211,6 +216,39 @@ public class EagleSRX extends TalonSRX{
 		this.config_kF(0, lastkFSlot0, 0);
 		this.configPeakOutputForward(lastPercentOutForward, 0);
 		this.configPeakOutputReverse(lastPercentOutReverse, 0);
+	}
+
+	@Override
+	public void set(ControlMode mode, double outputValue) {
+		talonOutputTask.updateOutput(outputValue);
+		talonOutputTask.updateControlMode(mode);
+	}
+
+	private class TalonOutputTask {
+		private ControlMode controlMode;
+		private double outputValue;
+
+		public void run() {
+			setInternal(controlMode, outputValue);
+		}
+
+		public void updateOutput(double outputValue) {
+			this.outputValue = outputValue;
+		}
+
+		public void updateControlMode(ControlMode mode) {
+			this.controlMode = mode;
+		}
+
+	}
+
+	private void setInternal(ControlMode mode, double outputValue) {
+		super.set(mode, outputValue);
+	}
+
+	@Override
+	public void onPeriodic() {
+		talonOutputTask.run();
 	}
 
 }
