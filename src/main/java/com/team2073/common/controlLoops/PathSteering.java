@@ -3,9 +3,9 @@ package com.team2073.common.controlLoops;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.sun.javafx.geom.Vec2d;
-import com.team2073.common.util.PathFollower;
+import com.team2073.common.util.DeadReckoningTracker;
 
-public class PathSteering extends PathFollower {
+public class PathSteering extends DeadReckoningTracker {
 	private Vec2d currentRobotVelocity = new Vec2d(0, 0);
 	private Vec2d desiredRobotVelocity = new Vec2d(0, 0);
 	private TalonSRX leftMotor;
@@ -13,7 +13,7 @@ public class PathSteering extends PathFollower {
 	private PigeonIMU gyro;
 
 	public PathSteering(PigeonIMU gyro, TalonSRX leftMotor, TalonSRX rightMotor) {
-		super(gyro, leftMotor, rightMotor);
+		super(gyro, leftMotor, rightMotor, 10);
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 		this.gyro = gyro;
