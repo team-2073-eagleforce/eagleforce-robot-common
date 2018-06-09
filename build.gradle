@@ -14,6 +14,7 @@ dependencies {
     compile wpilib()
     compile ctre()
     compile openrio.powerup.matchData()
+    compile group: 'org.json', name: 'json', version: '20171018'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     compile group: 'com.google.inject', name: 'guice', version: '4.1.0'
     compile group: 'com.google.inject.extensions', name: 'guice-assistedinject', version: '4.1.0'

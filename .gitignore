@@ -1,11 +1,21 @@
-/.gradle/
-/.settings/
+# Build dirs
 /bin/
 /build/
 /dist/
-/out/
+
+# Gradle
+/.gradle/
+
+# Eclipse
+/.settings/
 /.classpath
 /.project
+
+# IDEA
+/.idea
 /*.iml
-/*.ipr
-/*.iws
+/.xml
+/.iml
+
+# MAC
+*.DS_Store

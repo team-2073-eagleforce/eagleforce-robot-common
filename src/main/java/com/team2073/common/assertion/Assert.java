@@ -3,7 +3,7 @@ package com.team2073.common.assertion;
 public abstract class Assert {
 
 	/**
-	 * Use to check that a field is not null. If null, an {@link "IllegalArgumentException"} will be
+	 * Use to check that a field is not null. If null, an {@link IllegalArgumentException} will be
 	 * thrown with a message of: <i>{variableName} must not be null.</i>
 	 * <p>
 	 * Ex use:
