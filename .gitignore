@@ -16,6 +16,7 @@
 /*.iml
 /.xml
 /.iml
+/out
 
 # MAC
 *.DS_Store
