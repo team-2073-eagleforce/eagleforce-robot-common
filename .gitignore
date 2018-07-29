@@ -1,22 +1,64 @@
-# Build dirs
-/bin/
-/build/
-/dist/
+/target/
+!.mvn/wrapper/maven-wrapper.jar
 
-# Gradle
-/.gradle/
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
-# Eclipse
-/.settings/
-/.classpath
-/.project
+### IntelliJ IDEA ###
+out/
 
-# IDEA
-/.idea
-/*.iml
-/.xml
-/.iml
-/out
+# Shared IDEA config #
+#   From: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839-How-to-manage-projects-under-Version-Control-Systems
+.idea/workspace.xml
+.idea/usage.statistics.xml
+.idea/tasks.xml
+.idea/libraries
 
-# MAC
-*.DS_Store
+#   From: Preston
+.idea/uiDesigner.xml
+
+# Non-shared IDEA config #
+#   From: spring initializer
+# .idea
+# *.iws
+# *.iml
+# *.ipr
+
+
+### Mac ###
+.DS_Store
+
+### Gradle ###
+.gradle
+build/* # This must end in * for test results includion to work properly
+
+# JUnit test results
+    # Special handling to unignore files when a parent directory has already been ignored
+    # From: https://git-scm.com/docs/gitignore#_pattern_format
+        # "It is not possible to re-include a file if a parent directory of that file is excluded."
+    # Resolution from: https://stackoverflow.com/questions/5533050/gitignore-exclude-folder-but-include-specific-subfolder#answer-5534865
+        # "To do what you want, you have to “unignore” every parent directory of anything that you want to “unignore”."
+
+build/*
+!build/test-results/
+
+build/test-results/*
+!build/test-results/test
+
+build/test-results/test/*
+!build/test-results/test/*.xml
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+.gradletasknamecache
