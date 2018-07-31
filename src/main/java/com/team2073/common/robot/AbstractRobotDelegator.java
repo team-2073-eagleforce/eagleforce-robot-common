@@ -4,6 +4,8 @@ import java.sql.Driver;
 import java.text.DecimalFormat;
 
 import com.team2073.common.AppConstants;
+import com.team2073.common.listeners.ListenerRegistry;
+import com.team2073.common.listeners.ListenerRegistry.RobotStateEvent;
 import com.team2073.common.logging.OccasionalLoggingRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +83,7 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 		resetLastCheckedTime();
 		logger.info("disabled");
 		ExceptionUtil.suppressVoid(robot::disabledInit, "robot::disabledInit");
+		ListenerRegistry.setCurrentEvent(RobotStateEvent.DISABLED);
 	}
 
 	@Override
@@ -88,6 +91,7 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 		currentPeriod = MatchPeriod.AUTONOMOUS;
 		logger.info("autonomous enabled");
 		ExceptionUtil.suppressVoid(robot::autonomousInit, "robot::autonomousInit");
+		ListenerRegistry.setCurrentEvent(RobotStateEvent.AUTONOMOUS_START);
 	}
 
 	@Override
@@ -95,12 +99,14 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 		currentPeriod = MatchPeriod.TELEOP;
 		logger.info("teleop enabled");
 		ExceptionUtil.suppressVoid(robot::teleopInit, "robot::teleopInit");
+		ListenerRegistry.setCurrentEvent(RobotStateEvent.TELEOP_START);
 	}
 
 	@Override
 	public void testInit() {
 		logger.info("test enabled");
 		ExceptionUtil.suppressVoid(robot::testInit, "robot::testInit");
+		ListenerRegistry.setCurrentEvent(RobotStateEvent.TEST_START);
 	}
 
 	@Override
@@ -112,26 +118,33 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 		PeriodicRegistry.runPeriodic();
 		// TODO: Have the LoggingRegistry get called by the PeriodicRegistry instead
 		OccasionalLoggingRegistry.startOccasionalLogging();
+		// TODO: Have the ListenerRegistry get called by the PeriodicRegistry instead
+ 		ListenerRegistry.setCurrentEvent(RobotStateEvent.PERIODIC);
+		ListenerRegistry.runEventListeners();
 	}
 
 	@Override
 	public void disabledPeriodic() {
 		ExceptionUtil.suppressVoid(robot::disabledPeriodic, "robot::disabledPeriodic");
+		ListenerRegistry.setCurrentEvent(RobotStateEvent.PERIODIC);
 	}
 
 	@Override
 	public void autonomousPeriodic() {
 		ExceptionUtil.suppressVoid(robot::autonomousPeriodic, "robot::autonomousPeriodic");
+		ListenerRegistry.setCurrentEvent(RobotStateEvent.PERIODIC);
 	}
 
 	@Override
 	public void teleopPeriodic() {
 		ExceptionUtil.suppressVoid(robot::teleopPeriodic, "robot::teleopPeriodic");
+		ListenerRegistry.setCurrentEvent(RobotStateEvent.PERIODIC);
 	}
 
 	@Override
 	public void testPeriodic() {
 		ExceptionUtil.suppressVoid(robot::testPeriodic, "robot::testPeriodic");
+		ListenerRegistry.setCurrentEvent(RobotStateEvent.PERIODIC);
 	}
 	
 	private enum DsStatusMessage {
