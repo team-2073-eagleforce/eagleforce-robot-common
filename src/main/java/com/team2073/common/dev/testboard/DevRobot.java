@@ -16,22 +16,27 @@ public class DevRobot extends AbstractRobotDelegate {
 	@Override
 	public void robotInit() {
 		DevOperatorInterface.init();
+//		DevUtils.YOUGOBOOMNOW();
 	}
 
 	@Override
 	public void disabledInit() {
+//		DevUtils.YOUGOBOOMNOW();
 	}
 
 	@Override
 	public void autonomousInit() {
+//		DevUtils.YOUGOBOOMNOW();
 	}
 
 	@Override
 	public void teleopInit() {
+		DevUtils.YOUGOBOOMNOW();
 	}
 
 	@Override
 	public void testInit() {
+//		DevUtils.YOUGOBOOMNOW();
 	}
 
 	@Override
@@ -41,17 +46,21 @@ public class DevRobot extends AbstractRobotDelegate {
 
 	@Override
 	public void disabledPeriodic() {
+//		DevUtils.YOUGOBOOM();
 	}
 
 	@Override
 	public void autonomousPeriodic() {
+		DevUtils.YOUGOBOOM();
 	}
 
 	@Override
 	public void teleopPeriodic() {
+//		DevUtils.YOUGOBOOM();
 	}
 
 	@Override
 	public void testPeriodic() {
+//		DevUtils.YOUGOBOOM();
 	}
 }

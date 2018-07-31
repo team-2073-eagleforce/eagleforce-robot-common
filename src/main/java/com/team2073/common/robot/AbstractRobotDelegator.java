@@ -1,16 +1,19 @@
 package com.team2073.common.robot;
 
+import java.sql.Driver;
 import java.text.DecimalFormat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.usfirst.frc.team2073.robot.conf.AppConstants;
 
-import com.team2073.common.AppConstants;
+import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.util.ExceptionUtil;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Extend this class and simply pass in an implementation of
@@ -45,12 +48,13 @@ import edu.wpi.first.wpilibj.TimedRobot;
  *
  * @author Preston Briggs
  */
-public abstract class AbstractRobotDelegator extends TimedRobot {
+public abstract class AbstractRobotDelegator extends TimedRobot implements SmartDashboardAware {
 	
 	private final RobotDelegate robot;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final DriverStation driverStation = DriverStation.getInstance();
 	private DecimalFormat formatter = new DecimalFormat("#.##");
+	private boolean loggedFmsMatchData = false;
 
 	public AbstractRobotDelegator(RobotDelegate robot) {
 		this.robot = robot;
@@ -68,7 +72,6 @@ public abstract class AbstractRobotDelegator extends TimedRobot {
 	public void robotInit() {
 		// Don't wrap in exception handling, handled by rebooting
 		robot.robotInit();
-		logStartingConfig();
 		resetLastCheckedTime();
 	}
 
@@ -102,7 +105,9 @@ public abstract class AbstractRobotDelegator extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 		logAllChecks();
+		logStartingConfig();
 		ExceptionUtil.suppressVoid(robot::robotPeriodic, "robot::robotPeriodic");
+		// TODO: Test this, merged from driving-practice branch
 		PeriodicRegistry.runPeriodic();
 	}
 
@@ -147,12 +152,12 @@ public abstract class AbstractRobotDelegator extends TimedRobot {
 	}
 	
 	private boolean isRealMatch() {
-		return true;
-//		return driverStation.isFMSAttached();
+		return driverStation.isFMSAttached();
 	}
 		
 	public void logStartingConfig() {		
-		if(isRealMatch()) {
+		if(!loggedFmsMatchData && isRealMatch()) {
+			loggedFmsMatchData = true;
 			logger.info("Alliance: [{}], DriverStation: [{}], Match type: [{}], Match Number: [{}]"
 					, driverStation.getAlliance().toString()
 					, driverStation.getLocation()
@@ -221,4 +226,20 @@ public abstract class AbstractRobotDelegator extends TimedRobot {
 			previousVoltageStatus = VoltageStatusMessage.SAFE_VOLTAGE;
 		}
 	}
+
+	@Override
+	public void updateSmartDashboard() {
+		SmartDashboard.putBoolean("field.FMS Connected", driverStation.isFMSAttached());
+		SmartDashboard.putString("field.Alliance", driverStation.getAlliance().toString());
+		SmartDashboard.putNumber("field.Station Number", driverStation.getLocation());
+		SmartDashboard.putString("field.Match Type", driverStation.getMatchType().toString());
+		SmartDashboard.putNumber("field.Match Number", driverStation.getMatchNumber());
+	}
+
+	@Override
+	public void readSmartDashboard() {
+		
+	}
+	
+	
 }

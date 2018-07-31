@@ -45,7 +45,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public abstract class AbstractLoggingCommand extends Command {
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
-	protected String name = getClass().getSimpleName();
+	protected final String className = getClass().getSimpleName();
 
 	/*
 	 * IF CHANGING THIS CLASS, UPDATE AbstractLoggingCommandGroup AND AbstractLoggingInstantCommand!
@@ -57,36 +57,29 @@ public abstract class AbstractLoggingCommand extends Command {
 	
 	public AbstractLoggingCommand() {
 		super();
-		logger.debug("Constructing [{}] command.", name);
+		logger.debug("Constructing [{}] command.", className);
 	}
 
 	public AbstractLoggingCommand(double timeout) {
 		super(timeout);
-		logger.debug("Constructing [{}] command. timeout=[{}].", name, timeout);
+		logger.debug("Constructing [{}] command. timeout=[{}].", className, timeout);
 	}
 
 	public AbstractLoggingCommand(String name, double timeout) {
 		super(name, timeout);
-		this.name = name;
-		logger.debug("Constructing [{}] command. timeout=[{}].", name, timeout);
+		logger.debug("Constructing [{}] command. timeout=[{}].", className, timeout);
 	}
 
 	public AbstractLoggingCommand(String name) {
 		super(name);
-		this.name = name;
-		logger.debug("Constructing [{}] command.", name);
-	}
-	
-	protected void setLoggingName(String name) {
-		logger.trace("Renaming command from [{}] to [{}]", this.name, name);
-		this.name = name;
+		logger.debug("Constructing [{}] command.", className);
 	}
 
 	@Override
 	protected final void initialize() {
-		logger.debug("[{}] command initializing...", name);
+		logger.debug("[{}] command initializing...", className);
 		initializeDelegate();
-		logger.debug("[{}] command initialized successfully.", name);
+		logger.debug("[{}] command initialized successfully.", className);
 	}
 
 	protected void initializeDelegate() {
@@ -95,9 +88,9 @@ public abstract class AbstractLoggingCommand extends Command {
 
 	@Override
 	protected final void execute() {
-		logger.trace("[{}] command executing...", name);
+		logger.trace("[{}] command executing...", className);
 		executeDelegate();
-		logger.trace("[{}] command executed successfully.", name);
+		logger.trace("[{}] command executed successfully.", className);
 	}
 
 	protected void executeDelegate() {
@@ -106,9 +99,9 @@ public abstract class AbstractLoggingCommand extends Command {
 
 	@Override
 	protected final void end() {
-		logger.debug("[{}] command ending...", name);
+		logger.debug("[{}] command ending...", className);
 		endDelegate();
-		logger.debug("[{}] command ended successfully.", name);
+		logger.debug("[{}] command ended successfully.", className);
 	}
 
 	protected void endDelegate() {
@@ -117,9 +110,9 @@ public abstract class AbstractLoggingCommand extends Command {
 
 	@Override
 	protected final void interrupted() {
-		logger.debug("[{}] command interrupting...", name);
+		logger.debug("[{}] command interrupting...", className);
 		interruptedDelegate();
-		logger.debug("[{}] command interrupted successfully.", name);
+		logger.debug("[{}] command interrupted successfully.", className);
 	}
 
 	protected void interruptedDelegate() {
@@ -128,12 +121,12 @@ public abstract class AbstractLoggingCommand extends Command {
 	
 	@Override
 	protected final boolean isFinished() {
-		logger.trace("[{}] command checking finished status...", name);
+		logger.trace("[{}] command checking finished status...", className);
 		boolean isFinished = isFinishedDelegate();
 		if(isFinished)
-			logger.debug("[{}] command returned finished status of [{}].", name, isFinished);
+			logger.debug("[{}] command returned finished status of [{}].", className, isFinished);
 		else
-			logger.trace("[{}] command returned finished status of [{}].", name, isFinished);
+			logger.trace("[{}] command returned finished status of [{}].", className, isFinished);
 			
 		return isFinished;
 	}
