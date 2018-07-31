@@ -13,7 +13,7 @@ class StringUtilTest {
 
     @Test
     public void passInUpperCaseShouldReturnLowerCase(){
-        assertEquals("Hello", StringUtil.toFileCase("Hello"), "A file name cannot be uppercase");
+        assertEquals("hello", StringUtil.toFileCase("Hello"), "A file name cannot be uppercase");
     }
 
 }
