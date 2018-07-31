@@ -3,8 +3,6 @@ package com.team2073.robot.common.mediator.conflict
 import com.team2073.robot.common.mediator.condition.Condition
 import com.team2073.robot.common.mediator.request.Request
 import com.team2073.robot.common.mediator.subsys.ColleagueSubsystem
-import frc.team9073.robot.management.mediator.MasterConflictMap
-import java.util.ArrayList
 
 abstract class Conflict<O : Condition, C : Condition, Z : ColleagueSubsystem>(var originSubsystem: Class<Z>,
                                                                               var originCondition: O,
