@@ -2,6 +2,7 @@ package com.team2073.common.mediator.condition
 
 class PositionBasedCondition(val lowerBound: Double, val upperBound: Double, var exactPosition: Double): Condition {
 
+    /** testing javadocs publish to mavenlocal */
     override fun <Double> getConditionValue(): Double {
         return exactPosition as Double
     }
