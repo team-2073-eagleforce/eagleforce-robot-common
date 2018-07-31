@@ -1,4 +1,4 @@
-package com.team2073.robot.common.mediator.condition
+package com.team2073.common.mediator.condition
 
 interface Condition {
 

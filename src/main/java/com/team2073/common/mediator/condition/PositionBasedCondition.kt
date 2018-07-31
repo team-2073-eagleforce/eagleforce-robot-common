@@ -1,4 +1,4 @@
-package com.team2073.robot.common.mediator.condition
+package com.team2073.common.mediator.condition
 
 class PositionBasedCondition(val lowerBound: Double, val upperBound: Double, var exactPosition: Double): Condition {
 

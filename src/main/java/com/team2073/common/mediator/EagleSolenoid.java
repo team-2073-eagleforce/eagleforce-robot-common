@@ -1,4 +1,4 @@
-package com.team2073.robot.common.mediator;
+package com.team2073.common.mediator;
 
 import edu.wpi.first.wpilibj.Solenoid;
 

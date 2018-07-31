@@ -1,6 +1,6 @@
-package com.team2073.robot.common.mediator.condition
+package com.team2073.common.mediator.condition
 
-import com.team2073.robot.common.mediator.subsys.SubsystemStateCondition
+import com.team2073.common.mediator.subsys.SubsystemStateCondition
 
 class StateBasedCondition(val state: SubsystemStateCondition?) : Condition {
 

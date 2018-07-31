@@ -1,7 +1,7 @@
-package com.team2073.robot.common.mediator.Tracker
+package com.team2073.common.mediator.Tracker
 
-import com.team2073.robot.common.mediator.condition.PositionBasedCondition
-import com.team2073.robot.common.mediator.subsys.ColleagueSubsystem
+import com.team2073.common.mediator.condition.PositionBasedCondition
+import com.team2073.common.mediator.subsys.ColleagueSubsystem
 
 class PositionBasedTracker {
 

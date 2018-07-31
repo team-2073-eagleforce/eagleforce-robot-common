@@ -1,10 +1,10 @@
-package com.team2073.robot.common.mediator.conflict
+package com.team2073.common.mediator.conflict
 
-import com.team2073.robot.common.mediator.Tracker.PositionBasedTracker
-import com.team2073.robot.common.mediator.condition.Condition
-import com.team2073.robot.common.mediator.condition.PositionBasedCondition
-import com.team2073.robot.common.mediator.request.Request
-import com.team2073.robot.common.mediator.subsys.ColleagueSubsystem
+import com.team2073.common.mediator.Tracker.PositionBasedTracker
+import com.team2073.common.mediator.condition.Condition
+import com.team2073.common.mediator.condition.PositionBasedCondition
+import com.team2073.common.mediator.request.Request
+import com.team2073.common.mediator.subsys.ColleagueSubsystem
 
 class PositionBasedConflict<O : Condition, C : Condition, Z : ColleagueSubsystem>(var originSubsystemP: Class<Z>,
                                                                                   var originConditionP: O,

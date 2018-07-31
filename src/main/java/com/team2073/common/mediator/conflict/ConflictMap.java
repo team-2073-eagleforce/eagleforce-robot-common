@@ -1,4 +1,4 @@
-package com.team2073.robot.common.mediator.conflict;
+package com.team2073.common.mediator.conflict;
 
 import java.util.ArrayList;
 import java.util.Map;
