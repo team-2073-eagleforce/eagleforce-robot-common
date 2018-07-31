@@ -4,6 +4,7 @@ import java.sql.Driver;
 import java.text.DecimalFormat;
 
 import com.team2073.common.AppConstants;
+import com.team2073.common.logging.OccasionalLoggingRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,6 +110,8 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 		ExceptionUtil.suppressVoid(robot::robotPeriodic, "robot::robotPeriodic");
 		// TODO: Test this, merged from driving-practice branch
 		PeriodicRegistry.runPeriodic();
+		// TODO: Have the LoggingRegistry get called by the PeriodicRegistry instead
+		OccasionalLoggingRegistry.startOccasionalLogging();
 	}
 
 	@Override
