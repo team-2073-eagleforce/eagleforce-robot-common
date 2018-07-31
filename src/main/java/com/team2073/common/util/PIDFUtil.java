@@ -1,4 +1,4 @@
-package com.team2073.common.controlLoops;
+package com.team2073.common.util;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 

@@ -1,4 +1,4 @@
-package com.team2073.common.camera;
+package com.team2073.common.svc.camera;
 
 public interface CameraMessageReceiver {
 

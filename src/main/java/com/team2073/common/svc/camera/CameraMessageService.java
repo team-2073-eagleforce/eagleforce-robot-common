@@ -1,9 +1,8 @@
-package com.team2073.common.camera;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package com.team2073.common.svc.camera;
 
 import edu.wpi.first.wpilibj.Timer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
