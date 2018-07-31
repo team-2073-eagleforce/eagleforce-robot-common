@@ -1,8 +1,8 @@
 package com.team2073.common.controlLoops;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.team2073.common.registries.PeriodicRegistry;
-import com.team2073.common.registries.interfaces.PeriodicAware;
+import com.team2073.common.robot.PeriodicAware;
+import com.team2073.common.robot.PeriodicRegistry;
 
 public class CircuitBreaker implements PeriodicAware {
 	private double minimumVoltageToMove;

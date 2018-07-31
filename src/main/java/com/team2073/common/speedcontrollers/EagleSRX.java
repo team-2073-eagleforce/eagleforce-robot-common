@@ -1,4 +1,4 @@
-package com.team2073.common.util;
+package com.team2073.common.speedcontrollers;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.team2073.common.robot.PeriodicAware;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.smartdashboard.SmartDashboardAwareRegistry;
+import com.team2073.common.util.TimerUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +103,7 @@ public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardA
     public void readSmartDashboard() {
         isTestingEnabled = SmartDashboard.getBoolean(name + " Enable Test Mode", false);
         if (isTestingEnabled && (timer.hasWaited(1000) || !enabledTestingMode)) {
-            timer.startTimer();
+            timer.start();
             enabledTestingMode = true;
             reloadPIDFValues();
         }

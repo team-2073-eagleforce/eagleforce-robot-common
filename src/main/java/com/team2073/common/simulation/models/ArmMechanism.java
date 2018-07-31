@@ -1,6 +1,6 @@
 package com.team2073.common.simulation.models;
 
-import com.team2073.common.conf.AppConstants.Motors;
+import com.team2073.common.AppConstants.Motors;
 
 public class ArmMechanism implements Mechanism{
 	

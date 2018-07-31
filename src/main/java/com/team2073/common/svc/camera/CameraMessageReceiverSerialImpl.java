@@ -1,10 +1,9 @@
 package com.team2073.common.svc.camera;
 
+import com.team2073.common.inject.CheckedProviderUtils;
+import com.team2073.common.inject.SerialPortProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.usfirst.frc.team2073.robot.ctx.SerialPortProvider;
-import org.usfirst.frc.team2073.robot.domain.CameraMessage;
-import org.usfirst.frc.team2073.robot.util.CheckedProviderUtils;
 
 import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.smartdashboard.SmartDashboardAwareRegistry;
@@ -14,6 +13,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CameraMessageReceiverSerialImpl implements CameraMessageReceiver, SmartDashboardAware {
+
+	public static final String REQUEST_MESSAGE = "4\n";
 	public static final String STATE_SMARTDASHBOARD_KEY = "Camera Message Receiver State";
 	private String stateSmartdashboardKey = STATE_SMARTDASHBOARD_KEY;
 	private static final double CIRCUIT_BREAKER_MULTIPLIER = 2;
@@ -56,7 +57,7 @@ public class CameraMessageReceiverSerialImpl implements CameraMessageReceiver, S
 		if(serialPort == null)
 			return "";
 		state = State.RECEIVING_MESSAGE;
-		serialPort.writeString(CameraMessage.REQUEST_MESSAGE);
+		serialPort.writeString(REQUEST_MESSAGE);
 		String json = serialPort.readString();
 		//The JeVois can't accept the string fast enough so there needs to be a delay when requesting a message
 		while (json == null || json.isEmpty() || json.equals("OK")) {

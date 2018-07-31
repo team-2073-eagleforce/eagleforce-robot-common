@@ -3,9 +3,9 @@ package com.team2073.common.robot;
 import java.sql.Driver;
 import java.text.DecimalFormat;
 
+import com.team2073.common.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.usfirst.frc.team2073.robot.conf.AppConstants;
 
 import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.util.ExceptionUtil;

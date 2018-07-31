@@ -1,10 +1,10 @@
 package com.team2073.common.subsys;
 
+import com.team2073.common.subsys.ExampleAppConstants.DashboardKeys;
+import com.team2073.common.subsys.ExampleAppConstants.Defaults;
+import com.team2073.common.subsys.ExampleAppConstants.Shooter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.usfirst.frc.team2073.robot.conf.AppConstants.DashboardKeys;
-import org.usfirst.frc.team2073.robot.conf.AppConstants.Defaults;
-import org.usfirst.frc.team2073.robot.conf.AppConstants.Subsystems.Shooter;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.google.inject.Inject;

@@ -1,6 +1,6 @@
 package com.team2073.common.simulation.models;
 
-import com.team2073.common.conf.AppConstants.Motors;
+import com.team2073.common.AppConstants.Motors;
 
 public class LinearMotionMechanism implements Mechanism{
 	
@@ -43,8 +43,6 @@ public class LinearMotionMechanism implements Mechanism{
 	 * The Type of motor is the system running on.
 	 * @param motorCount
 	 * The number of motors for the system.
-	 * @param encoderCountsPerInchOfTravel
-	 * How many encoder counts per inch of travel.
 	 * @param massOnSystem
 	 * How much weight are we pulling up. (Probably want to overestimate this a bit)
 	 */
