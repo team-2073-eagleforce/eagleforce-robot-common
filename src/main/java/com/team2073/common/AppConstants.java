@@ -42,6 +42,7 @@ public abstract class AppConstants {
 		}
 	}
 
+	// TODO: Treat as defaults
 	public abstract class Diagnostics {
 		public static final double UNSAFE_BATTERY_VOLTAGE = 8.0;
 		public static final double LONG_ON_PERIODIC_CALL = 5e-3;
@@ -51,7 +52,8 @@ public abstract class AppConstants {
 	/**
 	 * Units are in terms of RPM, Amps, watts, and inch pounds
 	 * 
-	 * kv units are kt units are inch pounds per amp
+	 * kv units are rps per volt
+	 * kt units are inch pounds per amp
 	 */
 	public abstract class Motors {
 
