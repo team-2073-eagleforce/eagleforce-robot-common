@@ -46,16 +46,14 @@ import edu.wpi.first.wpilibj.TimedRobot;
  * @author Preston Briggs
  */
 public abstract class AbstractRobotDelegator extends TimedRobot {
-
-	private RobotController robotController;
+	
 	private final RobotDelegate robot;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final DriverStation driverStation = DriverStation.getInstance();
 	private DecimalFormat formatter = new DecimalFormat("#.##");
 
-	public AbstractRobotDelegator(RobotDelegate robot, RobotController robotController) {
+	public AbstractRobotDelegator(RobotDelegate robot) {
 		this.robot = robot;
-		this.robotController = robotController;
 	}
 	
 	private enum MatchPeriod {
@@ -199,23 +197,23 @@ public abstract class AbstractRobotDelegator extends TimedRobot {
 	private VoltageStatusMessage previousVoltageStatus = VoltageStatusMessage.SAFE_VOLTAGE;
 	
 	public void logUnsafeVoltages() {
-		if(robotController.isBrownedOut()) {
+		if(RobotController.isBrownedOut()) {
 			if(previousVoltageStatus != VoltageStatusMessage.ENTER_BROWNED_OUT) {
-				logger.info("Brown out detected. Voltage: [{}]", formatter.format(robotController.getBatteryVoltage()));
+				logger.info("Brown out detected. Voltage: [{}]", formatter.format(RobotController.getBatteryVoltage()));
 				previousVoltageStatus = VoltageStatusMessage.ENTER_BROWNED_OUT;
 			}
-		} else if(!robotController.isBrownedOut()) {
+		} else if(!RobotController.isBrownedOut()) {
 			if(previousVoltageStatus == VoltageStatusMessage.ENTER_BROWNED_OUT) {
-				logger.info("Exiting brown out, Voltage: [{}]", formatter.format(robotController.getBatteryVoltage()));
+				logger.info("Exiting brown out, Voltage: [{}]", formatter.format(RobotController.getBatteryVoltage()));
 				previousVoltageStatus = VoltageStatusMessage.EXIT_BROWNED_OUT;
-			}else if(robotController.getBatteryVoltage() < AppConstants.Diagnostics.UNSAFE_BATTERY_VOLTAGE) {
+			}else if(RobotController.getBatteryVoltage() < AppConstants.Diagnostics.UNSAFE_BATTERY_VOLTAGE) {
 				if(previousVoltageStatus != VoltageStatusMessage.UNSAFE_VOLTAGE) {
-					logger.info("Unsafe battery levels: [{}]", formatter.format(robotController.getBatteryVoltage()));
+					logger.info("Unsafe battery levels: [{}]", formatter.format(RobotController.getBatteryVoltage()));
 					previousVoltageStatus = VoltageStatusMessage.UNSAFE_VOLTAGE;
 				}
-			} else if(robotController.getBatteryVoltage() > AppConstants.Diagnostics.UNSAFE_BATTERY_VOLTAGE) {
+			} else if(RobotController.getBatteryVoltage() > AppConstants.Diagnostics.UNSAFE_BATTERY_VOLTAGE) {
 				if(previousVoltageStatus != VoltageStatusMessage.SAFE_VOLTAGE) {
-					logger.info("Safe battery level: [{}]", formatter.format(robotController.getBatteryVoltage()));
+					logger.info("Safe battery level: [{}]", formatter.format(RobotController.getBatteryVoltage()));
 					previousVoltageStatus = VoltageStatusMessage.SAFE_VOLTAGE;
 				}
 			}

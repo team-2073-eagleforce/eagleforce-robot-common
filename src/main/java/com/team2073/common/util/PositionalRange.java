@@ -1,5 +1,11 @@
 package com.team2073.common.util;
 
+import com.team2073.common.position.Position;
+
+/**
+ * @deprecated Use {@link Position} instead
+ */
+@Deprecated
 public class PositionalRange {
 	private double lowerBound;
 	private double upperBound;
