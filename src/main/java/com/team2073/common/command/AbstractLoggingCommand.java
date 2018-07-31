@@ -45,7 +45,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public abstract class AbstractLoggingCommand extends Command {
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
-	protected final String className = getClass().getSimpleName();
+	protected String className = getClass().getSimpleName();
 
 	/*
 	 * IF CHANGING THIS CLASS, UPDATE AbstractLoggingCommandGroup AND AbstractLoggingInstantCommand!
@@ -73,6 +73,11 @@ public abstract class AbstractLoggingCommand extends Command {
 	public AbstractLoggingCommand(String name) {
 		super(name);
 		logger.debug("Constructing [{}] command.", className);
+	}
+
+	protected void setLoggingName(String name) {
+		logger.trace("Renaming command from [{}] to [{}]", this.className, name);
+		this.className = name;
 	}
 
 	@Override
