@@ -6,6 +6,7 @@ import com.team2073.common.mediator.subsys.ColleagueSubsystem
 class PositionBasedTracker {
 
     companion object {
+
         var instanceList: MutableList<PositionBasedTrackee> = mutableListOf()
 
         fun registerTrackee(instance: PositionBasedTrackee) {
@@ -19,11 +20,10 @@ class PositionBasedTracker {
             }
             return position
         }
-
+//        TODO: Find a better way to get lower and upper bound of subsystem condition
         fun <C : ColleagueSubsystem> findSubsystemCondition(instance: Class<C>): PositionBasedCondition {
-            return PositionBasedCondition(0.0, 0.0, findSubsystemPosition(instance))
+            return PositionBasedCondition(findSubsystemPosition(instance) - 5, findSubsystemPosition(instance) + 5, findSubsystemPosition(instance))
         }
-
-
     }
+
 }
