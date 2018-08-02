@@ -1,6 +1,5 @@
 package com.team2073.common.mediator.subsys
 
-import edu.wpi.first.wpilibj.command.Subsystem
 
 abstract class ColleagueSubsystem : Subsystem {
 

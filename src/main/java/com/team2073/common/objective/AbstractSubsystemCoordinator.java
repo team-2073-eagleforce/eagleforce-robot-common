@@ -251,7 +251,7 @@ public abstract class AbstractSubsystemCoordinator implements PeriodicAware {
 		for (Deque<ObjectiveRequest> objectiveRequestStack : objectiveRequestStacks) {
 			for (ObjectiveRequest queuedObjectiveRequest : objectiveRequestStack) {
 				Set<Subsystem> queuedSubsystems = queuedObjectiveRequest.requestedObjective.getRequiredSubsystems();
-				// Check if any subsystems match
+				// Check if any fakesubsystems match
 				if (!Collections.disjoint(subsystems, queuedSubsystems)) {
 					return objectiveRequestStack;
 				}
