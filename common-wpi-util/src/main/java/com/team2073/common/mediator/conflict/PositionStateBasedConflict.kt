@@ -18,19 +18,8 @@ class PositionStateBasedConflict<O : Condition, C : Condition, Z : ColleagueSubs
     }
 
     override fun isConflicting(conflict: Conflict<C, O, Z>, request: Request<O, Z>): Boolean {
-
-        var conflictCase = false
-        var originCase = false
-
-        if (StateBasedTracker.findSubsystemCondition(conflict.conflictingSubsystem).isInCondition(conflict.conflictingCondition)) {
-            conflictCase = true
-        }
-         if (conflict.originCondition.isInCondition(request.condition)){
-             originCase = true
-        }
-
-        return originCase && conflictCase
-
+        return StateBasedTracker.findSubsystemCondition(conflict.conflictingSubsystem).isInCondition(conflict.conflictingCondition)
+                && conflict.originCondition.isInCondition(request.condition)
     }
 
     override fun invert(): Conflict<C, O, Z> {
