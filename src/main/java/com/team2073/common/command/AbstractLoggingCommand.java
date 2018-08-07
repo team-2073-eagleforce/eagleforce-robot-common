@@ -47,6 +47,8 @@ public abstract class AbstractLoggingCommand extends Command {
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	protected String className = getClass().getSimpleName();
 
+	// POO
+
 	/*
 	 * IF CHANGING THIS CLASS, UPDATE AbstractLoggingCommandGroup AND AbstractLoggingInstantCommand!
 	 * 
