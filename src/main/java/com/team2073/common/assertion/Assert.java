@@ -22,5 +22,7 @@ public abstract class Assert {
 	public static void assertNotNull(Object variable, String variableName) {
 		if(variable == null)
 			throw new IllegalArgumentException(String.format("[%s] must not be null.", variableName));
+
+		// SUP FAM
 	}
 }
