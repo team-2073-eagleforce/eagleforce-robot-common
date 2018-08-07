@@ -1,5 +1,6 @@
 package com.team2073.common.mediator.subsys
 
+import edu.wpi.first.wpilibj.command.Subsystem
 
 abstract class ColleagueSubsystem : Subsystem {
 
@@ -11,6 +12,8 @@ abstract class ColleagueSubsystem : Subsystem {
     }
 
     abstract fun<T> set(place: T)
+
+    abstract fun init()
 
 
 }

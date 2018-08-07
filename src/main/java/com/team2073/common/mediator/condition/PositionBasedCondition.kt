@@ -13,10 +13,9 @@ class PositionBasedCondition(val lowerBound: Double, val upperBound: Double, var
 
     fun findClosestBound(condition: Condition): Double{
         if(condition.getConditionValue() as Double - lowerBound > condition.getConditionValue() as Double - upperBound){
-            return upperBound + 1
+            return upperBound
         }else{
-            return lowerBound - 1
+            return lowerBound
         }
-        //TODO safe overshoot distance instead of 1's
     }
 }
