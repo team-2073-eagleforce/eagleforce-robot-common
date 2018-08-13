@@ -2,6 +2,18 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-guice.iml" filepath="$PROJECT_DIR$/.idea/modules/common-guice.iml" group="common-guice" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-guice/common-guice_main.iml" filepath="$PROJECT_DIR$/.idea/modules/common-guice/common-guice_main.iml" group="common-guice" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-guice/common-guice_test.iml" filepath="$PROJECT_DIR$/.idea/modules/common-guice/common-guice_test.iml" group="common-guice" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-util.iml" filepath="$PROJECT_DIR$/.idea/modules/common-util.iml" group="common-util" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-util/common-util_main.iml" filepath="$PROJECT_DIR$/.idea/modules/common-util/common-util_main.iml" group="common-util" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-util/common-util_test.iml" filepath="$PROJECT_DIR$/.idea/modules/common-util/common-util_test.iml" group="common-util" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-wpi-simulation.iml" filepath="$PROJECT_DIR$/.idea/modules/common-wpi-simulation.iml" group="common-wpi-simulation" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-wpi-simulation/common-wpi-simulation_main.iml" filepath="$PROJECT_DIR$/.idea/modules/common-wpi-simulation/common-wpi-simulation_main.iml" group="common-wpi-simulation" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-wpi-simulation/common-wpi-simulation_test.iml" filepath="$PROJECT_DIR$/.idea/modules/common-wpi-simulation/common-wpi-simulation_test.iml" group="common-wpi-simulation" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-wpi-util.iml" filepath="$PROJECT_DIR$/.idea/modules/common-wpi-util.iml" group="common-wpi-util" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-wpi-util/common-wpi-util_main.iml" filepath="$PROJECT_DIR$/.idea/modules/common-wpi-util/common-wpi-util_main.iml" group="common-wpi-util" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-wpi-util/common-wpi-util_test.iml" filepath="$PROJECT_DIR$/.idea/modules/common-wpi-util/common-wpi-util_test.iml" group="common-wpi-util" />
       <module fileurl="file://$PROJECT_DIR$/eagleforce-robot-common.iml" filepath="$PROJECT_DIR$/eagleforce-robot-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/eagleforce-robot-common_main.iml" filepath="$PROJECT_DIR$/.idea/modules/eagleforce-robot-common_main.iml" group="eagleforce-robot-common" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/eagleforce-robot-common_test.iml" filepath="$PROJECT_DIR$/.idea/modules/eagleforce-robot-common_test.iml" group="eagleforce-robot-common" />
