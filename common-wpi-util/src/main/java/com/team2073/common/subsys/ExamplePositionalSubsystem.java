@@ -1,5 +1,6 @@
 package com.team2073.common.subsys;
 
+import ch.qos.logback.classic.spi.Configurator;
 import com.team2073.common.subsys.ExampleAppConstants.DashboardKeys;
 import com.team2073.common.subsys.ExampleAppConstants.Defaults;
 import com.team2073.common.subsys.ExampleAppConstants.Shooter;
@@ -7,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
+//import com.google.inject.Inject;
+//import com.google.inject.name.Named;
 import com.team2073.common.position.Position;
 import com.team2073.common.position.PositionContainer;
 import com.team2073.common.position.PositionConverter;
@@ -73,8 +74,8 @@ public class ExamplePositionalSubsystem extends PositionalMechanismController<An
 
 	// Constructor
 	// ============================================================
-	@Inject
-	public ExamplePositionalSubsystem(@Named("shooterPivotMotor") EagleSRX pivotMotor, @Named("shooterPivotLimit") DigitalInput shooterPivotLimit) {
+//	@Inject
+	public ExamplePositionalSubsystem(/*@Named("shooterPivotMotor")*/ EagleSRX pivotMotor, /*@Named("shooterPivotLimit")*/ DigitalInput shooterPivotLimit) {
 		super(new PositionConverterImpl());
 		logger.info("Initializing ShooterPivotSubsystem.");
 		

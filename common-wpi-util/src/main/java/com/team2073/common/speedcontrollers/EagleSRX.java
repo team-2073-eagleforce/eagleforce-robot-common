@@ -5,7 +5,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import com.google.inject.Inject;
+//import com.google.inject.Inject;
 import com.team2073.common.robot.PeriodicAware;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.smartdashboard.SmartDashboardAwareRegistry;
@@ -86,7 +86,7 @@ public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardA
     }
 
     // TODO: Can't use inject in common project
-    @Inject
+//    @Inject
     public void registerSmartDashboardAware(SmartDashboardAwareRegistry smartDashboardAwareRegistry) {
         smartDashboardAwareRegistry.registerInstance(this);
     }

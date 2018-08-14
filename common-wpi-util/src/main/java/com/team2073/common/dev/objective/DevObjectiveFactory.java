@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import com.google.inject.Inject;
+//import com.google.inject.Inject;
 import com.team2073.common.dev.simulation.subsys.DevElevatorSubsystem;
 import com.team2073.common.dev.simulation.subsys.DevElevatorSubsystem.ElevatorHeight;
 import com.team2073.common.dev.simulation.subsys.DevIntakeSideRollerSubsystem;
@@ -18,10 +18,13 @@ import com.team2073.common.objective.Precondition;
 public class DevObjectiveFactory {
 
 	// Subsystems
-	@Inject private DevShooterPivotSubsystem shooter;
-	@Inject private DevElevatorSubsystem elevator;
-	@Inject private DevIntakeSideRollerSubsystem intakeSides;
-	
+//	@Inject private DevShooterPivotSubsystem shooter;
+//	@Inject private DevElevatorSubsystem elevator;
+//	@Inject private DevIntakeSideRollerSubsystem intakeSides;
+	private DevShooterPivotSubsystem shooter;
+	private DevElevatorSubsystem elevator;
+	private DevIntakeSideRollerSubsystem intakeSides;
+
 	// Objectives
 //	private DevElevatorObjective elevatorToMax;
 //	private DevElevatorObjective elevatorToPivot;

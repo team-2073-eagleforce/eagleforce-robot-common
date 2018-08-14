@@ -1,6 +1,6 @@
 package com.team2073.common.dev.cmd;
 
-import com.google.inject.Inject;
+//import com.google.inject.Inject;
 import com.team2073.common.dev.objective.DevObjectiveFactory;
 import com.team2073.common.dev.simulation.subsys.DevIntakeSideRollerSubsystem.IntakeSideRollerState;
 import com.team2073.common.dev.simulation.subsys.DevSubsystemCoordinatorImpl;
@@ -11,7 +11,7 @@ public class DevIntakeSideRollerRandomStateCommand extends DevAbstractObjectiveC
 	private IntakeSideRollerState[] states = IntakeSideRollerState.values();
 	private int index = -1;
 
-	@Inject
+//	@Inject
 	public DevIntakeSideRollerRandomStateCommand(DevSubsystemCoordinatorImpl coordinator, DevObjectiveFactory factory) {
 		super(coordinator, factory);
 	}

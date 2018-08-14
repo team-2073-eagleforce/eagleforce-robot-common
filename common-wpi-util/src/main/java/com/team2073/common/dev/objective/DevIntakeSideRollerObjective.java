@@ -4,7 +4,6 @@ import com.team2073.common.dev.simulation.subsys.DevIntakeSideRollerSubsystem;
 import com.team2073.common.dev.simulation.subsys.DevIntakeSideRollerSubsystem.IntakeSideRollerState;
 import com.team2073.common.objective.AbstractTypedObjective;
 import com.team2073.common.objective.StatusChecker;
-import com.team2073.common.objective.Objective.ConflictingStrategy;
 
 public class DevIntakeSideRollerObjective extends AbstractTypedObjective<IntakeSideRollerState> {
 	private DevIntakeSideRollerSubsystem intakeSides;

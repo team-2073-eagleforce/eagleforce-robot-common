@@ -3,10 +3,8 @@ package com.team2073.common.dev.simulation.subsys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Inject;
-import com.team2073.common.dev.objective.DevObjectiveFactory;
+//import com.google.inject.Inject;
 import com.team2073.common.objective.AbstractSubsystemCoordinator;
-import com.team2073.common.objective.ObjectiveRequest;
 
 public class DevSubsystemCoordinatorImpl extends AbstractSubsystemCoordinator {
 	private final Logger logger = LoggerFactory.getLogger(getClass());

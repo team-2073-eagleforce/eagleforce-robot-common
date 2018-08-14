@@ -1,6 +1,7 @@
 package com.team2073.common.dev.config;
 
-import com.google.inject.AbstractModule;
+//import com.google.inject.AbstractModule;
+//import org.reflections.Reflections;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-public class PropertyLoader extends AbstractModule {
+public class PropertyLoader { //} extends AbstractModule {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	//	@Inject TODO: add inject later
@@ -202,12 +203,12 @@ public class PropertyLoader extends AbstractModule {
 		return instance;
 	}
 
-	@Override
-	protected void configure() {
-		List<Object> init = init();
-		for (Object configuration : init) {
-			bind((Class<Object>) configuration.getClass()).toInstance(load(configuration.getClass()));
-		}
-	}
+//	@Override
+//	protected void configure() {
+//		List<Object> init = init();
+//		for (Object configuration : init) {
+//			bind((Class<Object>) configuration.getClass()).toInstance(load(configuration.getClass()));
+//		}
+//	}
 
 }

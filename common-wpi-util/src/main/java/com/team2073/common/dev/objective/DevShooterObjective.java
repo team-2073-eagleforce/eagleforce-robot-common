@@ -4,7 +4,6 @@ import com.team2073.common.dev.simulation.subsys.DevShooterPivotSubsystem;
 import com.team2073.common.dev.simulation.subsys.DevShooterPivotSubsystem.ShooterAngle;
 import com.team2073.common.objective.AbstractTypedObjective;
 import com.team2073.common.objective.StatusChecker;
-import com.team2073.common.objective.Objective.ConflictingStrategy;
 
 public class DevShooterObjective extends AbstractTypedObjective<ShooterAngle> {
 	
