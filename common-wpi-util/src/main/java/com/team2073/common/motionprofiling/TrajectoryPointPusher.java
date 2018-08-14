@@ -1,9 +1,9 @@
 package com.team2073.common.motionprofiling;
 
-import java.util.List;
-
 import com.ctre.phoenix.motion.TrajectoryPoint;
-import com.team2073.common.threading.InterruptibleRunnable;
+import com.team2073.common.concurrency.InterruptibleRunnable;
+
+import java.util.List;
 
 public class TrajectoryPointPusher implements InterruptibleRunnable {
 //	private boolean interrupted;

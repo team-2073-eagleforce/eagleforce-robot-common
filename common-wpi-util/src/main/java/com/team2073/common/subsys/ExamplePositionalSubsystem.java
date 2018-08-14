@@ -1,6 +1,5 @@
 package com.team2073.common.subsys;
 
-import ch.qos.logback.classic.spi.Configurator;
 import com.team2073.common.subsys.ExampleAppConstants.DashboardKeys;
 import com.team2073.common.subsys.ExampleAppConstants.Defaults;
 import com.team2073.common.subsys.ExampleAppConstants.Shooter;
@@ -12,10 +11,10 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 //import com.google.inject.name.Named;
 import com.team2073.common.position.Position;
 import com.team2073.common.position.PositionContainer;
-import com.team2073.common.position.PositionConverter;
+import com.team2073.common.position.converter.PositionConverter;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.smartdashboard.SmartDashboardAwareRegistry;
-import com.team2073.common.speedcontrollers.EagleSRX;
+import com.team2073.common.speedcontroller.EagleSRX;
 import com.team2073.common.subsys.ExamplePositionalSubsystem.Angle;
 
 import edu.wpi.first.wpilibj.DigitalInput;

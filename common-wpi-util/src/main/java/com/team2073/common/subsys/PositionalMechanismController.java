@@ -1,38 +1,36 @@
 package com.team2073.common.subsys;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
+import com.team2073.common.assertion.Assert;
+import com.team2073.common.objective.StatusChecker;
+import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.position.Position;
+import com.team2073.common.position.PositionContainer;
+import com.team2073.common.position.converter.NoOpPositionConverter;
+import com.team2073.common.position.converter.PositionConverter;
+import com.team2073.common.position.hold.DisabledHoldingStrategy;
+import com.team2073.common.position.hold.HoldingStrategy;
+import com.team2073.common.position.hold.PIDHoldingStrategy;
+import com.team2073.common.smartdashboard.SmartDashboardAware;
+import com.team2073.common.smartdashboard.SmartDashboardAwareRegistry;
+import com.team2073.common.speedcontroller.PidIndex;
+import com.team2073.common.util.StringUtil;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import org.apache.commons.math3.util.Precision;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-
-import org.apache.commons.math3.util.Precision;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
-import com.team2073.common.assertion.Assert;
-import com.team2073.common.objective.StatusChecker;
-import com.team2073.common.position.NoOpPositionConverter;
-import com.team2073.common.position.Position;
-import com.team2073.common.position.PositionContainer;
-import com.team2073.common.position.PositionConverter;
-import com.team2073.common.robot.PeriodicAware;
-import com.team2073.common.smartdashboard.SmartDashboardAware;
-import com.team2073.common.smartdashboard.SmartDashboardAwareRegistry;
-import com.team2073.common.speedcontrollers.PidIndex;
-import com.team2073.common.speedcontrollers.hold.DisabledHoldingStrategy;
-import com.team2073.common.speedcontrollers.hold.HoldingStrategy;
-import com.team2073.common.speedcontrollers.hold.PIDHoldingStrategy;
-import com.team2073.common.util.StringUtil;
-
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * TODO

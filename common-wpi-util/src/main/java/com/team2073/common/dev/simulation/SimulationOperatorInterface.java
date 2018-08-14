@@ -7,7 +7,7 @@ import com.team2073.common.dev.objective.DevObjectiveFactory;
 import com.team2073.common.dev.simulation.subsys.DevElevatorSubsystem.ElevatorHeight;
 import com.team2073.common.dev.simulation.subsys.DevShooterPivotSubsystem.ShooterAngle;
 import com.team2073.common.dev.simulation.subsys.DevSubsystemCoordinatorImpl;
-import com.team2073.common.triggers.DPadTrigger;
+import com.team2073.common.trigger.DPadTrigger;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;

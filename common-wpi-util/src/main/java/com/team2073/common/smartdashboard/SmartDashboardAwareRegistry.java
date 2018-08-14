@@ -1,15 +1,14 @@
 package com.team2073.common.smartdashboard;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import com.team2073.common.assertion.Assert;
+import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRegistry;
+import com.team2073.common.util.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.team2073.common.assertion.Assert;
-import com.team2073.common.robot.PeriodicAware;
-import com.team2073.common.robot.PeriodicRegistry;
-import com.team2073.common.util.ExceptionUtil;
+import java.util.LinkedList;
+import java.util.List;
 
 public class SmartDashboardAwareRegistry implements PeriodicAware{
 	private final Logger logger = LoggerFactory.getLogger(getClass());

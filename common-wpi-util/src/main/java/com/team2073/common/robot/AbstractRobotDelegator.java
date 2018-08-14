@@ -1,21 +1,20 @@
 package com.team2073.common.robot;
 
-import java.text.DecimalFormat;
-
 import com.team2073.common.AppConstants;
-import com.team2073.common.listeners.ListenerRegistry;
-import com.team2073.common.listeners.ListenerRegistry.RobotStateEvent;
-import com.team2073.common.logging.OccasionalLoggingRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.team2073.common.event.ListenerRegistry;
+import com.team2073.common.event.ListenerRegistry.RobotStateEvent;
+import com.team2073.common.periodic.OccasionalLoggingRegistry;
+import com.team2073.common.periodic.PeriodicRegistry;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.util.ExceptionUtil;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.DecimalFormat;
 
 /**
  * Extend this class and simply pass in an implementation of

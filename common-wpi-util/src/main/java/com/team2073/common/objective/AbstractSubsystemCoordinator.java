@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.team2073.common.objective.Objective.ConflictingStrategy;
-import com.team2073.common.robot.PeriodicAware;
-import com.team2073.common.robot.PeriodicRegistry;
+import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRegistry;
 import com.team2073.common.util.LogUtil;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
