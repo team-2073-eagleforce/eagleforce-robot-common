@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
 public class HallEffectTrigger extends Trigger {
+
 	private DigitalInput sensor;
 	
 	public HallEffectTrigger(DigitalInput sensor) {

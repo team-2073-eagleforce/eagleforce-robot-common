@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
 public class RobotModeTrigger extends Trigger {
+
 	private final RobotMode mode;
 	private final boolean checkEnabled;
 

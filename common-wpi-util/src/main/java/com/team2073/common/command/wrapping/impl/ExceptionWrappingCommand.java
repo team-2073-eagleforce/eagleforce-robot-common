@@ -1,12 +1,12 @@
 package com.team2073.common.command.wrapping.impl;
 
-import java.util.concurrent.Callable;
-
+import com.team2073.common.command.wrapping.BaseWrappingCommand;
+import com.team2073.common.command.wrapping.WrappableCommand;
+import com.team2073.common.util.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.team2073.common.command.wrapping.BaseWrappingCommand;
-import com.team2073.common.command.wrapping.WrappableCommand;
+import java.util.concurrent.Callable;
 
 /**
  * Wraps a {@link WrappableCommand} to add exception handling. If an exception is thrown
@@ -27,7 +27,8 @@ public class ExceptionWrappingCommand extends BaseWrappingCommand {
 
 	@Override
 	public void initialize() {
-		boolean exceptionThrown = handleVoid(innerCommand::initialize, "initialize");
+//		boolean exceptionThrown = handleVoid(innerCommand::initialize, "initialize");
+		boolean exceptionThrown = ExceptionUtil.suppressVoid(innerCommand::initialize, "initialize");
 		if(exceptionThrown) {
 			logger.error("initialize() method failed. Ending command...");
 			cancel();

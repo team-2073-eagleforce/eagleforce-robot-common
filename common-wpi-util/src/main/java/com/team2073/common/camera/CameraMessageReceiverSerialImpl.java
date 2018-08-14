@@ -1,7 +1,5 @@
 package com.team2073.common.camera;
 
-//import com.team2073.common.inject.CheckedProviderUtils;
-//import com.team2073.common.inject.SerialPortProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,11 +39,6 @@ public class CameraMessageReceiverSerialImpl implements CameraMessageReceiver, S
 		this.serialPort = serialPort;
 		state = State.WAITING;
 	}
-	
-//	public CameraMessageReceiverSerialImpl(SerialPortProvider serialPortProvider, SmartDashboardAwareRunner smartDashboardAwareRunner) {
-////		this(CheckedProviderUtils.getOrNull(serialPortProvider));
-//		smartDashboardAwareRegistry.registerInstance(this);
-//	}
 
 	// CameraMessageReceiver methods
 	// ====================================================================================================

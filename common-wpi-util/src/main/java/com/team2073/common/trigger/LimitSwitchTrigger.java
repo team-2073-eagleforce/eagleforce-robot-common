@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
 public class LimitSwitchTrigger extends Trigger {
+
 	private DigitalInput sensor;
 	
 	public LimitSwitchTrigger(DigitalInput sensor) {

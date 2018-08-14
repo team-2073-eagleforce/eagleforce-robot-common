@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MultiTrigger extends Trigger {
+
 	private final List<Trigger> triggers;
 
 	public MultiTrigger(List<Trigger> triggers) {

@@ -1,16 +1,15 @@
 package com.team2073.common.command.wrapping;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Vector;
-
+import com.team2073.common.command.wrapping.WrapUtil.CommandWrapperBuilder;
 import com.team2073.common.command.wrapping.impl.ExceptionWrappingCommand;
 import com.team2073.common.command.wrapping.impl.LogWrappingCommand;
-
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This is the core class in the Command Wrapping framework.

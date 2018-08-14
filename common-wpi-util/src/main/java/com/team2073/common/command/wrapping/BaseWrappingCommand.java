@@ -65,7 +65,7 @@ public abstract class BaseWrappingCommand extends WrappableCommand {
 	 * @param commandToWrap The command to be wrapped.
 	 */
 	public BaseWrappingCommand(WrappableCommand commandToWrap) {
-		Assert.assertNotNull(commandToWrap, "toWrap");
+		Assert.assertNotNull(commandToWrap, "commandToWrap");
 		innerCommand = commandToWrap;
 		setName(innerCommand.getName());
 		setSubsystem(innerCommand.getSubsystem());

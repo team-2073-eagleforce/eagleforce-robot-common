@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class CommandUtil {
+
 	public static CommandGroup waitBefore(Command command, double timeInSeconds) {
 		CommandGroup commandGroup = new CommandGroup();
 		commandGroup.addSequential(new WaitCommand(timeInSeconds));
@@ -25,10 +26,7 @@ public class CommandUtil {
 	}
 	
 	public static CommandGroup parallelDelayParallel(Command first, Command second, double delayInSeconds) {
-		CommandGroup commandGroup = new CommandGroup() {
-			{
-			}
-		};
+		CommandGroup commandGroup = new CommandGroup();
 		
 		commandGroup.addSequential(first, delayInSeconds);
 		commandGroup.addParallel(second);

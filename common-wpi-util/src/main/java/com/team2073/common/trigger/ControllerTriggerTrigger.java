@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
 public class ControllerTriggerTrigger extends Trigger {
+
 	private Joystick controller;
 	private int axis;
 	

@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
 public class JoystickPovTrigger extends Trigger {
+
 	private final Joystick controller;
 	private final int pov;
 
