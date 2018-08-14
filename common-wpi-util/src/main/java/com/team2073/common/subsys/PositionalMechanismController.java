@@ -14,7 +14,7 @@ import com.team2073.common.position.hold.DisabledHoldingStrategy;
 import com.team2073.common.position.hold.HoldingStrategy;
 import com.team2073.common.position.hold.PIDHoldingStrategy;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
-import com.team2073.common.smartdashboard.SmartDashboardAwareRegistry;
+import com.team2073.common.smartdashboard.SmartDashboardAwareRunner;
 import com.team2073.common.speedcontroller.PidIndex;
 import com.team2073.common.util.StringUtil;
 import edu.wpi.first.networktables.NetworkTable;
@@ -123,9 +123,9 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 
 	// Implementation Methods
 	// ============================================================
-	/** Call this if you would like to register a {@link SmartDashboardAwareRegistry}. */
-	public void registerSmartDashboardAware(SmartDashboardAwareRegistry smartDashboardAwareRegistry) {
-		smartDashboardAwareRegistry.registerInstance(this);
+	/** Call this if you would like to register a {@link SmartDashboardAwareRunner}. */
+	public void registerSmartDashboardAware(SmartDashboardAwareRunner smartDashboardAwareRunner) {
+		smartDashboardAwareRunner.registerInstance(this);
 	}
 	
 	@Override

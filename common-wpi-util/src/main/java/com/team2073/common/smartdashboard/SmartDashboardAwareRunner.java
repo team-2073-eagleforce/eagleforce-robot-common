@@ -2,7 +2,7 @@ package com.team2073.common.smartdashboard;
 
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.periodic.PeriodicAware;
-import com.team2073.common.periodic.PeriodicRegistry;
+import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.util.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,13 +10,13 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SmartDashboardAwareRegistry implements PeriodicAware{
+public class SmartDashboardAwareRunner implements PeriodicAware{
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final List<SmartDashboardAware> instanceList = new LinkedList<>();
 	
-	public SmartDashboardAwareRegistry() {
-		PeriodicRegistry.registerInstance(this);
-		PeriodicRegistry.registerSmartDashboard(this);
+	public SmartDashboardAwareRunner() {
+		PeriodicRunner.registerInstance(this);
+		PeriodicRunner.registerSmartDashboard(this);
 	}
 
 	public void registerInstance(SmartDashboardAware instance) {

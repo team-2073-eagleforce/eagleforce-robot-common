@@ -2,7 +2,7 @@ package com.team2073.common.controlloop;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-public class PIDFUtil {
+public class PidfControlLoop {
 	private double p;
 	private double i;
 	private double d;
@@ -33,7 +33,7 @@ public class PIDFUtil {
 	 *            <p>
 	 *            goal is in units of encoder tics if using a talon
 	 */
-	public PIDFUtil(double p, double i, double d, double f, TalonSRX talon, long intervalInMilis, double maxOutput) {
+	public PidfControlLoop(double p, double i, double d, double f, TalonSRX talon, long intervalInMilis, double maxOutput) {
 		this.p = p;
 		this.i = i;
 		this.d = d;
@@ -48,7 +48,7 @@ public class PIDFUtil {
 				while (true) {
 					pidCycle();
 					try {
-						Thread.sleep(PIDFUtil.this.intervalInMilis);
+						Thread.sleep(PidfControlLoop.this.intervalInMilis);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

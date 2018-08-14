@@ -1,9 +1,9 @@
 package com.team2073.common.periodic;
 
-import com.team2073.common.AppConstants;
+import com.team2073.common.CommonConstants;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
-import com.team2073.common.smartdashboard.SmartDashboardAwareRegistry;
+import com.team2073.common.smartdashboard.SmartDashboardAwareRunner;
 import com.team2073.common.util.ExceptionUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,10 +14,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedHashSet;
 
-public class PeriodicRegistry implements SmartDashboardAware {
+public class PeriodicRunner implements SmartDashboardAware {
 	
-	private static PeriodicRegistry singleton = new PeriodicRegistry();
-	private static final Logger logger = LoggerFactory.getLogger(PeriodicRegistry.class);
+	private static PeriodicRunner singleton = new PeriodicRunner();
+	private static final Logger logger = LoggerFactory.getLogger(PeriodicRunner.class);
 	private final LinkedHashSet<PeriodicInstance> instanceList = new LinkedHashSet<>();
 	private Timer innerTimer = new Timer();
 	private Timer outerTimer = new Timer();
@@ -87,7 +87,7 @@ public class PeriodicRegistry implements SmartDashboardAware {
 			innerTimer.stop();
 			
 			double elapsed = innerTimer.get();
-			if(elapsed >= AppConstants.Diagnostics.LONG_ON_PERIODIC_CALL) {
+			if(elapsed >= CommonConstants.Diagnostics.LONG_ON_PERIODIC_CALL) {
 				logger.debug("[{}}] long onPeriodic call on [{}]", elapsed, wrapper.getClass().getSimpleName());
 			}
 			innerTimer.reset();
@@ -116,16 +116,16 @@ public class PeriodicRegistry implements SmartDashboardAware {
 		
 		logger.debug("Periodic loop: Total [{}] Avg [{}] Longest [{}:{}].", fmt(total), fmt(avg), fmt(longestInstance.last), longestInstance.name);
 		
-		if(total >= AppConstants.Diagnostics.LONG_PERIODIC_LOOP) {
+		if(total >= CommonConstants.Diagnostics.LONG_PERIODIC_LOOP) {
 			logger.debug("[{}}] long periodic loop on [{}]", total, instanceList.getClass().getName());
 		}
 	}
 	
-	public static void registerSmartDashboard(SmartDashboardAwareRegistry registry) {
+	public static void registerSmartDashboard(SmartDashboardAwareRunner registry) {
 		singleton.registerSmartDashboardInternal(registry);
 	}
 	
-	public void registerSmartDashboardInternal(SmartDashboardAwareRegistry registry) {
+	public void registerSmartDashboardInternal(SmartDashboardAwareRunner registry) {
 		registry.registerInstance(this);
 	}
 	

@@ -1,7 +1,7 @@
 package com.team2073.common.controller;
 
 import com.team2073.common.trigger.DPadTrigger;
-import com.team2073.common.trigger.TriggerTrigger;
+import com.team2073.common.trigger.ControllerTriggerTrigger;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -33,8 +33,8 @@ public class EagleController {
 		upDPad = new DPadTrigger(controller, 0);
 		rightDPad = new DPadTrigger(controller, 90);
 		downDPad = new DPadTrigger(controller, 180);
-		leftTrigger = new TriggerTrigger(controller, 2);
-		rightTrigger = new TriggerTrigger(controller, 3);
+		leftTrigger = new ControllerTriggerTrigger(controller, 2);
+		rightTrigger = new ControllerTriggerTrigger(controller, 3);
 
 		a = new JoystickButton(controller, 1);
 		b = new JoystickButton(controller, 2);

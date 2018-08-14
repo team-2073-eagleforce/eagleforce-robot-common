@@ -6,7 +6,7 @@ import com.team2073.common.util.TimerUtil;
 
 import java.util.LinkedList;
 
-public class OccasionalLoggingRegistry {
+public class OccasionalLoggingRunner {
     private static LinkedList<OccasionalLoggingAware> instanceList = new LinkedList<>();
     private static TimerUtil timerUtil = new TimerUtil();
 

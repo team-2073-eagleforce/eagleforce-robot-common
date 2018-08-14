@@ -10,9 +10,10 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Preston Briggs
  */
-public class ExceptionUtil {
+public abstract class ExceptionUtil {
 	private static final Logger logger = LoggerFactory.getLogger(ExceptionUtil.class);
 
+	private ExceptionUtil() {}
 
 	// Logging versions
 	// ============================================================

@@ -42,7 +42,7 @@ public class CameraMessageReceiverSerialImpl implements CameraMessageReceiver, S
 		state = State.WAITING;
 	}
 	
-//	public CameraMessageReceiverSerialImpl(SerialPortProvider serialPortProvider, SmartDashboardAwareRegistry smartDashboardAwareRegistry) {
+//	public CameraMessageReceiverSerialImpl(SerialPortProvider serialPortProvider, SmartDashboardAwareRunner smartDashboardAwareRunner) {
 ////		this(CheckedProviderUtils.getOrNull(serialPortProvider));
 //		smartDashboardAwareRegistry.registerInstance(this);
 //	}

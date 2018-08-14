@@ -7,7 +7,7 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 //import com.google.inject.Inject;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
-import com.team2073.common.smartdashboard.SmartDashboardAwareRegistry;
+import com.team2073.common.smartdashboard.SmartDashboardAwareRunner;
 import com.team2073.common.util.TimerUtil;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,8 +48,8 @@ public class EagleSPX extends VictorSPX implements SmartDashboardAware {
 	}
 
 //	@Inject
-	public void registerSmartDashboardAware(SmartDashboardAwareRegistry smartDashboardAwareRegistry) {
-		smartDashboardAwareRegistry.registerInstance(this);
+	public void registerSmartDashboardAware(SmartDashboardAwareRunner smartDashboardAwareRunner) {
+		smartDashboardAwareRunner.registerInstance(this);
 	}
 
 	@Override

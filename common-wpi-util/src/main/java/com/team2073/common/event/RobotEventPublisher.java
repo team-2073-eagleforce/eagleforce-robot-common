@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * @author pbriggs
  */
-public class ListenerRegistry {
+public class RobotEventPublisher {
     private static RobotStateEvent currentEvent;
     private static Map<RobotStateEvent, LinkedList<EventListener>> instancesMap = new HashMap<>();
 
@@ -42,16 +42,16 @@ public class ListenerRegistry {
         }
     }
 
-    public ListenerRegistry() {
+    public RobotEventPublisher() {
         for (RobotStateEvent event : RobotStateEvent.values())
             instancesMap.put(event, new LinkedList<>());
     }
 
     public static void setCurrentEvent(RobotStateEvent currentEvent) {
         if((currentEvent.getEventNumber() & 1) != 0 && currentEvent.getEventNumber() != -1) {
-            ListenerRegistry.currentEvent = currentEvent.getRobotStateEvent(currentEvent.getEventNumber()+1);
+            RobotEventPublisher.currentEvent = currentEvent.getRobotStateEvent(currentEvent.getEventNumber()+1);
         }else {
-            ListenerRegistry.currentEvent = currentEvent;
+            RobotEventPublisher.currentEvent = currentEvent;
         }
     }
 

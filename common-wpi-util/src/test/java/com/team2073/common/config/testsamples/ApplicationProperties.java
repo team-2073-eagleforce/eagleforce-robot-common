@@ -1,10 +1,10 @@
 package com.team2073.common.config.testsamples;
 
-import com.team2073.common.config.Properties;
+import com.team2073.common.config.PropertyContainer;
 
 import javax.validation.constraints.NotNull;
 
-@Properties
+@PropertyContainer
 public class ApplicationProperties {
 
 	@NotNull

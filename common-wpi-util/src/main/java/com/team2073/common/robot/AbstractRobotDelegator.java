@@ -1,10 +1,10 @@
 package com.team2073.common.robot;
 
-import com.team2073.common.AppConstants;
-import com.team2073.common.event.ListenerRegistry;
-import com.team2073.common.event.ListenerRegistry.RobotStateEvent;
-import com.team2073.common.periodic.OccasionalLoggingRegistry;
-import com.team2073.common.periodic.PeriodicRegistry;
+import com.team2073.common.CommonConstants;
+import com.team2073.common.event.RobotEventPublisher;
+import com.team2073.common.event.RobotEventPublisher.RobotStateEvent;
+import com.team2073.common.periodic.OccasionalLoggingRunner;
+import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.util.ExceptionUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -81,7 +81,7 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 		resetLastCheckedTime();
 		logger.info("disabled");
 		ExceptionUtil.suppressVoid(robot::disabledInit, "robot::disabledInit");
-		ListenerRegistry.setCurrentEvent(RobotStateEvent.DISABLED);
+		RobotEventPublisher.setCurrentEvent(RobotStateEvent.DISABLED);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 		currentPeriod = MatchPeriod.AUTONOMOUS;
 		logger.info("autonomous enabled");
 		ExceptionUtil.suppressVoid(robot::autonomousInit, "robot::autonomousInit");
-		ListenerRegistry.setCurrentEvent(RobotStateEvent.AUTONOMOUS_START);
+		RobotEventPublisher.setCurrentEvent(RobotStateEvent.AUTONOMOUS_START);
 	}
 
 	@Override
@@ -97,14 +97,14 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 		currentPeriod = MatchPeriod.TELEOP;
 		logger.info("teleop enabled");
 		ExceptionUtil.suppressVoid(robot::teleopInit, "robot::teleopInit");
-		ListenerRegistry.setCurrentEvent(RobotStateEvent.TELEOP_START);
+		RobotEventPublisher.setCurrentEvent(RobotStateEvent.TELEOP_START);
 	}
 
 	@Override
 	public void testInit() {
 		logger.info("test enabled");
 		ExceptionUtil.suppressVoid(robot::testInit, "robot::testInit");
-		ListenerRegistry.setCurrentEvent(RobotStateEvent.TEST_START);
+		RobotEventPublisher.setCurrentEvent(RobotStateEvent.TEST_START);
 	}
 
 	@Override
@@ -113,36 +113,36 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 		logStartingConfig();
 		ExceptionUtil.suppressVoid(robot::robotPeriodic, "robot::robotPeriodic");
 		// TODO: Test this, merged from driving-practice branch
-		PeriodicRegistry.runPeriodic();
-		// TODO: Have the LoggingRegistry get called by the PeriodicRegistry instead
-		OccasionalLoggingRegistry.startOccasionalLogging();
-		// TODO: Have the ListenerRegistry get called by the PeriodicRegistry instead
- 		ListenerRegistry.setCurrentEvent(RobotStateEvent.PERIODIC);
-		ListenerRegistry.runEventListeners();
+		PeriodicRunner.runPeriodic();
+		// TODO: Have the LoggingRegistry get called by the PeriodicRunner instead
+		OccasionalLoggingRunner.startOccasionalLogging();
+		// TODO: Have the RobotEventPublisher get called by the PeriodicRunner instead
+ 		RobotEventPublisher.setCurrentEvent(RobotStateEvent.PERIODIC);
+		RobotEventPublisher.runEventListeners();
 	}
 
 	@Override
 	public void disabledPeriodic() {
 		ExceptionUtil.suppressVoid(robot::disabledPeriodic, "robot::disabledPeriodic");
-		ListenerRegistry.setCurrentEvent(RobotStateEvent.PERIODIC);
+		RobotEventPublisher.setCurrentEvent(RobotStateEvent.PERIODIC);
 	}
 
 	@Override
 	public void autonomousPeriodic() {
 		ExceptionUtil.suppressVoid(robot::autonomousPeriodic, "robot::autonomousPeriodic");
-		ListenerRegistry.setCurrentEvent(RobotStateEvent.PERIODIC);
+		RobotEventPublisher.setCurrentEvent(RobotStateEvent.PERIODIC);
 	}
 
 	@Override
 	public void teleopPeriodic() {
 		ExceptionUtil.suppressVoid(robot::teleopPeriodic, "robot::teleopPeriodic");
-		ListenerRegistry.setCurrentEvent(RobotStateEvent.PERIODIC);
+		RobotEventPublisher.setCurrentEvent(RobotStateEvent.PERIODIC);
 	}
 
 	@Override
 	public void testPeriodic() {
 		ExceptionUtil.suppressVoid(robot::testPeriodic, "robot::testPeriodic");
-		ListenerRegistry.setCurrentEvent(RobotStateEvent.PERIODIC);
+		RobotEventPublisher.setCurrentEvent(RobotStateEvent.PERIODIC);
 	}
 	
 	private enum DsStatusMessage {
@@ -225,12 +225,12 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 			if(previousVoltageStatus == VoltageStatusMessage.ENTER_BROWNED_OUT) {
 				logger.info("Exiting brown out, Voltage: [{}]", formatter.format(RobotController.getBatteryVoltage()));
 				previousVoltageStatus = VoltageStatusMessage.EXIT_BROWNED_OUT;
-			}else if(RobotController.getBatteryVoltage() < AppConstants.Diagnostics.UNSAFE_BATTERY_VOLTAGE) {
+			}else if(RobotController.getBatteryVoltage() < CommonConstants.Diagnostics.UNSAFE_BATTERY_VOLTAGE) {
 				if(previousVoltageStatus != VoltageStatusMessage.UNSAFE_VOLTAGE) {
 					logger.info("Unsafe battery levels: [{}]", formatter.format(RobotController.getBatteryVoltage()));
 					previousVoltageStatus = VoltageStatusMessage.UNSAFE_VOLTAGE;
 				}
-			} else if(RobotController.getBatteryVoltage() > AppConstants.Diagnostics.UNSAFE_BATTERY_VOLTAGE) {
+			} else if(RobotController.getBatteryVoltage() > CommonConstants.Diagnostics.UNSAFE_BATTERY_VOLTAGE) {
 				if(previousVoltageStatus != VoltageStatusMessage.SAFE_VOLTAGE) {
 					logger.info("Safe battery level: [{}]", formatter.format(RobotController.getBatteryVoltage()));
 					previousVoltageStatus = VoltageStatusMessage.SAFE_VOLTAGE;

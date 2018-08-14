@@ -3,11 +3,11 @@ package com.team2073.common.trigger;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
-public class JoystickPOV extends Trigger {
+public class JoystickPovTrigger extends Trigger {
 	private final Joystick controller;
 	private final int pov;
 
-	public JoystickPOV(Joystick controller, int pov) {
+	public JoystickPovTrigger(Joystick controller, int pov) {
 		this.controller = controller;
 		this.pov = pov;
 	}

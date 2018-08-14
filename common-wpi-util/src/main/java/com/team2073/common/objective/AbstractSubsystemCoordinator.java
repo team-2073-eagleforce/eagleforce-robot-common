@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.team2073.common.objective.Objective.ConflictingStrategy;
 import com.team2073.common.periodic.PeriodicAware;
-import com.team2073.common.periodic.PeriodicRegistry;
+import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.util.LogUtil;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -27,7 +27,7 @@ public abstract class AbstractSubsystemCoordinator implements PeriodicAware {
 
 	public AbstractSubsystemCoordinator() {
 		LogUtil.infoConstruct(getClass(), logger);
-		PeriodicRegistry.registerInstance(this);
+		PeriodicRunner.registerInstance(this);
 	}
 	
 	/**

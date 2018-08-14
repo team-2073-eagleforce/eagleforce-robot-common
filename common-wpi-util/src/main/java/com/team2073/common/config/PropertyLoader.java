@@ -120,7 +120,7 @@ public class PropertyLoader { //} extends AbstractModule {
 	public List<Object> init() {
 
 		Reflections reflection = new Reflections("com.team2073");
-		Set<Class<?>> subTypesOf = reflection.getTypesAnnotatedWith(com.team2073.common.config.Properties.class);
+		Set<Class<?>> subTypesOf = reflection.getTypesAnnotatedWith(PropertyContainer.class);
 		List<Object> configList = new ArrayList<>();
 		for (Class<?> clazz : subTypesOf) {
 			Object load = load(clazz);

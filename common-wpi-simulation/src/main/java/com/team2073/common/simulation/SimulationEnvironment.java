@@ -1,16 +1,16 @@
 package com.team2073.common.simulation;
 
+import com.team2073.common.simulation.models.Mechanism;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.team2073.common.simulation.models.Mechanism;
-
-public class SimulationEnviornment {
+public class SimulationEnvironment {
 	private List<Mechanism> mechanismList = new ArrayList<>();
 	
-	public SimulationEnviornment() {
+	public SimulationEnvironment() {
 		new Timer().scheduleAtFixedRate(new UpdateMechanisms(), 0, 1);
 	}
 	

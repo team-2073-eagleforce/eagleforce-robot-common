@@ -1,6 +1,6 @@
 package com.team2073.common;
 
-public abstract class AppConstants {
+public abstract class CommonConstants {
 	public abstract class Controllers {
 		public abstract class PowerStick {
 			public abstract class ButtonPorts {

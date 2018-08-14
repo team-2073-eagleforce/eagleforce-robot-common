@@ -9,6 +9,8 @@ public abstract class LogUtil {
 	private static final String INITIALIZE_MSG = "Initializing [{}].";
 	private static final String INITIALIZE_END_MSG = "Initializing [{}] complete.";
 
+	private LogUtil() {}
+
 	// Constructor start
 	// ================================================================================
 	/** Logs the start of object construction. Ex message: "Constructing [SomeClassName]." <p>

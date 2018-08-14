@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 //import com.google.inject.Inject;
 import com.team2073.common.periodic.PeriodicAware;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
-import com.team2073.common.smartdashboard.SmartDashboardAwareRegistry;
+import com.team2073.common.smartdashboard.SmartDashboardAwareRunner;
 import com.team2073.common.util.TimerUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.slf4j.Logger;
@@ -86,8 +86,8 @@ public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardA
 
     // TODO: Can't use inject in common project
 //    @Inject
-    public void registerSmartDashboardAware(SmartDashboardAwareRegistry smartDashboardAwareRegistry) {
-        smartDashboardAwareRegistry.registerInstance(this);
+    public void registerSmartDashboardAware(SmartDashboardAwareRunner smartDashboardAwareRunner) {
+        smartDashboardAwareRunner.registerInstance(this);
     }
 
     @Override

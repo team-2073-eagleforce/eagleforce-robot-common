@@ -2,7 +2,7 @@ package com.team2073.common.speedcontroller;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2073.common.periodic.PeriodicAware;
-import com.team2073.common.periodic.PeriodicRegistry;
+import com.team2073.common.periodic.PeriodicRunner;
 
 // TODO: This should be a wrapper around a BaseMotorController. See LogWrappingCommand for example
 public class CircuitBreaker implements PeriodicAware {
@@ -31,7 +31,7 @@ public class CircuitBreaker implements PeriodicAware {
 		this.maxAllowableCurrent = maxAllowableAmperage;
 		this.allowableTimeAtStall = allowableTimeAtStallInMillis;
 		this.talon = talon;
-		PeriodicRegistry.registerInstance(this);
+		PeriodicRunner.registerInstance(this);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class CircuitBreaker implements PeriodicAware {
 		this.maxAllowableCurrent = maxAllowableAmperage;
 		this.allowableTimeAtStall = allowableTimeAtStallInMillis;
 		this.talon = talon;
-		PeriodicRegistry.registerInstance(this);
+		PeriodicRunner.registerInstance(this);
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class CircuitBreaker implements PeriodicAware {
 		this.minTravel = minTravel;
 		this.maxTravel = maxTravel;
 		this.talon = talon;
-		PeriodicRegistry.registerInstance(this);
+		PeriodicRunner.registerInstance(this);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class CircuitBreaker implements PeriodicAware {
 		this.minTravel = minTravel;
 		this.maxTravel = maxTravel;
 		this.talon = talon;
-		PeriodicRegistry.registerInstance(this);
+		PeriodicRunner.registerInstance(this);
 	}
 
 	@Override

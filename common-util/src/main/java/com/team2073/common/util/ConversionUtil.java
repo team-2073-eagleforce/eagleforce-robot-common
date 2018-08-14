@@ -2,6 +2,8 @@ package com.team2073.common.util;
 
 public abstract class ConversionUtil {
 
+	private ConversionUtil() {}
+
 	public static String humanReadableByteCount(long bytes) {
 		return humanReadableByteCount(bytes, true);
 	}

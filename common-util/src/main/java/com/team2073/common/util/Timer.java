@@ -1,6 +1,6 @@
 package com.team2073.common.util;
 
-public class TimerUtil {
+public class Timer {
 
 	private long startTime;
 	private TimerState state = TimerState.UNINITIALIZED;
