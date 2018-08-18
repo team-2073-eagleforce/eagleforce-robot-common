@@ -14,23 +14,23 @@ import edu.wpi.first.wpilibj.DigitalInput;
 /**
  * Manages monitoring a zero sensor for zeroing 'events' and setting a corresponding motor controller's position.
  * Records the beginning and end of a zeroing 'session' and sets the zero using the middle of the range.
- * 
+ *
  * <h3>Use</h3>
  * At the bare minimum this requires a {@link DigitalInput} to monitor and a {@link BaseMotorController}
  * to update on zero events (required by all constructors).
  * <p>
  * After that just call {@link #onPeriodic()} once per periodic iteration and zeroing will be 100% managed for you.
- * 
+ *
  * <h3>Configuration</h3>
  * <p>
  * A few of the parameters callers may customize are:
  * <p>
  * <ul>
- * 	<li>Zero position offset: {@link #setOffset(int)}</li>
+ * 	<li>Zero position offset: {@link #setOffsetInTics(int)} (int)}</li>
  * 	<li>pidIdx of the motor controller: {@link #setPidIdx(int)} </li>
  * 	<li>Inverted: {@link #setInverted(boolean)}</li>
  * </ul>
- * 
+ *
  * <h3>Improved Logging</h3>
  * <p>
  * For more readable logging use:
@@ -40,12 +40,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
  * 	<li>{@link #setPositionUnit(String)}</li>
  * 	<li>{@link #setName(String)}</li>
  * </ul>
- * 
+ *
  * <h3>Zeroing Event Listening</h3>
  * <p>
  * If access to the zero events is required (to add some additional logic upon zero), use {@link #setListener(ZeroEventListener)}.
  * <p>
- * 
+ *
  *
  * @author Preston Briggs
  */
@@ -63,20 +63,21 @@ public class Zeroer implements PeriodicAware {
 	/** The number of times we have started and finished a zero, causing a zero event. */
 	private long zeroTriggerCount;
 	private long lastZeroTimestamp;
-	
+
 	// IO
 	private final DigitalInput zeroSensor;
 	private final BaseMotorController motor;
-	
+
 	// Optional
 	private ZeroEventListener listener = new NoOpZeroEventListener();
-	
+
 	// Customizable config
 	private int offset;
 	private int pidIdx = 0;
 	private boolean inverted;
 	private ZeroingStrategy strategy = ZeroingStrategy.EVERY_TIME;
-	
+	private ZeroingLocation zeroLocation = ZeroingLocation.MIDPOINT;
+
 	// Optional logging config
 	private String name = "UNNAMED";
 	private String logPrefix;
@@ -92,14 +93,14 @@ public class Zeroer implements PeriodicAware {
 
 	public Zeroer(DigitalInput zeroSensor, BaseMotorController motor,
 			int offset, int pidIdx, boolean inverted) {
-		
+
 		this.zeroSensor = zeroSensor;
 		this.motor = motor;
 		this.offset = offset;
 		this.pidIdx = pidIdx;
 		this.inverted = inverted;
 	}
-	
+
 	public Zeroer(DigitalInput zeroSensor, BaseMotorController motor, PositionConverter converter, String name) {
 		this.zeroSensor = zeroSensor;
 		this.motor = motor;
@@ -118,7 +119,7 @@ public class Zeroer implements PeriodicAware {
 		this.pidIdx = pidIdx;
 		this.inverted = inverted;
 	}
-	
+
 	public Zeroer(DigitalInput zeroSensor, BaseMotorController motor, PositionConverter converter, int offset,
 			int pidIdx, boolean inverted, String name) {
 
@@ -131,10 +132,10 @@ public class Zeroer implements PeriodicAware {
 		setName(name);
 		setPositionUnit(converter.positionalUnit());
 	}
-	
+
 	public Zeroer(DigitalInput zeroSensor, BaseMotorController motor, PositionConverter converter,
 			ZeroEventListener listener, int offset, int pidIdx, boolean inverted, String name) {
-		
+
 		this.zeroSensor = zeroSensor;
 		this.motor = motor;
 		setConverter(converter);
@@ -145,11 +146,11 @@ public class Zeroer implements PeriodicAware {
 		setName(name);
 		setPositionUnit(converter.positionalUnit());
 	}
-	
+
 
 	// Public methods
 	// ============================================================
-	public boolean atZero() {
+	public boolean atSensor() {
 		return inverted ? zeroSensor.get() : !zeroSensor.get();
 	}
 
@@ -167,7 +168,7 @@ public class Zeroer implements PeriodicAware {
 		debug("Zeroing");
 		motor.setSelectedSensorPosition(zeroTicsValue, pidIdx, 0);
 	}
-	
+
 	/** Used to get the current position once per periodic loop to cache the value.
 	 * Subclasses may override this to provide custom sensor readings however they
 	 * should not use this to get the current position. Use {@link #currentTicsCached()}
@@ -175,37 +176,37 @@ public class Zeroer implements PeriodicAware {
 	protected int currentTics() {
 		return motor.getSelectedSensorPosition(pidIdx);
 	}
-	
+
 	protected final int currentTicsCached() {
 		if(positionCache == null)
 			positionCache = currentTics();
-		
+
 		return positionCache;
 	}
-	
+
 
 	// Private methods
 	// ============================================================
 	private void checkForNewZero() {
-		
-		if(!zeroing && atZero()) {
+
+		if(!zeroing && atSensor()) {
 			// Detected a zero for the first time
 			debug("Made contact with zero");
 			zeroing = true;
 			onZeroStart();
-			
-		} else if(zeroing && atZero()) {
+
+		} else if(zeroing && atSensor()) {
 			// We have already detected this zero, ignore
 			return;
-			
-		} else if(zeroing && !atZero()) {
+
+		} else if(zeroing && !atSensor()) {
 			// We lost contact with the zero, end this 'contact session'
 			debug("Lost contact with zero");
 			zeroing = false;
 			onZeroEnd();
 			zeroEncoder();
 			return;
-			
+
 		} else {
 			trace("Waiting for zero");
 		}
@@ -214,10 +215,45 @@ public class Zeroer implements PeriodicAware {
 		zeroStartPos = currentTicsCached();
 		zeroStartCount++;
 	}
-	
+
 	private void onZeroEnd() {
 		// TODO: Check if we went all the way through the zero or came back out the same side before finishing
 		zeroEndPos = currentTicsCached();
+	}
+
+	private int findZeroLocation(){
+		int zero;
+		int currTics = currentTicsCached();
+		switch(zeroLocation){
+			case MIDPOINT:
+				int middleZero = (zeroStartPos + zeroEndPos) / 2;
+				zero = currTics - middleZero;
+				break;
+			case RISING_EDGE:
+				zero = currTics - zeroStartPos;
+				break;
+			case FALLING_EDGE:
+				zero = currTics - zeroEndPos;
+				break;
+			case TOP_SIDE:
+				if (zeroEndPos - zeroStartPos > 0 )
+					zero = currTics - zeroEndPos;
+				else if(zeroEndPos - zeroStartPos < 0)
+					zero = currTics - zeroStartPos;
+				else
+					zero = zeroStartPos;
+			case BOTTOM_SIDE:
+				if (zeroStartPos - zeroEndPos < 0 )
+					zero = currTics - zeroStartPos;
+				else if(zeroStartPos - zeroEndPos > 0)
+					zero = currTics - zeroEndPos;
+				else
+					zero = zeroStartPos;
+			default:
+				zero = zeroStartPos;
+
+		}
+		return zero;
 	}
 
 	private void zeroEncoder() {
@@ -226,17 +262,30 @@ public class Zeroer implements PeriodicAware {
 			reset();
 			return;
 		}
-		
-		if(strategy == ZeroingStrategy.INITIAL_ONLY && zeroTriggerCount > 0) {
-			debug("Zeroing strategy set to [{}]. Ignoring zero.", strategy);
-			reset();
-			return;
+
+		int zeroPosition;
+
+		switch (strategy){
+			case INITIAL_ONLY:
+				if(zeroTriggerCount > 0) {
+					debug("Zeroing strategy set to [{}]. Ignoring zero.", strategy);
+					reset();
+					return;
+				}
+				zeroPosition = findZeroLocation();
+				break;
+			case EVERY_TIME:
+				zeroPosition = findZeroLocation();
+				break;
+			default:
+				zeroPosition = findZeroLocation();
+
 		}
-		
+
 		int currTics = currentTicsCached();
-		int middleZero = (zeroStartPos + zeroEndPos) / 2;
-		int zero = currTics - middleZero;
-		int zeroWithOffset = offset + zero;
+		int zeroWithOffset = offset + zeroPosition;
+
+
 		String offsetMsg;
 		String zeroMsg;
 		String zeroWithOffsetMsg;
@@ -244,59 +293,57 @@ public class Zeroer implements PeriodicAware {
 		String startMsg;
 		String middleMsg;
 		String endMsg;
-		
+
 		// TODO: Change this to use a method that converts into loggable String
 		// If converter available, this method will convert and append positionUnit.
 		// If not, just append tics and return
 		// ...or maybe just setup a default converter that converts to tics (aka does nothing)
 		if(converter != null) {
 			offsetMsg = converter.asPosition(offset) + "";
-			zeroMsg = converter.asPosition(zero) + positionUnit;
+			zeroMsg = converter.asPosition(zeroPosition) + positionUnit;
 			zeroWithOffsetMsg = converter.asPosition(zeroWithOffset) + "";
 			currPosMsg = converter.asPosition(currTics) + positionUnit;
 			startMsg = converter.asPosition(zeroStartPos) + "";
-			middleMsg = converter.asPosition(middleZero) + "";
 			endMsg = converter.asPosition(zeroEndPos) + "";
 		} else {
 			offsetMsg = offset + "";
-			zeroMsg = zero + " tics";
+			zeroMsg = zeroPosition + " tics";
 			zeroWithOffsetMsg = zeroWithOffset + "";
 			currPosMsg = currTics + " tics";
 			startMsg = zeroStartPos + "";
-			middleMsg = middleZero + "";
 			endMsg = zeroEndPos + "";
 		}
 
 		if(logger.isTraceEnabled()) {
-			logger.debug("Zeroing [{}] encoder to [{}]. Current pos: [{}]. Zero band: [{} -> {} <- {}]. Offest calc: [{} + {} = {}]"
-					, name, zeroWithOffsetMsg, currPosMsg, startMsg, middleMsg, endMsg, zeroMsg, offsetMsg, zeroWithOffsetMsg);
+			logger.debug("Zeroing [{}] encoder to [{}]. Current pos: [{}]. Zero band: [{} -- {}]. Offest calc: [{} + {} = {}]"
+					, name, zeroWithOffsetMsg, currPosMsg, startMsg, endMsg, zeroMsg, offsetMsg, zeroWithOffsetMsg);
 		} else {
 			logger.debug("Zeroing [{}] encoder to [{}]. Current pos: [{}]."
 					, name, zeroWithOffsetMsg, currPosMsg);
 		}
-		
+
 		// TODO: Pass some info to the listener? Such as current pos, start/end zero, etc.
 		listener.onBeforeZero();
 		zeroEncoder(zeroWithOffset);
 		zeroTriggerCount++;
 		reset();
 	}
-	
+
 	private void clearCache() {
 		positionCache = null;
 	}
-	
+
 	private void reset() {
 		zeroEndPos = null;
 		zeroStartPos = null;
 	}
-	
+
 	private double currentPosition() {
 		if(converter == null) {
 			throw new IllegalArgumentException("[" + name + "] zeroer: Cannot get current position when converter is null. "
 					+ "Use currentTics or supply a PositionConverter implementation.");
 		}
-		
+
 		return converter.asPosition(currentTicsCached());
 	}
 
@@ -306,37 +353,37 @@ public class Zeroer implements PeriodicAware {
 	private void debug(String msg) {
 		logger.debug("[{}] zeroer: {}. {}", name, msg, positionMsg());
 	}
-	
+
 	private void trace(String msg) {
 		if(!logger.isTraceEnabled())
 			return;
 
 		logger.trace("[{}] zeroer: {}. {}", name, msg, positionMsg());
 	}
-	
+
 	private void warn(String msg, Object... args) {
 		logger.warn(logPrefix + msg, args);
 	}
-	
+
 	private void info(String msg, Object... args) {
 		logger.info(logPrefix + msg, args);
 	}
-	
+
 	private void debug(String msg, Object... args) {
 		logger.debug(logPrefix + msg, args);
 	}
-	
+
 	private void trace(String msg, Object... args) {
 		logger.trace(logPrefix + msg, args);
 	}
-	
+
 	private String positionMsg() {
 		// Prefer logging position, fallback to logging tics
 		if(converter != null)
 			return "Position: [" + currentPosition() + "].";
 		else
 			return "Tics: [" + currentTicsCached() + "].";
-		
+
 	}
 
 
@@ -371,16 +418,16 @@ public class Zeroer implements PeriodicAware {
 		if(converter == null)
 			throw new IllegalArgumentException("Cannot set offset in positional value when converter has not been set. "
 					+ "Either set a converter or set the offset in tics.");
-		
+
 		this.offset = converter.asTics(offsetUnits);
 		return this;
 	}
 
 	/**
 	 * The {@link #pidIdx} to use when reading/setting sensor position.
-	 * <p> 
+	 * <p>
 	 * 0 for Primary closed-loop. 1 for cascaded closed-loop. See Phoenix-Documentation for how to interpret.
-	 * 
+	 *
 	 * @see BaseMotorController#getSelectedSensorPosition(int)
 	 * @see BaseMotorController#setSelectedSensorPosition(int, int, int)
 	 */
@@ -396,12 +443,12 @@ public class Zeroer implements PeriodicAware {
 		return this;
 	}
 	/**
-	 * Optional setting. 
+	 * Optional setting.
 	 * <p>
 	 * Set a converter to convert between tics and position (degrees, inches, etc.). Only used
 	 * to produce more readable logs. Recommended to also set {@link Zeroer#setName(String)} and
 	 * {@link Zeroer#setPositionUnit(String)} if using this.
-	 * 
+	 *
 	 * @see Zeroer#setPositionUnit(String)
 	 * @see Zeroer#setName(String)
 	 */
@@ -412,16 +459,16 @@ public class Zeroer implements PeriodicAware {
 		PositionConverter.assertConversions(converter);
 		return this;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Optional setting. 
+	 * Optional setting.
 	 * <p>
 	 * Used for logging. Do not include "Zero" or "Zeroer", that is included in the log messages already.
-	 * 
+	 *
 	 * @see Zeroer#setConverter(PositionConverter)
 	 * @see Zeroer#setPositionUnit(String)
 	 * @param name The name to give this {@link Zeroer}
@@ -434,11 +481,11 @@ public class Zeroer implements PeriodicAware {
 	}
 
 	/**
-	 * Optional setting. 
+	 * Optional setting.
 	 * <p>
 	 * Set the unit of measurement for position (degrees, inches, cm, etc.).
 	 * Used for logging.
-	 * 
+	 *
 	 * @see Zeroer#setConverter(PositionConverter)
 	 * @see Zeroer#setName(String)
 	 */
@@ -455,33 +502,53 @@ public class Zeroer implements PeriodicAware {
 	/** @see ZeroingStrategy */
 	public void setStrategy(ZeroingStrategy strategy) {
 		this.strategy = strategy;
-		
-		if(strategy == ZeroingStrategy.ERROR_CORRECTION_ONLY)
-			throw new IllegalArgumentException(ZeroingStrategy.ERROR_CORRECTION_ONLY + " not implemented yet.");
+
+	}
+
+	public void setZeroLocation(ZeroingLocation zeroLocation) {
+		this.zeroLocation = zeroLocation;
 	}
 
 
 	// Inner classes
 	public enum ZeroingStrategy {
-		
+
 		/** Zero sensor every time a zero is observed. */
 		EVERY_TIME,
-		
+
 		/** Zero sensor on the first zero observed only. Ignore all subsequent zero events. */
 		INITIAL_ONLY,
-		
-		/** Zero sensor when the expected position and actual position are not within a given variance. */
-		ERROR_CORRECTION_ONLY
-		
+
 	}
-	
+
+	/**
+	 * The edge of the sensor where you would like to zero to, midpoint is default, {@link ZeroingStrategy} should be used to specify when to zero
+	 */
+	public enum ZeroingLocation {
+
+		/** Zero sensor to the center of the mechanism*/
+		MIDPOINT,
+
+		/** Zero sensor to the first edge of the sensor found */
+		RISING_EDGE,
+
+		/** Zero sensor to the last edge of the sensor found */
+		FALLING_EDGE,
+
+		/** Zero sensor to the top edge of the sensor (top is relative to the sensor readings, where top is the point that is hit first when traveling in a negative direction)*/
+		TOP_SIDE,
+
+		/** Zero sensor to the bottom edge of the sensor (bottom is relative to the sensor readings, where "bottom" is the point that is hit first when traveling in a positive direction)*/
+		BOTTOM_SIDE
+	}
+
 	// ============================================================
 	private static class NoOpZeroEventListener implements ZeroEventListener {
 
 		@Override
 		public void onBeforeZero() {
 		}
-		
+
 	}
 
 }
