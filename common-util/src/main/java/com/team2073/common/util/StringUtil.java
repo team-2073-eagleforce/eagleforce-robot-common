@@ -2,8 +2,6 @@ package com.team2073.common.util;
 
 public abstract class StringUtil {
 
-	private StringUtil() { }
-
 	public static boolean isEmpty(String str) {
 		if(str == null || str.isEmpty())
 			return true;

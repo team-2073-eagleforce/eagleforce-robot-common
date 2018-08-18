@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 public abstract class ExceptionUtil {
 	private static final Logger logger = LoggerFactory.getLogger(ExceptionUtil.class);
 
-	private ExceptionUtil() {}
-
 	// Logging versions
 	// ============================================================
 	/**
@@ -32,7 +30,7 @@ public abstract class ExceptionUtil {
 		return suppressVoid(action, methodName, null);
 	}
 
-	/** An alternative to {@link #suppressVoid(Callable, String)} that allows specifying an additional message to log. */
+	/** An alternative to {@link #suppressVoid(Runnable, String)} that allows specifying an additional message to log. */
 	public static boolean suppressVoid(Runnable action, String methodName, String additionalMessage) {
 		return suppressVoidInternal(action, methodName, additionalMessage, true);
 	}

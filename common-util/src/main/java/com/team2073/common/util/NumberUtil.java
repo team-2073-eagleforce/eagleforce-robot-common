@@ -4,8 +4,6 @@ import java.text.DecimalFormat;
 
 public abstract class NumberUtil {
 
-	private NumberUtil() {}
-
 	private static DecimalFormat defaultFormat = new DecimalFormat("#.00000");
 
 	public static String trim(double num) {
