@@ -1,14 +1,15 @@
 package com.team2073.common.periodic;
 
+
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.util.ExceptionUtil;
-import com.team2073.common.util.TimerUtil;
+import com.team2073.common.util.Timer;
 
 import java.util.LinkedList;
 
 public class OccasionalLoggingRunner {
     private static LinkedList<OccasionalLoggingAware> instanceList = new LinkedList<>();
-    private static TimerUtil timerUtil = new TimerUtil();
+    private static Timer timerUtil = new Timer();
 
     public static void registerInstance(OccasionalLoggingAware instance) {
         Assert.assertNotNull(instance, "instance");

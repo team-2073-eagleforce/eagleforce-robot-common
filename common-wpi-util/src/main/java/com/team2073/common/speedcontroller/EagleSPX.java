@@ -1,5 +1,6 @@
 package com.team2073.common.speedcontroller;
 
+import com.team2073.common.util.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +9,6 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 //import com.google.inject.Inject;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.smartdashboard.SmartDashboardAwareRunner;
-import com.team2073.common.util.TimerUtil;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -17,7 +17,7 @@ public class EagleSPX extends VictorSPX implements SmartDashboardAware {
 	private String name;
 	private boolean isTestingEnabled = false;
 	private double safePercentage = .5;
-	private TimerUtil timer = new TimerUtil();
+	private Timer timer = new Timer();
 
 	private double lastPercentOutForward = 0;
 	private double lastPercentOutReverse = 0;

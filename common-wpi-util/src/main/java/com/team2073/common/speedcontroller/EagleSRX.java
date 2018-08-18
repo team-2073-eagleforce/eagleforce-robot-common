@@ -1,6 +1,5 @@
 package com.team2073.common.speedcontroller;
 
-import java.util.Timer;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -8,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import com.team2073.common.periodic.PeriodicAware;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.smartdashboard.SmartDashboardAwareRunner;
-import com.team2073.common.util.TimerUtil;
+import com.team2073.common.util.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,7 @@ public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardA
     private String name;
     private boolean isTestingEnabled = false;
     private double safePercentage = .5;
-	private TimerUtil timer = new TimerUtil();
+	private Timer timer = new Timer();
 
     private double lastPercentOutForward = 0;
     private double lastPercentOutReverse = 0;
