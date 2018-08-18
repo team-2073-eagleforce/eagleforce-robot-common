@@ -236,22 +236,15 @@ public class Zeroer implements PeriodicAware {
 				zero = currTics - zeroEndPos;
 				break;
 			case TOP_SIDE:
-				if (zeroEndPos - zeroStartPos > 0 )
-					zero = currTics - zeroEndPos;
-				else if(zeroEndPos - zeroStartPos < 0)
-					zero = currTics - zeroStartPos;
-				else
-					zero = zeroStartPos;
+				int max = Math.max(zeroStartPos, zeroEndPos);
+				zero = currTics - max;
+				break;
 			case BOTTOM_SIDE:
-				if (zeroStartPos - zeroEndPos < 0 )
-					zero = currTics - zeroStartPos;
-				else if(zeroStartPos - zeroEndPos > 0)
-					zero = currTics - zeroEndPos;
-				else
-					zero = zeroStartPos;
+				int min = Math.min(zeroStartPos, zeroEndPos);
+				zero = currTics - min;
+				break;
 			default:
-				zero = zeroStartPos;
-
+				throw new IllegalStateException("state [" + zeroLocation + "] has not been implemented.");
 		}
 		return zero;
 	}
@@ -263,8 +256,6 @@ public class Zeroer implements PeriodicAware {
 			return;
 		}
 
-		int zeroPosition;
-
 		switch (strategy){
 			case INITIAL_ONLY:
 				if(zeroTriggerCount > 0) {
@@ -272,15 +263,14 @@ public class Zeroer implements PeriodicAware {
 					reset();
 					return;
 				}
-				zeroPosition = findZeroLocation();
 				break;
 			case EVERY_TIME:
-				zeroPosition = findZeroLocation();
 				break;
 			default:
-				zeroPosition = findZeroLocation();
-
+				throw new IllegalStateException("strategy [" + strategy + "] has not been implemented.");
 		}
+		int zeroPosition = findZeroLocation();
+
 
 		int currTics = currentTicsCached();
 		int zeroWithOffset = offset + zeroPosition;
@@ -501,11 +491,13 @@ public class Zeroer implements PeriodicAware {
 
 	/** @see ZeroingStrategy */
 	public void setStrategy(ZeroingStrategy strategy) {
+		Assert.assertNotNull(strategy, "strategy");
 		this.strategy = strategy;
 
 	}
 
 	public void setZeroLocation(ZeroingLocation zeroLocation) {
+		Assert.assertNotNull(zeroLocation, "zeroLocation");
 		this.zeroLocation = zeroLocation;
 	}
 
@@ -535,10 +527,12 @@ public class Zeroer implements PeriodicAware {
 		/** Zero sensor to the last edge of the sensor found */
 		FALLING_EDGE,
 
-		/** Zero sensor to the top edge of the sensor (top is relative to the sensor readings, where top is the point that is hit first when traveling in a negative direction)*/
+		/**
+		 * Zero sensor to the top edge of the sensor (top is relative to the sensor readings, where top is the point that is hit first when traveling in a negative direction). This won't change depending on direction of the motion.
+		 */
 		TOP_SIDE,
 
-		/** Zero sensor to the bottom edge of the sensor (bottom is relative to the sensor readings, where "bottom" is the point that is hit first when traveling in a positive direction)*/
+		/** Zero sensor to the bottom edge of the sensor (bottom is relative to the sensor readings, where "bottom" is the point that is hit first when traveling in a positive direction). This won't change depending on direction of the motion.*/
 		BOTTOM_SIDE
 	}
 
