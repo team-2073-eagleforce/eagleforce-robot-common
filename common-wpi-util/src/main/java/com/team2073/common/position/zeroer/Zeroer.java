@@ -256,22 +256,13 @@ public class Zeroer implements PeriodicAware {
 			return;
 		}
 
-		switch (strategy){
-			case INITIAL_ONLY:
-				if(zeroTriggerCount > 0) {
-					debug("Zeroing strategy set to [{}]. Ignoring zero.", strategy);
-					reset();
-					return;
-				}
-				break;
-			case EVERY_TIME:
-				break;
-			default:
-				throw new IllegalStateException("strategy [" + strategy + "] has not been implemented.");
+		if (strategy == ZeroingStrategy.INITIAL_ONLY && zeroTriggerCount > 0) {
+			debug("Zeroing strategy set to [{}]. Ignoring zero.", strategy);
+			reset();
+			return;
 		}
+
 		int zeroPosition = findZeroLocation();
-
-
 		int currTics = currentTicsCached();
 		int zeroWithOffset = offset + zeroPosition;
 
@@ -514,7 +505,8 @@ public class Zeroer implements PeriodicAware {
 	}
 
 	/**
-	 * The edge of the sensor where you would like to zero to, midpoint is default, {@link ZeroingStrategy} should be used to specify when to zero
+	 * The edge of the sensor where you would like to zero to, midpoint is default,
+	 * {@link ZeroingStrategy} should be used to specify when to zero
 	 */
 	public enum ZeroingLocation {
 
@@ -527,12 +519,17 @@ public class Zeroer implements PeriodicAware {
 		/** Zero sensor to the last edge of the sensor found */
 		FALLING_EDGE,
 
-		/**
-		 * Zero sensor to the top edge of the sensor (top is relative to the sensor readings, where top is the point that is hit first when traveling in a negative direction). This won't change depending on direction of the motion.
+		/** Zero sensor to the top edge of the sensor (top is relative to the sensor readings,
+		 *  where top is the point that is hit first when traveling in a negative direction).
+		 *  This won't change depending on direction of the motion.
 		 */
 		TOP_SIDE,
 
-		/** Zero sensor to the bottom edge of the sensor (bottom is relative to the sensor readings, where "bottom" is the point that is hit first when traveling in a positive direction). This won't change depending on direction of the motion.*/
+		/**
+		 * Zero sensor to the bottom edge of the sensor (bottom is relative to the sensor readings,
+		 * where "bottom" is the point that is hit first when traveling in a positive direction).
+		 * This won't change depending on direction of the motion.
+		 */
 		BOTTOM_SIDE
 	}
 
