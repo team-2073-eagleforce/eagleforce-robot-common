@@ -23,13 +23,15 @@
         </compilerArguments>
       </configuration>
     </facet>
+    <facet type="FRC_FACET" name="FRC">
+      <configuration />
+    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/../../../common-wpi-util/out/production/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../common-wpi-util/src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../../common-wpi-util/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../common-wpi-util/src/main/resources" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

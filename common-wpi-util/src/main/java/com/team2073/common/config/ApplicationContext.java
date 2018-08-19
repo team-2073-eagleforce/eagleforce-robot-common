@@ -15,4 +15,8 @@ public class ApplicationContext {
 	public List<String> getActiveProfiles() {
 		return activeProfiles;
 	}
+
+	public void setActiveProfiles(List<String> activeProfiles) {
+		this.activeProfiles = activeProfiles;
+	}
 }

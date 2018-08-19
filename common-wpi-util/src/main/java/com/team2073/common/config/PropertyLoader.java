@@ -2,6 +2,7 @@ package com.team2073.common.config;
 
 //import com.google.inject.AbstractModule;
 //import org.reflections.Reflections;
+
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,23 +11,134 @@ import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 public class PropertyLoader { //} extends AbstractModule {
+	//	TODO: realoading values (oof) (talking to taters on thursday)
 
+
+	private static final String DEFAULT_REMOTE_FILE_NAME = "eagleforce-properties";
+	/**
+	 * A property file will look something like [ mainbot-application.properties ] and
+	 * the corresponding class would have a name of [ ApplicationProperties ] and have the @{@link PropertyContainer} annotation.
+	 */
+	private static final String PROPERTY_CLASS_SUFFIX = "Properties";
+	/**
+	 * A property file will look something like [ mainbot-application.properties ] and
+	 * the corresponding class would have a name of [ ApplicationProperties ] and have the @{@link PropertyContainer} annotation.
+	 */
+	private static final String PROPERTY_FILE_SUFFIX = ".properties";
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	//	@Inject TODO: add inject later
 	private ApplicationContext ctx = new ApplicationContext();
+	private File primaryPropertyDirectory;
+	private ClassLoader secondaryPropertyDirectory = Thread.currentThread().getContextClassLoader();
+
+
+	public PropertyLoader() {
+		primaryPropertyDirectory = new File(System.getProperty("user.home"));
+		primaryPropertyDirectory = new File(primaryPropertyDirectory, DEFAULT_REMOTE_FILE_NAME);
+
+	}
+
+	public void setPrimaryPropertyDirectory(File primaryPropertyDirectory) {
+		this.primaryPropertyDirectory = primaryPropertyDirectory;
+	}
+
+	public void setSecondaryPropertyDirectory(ClassLoader secondaryPropertyDirectory) {
+		this.secondaryPropertyDirectory = secondaryPropertyDirectory;
+	}
+
+	public void loadProperties(Object propertyObject) {
+		Class clazz = propertyObject.getClass();
+		List<Properties> props = findProperties(resolvePropertyFileName(clazz, null));
+
+		Field[] fields = clazz.getDeclaredFields();
+		for (Field field : fields) {
+			field.setAccessible(true);
+			String property = null;
+			for (Properties prop : props) {
+				property = prop.getProperty(field.getName());
+				if (property != null) {
+					break;
+				}
+				logger.debug("Could not find property [" + prop + "]");
+			}
+			if (property == null) {
+				logger.debug("All checks of the property were null");
+			}
+
+			try {
+				if (property == null) {
+					if (field.get(propertyObject) == null && field.isAnnotationPresent(NotNull.class)) {
+						throw new IllegalStateException("This property is required and cannot be null: ["
+								+ field.getName() + "] in class " + clazz.getSimpleName());
+					}
+				}
+			} catch (IllegalArgumentException e) {
+				logger.warn("The specified instance is the wrong type for the given field", e);
+			} catch (IllegalAccessException e) {
+				logger.warn("This should never happen", e);
+			}
+			Class<?> declaringClass = field.getType();
+			if (property != null) {
+				try {
+					if (declaringClass.isAssignableFrom(Double.class)) {
+						field.set(propertyObject, Double.parseDouble(property));
+					} else if (declaringClass.isAssignableFrom(Integer.class)) {
+						field.set(propertyObject, Integer.parseInt(property));
+					} else if (declaringClass.isAssignableFrom(String.class)) {
+						field.set(propertyObject, property);
+					} else if (declaringClass.isAssignableFrom(Boolean.class)) {
+						field.set(propertyObject, Boolean.parseBoolean(property));
+					}
+				} catch (NumberFormatException e) {
+					logger.warn("The provided String does not contain a double", e);
+				} catch (IllegalArgumentException e) {
+					logger.warn("The provided instance is the wrong type for the declared field", e);
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+
+			field.setAccessible(false);
+		}
+	}
+
+	public void loadProperties(List<Object> propertyObjectList) {
+		for (Object it : propertyObjectList) {
+			loadProperties(it);
+		}
+	}
+
+	public void loadProperties(List<Object> propertyObjectList, List<String> activeProfiles) {
+		ctx.setActiveProfiles(activeProfiles);
+		for (Object it : propertyObjectList) {
+			loadProperties(it);
+		}
+	}
+
+	protected String resolvePropertyFileName(Class<?> propertyClass, Optional<String> profile) {
+		String fileName = null;
+		String className = propertyClass.getSimpleName();
+		if (className.endsWith(PROPERTY_CLASS_SUFFIX)) {
+			fileName = className.replace(PROPERTY_CLASS_SUFFIX, "");
+			fileName = fileName.toLowerCase();
+			if (profile.isPresent()) {
+				fileName = profile.get().concat("-" + fileName);
+			}
+			fileName = fileName.concat(PROPERTY_FILE_SUFFIX);
+		} else {
+			logger.warn("Class [" + className + "] Name does not end with [{}]", PROPERTY_CLASS_SUFFIX);
+		}
+		return fileName;
+	}
+
 
 	public List<Properties> findProperties(String fileName) {
 		List<Properties> propList = new ArrayList<>();
-		File externalPropFile = new File(System.getProperty("user.home"));
 //		externalPropFile = new File(externalPropFile, "lvuser"); <-- this is the user, should only be needed if not logged in as lvuser
-		externalPropFile = new File(externalPropFile, "eagleforce-properties");
-		externalPropFile = new File(externalPropFile, fileName);
+		File externalPropFile = new File(primaryPropertyDirectory, fileName);
 		FileInputStream propsInput;
 		Properties props = null;
 
@@ -64,7 +176,7 @@ public class PropertyLoader { //} extends AbstractModule {
 		for (String prefix : ctx.getActiveProfiles()) {
 			String ctxFileName = prefix.concat("-" + fileName);
 			props = loadPropertiesFromPath(
-					Thread.currentThread().getContextClassLoader().getResourceAsStream(ctxFileName));
+					secondaryPropertyDirectory.getResourceAsStream(ctxFileName));
 
 			if (props != null) {
 				propList.add(props);
@@ -76,7 +188,7 @@ public class PropertyLoader { //} extends AbstractModule {
 
 //		4th priority, non ctx local files. Non robot specific in src.
 		props = loadPropertiesFromPath(
-				Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName));
+				secondaryPropertyDirectory.getResourceAsStream(fileName));
 		if (props != null) {
 			propList.add(props);
 		}
@@ -99,38 +211,18 @@ public class PropertyLoader { //} extends AbstractModule {
 		return props;
 	}
 
-	private String classNameToFileName(String className) {
-		String fileName = null;
-		if (className.endsWith("Properties")) {
-			fileName = className.replace("Properties", "");
-			fileName = fileName.toLowerCase();
-			fileName = fileName.concat(".properties");
-		} else {
-			logger.warn("Class [" + className + "] Name does not end with [Properties]  ");
-		}
-		return fileName;
-	}
-
-//	TODO: *check*  Look in a file based on the class name (convert class name to file name) (strip property names, think of how the logging was set up)
-//	TODO: *check* Create hierarchy of property values (external, internal properties, internal defaults, fail if @NotNull) 
-//	TODO: *check* Find all classes that implement configuration and pass them into this method
-//	TODO: realoading values (oof) (talking to taters on thursday)
-//	TODO: *check* allow different profiles (application-test.properties vs mainbot vs practicebot)
-
-	public List<Object> init() {
-
+	/**
+	 * Finds every class annotated with @{@link PropertyContainer} and loads properties of a created instance (i think this is useless plz lmk if it is / isnt)
+	 */
+	public void init() {
 		Reflections reflection = new Reflections("com.team2073");
 		Set<Class<?>> subTypesOf = reflection.getTypesAnnotatedWith(PropertyContainer.class);
-		List<Object> configList = new ArrayList<>();
 		for (Class<?> clazz : subTypesOf) {
-			Object load = load(clazz);
-			configList.add(load);
+			loadProperties(classToInstance(clazz));
 		}
-		return configList;
 	}
 
-	public Object load(Class<?> clazz) {
-		List<Properties> props = findProperties(classNameToFileName(clazz.getSimpleName()));
+	private Object classToInstance(Class<?> clazz) {
 		Object instance = null;
 		Constructor validConstructor = null;
 		try {
@@ -148,56 +240,6 @@ public class PropertyLoader { //} extends AbstractModule {
 			logger.warn("Cannot create new instance of this class, [" + clazz.getName() + "] ", e);
 		} catch (IllegalAccessException e) {
 			logger.warn("Cannot create new instance of this class, [" + clazz.getName() + "] ", e);
-		}
-		Field[] fields = clazz.getDeclaredFields();
-		for (Field field : fields) {
-			field.setAccessible(true);
-			String property = null;
-			for (Properties prop : props) {
-				property = prop.getProperty(field.getName());
-				if (property != null) {
-					break;
-				}
-				logger.debug("Could not find property [" + prop + "]");
-			}
-			if (property == null) {
-				logger.debug("All checks of the property were null");
-			}
-
-			try {
-				if (property == null) {
-					if (field.get(instance) == null && field.isAnnotationPresent(NotNull.class)) {
-						throw new IllegalStateException("This property is required and cannot be null: ["
-								+ field.getName() + "] in class " + clazz.getSimpleName());
-					}
-				}
-			} catch (IllegalArgumentException e) {
-				logger.warn("The specified instance is the wrong type for the given field", e);
-			} catch (IllegalAccessException e) {
-				logger.warn("This should never happen", e);
-			}
-			Class<?> declaringClass = field.getType();
-			if (property != null) {
-				try {
-					if (declaringClass.isAssignableFrom(Double.class)) {
-						field.set(instance, Double.parseDouble(property));
-					} else if (declaringClass.isAssignableFrom(Integer.class)) {
-						field.set(instance, Integer.parseInt(property));
-					} else if (declaringClass.isAssignableFrom(String.class)) {
-						field.set(instance, property);
-					} else if (declaringClass.isAssignableFrom(Boolean.class)) {
-						field.set(instance, Boolean.parseBoolean(property));
-					}
-				} catch (NumberFormatException e) {
-					logger.warn("The provided String does not contain a double", e);
-				} catch (IllegalArgumentException e) {
-					logger.warn("The provided instance is the wrong type for the declared field", e);
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-			}
-
-			field.setAccessible(false);
 		}
 
 		return instance;
