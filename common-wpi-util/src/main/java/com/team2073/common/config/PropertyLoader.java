@@ -138,17 +138,21 @@ public class PropertyLoader { //} extends AbstractModule {
 	public List<Properties> findProperties(String fileName) {
 		List<Properties> propList = new ArrayList<>();
 //		externalPropFile = new File(externalPropFile, "lvuser"); <-- this is the user, should only be needed if not logged in as lvuser
-		File externalPropFile = new File(primaryPropertyDirectory, fileName);
+		final File externalPropFile = new File(primaryPropertyDirectory, fileName);
+
 		FileInputStream propsInput;
 		Properties props = null;
 
 
+//		TODO: please check this, im not sure if im accessing the remote files correctly
+
 //		1st priority, ctx remote files. Robot specific on RIO.
 		for (String prefix : ctx.getActiveProfiles()) {
 			String ctxFileName = prefix.concat("-" + fileName);
+			File externalCtxPropFile = new File(primaryPropertyDirectory, ctxFileName);
 			FileInputStream ctxPropsInput;
 			try {
-				ctxPropsInput = new FileInputStream(ctxFileName);
+				ctxPropsInput = new FileInputStream(externalCtxPropFile);
 				props = loadPropertiesFromPath(ctxPropsInput);
 			} catch (FileNotFoundException e) {
 				logger.debug("Could not find the file");
