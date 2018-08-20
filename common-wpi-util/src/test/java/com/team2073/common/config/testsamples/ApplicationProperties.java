@@ -11,7 +11,7 @@ public class ApplicationProperties {
 	private Double startingPosition = 39.2;
 	
 	@NotNull
-	private String name = "";
+	private String name = "HUMMINGBIRD";
 
 	public Double getStartingPosition() {
 		return startingPosition;

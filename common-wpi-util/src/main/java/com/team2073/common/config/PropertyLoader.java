@@ -11,7 +11,10 @@ import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 
 public class PropertyLoader { //} extends AbstractModule {
 	//	TODO: realoading values (oof) (talking to taters on thursday)
@@ -51,7 +54,7 @@ public class PropertyLoader { //} extends AbstractModule {
 
 	public void loadProperties(Object propertyObject) {
 		Class clazz = propertyObject.getClass();
-		List<Properties> props = findProperties(resolvePropertyFileName(clazz, null));
+		List<Properties> props = findProperties(resolvePropertyFileName(clazz));
 
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
@@ -62,10 +65,9 @@ public class PropertyLoader { //} extends AbstractModule {
 				if (property != null) {
 					break;
 				}
-				logger.debug("Could not find property [" + prop + "]");
 			}
 			if (property == null) {
-				logger.debug("All checks of the property were null");
+				logger.error("All checks of the property for field [{}] in class [{}] were null", field.getName(), clazz.getSimpleName());
 			}
 
 			try {
@@ -118,15 +120,12 @@ public class PropertyLoader { //} extends AbstractModule {
 		}
 	}
 
-	protected String resolvePropertyFileName(Class<?> propertyClass, Optional<String> profile) {
+	protected String resolvePropertyFileName(Class<?> propertyClass) {
 		String fileName = null;
 		String className = propertyClass.getSimpleName();
 		if (className.endsWith(PROPERTY_CLASS_SUFFIX)) {
 			fileName = className.replace(PROPERTY_CLASS_SUFFIX, "");
 			fileName = fileName.toLowerCase();
-			if (profile.isPresent()) {
-				fileName = profile.get().concat("-" + fileName);
-			}
 			fileName = fileName.concat(PROPERTY_FILE_SUFFIX);
 		} else {
 			logger.warn("Class [" + className + "] Name does not end with [{}]", PROPERTY_CLASS_SUFFIX);
@@ -141,8 +140,7 @@ public class PropertyLoader { //} extends AbstractModule {
 		final File externalPropFile = new File(primaryPropertyDirectory, fileName);
 
 		FileInputStream propsInput;
-		Properties props = null;
-
+		Properties props = new Properties();
 
 //		TODO: please check this, im not sure if im accessing the remote files correctly
 
@@ -155,9 +153,9 @@ public class PropertyLoader { //} extends AbstractModule {
 				ctxPropsInput = new FileInputStream(externalCtxPropFile);
 				props = loadPropertiesFromPath(ctxPropsInput);
 			} catch (FileNotFoundException e) {
-				logger.debug("Could not find the file");
+				logger.debug("Could not find ctx file on RIO");
 			}
-			if (props != null)
+			if (!props.isEmpty())
 				propList.add(props);
 		}
 
@@ -170,7 +168,7 @@ public class PropertyLoader { //} extends AbstractModule {
 		} catch (FileNotFoundException e) {
 			logger.debug("Could not find the file on rio");
 		}
-		if (props != null) {
+		if (!props.isEmpty()) {
 			propList.add(props);
 		}
 
@@ -179,10 +177,14 @@ public class PropertyLoader { //} extends AbstractModule {
 //		3rd priority, ctx local files. Robot specific in src.
 		for (String prefix : ctx.getActiveProfiles()) {
 			String ctxFileName = prefix.concat("-" + fileName);
-			props = loadPropertiesFromPath(
-					secondaryPropertyDirectory.getResourceAsStream(ctxFileName));
+			try {
+				props = loadPropertiesFromPath(
+						secondaryPropertyDirectory.getResourceAsStream(ctxFileName));
+			} catch (Exception e) {
+				logger.debug("couldnt find ctx file in local dir [{}]", ctxFileName);
+			}
 
-			if (props != null) {
+			if (!props.isEmpty()) {
 				propList.add(props);
 			}
 
@@ -191,9 +193,13 @@ public class PropertyLoader { //} extends AbstractModule {
 //		===============================================================
 
 //		4th priority, non ctx local files. Non robot specific in src.
-		props = loadPropertiesFromPath(
-				secondaryPropertyDirectory.getResourceAsStream(fileName));
-		if (props != null) {
+		try {
+			props = loadPropertiesFromPath(
+					secondaryPropertyDirectory.getResourceAsStream(fileName));
+		} catch (Exception e) {
+			logger.debug("couldnt find file in local dir [{}]", fileName);
+		}
+		if (!props.isEmpty()) {
 			propList.add(props);
 		}
 
@@ -209,7 +215,7 @@ public class PropertyLoader { //} extends AbstractModule {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
+			return new Properties();
 		}
 
 		return props;
