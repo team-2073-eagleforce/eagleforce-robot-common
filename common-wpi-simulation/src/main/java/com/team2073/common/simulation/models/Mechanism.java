@@ -1,10 +1,9 @@
 package com.team2073.common.simulation.models;
 
-public interface Mechanism {
+import com.team2073.common.simulation.env.SimulationCycleComponent;
 
-	void periodic(int intervalInMs);
-	
+public interface Mechanism extends SimulationCycleComponent {
+
 	double position();
-	
 
 }

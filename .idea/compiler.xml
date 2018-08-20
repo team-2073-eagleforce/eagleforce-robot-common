@@ -4,8 +4,6 @@
     <bytecodeTargetLevel>
       <module name="common-guice_main" target="1.8" />
       <module name="common-guice_test" target="1.8" />
-      <module name="common-robot_main" target="1.8" />
-      <module name="common-robot_test" target="1.8" />
       <module name="common-util_main" target="1.8" />
       <module name="common-util_test" target="1.8" />
       <module name="common-wpi-simulation_main" target="1.8" />

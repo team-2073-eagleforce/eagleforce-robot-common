@@ -17,4 +17,6 @@ dependencies {
     compile 'javax.validation:validation-api:2.0.0.Final'
     compile 'org.reflections:reflections:0.9.11'
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
+
+    testCompile group: 'com.team2073', name: 'common-wpi-simulation', version: '0.1.0-SNAPSHOT'
 }

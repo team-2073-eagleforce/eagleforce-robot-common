@@ -2,6 +2,7 @@ package com.team2073.common.simulation.models;
 
 
 import com.team2073.common.simulation.SimulationConstants.Motors;
+import com.team2073.common.simulation.env.SimulationEnvironment;
 
 public class LinearMotionMechanism implements Mechanism{
 	
@@ -26,7 +27,7 @@ public class LinearMotionMechanism implements Mechanism{
 		LinearMotionMechanism LMM = new LinearMotionMechanism(25., MotorType.CIM, 2, 30, .855);
 		for(int i = 0; LMM.getCurrentMechanismPosition() < 40; i++) {
 			LMM.updateVoltage(12);
-			LMM.periodic(1);
+//			LMM.cycle(1);
 			if(i%100 == 0)
 				System.out.println(i+":" + "\tPosition: " + LMM.getCurrentMechanismPosition() + " \t Velocity: " + LMM.getCurrentMechanismVelocity() + "\t Acceleration: " + LMM.getCurrentMechanismAcceleration());
 		}
@@ -89,9 +90,9 @@ public class LinearMotionMechanism implements Mechanism{
 	}
 	
 	@Override
-	public void periodic(int intervalInMs) {
-		calculateDistance(intervalInMs);
-		calculateMechanismVelocity(intervalInMs, currentVoltage);
+	public void cycle(SimulationEnvironment env) {
+		calculateDistance(env.getIntervalMs());
+		calculateMechanismVelocity(env.getIntervalMs(), currentVoltage);
 //		calculateMechanismAcceleration(currentVoltage);
 //		calculateNewMotorVelocity(currentVoltage, intervalInMs);
 	}
