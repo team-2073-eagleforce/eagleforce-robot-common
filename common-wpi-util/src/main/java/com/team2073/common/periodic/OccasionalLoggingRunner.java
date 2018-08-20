@@ -9,17 +9,17 @@ import java.util.LinkedList;
 
 public class OccasionalLoggingRunner {
     private static LinkedList<OccasionalLoggingAware> instanceList = new LinkedList<>();
-    private static Timer timerUtil = new Timer();
+    private static Timer timer = new Timer();
 
     public static void registerInstance(OccasionalLoggingAware instance) {
         Assert.assertNotNull(instance, "instance");
         instanceList.add(instance);
-        timerUtil.start();
+        timer.start();
     }
 
     public static void startOccasionalLogging() {
-        if(timerUtil.hasWaited(5000)){
-            timerUtil.start();
+        if(timer.hasWaited(5000)){
+            timer.start();
             instanceList.forEach(instance ->
                     ExceptionUtil.suppressVoid(instance::occasionalLogging, instance.getClass().getSimpleName() + " ::occasionalLogging"));
         }
