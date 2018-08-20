@@ -1,7 +1,7 @@
 package com.team2073.common.simulation.env;
 
 import com.team2073.common.periodic.PeriodicAware;
-import com.team2073.common.simulation.models.SimulationCycleComponent;
+import com.team2073.common.simulation.model.SimulationCycleComponent;
 import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
 import org.junit.jupiter.api.Test;
 

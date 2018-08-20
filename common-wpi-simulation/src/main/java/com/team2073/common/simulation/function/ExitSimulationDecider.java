@@ -1,4 +1,4 @@
-package com.team2073.common.simulation.util.function;
+package com.team2073.common.simulation.function;
 
 import com.team2073.common.simulation.env.SimulationEnvironment;
 

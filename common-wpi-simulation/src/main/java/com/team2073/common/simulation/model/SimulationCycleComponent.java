@@ -1,4 +1,4 @@
-package com.team2073.common.simulation.models;
+package com.team2073.common.simulation.model;
 
 import com.team2073.common.simulation.env.SimulationEnvironment;
 

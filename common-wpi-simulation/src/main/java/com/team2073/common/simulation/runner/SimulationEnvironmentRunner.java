@@ -2,11 +2,11 @@ package com.team2073.common.simulation.runner;
 
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.periodic.PeriodicAware;
-import com.team2073.common.simulation.models.SimulationCycleComponent;
+import com.team2073.common.simulation.model.SimulationCycleComponent;
 import com.team2073.common.simulation.env.SimulationCycleEnvironment;
 import com.team2073.common.simulation.env.SimulationEnvironment;
-import com.team2073.common.simulation.util.function.ExitSimulationDecider;
-import com.team2073.common.simulation.util.function.OnSimulationCompleteHandler;
+import com.team2073.common.simulation.function.ExitSimulationDecider;
+import com.team2073.common.simulation.function.OnSimulationCompleteHandler;
 import com.team2073.common.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
