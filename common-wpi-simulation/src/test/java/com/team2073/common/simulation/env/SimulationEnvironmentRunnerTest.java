@@ -1,6 +1,8 @@
 package com.team2073.common.simulation.env;
 
 import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.simulation.models.SimulationCycleComponent;
+import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +27,7 @@ class SimulationEnvironmentRunnerTest {
                 });
     }
 
-    private static class BasicCycleComponent implements SimulationCycleComponent{
+    private static class BasicCycleComponent implements SimulationCycleComponent {
 
         int cycles = 0;
 

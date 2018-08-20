@@ -4,7 +4,7 @@ package com.team2073.common.simulation.models;
 import com.team2073.common.simulation.SimulationConstants.Motors;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
-public class LinearMotionMechanism implements Mechanism{
+public class LinearMotionMechanism implements SimulationMechanism {
 	
 	private final double gearRatio;
 	private final MotorType motor;

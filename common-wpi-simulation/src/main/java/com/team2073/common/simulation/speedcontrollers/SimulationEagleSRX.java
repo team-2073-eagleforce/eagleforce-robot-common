@@ -4,14 +4,14 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.team2073.common.simulation.models.Mechanism;
+import com.team2073.common.simulation.models.SimulationMechanism;
 
 public class SimulationEagleSRX extends TalonSRX {
 	private double outputVoltage;
 	private double maxOutputForward;
 	private double maxOutputReverse;
 	private double encoderTicsPerUnitOfMechanism;
-	private Mechanism mechanism;
+	private SimulationMechanism mechanism;
 	private String name;
 	private PID pid = new PID();
 
@@ -42,7 +42,7 @@ public class SimulationEagleSRX extends TalonSRX {
 	 *            super if the method is handled elsewhere. </post>
 	 */
 	
-	public SimulationEagleSRX(int deviceNumber, String name, Mechanism mechanism, int encoderTicsPerUnitOfMechanism) {
+	public SimulationEagleSRX(int deviceNumber, String name, SimulationMechanism mechanism, int encoderTicsPerUnitOfMechanism) {
 			super(deviceNumber);
 			this.mechanism = mechanism;
 			this.name = name;

@@ -1,7 +1,8 @@
-package com.team2073.common.simulation.env;
+package com.team2073.common.simulation.runner;
 
 import com.team2073.common.periodic.PeriodicAware;
 import com.team2073.common.robot.DetailedRobotState.RobotMode;
+import com.team2073.common.simulation.env.SimulationRobot;
 import com.team2073.common.util.EnumUtil;
 
 /**

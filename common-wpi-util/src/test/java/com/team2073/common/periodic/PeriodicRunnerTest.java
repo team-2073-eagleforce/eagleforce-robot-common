@@ -1,6 +1,6 @@
 package com.team2073.common.periodic;
 
-import com.team2073.common.simulation.env.SimulationEnvironmentRunner;
+import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,6 @@
-package com.team2073.common.simulation.env;
+package com.team2073.common.simulation.models;
+
+import com.team2073.common.simulation.env.SimulationEnvironment;
 
 /**
  * @author pbriggs

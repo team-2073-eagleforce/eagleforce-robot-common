@@ -4,7 +4,7 @@ package com.team2073.common.simulation.models;
 import com.team2073.common.simulation.SimulationConstants.Motors;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
-public class ArmMechanism implements Mechanism{
+public class ArmMechanism implements SimulationMechanism {
 	
 	private final double gearRatio;
 	private final MotorType motor;
