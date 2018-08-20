@@ -1,9 +1,9 @@
 package com.team2073.common.util;
 
-import java.util.concurrent.Callable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.Callable;
 
 /**
  * A set of utilities for handling exceptions.
@@ -150,5 +150,11 @@ public abstract class ExceptionUtil {
 			return defaultValue;
 		}
 	}
+
+    // Other methods
+    // ============================================================
+    public static void illegalState(String msg) {
+        throw new IllegalStateException(msg);
+    }
 
 }

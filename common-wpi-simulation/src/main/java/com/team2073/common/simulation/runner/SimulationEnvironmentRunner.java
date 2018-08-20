@@ -194,7 +194,12 @@ public class SimulationEnvironmentRunner {
         @Override
         public void run() {
             int currRobotPeriodic = simEnv.incrementAndGetPeriodic();
-            log.trace("Running periodic iteration [{}].", currRobotPeriodic);
+
+            if (currRobotPeriodic % 10 == 0 && !log.isTraceEnabled())
+                log.debug("Running periodic iteration [{}].", currRobotPeriodic);
+            else
+                log.trace("Running periodic iteration [{}].", currRobotPeriodic);
+
             periodicList.forEach(e -> e.onPeriodic());
             log.trace("Finished running periodic iteration [{}].", currRobotPeriodic);
         }
