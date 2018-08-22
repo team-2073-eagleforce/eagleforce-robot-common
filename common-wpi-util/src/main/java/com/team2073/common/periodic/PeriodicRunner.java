@@ -4,7 +4,6 @@ import com.team2073.common.CommonConstants;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.smartdashboard.SmartDashboardAwareRunner;
-import com.team2073.common.util.ExceptionUtil;
 import com.team2073.common.util.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.slf4j.Logger;
@@ -14,30 +13,33 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedHashSet;
 
+
 public class PeriodicRunner implements SmartDashboardAware, PeriodicAware {
-	
-	private static PeriodicRunner singleton = new PeriodicRunner();
+
 	private static final Logger logger = LoggerFactory.getLogger(PeriodicRunner.class);
+	private static PeriodicRunner singleton = new PeriodicRunner();
+
 	private final LinkedHashSet<PeriodicInstance> instanceList = new LinkedHashSet<>();
-	private Timer innerTimer = new Timer();
-	private Timer outerTimer = new Timer();
+	private Timer instanceLoopTimer = new Timer();
+	private Timer fullLoopTimer = new Timer();
 	private Timer overallTimer = new Timer();
 	private static NumberFormat formatter = new DecimalFormat("#0.00000");     
 	
-	private double overallTotal;
-	
-	private double currCount = 0;
-	private double currTotal = 0;
-	private double currAvg = 0;
-	private double currLongest = 0;
-	private PeriodicInstance currLongestInstance;
-	
-	private double runningCount = 0;
-	private double runningTotal = 0;
-	private double runningAvg = 0;
-	private double runningLongest = 0;
-	private PeriodicInstance runningLongestInstance;
-	
+	/** One 'count' of this loop history represents one full periodic cycle of ALL PeriodicInstances.
+	 * This history object exists the life the robot
+	 * (it's 'longest' cycle refers to the longest of all periodic cycles). */
+	private final InstanceAwareDurationHistory fullLoopHistory = new InstanceAwareDurationHistory();
+
+	/** One 'count' of this loop history represents one cycle of ONE PeriodicInstance.
+	 * This history object exists the life the robot
+	 * (it's 'longest' cycle refers to the longest of all periodic cycles). */
+	private final InstanceAwareDurationHistory instanceLoopHistory = new InstanceAwareDurationHistory();
+
+	/** One 'count' of this loop history represents one cycle of ONE PeriodicInstance.
+	 * This history object only exists for one full periodic iteration
+	 * (it's 'longest' cycle refers to the longest of the current periodic cycle). */
+	private InstanceAwareDurationHistory currInstanceLoopHistory;
+
 	public static void registerInstance(PeriodicAware instance) {
 		Assert.assertNotNull(instance, "instance");
 		registerInstance(instance, instance.getClass().getSimpleName());
@@ -63,70 +65,45 @@ public class PeriodicRunner implements SmartDashboardAware, PeriodicAware {
 	@Override
 	public void onPeriodic() {
 		overallTimer.stop();
+		logger.trace("Running periodic loop...");
 
-		logger.trace("Starting periodic.");
 		overallTimer.start();
-
 		onPeriodicInternal();
-
 		overallTimer.stop();
 
-		overallTotal = overallTimer.getElapsedTime();
-
-		// TODO: Sometimes this is 3.0 when the inner loop is 0.0. See if this is a formatting or a performance issue.
-		logger.trace("Completed periodic [{}].", fmt(overallTotal));
+		logger.trace("Running periodic loop complete. Total duration: [{}]", overallTimer.getElapsedTime());
 	}
 
 	public void onPeriodicInternal() {
-		int count = 0;
-		double total = 0;
-		double avg = 0;
-		PeriodicInstance longestInstance = null;
-		
-		currCount++;
-		
-		outerTimer.start();
+		currInstanceLoopHistory = new InstanceAwareDurationHistory();
+		fullLoopTimer.start();
+
 		for (PeriodicInstance wrapper : instanceList) {
 			PeriodicAware instance = wrapper.instance;
-			count++;
-			runningCount++;
+			instanceLoopTimer.start();
+//			ExceptionUtil.suppressVoid(instance::onPeriodic, wrapper.name + " ::onPeriodic");
+			instance.onPeriodic();
+			instanceLoopTimer.stop();
 			
-			innerTimer.start();
-			ExceptionUtil.suppressVoid(instance::onPeriodic, wrapper.name + " ::onPeriodic");
-			innerTimer.stop();
-			
-			double elapsed = innerTimer.getElapsedTime();
+			long elapsed = instanceLoopTimer.getElapsedTime();
 			if(elapsed >= CommonConstants.Diagnostics.LONG_ON_PERIODIC_CALL) {
-				logger.debug("[{}] long onPeriodic call on [{}]", elapsed, wrapper.getClass().getSimpleName());
+				logger.trace("Long onPeriodic call of [{}] ms from [{}]", elapsed, wrapper.getClass().getSimpleName());
 			}
-			innerTimer.stop();
-			wrapper.update(elapsed);
-			
-			if(longestInstance == null || elapsed > longestInstance.last) {
-				longestInstance = wrapper;
-			}
-			
-			total += elapsed;
-			runningTotal += elapsed;
-		}
-		outerTimer.stop();
 
-		if(runningLongestInstance == null || longestInstance.last > runningLongest) {
-			runningLongest = longestInstance.last;
-			runningLongestInstance = longestInstance;
+			wrapper.update(elapsed);
+			instanceLoopHistory.update(elapsed, wrapper);
+			currInstanceLoopHistory.update(elapsed, wrapper);
 		}
+		fullLoopTimer.stop();
+		fullLoopHistory.update(fullLoopTimer.getElapsedTime(), currInstanceLoopHistory.getLongestInstance());
+
+		logger.trace("Periodic loop: Total: [{}] ms. Avg: [{}] ms. Longest: [{}]: ms. From: [{}].",
+				currInstanceLoopHistory.getTotal(), fmt(currInstanceLoopHistory.getAverage()),
+				currInstanceLoopHistory.getLongest(), currInstanceLoopHistory.getLongestInstance().name);
 		
-		currLongest = total;
-		currTotal += total;
-		currLongestInstance = longestInstance;
-		avg = total / count;
-		currAvg = currTotal / currCount;
-		runningAvg = currAvg / count;
-		
-		logger.trace("Periodic loop: Total [{}] Avg [{}] Longest [{}:{}].", fmt(total), fmt(avg), fmt(longestInstance.last), longestInstance.name);
-		
-		if(total >= CommonConstants.Diagnostics.LONG_PERIODIC_LOOP) {
-			logger.debug("[{}] long periodic loop.", total);
+		if(currInstanceLoopHistory.getTotal() >= CommonConstants.Diagnostics.LONG_PERIODIC_LOOP) {
+			logger.trace("Long periodic loop of [{}] ms. Number of instances looped [{}].",
+					currInstanceLoopHistory.getTotal(), instanceList.size());
 		}
 	}
 	
@@ -140,25 +117,24 @@ public class PeriodicRunner implements SmartDashboardAware, PeriodicAware {
 	
 	@Override
 	public void updateSmartDashboard() {
-		// TODO Auto-generated method stub
-		SmartDashboard.putNumber("periodic.overall.total", fmt(overallTotal));
+		SmartDashboard.putNumber("periodic.overall.total", fullLoopHistory.getTotal());
 		
-		SmartDashboard.putNumber("periodic.curr.count", fmt(currCount));
-		SmartDashboard.putNumber("periodic.curr.total", fmt(currTotal));
-		SmartDashboard.putNumber("periodic.curr.avg", fmt(currAvg));
-		if(currLongestInstance != null) {
-			SmartDashboard.putNumber("periodic.curr.longest-instance.longest", fmt(currLongest));
-			SmartDashboard.putString("periodic.curr.longest-instance.name", currLongestInstance.name);
-			SmartDashboard.putNumber("periodic.curr.longest-instance.avg", fmt(currLongestInstance.average));
+		SmartDashboard.putNumber("periodic.curr.count", fullLoopHistory.getCount());
+		SmartDashboard.putNumber("periodic.curr.total", fullLoopHistory.getTotal());
+		SmartDashboard.putNumber("periodic.curr.avg", fullLoopHistory.getAverage());
+		if(fullLoopHistory.getLongestInstance() != null) {
+			SmartDashboard.putNumber("periodic.curr.longest-instance.longest", fullLoopHistory.getLongest());
+			SmartDashboard.putString("periodic.curr.longest-instance.name", fullLoopHistory.getLongestInstance().name);
+			SmartDashboard.putNumber("periodic.curr.longest-instance.avg", fullLoopHistory.getLongestInstance().getAverage());
 		}
 
-		SmartDashboard.putNumber("periodic.history.count", fmt(runningCount));
-		SmartDashboard.putNumber("periodic.history.total", fmt(runningTotal));
-		SmartDashboard.putNumber("periodic.history.avg", fmt(runningAvg));
-		if(runningLongestInstance != null) {
-			SmartDashboard.putNumber("periodic.history.longest-instance.longest", fmt(runningLongest));
-			SmartDashboard.putString("periodic.history.longest-instance.name", runningLongestInstance.name);
-			SmartDashboard.putNumber("periodic.history.longest-instance.avg", fmt(runningLongestInstance.average));
+		SmartDashboard.putNumber("periodic.history.count", instanceLoopHistory.getCount());
+		SmartDashboard.putNumber("periodic.history.total", instanceLoopHistory.getTotal());
+		SmartDashboard.putNumber("periodic.history.avg", instanceLoopHistory.getAverage());
+		if(instanceLoopHistory.getLongestInstance() != null) {
+			SmartDashboard.putNumber("periodic.history.longest-instance.longest", instanceLoopHistory.getLongest());
+			SmartDashboard.putString("periodic.history.longest-instance.name", instanceLoopHistory.getLongestInstance().name);
+			SmartDashboard.putNumber("periodic.history.longest-instance.avg", instanceLoopHistory.getLongestInstance().getAverage());
 		}
 	}
 
@@ -166,31 +142,89 @@ public class PeriodicRunner implements SmartDashboardAware, PeriodicAware {
 	public void readSmartDashboard() {
 	}
 
+	/** @see #fullLoopHistory */
+	public InstanceAwareDurationHistory getFullLoopHistory() {
+		return fullLoopHistory;
+	}
+
+	/** @see #instanceLoopHistory */
+	public InstanceAwareDurationHistory getInstanceLoopHistory() {
+		return instanceLoopHistory;
+	}
+
+	/** @see #currInstanceLoopHistory */
+	public InstanceAwareDurationHistory getCurrInstanceLoopHistory() {
+		return currInstanceLoopHistory;
+	}
+
 	public static PeriodicRunner getInstance() {
 		return singleton;
 	}
 
-	private static class PeriodicInstance {
+	public static class PeriodicInstance {
 		private PeriodicAware instance;
+		private DurationHistory history = new DurationHistory();
 		private String name;
-		
-		private double total;
-		private double longest;
-		private double last;
-		private double count;
-		private double average;
-		
+
 		public PeriodicInstance(PeriodicAware instance, String name) {
 			this.instance = instance;
 			this.name = name;
 		}
 
-		public void update(double time) {
-			total += time;
-			longest = time > longest ? time : longest;
-			last = time;
+		public void update(long time) {
+			history.update(time);
+		}
+
+
+		public double getAverage() {
+			return history.getAverage();
+		}
+
+	}
+
+	public static class DurationHistory {
+		protected long total;
+		protected long longest;
+		protected long count;
+		protected double average;
+
+		public void update(long elapsed) {
+			total += elapsed;
+			longest = elapsed > longest ? elapsed : longest;
 			count++;
-			average = total / count;
+			average = (double) total / count;
+		}
+
+		public long getTotal() {
+			return total;
+		}
+
+		public long getLongest() {
+			return longest;
+		}
+
+		public long getCount() {
+			return count;
+		}
+
+		public double getAverage() {
+			return average;
+		}
+	}
+
+	public static class InstanceAwareDurationHistory extends DurationHistory {
+
+		protected PeriodicInstance longestInstance;
+
+		public void update(long elapsed, PeriodicInstance instance) {
+			Assert.assertNotNull(instance, "instance");
+			if (longest <= 0 || elapsed > longest)
+				longestInstance = instance;
+			update(elapsed);
+		}
+
+		public PeriodicInstance getLongestInstance() {
+			return longestInstance;
 		}
 	}
 }
