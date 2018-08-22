@@ -1,9 +1,10 @@
-package com.team2073.common.simulation.models;
+package com.team2073.common.simulation.model;
 
 
 import com.team2073.common.simulation.SimulationConstants.Motors;
+import com.team2073.common.simulation.env.SimulationEnvironment;
 
-public class LinearMotionMechanism implements Mechanism{
+public class ArmMechanism implements SimulationMechanism {
 	
 	private final double gearRatio;
 	private final MotorType motor;
@@ -11,7 +12,7 @@ public class LinearMotionMechanism implements Mechanism{
 	private double massOnSystem;
 	private double velocityConstant; 
 	private double torqueConstant;
-	private double pullyRadius;
+	private double lengthOfArm;
 	private double motorResitance;
 	private double currentVoltage = 0;
 	private double currentMechanismPosition = 0;
@@ -23,17 +24,17 @@ public class LinearMotionMechanism implements Mechanism{
 	}
 	
 	public static void main(String args[]) {
-		LinearMotionMechanism LMM = new LinearMotionMechanism(25., MotorType.CIM, 2, 30, .855);
-		for(int i = 0; LMM.getCurrentMechanismPosition() < 40; i++) {
+		ArmMechanism LMM = new ArmMechanism(55, MotorType.MINI_CIM, 2, 15, 13);
+		for(int i = 0; LMM.getCurrentMechanismPosition() < .25; i++) {
 			LMM.updateVoltage(12);
-			LMM.periodic(1);
-			if(i%100 == 0)
+//			LMM.cycle(1);
+			if(i%25 == 0)
 				System.out.println(i+":" + "\tPosition: " + LMM.getCurrentMechanismPosition() + " \t Velocity: " + LMM.getCurrentMechanismVelocity() + "\t Acceleration: " + LMM.getCurrentMechanismAcceleration());
 		}
 	}
 	
 	/**
-	 * For Systems like elevators =)
+	 * For Arm Systems with most of the weight at the end of the arm
 	 *
 	 * Units are in terms of RPM, Inches, and Pounds
 	 * 
@@ -47,12 +48,12 @@ public class LinearMotionMechanism implements Mechanism{
 	 * @param massOnSystem
 	 * How much weight are we pulling up. (Probably want to overestimate this a bit)
 	 */
-	public LinearMotionMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double pulleyRadius) {
+	public ArmMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double lengthOfArm) {
 		this.gearRatio = gearRatio;
 		this.motor = motor;
 		this.motorCount = motorCount;
 		this.massOnSystem = massOnSystem;
-		this.pullyRadius = pulleyRadius;
+		this.lengthOfArm = lengthOfArm;
 		calculateConstants();
 	}
 	
@@ -80,7 +81,7 @@ public class LinearMotionMechanism implements Mechanism{
 			break;
 		}
 		
-//		Halves the stall current and doubles the stall torque
+//		Creates "supermotor" with additional torque per motor
 		torqueConstant = torqueConstant * 2 * motorCount;
 	}
 	
@@ -89,22 +90,19 @@ public class LinearMotionMechanism implements Mechanism{
 	}
 	
 	@Override
-	public void periodic(int intervalInMs) {
-		calculateDistance(intervalInMs);
-		calculateMechanismVelocity(intervalInMs, currentVoltage);
+	public void cycle(SimulationEnvironment env) {
+		calculateDistance(env.getIntervalMs());
+		calculateMechanismVelocity(env.getIntervalMs(), currentVoltage);
 //		calculateMechanismAcceleration(currentVoltage);
 //		calculateNewMotorVelocity(currentVoltage, intervalInMs);
 	}
 	
 	private double calculateMechanismAcceleration(double voltage) {
-		currentMechanismAcceleration = (-torqueConstant * gearRatio * gearRatio
-				/ (velocityConstant * motorResitance * pullyRadius * pullyRadius * massOnSystem)
-				* currentMechanismVelocity
-				+ gearRatio * torqueConstant / (motorResitance * pullyRadius * massOnSystem) * voltage);
+		currentMechanismAcceleration = ((gearRatio * torqueConstant * voltage)
+				- ((1/velocityConstant) * torqueConstant * currentMechanismVelocity * gearRatio * gearRatio))
+				/ (motorResitance * (1./12.) * massOnSystem * Math.pow(lengthOfArm, 2));
 				
 		return currentMechanismAcceleration;
-//				-Kt * kG * kG / (Kv * kResistance * kr * kr * kMass) * velocity_ +
-//		           kG * Kt / (kResistance * kr * kMass) * voltage;
 	}
 
 //	private void calculateNewMotorVelocity(double voltage, int intervalInMs) {

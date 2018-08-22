@@ -11,5 +11,5 @@ apply plugin: 'kotlin'
 dependencies {
     compile wpilib()
     compile ctre()
-    compile group: 'com.team2073', name: 'common-util', version: '0.1.0-SNAPSHOT'
+    compile group: 'com.team2073', name: 'common-wpi-util', version: '0.1.0-SNAPSHOT'
 }

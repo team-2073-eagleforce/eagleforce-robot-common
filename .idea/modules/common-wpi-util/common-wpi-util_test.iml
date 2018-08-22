@@ -34,6 +34,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="common-wpi-util_main" />
+    <orderEntry type="library" name="Gradle: com.team2073:common-wpi-simulation:0.1.0-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="common-wpi-util_main" />
     <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibj:wpilibj-java:2018.4.1" level="project" />
     <orderEntry type="library" name="Gradle: edu.wpi.first.ntcore:ntcore-java:4.1.0" level="project" />
     <orderEntry type="library" name="Gradle: edu.wpi.first.wpiutil:wpiutil-java:3.2.0" level="project" />

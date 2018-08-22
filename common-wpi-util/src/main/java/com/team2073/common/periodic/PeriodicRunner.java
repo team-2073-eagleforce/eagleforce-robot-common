@@ -5,7 +5,7 @@ import com.team2073.common.assertion.Assert;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.smartdashboard.SmartDashboardAwareRunner;
 import com.team2073.common.util.ExceptionUtil;
-import edu.wpi.first.wpilibj.Timer;
+import com.team2073.common.util.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedHashSet;
 
-public class PeriodicRunner implements SmartDashboardAware {
+public class PeriodicRunner implements SmartDashboardAware, PeriodicAware {
 	
 	private static PeriodicRunner singleton = new PeriodicRunner();
 	private static final Logger logger = LoggerFactory.getLogger(PeriodicRunner.class);
@@ -49,26 +49,35 @@ public class PeriodicRunner implements SmartDashboardAware {
 		singleton.instanceList.add(wrapper);
 		logger.info("Registered [{}] periodic instance.", wrapper.name);
 	}
-	
+
+	/** @deprecated Use {@link #getInstance()#onPeriodic()} instead. */
+	@Deprecated
 	public static void runPeriodic() {
-		singleton.overallTimer.reset();
-		
-		logger.debug("Starting periodic.");
-		singleton.overallTimer.start();
-		
-		singleton.runPeriodicInternal();
-		
-		singleton.overallTimer.stop();
-		
-		singleton.overallTotal = singleton.overallTimer.get();
-		logger.debug("Completed periodic [{}].", fmt(singleton.overallTotal));
+		getInstance().onPeriodic();
 	}
 	
 	public static double fmt(double number) {
 		 return Double.parseDouble(formatter.format(number));
 	}
 
-	public void runPeriodicInternal() {
+	@Override
+	public void onPeriodic() {
+		overallTimer.stop();
+
+		logger.trace("Starting periodic.");
+		overallTimer.start();
+
+		onPeriodicInternal();
+
+		overallTimer.stop();
+
+		overallTotal = overallTimer.getElapsedTime();
+
+		// TODO: Sometimes this is 3.0 when the inner loop is 0.0. See if this is a formatting or a performance issue.
+		logger.trace("Completed periodic [{}].", fmt(overallTotal));
+	}
+
+	public void onPeriodicInternal() {
 		int count = 0;
 		double total = 0;
 		double avg = 0;
@@ -86,11 +95,11 @@ public class PeriodicRunner implements SmartDashboardAware {
 			ExceptionUtil.suppressVoid(instance::onPeriodic, wrapper.name + " ::onPeriodic");
 			innerTimer.stop();
 			
-			double elapsed = innerTimer.get();
+			double elapsed = innerTimer.getElapsedTime();
 			if(elapsed >= CommonConstants.Diagnostics.LONG_ON_PERIODIC_CALL) {
-				logger.debug("[{}}] long onPeriodic call on [{}]", elapsed, wrapper.getClass().getSimpleName());
+				logger.debug("[{}] long onPeriodic call on [{}]", elapsed, wrapper.getClass().getSimpleName());
 			}
-			innerTimer.reset();
+			innerTimer.stop();
 			wrapper.update(elapsed);
 			
 			if(longestInstance == null || elapsed > longestInstance.last) {
@@ -114,10 +123,10 @@ public class PeriodicRunner implements SmartDashboardAware {
 		currAvg = currTotal / currCount;
 		runningAvg = currAvg / count;
 		
-		logger.debug("Periodic loop: Total [{}] Avg [{}] Longest [{}:{}].", fmt(total), fmt(avg), fmt(longestInstance.last), longestInstance.name);
+		logger.trace("Periodic loop: Total [{}] Avg [{}] Longest [{}:{}].", fmt(total), fmt(avg), fmt(longestInstance.last), longestInstance.name);
 		
 		if(total >= CommonConstants.Diagnostics.LONG_PERIODIC_LOOP) {
-			logger.debug("[{}}] long periodic loop on [{}]", total, instanceList.getClass().getName());
+			logger.debug("[{}] long periodic loop.", total);
 		}
 	}
 	
@@ -156,7 +165,11 @@ public class PeriodicRunner implements SmartDashboardAware {
 	@Override
 	public void readSmartDashboard() {
 	}
-	
+
+	public static PeriodicRunner getInstance() {
+		return singleton;
+	}
+
 	private static class PeriodicInstance {
 		private PeriodicAware instance;
 		private String name;

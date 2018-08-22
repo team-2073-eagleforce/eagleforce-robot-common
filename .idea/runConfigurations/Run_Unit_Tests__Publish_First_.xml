@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Unit Tests" type="JUnit" factoryName="JUnit">
+  <configuration default="false" name="Run Unit Tests (Publish First)" type="JUnit" factoryName="JUnit">
     <option name="PACKAGE_NAME" value="" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
@@ -10,6 +10,7 @@
       <value defaultName="wholeProject" />
     </option>
     <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Publish Maven Local (All)" run_configuration_type="GradleRunConfiguration" />
       <option name="Make" enabled="true" />
     </method>
   </configuration>
