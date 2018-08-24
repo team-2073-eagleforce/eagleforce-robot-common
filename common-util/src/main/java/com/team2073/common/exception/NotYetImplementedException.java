@@ -13,6 +13,7 @@ public class NotYetImplementedException extends RuntimeException {
 
 	/** @see NotYetImplementedException */
 	public NotYetImplementedException() {
+		super("This method has not been implemented yet.");
 	}
 
 	/**
