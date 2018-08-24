@@ -18,6 +18,35 @@ import java.util.Set;
 
 public class PropertyLoader { //} extends AbstractModule {
 	//	TODO: realoading values (oof) (talking to taters on thursday)
+/*	I had an idea for this, when we load values could we keep a list of all the instances that had values
+	loaded into them, and when we update, we just re load the new values?
+
+	this might require a method in the domain object that is called tho, or we could not but it would mean the domain objects have to be used in a very specific way
+
+	something like:
+
+	ArrayList<Object> instances;
+
+	public void loadProperty(Object propertyObject){
+		instances.add(propertyObject);
+
+		...
+	}
+
+	public void reloadProperties(){
+		for(Object instance : instances){
+			loadProperty(instance);
+		}
+	}
+
+	on second thought we might have to make the instances a map or some other type that can hold the context that the instance was registered with also
+
+
+	another option would just to have subsystems have a method that is  called whenever we reload values,
+	and in that method they have access to this class and they can call load on all of their property files
+
+
+ */
 
 
 	private static final String DEFAULT_REMOTE_FILE_NAME = "eagleforce-properties";
@@ -52,9 +81,9 @@ public class PropertyLoader { //} extends AbstractModule {
 		this.secondaryPropertyDirectory = secondaryPropertyDirectory;
 	}
 
-	public void loadProperties(Object propertyObject) {
+	public void loadProperties(Object propertyObject, List<String> context) {
 		Class clazz = propertyObject.getClass();
-		List<Properties> props = findProperties(resolvePropertyFileName(clazz));
+		List<Properties> props = findProperties(resolvePropertyFileName(clazz), context);
 
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
@@ -113,11 +142,14 @@ public class PropertyLoader { //} extends AbstractModule {
 		}
 	}
 
-	public void loadProperties(List<Object> propertyObjectList, List<String> activeProfiles) {
-		ctx.setActiveProfiles(activeProfiles);
+	public void loadProperties(List<Object> propertyObjectList, List<String> context) {
 		for (Object it : propertyObjectList) {
-			loadProperties(it);
+			loadProperties(it, context);
 		}
+	}
+
+	public void loadProperties(Object propertyObject) {
+		loadProperties(propertyObject, ctx.getActiveProfiles());
 	}
 
 	protected String resolvePropertyFileName(Class<?> propertyClass) {
@@ -134,7 +166,7 @@ public class PropertyLoader { //} extends AbstractModule {
 	}
 
 
-	public List<Properties> findProperties(String fileName) {
+	public List<Properties> findProperties(String fileName, List<String> ctx) {
 		List<Properties> propList = new ArrayList<>();
 //		externalPropFile = new File(externalPropFile, "lvuser"); <-- this is the user, should only be needed if not logged in as lvuser
 		final File externalPropFile = new File(primaryPropertyDirectory, fileName);
@@ -144,21 +176,23 @@ public class PropertyLoader { //} extends AbstractModule {
 
 //		TODO: please check this, im not sure if im accessing the remote files correctly
 
-//		1st priority, ctx remote files. Robot specific on RIO.
-		for (String prefix : ctx.getActiveProfiles()) {
-			String ctxFileName = prefix.concat("-" + fileName);
-			File externalCtxPropFile = new File(primaryPropertyDirectory, ctxFileName);
-			FileInputStream ctxPropsInput;
-			try {
-				ctxPropsInput = new FileInputStream(externalCtxPropFile);
-				props = loadPropertiesFromPath(ctxPropsInput);
-			} catch (FileNotFoundException e) {
-				logger.debug("Could not find ctx file on RIO");
-			}
-			if (!props.isEmpty())
-				propList.add(props);
-		}
 
+		if (ctx != null) {
+//		1st priority, ctx remote files. Robot specific on RIO.
+			for (String prefix : ctx) {
+				String ctxFileName = prefix.concat("-" + fileName);
+				File externalCtxPropFile = new File(primaryPropertyDirectory, ctxFileName);
+				FileInputStream ctxPropsInput;
+				try {
+					ctxPropsInput = new FileInputStream(externalCtxPropFile);
+					props = loadPropertiesFromPath(ctxPropsInput);
+				} catch (FileNotFoundException e) {
+					logger.debug("Could not find ctx file on RIO");
+				}
+				if (!props.isEmpty())
+					propList.add(props);
+			}
+		}
 //		===============================================================
 
 //		2nd priority, non ctx remote files. Non robot specific, on RIO.
@@ -175,19 +209,21 @@ public class PropertyLoader { //} extends AbstractModule {
 //		===============================================================
 
 //		3rd priority, ctx local files. Robot specific in src.
-		for (String prefix : ctx.getActiveProfiles()) {
-			String ctxFileName = prefix.concat("-" + fileName);
-			try {
-				props = loadPropertiesFromPath(
-						secondaryPropertyDirectory.getResourceAsStream(ctxFileName));
-			} catch (Exception e) {
-				logger.debug("couldnt find ctx file in local dir [{}]", ctxFileName);
-			}
+		if (ctx != null) {
+			for (String prefix : ctx) {
+				String ctxFileName = prefix.concat("-" + fileName);
+				try {
+					props = loadPropertiesFromPath(
+							secondaryPropertyDirectory.getResourceAsStream(ctxFileName));
+				} catch (Exception e) {
+					logger.debug("couldnt find ctx file in local dir [{}]", ctxFileName);
+				}
 
-			if (!props.isEmpty()) {
-				propList.add(props);
-			}
+				if (!props.isEmpty()) {
+					propList.add(props);
+				}
 
+			}
 		}
 
 //		===============================================================
@@ -222,7 +258,9 @@ public class PropertyLoader { //} extends AbstractModule {
 	}
 
 	/**
-	 * Finds every class annotated with @{@link PropertyContainer} and loads properties of a created instance (i think this is useless plz lmk if it is / isnt)
+	 * Finds every class annotated with @{@link PropertyContainer} and loads properties of a created instance
+	 * <p>
+	 * (i think this is useless if we have the load methods instead,  plz lmk if it is / isnt)
 	 */
 	public void init() {
 		Reflections reflection = new Reflections("com.team2073");
@@ -254,13 +292,5 @@ public class PropertyLoader { //} extends AbstractModule {
 
 		return instance;
 	}
-
-//	@Override
-//	protected void configure() {
-//		List<Object> init = init();
-//		for (Object configuration : init) {
-//			bind((Class<Object>) configuration.getClass()).toInstance(load(configuration.getClass()));
-//		}
-//	}
 
 }

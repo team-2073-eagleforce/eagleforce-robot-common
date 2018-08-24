@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -15,10 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PropertyLoaderTest {
 
 
+
     private static PropertyLoader propLoader;
 
     @BeforeEach
-    public static void propLoader(){
+    public void propLoader(){
         propLoader = new PropertyLoader();
     }
 
@@ -26,9 +29,28 @@ class PropertyLoaderTest {
     public void localFileTest() {
         ApplicationProperties appProp = new ApplicationProperties();
 
+        propLoader.loadProperties(appProp, null);
+
+        assertEquals(3.3, (double) appProp.getStartingPosition());
+    }
+
+    @Test
+    public void localDefaultCTXFileTest(){
+        ApplicationProperties appProp = new ApplicationProperties();
+
         propLoader.loadProperties(appProp);
 
         assertEquals(32.5, (double) appProp.getStartingPosition());
+
+    }
+
+    @Test
+    public void localSpecifiedCTXFileTest(){
+        ApplicationProperties app = new ApplicationProperties();
+
+        propLoader.loadProperties(app, Arrays.asList("practicebot"));
+
+        assertEquals( 69.5, (double) app.getStartingPosition());
     }
 
 
