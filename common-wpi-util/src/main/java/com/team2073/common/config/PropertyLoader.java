@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -114,13 +115,13 @@ public class PropertyLoader { //} extends AbstractModule {
 			Class<?> declaringClass = field.getType();
 			if (property != null) {
 				try {
-					if (declaringClass.isAssignableFrom(Double.class)) {
+					if (declaringClass.isAssignableFrom(Double.class) || declaringClass.isAssignableFrom(double.class)) {
 						field.set(propertyObject, Double.parseDouble(property));
-					} else if (declaringClass.isAssignableFrom(Integer.class)) {
+					} else if (declaringClass.isAssignableFrom(Integer.class) || declaringClass.isAssignableFrom(int.class)) {
 						field.set(propertyObject, Integer.parseInt(property));
 					} else if (declaringClass.isAssignableFrom(String.class)) {
 						field.set(propertyObject, property);
-					} else if (declaringClass.isAssignableFrom(Boolean.class)) {
+					} else if (declaringClass.isAssignableFrom(Boolean.class) || declaringClass.isAssignableFrom(boolean.class)) {
 						field.set(propertyObject, Boolean.parseBoolean(property));
 					}
 				} catch (NumberFormatException e) {
@@ -176,7 +177,6 @@ public class PropertyLoader { //} extends AbstractModule {
 
 //		TODO: please check this, im not sure if im accessing the remote files correctly
 
-
 		if (ctx != null) {
 //		1st priority, ctx remote files. Robot specific on RIO.
 			for (String prefix : ctx) {
@@ -187,7 +187,7 @@ public class PropertyLoader { //} extends AbstractModule {
 					ctxPropsInput = new FileInputStream(externalCtxPropFile);
 					props = loadPropertiesFromPath(ctxPropsInput);
 				} catch (FileNotFoundException e) {
-					logger.debug("Could not find ctx file on RIO");
+					logger.debug("Could not find ctx file on RIO: [{}]", externalCtxPropFile);
 				}
 				if (!props.isEmpty())
 					propList.add(props);
