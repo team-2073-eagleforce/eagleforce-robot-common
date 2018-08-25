@@ -12,8 +12,8 @@ public class LinearMotionMechanism implements SimulationMechanism {
 	private double massOnSystem;
 	private double velocityConstant; 
 	private double torqueConstant;
-	private double pullyRadius;
-	private double motorResitance;
+	private double pulleyRadius;
+	private double motorResistance;
 	private double currentVoltage = 0;
 	private double currentMechanismPosition = 0;
 	private double currentMechanismVelocity = 0;
@@ -53,7 +53,7 @@ public class LinearMotionMechanism implements SimulationMechanism {
 		this.motor = motor;
 		this.motorCount = motorCount;
 		this.massOnSystem = massOnSystem;
-		this.pullyRadius = pulleyRadius;
+		this.pulleyRadius = pulleyRadius;
 		calculateConstants();
 	}
 	
@@ -62,29 +62,30 @@ public class LinearMotionMechanism implements SimulationMechanism {
 		case PRO:
 			velocityConstant = Motors.Pro.MOTOR_KV;
 			torqueConstant = Motors.Pro.MOTOR_KT;
-			motorResitance = Motors.Pro.RESISTANCE;
+			motorResistance = Motors.Pro.RESISTANCE;
 			break;
 		case BAG:
 			velocityConstant = Motors.Bag.MOTOR_KV;
 			torqueConstant = Motors.Bag.MOTOR_KT;
-			motorResitance = Motors.Bag.RESISTANCE;
+			motorResistance = Motors.Bag.RESISTANCE;
 			break;
 		case CIM:
 			velocityConstant = Motors.Cim.MOTOR_KV;
 			torqueConstant = Motors.Cim.MOTOR_KT;
-			motorResitance = Motors.Cim.RESISTANCE;
+			motorResistance = Motors.Cim.RESISTANCE;
 			break;
 		case MINI_CIM:
 			velocityConstant = Motors.MiniCim.MOTOR_KV;
 			torqueConstant = Motors.MiniCim.MOTOR_KT;
-			motorResitance = Motors.MiniCim.RESISTANCE;
+			motorResistance = Motors.MiniCim.RESISTANCE;
 			break;
 		}
 		
-//		Halves the stall current and doubles the stall torque
+//		doubles the stall torque to make "super motor" based on motor count
 		torqueConstant = torqueConstant * 2 * motorCount;
 	}
-	
+
+	@Override
 	public void updateVoltage(double voltage) {
 		currentVoltage  = voltage;
 	}
@@ -92,20 +93,22 @@ public class LinearMotionMechanism implements SimulationMechanism {
 	@Override
 	public void cycle(SimulationEnvironment env) {
 		calculateDistance(env.getIntervalMs());
-		calculateMechanismVelocity(env.getIntervalMs(), currentVoltage);
+		calculateMechanismVelocity(env.getIntervalMs());
 //		calculateMechanismAcceleration(currentVoltage);
 //		calculateNewMotorVelocity(currentVoltage, intervalInMs);
 	}
 	
-	private double calculateMechanismAcceleration(double voltage) {
+	private double calculateMechanismAcceleration() {
 		currentMechanismAcceleration = (-torqueConstant * gearRatio * gearRatio
-				/ (velocityConstant * motorResitance * pullyRadius * pullyRadius * massOnSystem)
+				/ (velocityConstant * motorResistance * pulleyRadius * pulleyRadius * massOnSystem)
 				* currentMechanismVelocity
-				+ gearRatio * torqueConstant / (motorResitance * pullyRadius * massOnSystem) * voltage);
+				+ gearRatio * torqueConstant / (motorResistance * pulleyRadius * massOnSystem) * currentVoltage);
 				
 		return currentMechanismAcceleration;
+
 //				-Kt * kG * kG / (Kv * kResistance * kr * kr * kMass) * velocity_ +
 //		           kG * Kt / (kResistance * kr * kMass) * voltage;
+
 	}
 
 //	private void calculateNewMotorVelocity(double voltage, int intervalInMs) {
@@ -116,9 +119,9 @@ public class LinearMotionMechanism implements SimulationMechanism {
 //		currentMotorSpeed = motorVelocity;
 //	}
 	
-	private void calculateMechanismVelocity(int intervalInMs, double voltage) {
+	private void calculateMechanismVelocity(int intervalInMs) {
 //		currentMechanismVelocity =  currentMechanismVelocity + currentMechanismAcceleration * msToSeconds(intervalInMs);
-		currentMechanismVelocity += msToSeconds(intervalInMs) * calculateMechanismAcceleration(voltage);
+		currentMechanismVelocity += msToSeconds(intervalInMs) * calculateMechanismAcceleration();
 	}
 	
 	private double msToSeconds(int timeInMs) {
@@ -147,6 +150,11 @@ public class LinearMotionMechanism implements SimulationMechanism {
 	public double position() {
 		return currentMechanismPosition;
 	}
-	
-	
+
+	@Override
+	public double velocity() {
+		return currentMechanismVelocity;
+	}
+
+
 }

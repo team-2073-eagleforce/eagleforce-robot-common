@@ -27,7 +27,7 @@ class SimulationEnvironmentRunnerTest {
                 });
     }
 
-    private static class BasicCycleComponent implements SimulationCycleComponent {
+    static class BasicCycleComponent implements SimulationCycleComponent {
 
         int cycles = 0;
 

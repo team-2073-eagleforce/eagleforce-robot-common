@@ -13,7 +13,7 @@ public class ArmMechanism implements SimulationMechanism {
 	private double velocityConstant; 
 	private double torqueConstant;
 	private double lengthOfArm;
-	private double motorResitance;
+	private double motorResistance;
 	private double currentVoltage = 0;
 	private double currentMechanismPosition = 0;
 	private double currentMechanismVelocity = 0;
@@ -62,29 +62,30 @@ public class ArmMechanism implements SimulationMechanism {
 		case PRO:
 			velocityConstant = Motors.Pro.MOTOR_KV;
 			torqueConstant = Motors.Pro.MOTOR_KT;
-			motorResitance = Motors.Pro.RESISTANCE;
+			motorResistance = Motors.Pro.RESISTANCE;
 			break;
 		case BAG:
 			velocityConstant = Motors.Bag.MOTOR_KV;
 			torqueConstant = Motors.Bag.MOTOR_KT;
-			motorResitance = Motors.Bag.RESISTANCE;
+			motorResistance = Motors.Bag.RESISTANCE;
 			break;
 		case CIM:
 			velocityConstant = Motors.Cim.MOTOR_KV;
 			torqueConstant = Motors.Cim.MOTOR_KT;
-			motorResitance = Motors.Cim.RESISTANCE;
+			motorResistance = Motors.Cim.RESISTANCE;
 			break;
 		case MINI_CIM:
 			velocityConstant = Motors.MiniCim.MOTOR_KV;
 			torqueConstant = Motors.MiniCim.MOTOR_KT;
-			motorResitance = Motors.MiniCim.RESISTANCE;
+			motorResistance = Motors.MiniCim.RESISTANCE;
 			break;
 		}
 		
 //		Creates "supermotor" with additional torque per motor
 		torqueConstant = torqueConstant * 2 * motorCount;
 	}
-	
+
+	@Override
 	public void updateVoltage(double voltage) {
 		currentVoltage  = voltage;
 	}
@@ -93,14 +94,12 @@ public class ArmMechanism implements SimulationMechanism {
 	public void cycle(SimulationEnvironment env) {
 		calculateDistance(env.getIntervalMs());
 		calculateMechanismVelocity(env.getIntervalMs(), currentVoltage);
-//		calculateMechanismAcceleration(currentVoltage);
-//		calculateNewMotorVelocity(currentVoltage, intervalInMs);
 	}
 	
 	private double calculateMechanismAcceleration(double voltage) {
 		currentMechanismAcceleration = ((gearRatio * torqueConstant * voltage)
 				- ((1/velocityConstant) * torqueConstant * currentMechanismVelocity * gearRatio * gearRatio))
-				/ (motorResitance * (1./12.) * massOnSystem * Math.pow(lengthOfArm, 2));
+				/ (motorResistance * (1./12.) * massOnSystem * Math.pow(lengthOfArm, 2));
 				
 		return currentMechanismAcceleration;
 	}
@@ -114,7 +113,6 @@ public class ArmMechanism implements SimulationMechanism {
 //	}
 	
 	private void calculateMechanismVelocity(int intervalInMs, double voltage) {
-//		currentMechanismVelocity =  currentMechanismVelocity + currentMechanismAcceleration * msToSeconds(intervalInMs);
 		currentMechanismVelocity += msToSeconds(intervalInMs) * calculateMechanismAcceleration(voltage);
 	}
 	
@@ -144,6 +142,11 @@ public class ArmMechanism implements SimulationMechanism {
 	public double position() {
 		return currentMechanismPosition;
 	}
-	
-	
+
+	@Override
+	public double velocity() {
+		return currentMechanismVelocity;
+	}
+
+
 }

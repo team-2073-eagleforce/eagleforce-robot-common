@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.team2073.common.simulation.model.SimulationMechanism;
 
-public class SimulationEagleSPX extends VictorSPX {
+public class SimulationEagleSPX extends BaseSimulationMotorController {
 	private double outputVoltage;
 	private double maxOutputForward;
 	private double maxOutputReverse;
@@ -14,6 +14,8 @@ public class SimulationEagleSPX extends VictorSPX {
 	private SimulationMechanism mechanism;
 	private String name;
 	private PID pid = new PID();
+
+	//	TODO: make this look like SimulationEagleSRX, keep it lookin fresh
 
 	public double talonOutputVoltage() {
 		if(outputVoltage >= 0 )
@@ -43,7 +45,6 @@ public class SimulationEagleSPX extends VictorSPX {
 	 */
 	
 	public SimulationEagleSPX(int deviceNumber, String name, SimulationMechanism mechanism, int encoderTicsPerUnitOfMechanism) {
-			super(deviceNumber);
 			this.mechanism = mechanism;
 			this.name = name;
 			this.encoderTicsPerUnitOfMechanism = encoderTicsPerUnitOfMechanism;
@@ -100,7 +101,12 @@ public class SimulationEagleSPX extends VictorSPX {
 		this.maxOutputReverse = percentOut;
 		return null;
 	}
-	
+
+	@Override
+	public double getMotorOutputPercent() {
+		return outputVoltage/12;
+	}
+
 	@Override
 	public void selectProfileSlot(int slotIdx, int pidIdx) {
 		pid.setCurrentSlot(slotIdx);
@@ -112,13 +118,13 @@ public class SimulationEagleSPX extends VictorSPX {
 	}
 
 	@Override
+	public int getSelectedSensorVelocity(int pidIdx) {
+		return 0;
+	}
+
+	@Override
 	public double getMotorOutputVoltage() {
 		return outputVoltage;
-	}
-	
-	@Override
-	public ErrorCode configSelectedFeedbackSensor(FeedbackDevice feedbackDevice, int pidIdx, int timeoutMs) {
-		return null;
 	}
 	
 	public class PID {
