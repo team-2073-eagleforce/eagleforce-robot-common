@@ -4,6 +4,8 @@ package com.team2073.common.simulation.model;
 import com.team2073.common.simulation.SimulationConstants.Motors;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
+import static com.team2073.common.util.ConversionUtil.msToSeconds;
+
 public class ArmMechanism implements SimulationMechanism {
 	
 	private final double gearRatio;
@@ -21,16 +23,6 @@ public class ArmMechanism implements SimulationMechanism {
 	
 	public enum MotorType {
 		PRO, BAG, CIM, MINI_CIM;
-	}
-	
-	public static void main(String args[]) {
-		ArmMechanism LMM = new ArmMechanism(55, MotorType.MINI_CIM, 2, 15, 13);
-		for(int i = 0; LMM.getCurrentMechanismPosition() < .25; i++) {
-			LMM.updateVoltage(12);
-//			LMM.cycle(1);
-			if(i%25 == 0)
-				System.out.println(i+":" + "\tPosition: " + LMM.getCurrentMechanismPosition() + " \t Velocity: " + LMM.getCurrentMechanismVelocity() + "\t Acceleration: " + LMM.getCurrentMechanismAcceleration());
-		}
 	}
 	
 	/**
@@ -114,10 +106,6 @@ public class ArmMechanism implements SimulationMechanism {
 	
 	private void calculateMechanismVelocity(int intervalInMs, double voltage) {
 		currentMechanismVelocity += msToSeconds(intervalInMs) * calculateMechanismAcceleration(voltage);
-	}
-	
-	private double msToSeconds(int timeInMs) {
-		return timeInMs * 0.001;
 	}
 	
 	private void calculateDistance(int intervalInMs) {

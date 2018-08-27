@@ -7,15 +7,12 @@ import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.*;
 
 abstract public class BaseSimulationMotorController implements IMotorController {
-
 	@Override
 	public void set(ControlMode Mode, double demand0, double demand1) {
-
 	}
 
 	@Override
 	public void neutralOutput() {
-
 	}
 
 	@Override
@@ -29,13 +26,13 @@ abstract public class BaseSimulationMotorController implements IMotorController 
 	}
 
 	@Override
-	public void setInverted(boolean invert) {
-
+	public boolean getInverted() {
+		return false;
 	}
 
 	@Override
-	public boolean getInverted() {
-		return false;
+	public void setInverted(boolean invert) {
+
 	}
 
 	@Override
@@ -226,6 +223,16 @@ abstract public class BaseSimulationMotorController implements IMotorController 
 	@Override
 	public void selectProfileSlot(int slotIdx, int pidIdx) {
 
+	}
+
+	@Override
+	public int getSelectedSensorPosition(int pidIdx) {
+		return 0;
+	}
+
+	@Override
+	public int getSelectedSensorVelocity(int pidIdx) {
+		return 0;
 	}
 
 	@Override

@@ -2,21 +2,17 @@ package com.team2073.common.simulation.speedcontroller;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2073.common.exception.NotYetImplementedException;
 import com.team2073.common.simulation.model.SimulationMechanism;
 import com.team2073.common.util.EnumUtil;
 
 public class SimulationEagleSRX extends BaseSimulationMotorControllerEnhanced {
 	private double outputVoltage;
-	private double maxOutputForward;
-	private double maxOutputReverse;
+	private double maxOutputForward = 12;
+	private double maxOutputReverse = -12;
 	private double encoderTicsPerUnitOfMechanism;
 	private SimulationMechanism mechanism;
 	private String name;
-	private TalonSRX talon = null;
-
-
 
 	/**
 	 * Simulated TalonSRX
@@ -43,10 +39,6 @@ public class SimulationEagleSRX extends BaseSimulationMotorControllerEnhanced {
 			return Math.max(outputVoltage, maxOutputReverse);
 	}
 
-	public void assignActual(TalonSRX talon) {
-		this.talon = talon;
-	}
-
 	@Override
 	public void set(ControlMode mode, double outputValue) {
 		switch (mode) {
@@ -58,21 +50,23 @@ public class SimulationEagleSRX extends BaseSimulationMotorControllerEnhanced {
 			default:
 				EnumUtil.throwUnknownValueException(mode);
 		}
-		mechanism.updateVoltage(outputVoltage);
+		mechanism.updateVoltage(talonOutputVoltage());
 	}
 
 	@Override
 	public ErrorCode configPeakOutputForward(double percentOut, int timeoutMs) {
+		this.maxOutputForward = percentOut * 12;
 		return null;
 	}
 
 	@Override
 	public ErrorCode configPeakOutputReverse(double percentOut, int timeoutMs) {
+		this.maxOutputReverse = percentOut * 12;
 		return null;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public String getName() {
+		return name;
 	}
 
 	@Override
@@ -87,12 +81,12 @@ public class SimulationEagleSRX extends BaseSimulationMotorControllerEnhanced {
 
 	@Override
 	public int getSelectedSensorPosition(int pidIdx) {
-		return (int) Math.round(mechanism.position());
+		return (int) Math.round(mechanism.position() * encoderTicsPerUnitOfMechanism);
 	}
 
 	@Override
 	public int getSelectedSensorVelocity(int pidIdx) {
-		return (int) Math.round(mechanism.velocity());
+		return (int) Math.round(mechanism.velocity() * encoderTicsPerUnitOfMechanism);
 	}
 
 

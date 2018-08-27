@@ -1,5 +1,7 @@
 package com.team2073.common.util;
 
+import java.util.concurrent.TimeUnit;
+
 public abstract class ConversionUtil {
 
 	public static String humanReadableByteCount(long bytes) {
@@ -14,4 +16,9 @@ public abstract class ConversionUtil {
 		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
 		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
+
+	public static double msToSeconds(int timeInMs) {
+		return timeInMs * 0.001;
+	}
+
 }
