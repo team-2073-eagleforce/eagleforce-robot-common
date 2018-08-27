@@ -1,1 +1,6 @@
 rootProject.name = 'eagleforce-robot-common'
+include 'common-util'
+include 'common-wpi-util'
+include 'common-guice'
+include 'common-wpi-simulation'
+

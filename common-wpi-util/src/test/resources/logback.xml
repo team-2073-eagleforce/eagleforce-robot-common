@@ -1,0 +1,52 @@
+<configuration>
+
+    <property name="LOG_DATEFORMAT_PATTERN" value="HH:mm:ss.SSS"/>
+    <property name="LOG_LEVEL_PATTERN" value="%5p"/>
+    <property name="LOG_PATTERN" value="%d{${LOG_DATEFORMAT_PATTERN}} ${LOG_LEVEL_PATTERN} --- %-40.40logger{39} : %m%n"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <logger name="com.team2073" level="DEBUG" />
+
+    <!-- common-wpi-util -->
+    <!-- ============================================================ -->
+
+	<!--<logger name="com.team2073.common.camera" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.command" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.config" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.controller" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.controlloop" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.dev" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.drive" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.event" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.mediator" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.motionprofiling" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.objective" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.periodic" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.position" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.robot" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.smartdashboard" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.speedcontroller" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.subsys" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.trigger" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.util" level="TRACE" />-->
+
+    <!-- common-wpi-simulation -->
+    <!-- ============================================================ -->
+
+    <!--<logger name="com.team2073.common.simulation" level="TRACE" />-->
+    <!--<logger name="com.team2073.common.simulation.env" level="TRACE" />-->
+    <!--<logger name="com.team2073.common.simulation.function" level="TRACE" />-->
+    <!--<logger name="com.team2073.common.simulation.model" level="TRACE" />-->
+    <!--<logger name="com.team2073.common.simulation.runner" level="TRACE" />-->
+    <!--<logger name="com.team2073.common.simulation.speedcontroller" level="TRACE" />-->
+
+</configuration>

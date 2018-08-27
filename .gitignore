@@ -36,7 +36,7 @@ out/
 
 ### Gradle ###
 .gradle
-build/* # This must end in * for test results includion to work properly
+**/build/* # This must end in * for test results includion to work properly
 
 # JUnit test results
     # Special handling to unignore files when a parent directory has already been ignored
@@ -45,14 +45,14 @@ build/* # This must end in * for test results includion to work properly
     # Resolution from: https://stackoverflow.com/questions/5533050/gitignore-exclude-folder-but-include-specific-subfolder#answer-5534865
         # "To do what you want, you have to “unignore” every parent directory of anything that you want to “unignore”."
 
-build/*
-!build/test-results/
+**/build/*
+!**/build/test-results/
 
-build/test-results/*
-!build/test-results/test
+**/build/test-results/*
+!**/build/test-results/test
 
-build/test-results/test/*
-!build/test-results/test/*.xml
+**/build/test-results/test/*
+!**/build/test-results/test/*.xml
 
 # Ignore Gradle GUI config
 gradle-app.setting
