@@ -2,21 +2,56 @@ package com.team2073.common.config;
 
 //import com.google.inject.Guice;
 //import com.google.inject.Injector;
+import com.team2073.common.config.testsamples.ApplicationProperties;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author pbriggs
  */
 class PropertyLoaderTest {
 
-    @Test
-    public void renameMe() {
-//        PropertyLoader propLoader = new PropertyLoader();
-//        Injector injector = Guice.createInjector(new PropertyLoader());
-//        ApplicationProperties instance = injector.getInstance(ApplicationProperties.class);
-//        RioProperties rioProps = injector.getInstance(RioProperties.class);
-//
-//        assertEquals(32.5, (double) instance.getStartingPosition());
-//        assertEquals(2073, (int) rioProps.getTeamNumber());
+
+
+    private static PropertyLoader propLoader;
+
+    @BeforeEach
+    public void propLoader(){
+        propLoader = new PropertyLoader();
     }
+
+    @Test
+    public void localFileTest() {
+        ApplicationProperties appProp = new ApplicationProperties();
+
+        propLoader.loadProperties(appProp, null);
+
+        assertEquals(3.3, (double) appProp.getStartingPosition());
+    }
+
+    @Test
+    public void localDefaultCTXFileTest(){
+        ApplicationProperties appProp = new ApplicationProperties();
+
+        propLoader.loadProperties(appProp);
+
+        assertEquals(32.5, (double) appProp.getStartingPosition());
+
+    }
+
+    @Test
+    public void localSpecifiedCTXFileTest(){
+        ApplicationProperties app = new ApplicationProperties();
+
+        propLoader.loadProperties(app, Arrays.asList("practicebot"));
+
+        assertEquals( 69.5, (double) app.getStartingPosition());
+    }
+
+
 }
