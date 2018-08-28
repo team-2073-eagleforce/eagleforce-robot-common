@@ -12,4 +12,8 @@ class StateBasedCondition(val state: SubsystemStateCondition?) : Condition {
     override fun isInCondition(condition: Condition): Boolean {
         return this.state == state
     }
+
+    override fun toString(): String {
+        return "A state condition with value [" + state.toString() + "]"
+    }
 }
