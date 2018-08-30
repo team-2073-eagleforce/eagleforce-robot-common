@@ -4,7 +4,7 @@ package com.team2073.common.simulation.model;
 import com.team2073.common.simulation.SimulationConstants.Motors;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
-import static com.team2073.common.util.ConversionUtil.msToSeconds;
+import static com.team2073.common.util.ConversionUtil.*;
 
 public class LinearMotionMechanism implements SimulationMechanism {
 

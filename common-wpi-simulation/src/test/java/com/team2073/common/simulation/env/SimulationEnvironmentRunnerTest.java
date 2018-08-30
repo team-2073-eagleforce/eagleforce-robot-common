@@ -5,7 +5,7 @@ import com.team2073.common.simulation.model.SimulationCycleComponent;
 import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author pbriggs

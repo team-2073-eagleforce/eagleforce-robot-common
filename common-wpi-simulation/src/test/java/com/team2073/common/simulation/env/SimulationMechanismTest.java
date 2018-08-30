@@ -8,7 +8,7 @@ import com.team2073.common.simulation.speedcontroller.SimulationEagleSPX;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSRX;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class SimulationMechanismTest {
