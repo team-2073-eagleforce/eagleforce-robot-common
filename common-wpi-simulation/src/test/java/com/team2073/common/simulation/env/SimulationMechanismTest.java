@@ -1,5 +1,6 @@
 package com.team2073.common.simulation.env;
 
+import com.team2073.common.simulation.SimulationConstants;
 import com.team2073.common.simulation.env.SubsystemTestFixtures.ConstantOutputtingSubsystem;
 import com.team2073.common.simulation.model.ArmMechanism;
 import com.team2073.common.simulation.model.LinearMotionMechanism;
@@ -8,14 +9,14 @@ import com.team2073.common.simulation.speedcontroller.SimulationEagleSPX;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSRX;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class SimulationMechanismTest {
 
 	@Test
-	public void simulationEagleSRXBasic() {
-		LinearMotionMechanism lmm = new LinearMotionMechanism(25., LinearMotionMechanism.MotorType.CIM, 2, 30, .855);
+	public void simulationEagleSRX_WHEN_set_SHOULD_MoveMechanism() {
+		LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.CIM, 2, 30, .855);
 		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(new SimulationEagleSRX("ExampleTalon", lmm, 4096));
 
 		new SimulationEnvironmentRunner()
@@ -30,8 +31,8 @@ public class SimulationMechanismTest {
 	}
 
 	@Test
-	public void simulationEagleSPXBasic() {
-		ArmMechanism arm = new ArmMechanism(55, ArmMechanism.MotorType.MINI_CIM, 2, 15, 13);
+	public void simulationEagleSPX_WHEN_set_SHOULD_MoveMechanism() {
+		ArmMechanism arm = new ArmMechanism(55, SimulationConstants.MotorType.MINI_CIM, 2, 15, 13);
 		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(new SimulationEagleSPX("ExampleTalon", arm));
 
 		new SimulationEnvironmentRunner()

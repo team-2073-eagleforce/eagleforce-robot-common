@@ -18,10 +18,7 @@ public class SimulationEagleSPX extends BaseSimulationMotorController {
 	 *
 	 * @param name      This is the name the Talon will be referred to in logging.
 	 * @param mechanism The mechanism that is being controlled by this talon
-	 *                  <pre>
-	 *                                                                                             If a specific method is causing errors, or spamming the console while you are simulating,
-	 *                                                                                             make sure that that method is overridden and either executes the appropriate logic or
-	 *                                                                                             simply doesn't call super if the method is handled elsewhere. </post>
+	 *
 	 */
 	public SimulationEagleSPX(String name, SimulationMechanism mechanism) {
 		this.mechanism = mechanism;

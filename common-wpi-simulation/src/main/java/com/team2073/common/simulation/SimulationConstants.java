@@ -11,6 +11,10 @@ public class SimulationConstants {
      * kv units are rps per volt
      * kt units are inch pounds per amp
      */
+    public enum MotorType {
+        PRO, BAG, CIM, MINI_CIM;
+    }
+
     public abstract class Motors {
 
         public abstract class Pro {
@@ -61,5 +65,41 @@ public class SimulationConstants {
                     / (12 - RESISTANCE * FREE_CURRENT);
         }
 
+    }
+
+    /**
+     * returns an array containing MOTOR_KV, MOTOR_KT, and RESISTANCE at locations 0,1,and 2 respectively.
+     * @param motorType
+     * @return
+     */
+    public static double[] calculateConstants(MotorType motorType){
+        double velocityConstant = 0;
+        double torqueConstant = 0 ;
+        double motorResistance = 0;
+
+            switch (motorType) {
+                case PRO:
+                    velocityConstant = Motors.Pro.MOTOR_KV;
+                    torqueConstant = Motors.Pro.MOTOR_KT;
+                    motorResistance = Motors.Pro.RESISTANCE;
+                    break;
+                case BAG:
+                    velocityConstant = Motors.Bag.MOTOR_KV;
+                    torqueConstant = Motors.Bag.MOTOR_KT;
+                    motorResistance = Motors.Bag.RESISTANCE;
+                    break;
+                case CIM:
+                    velocityConstant = Motors.Cim.MOTOR_KV;
+                    torqueConstant = Motors.Cim.MOTOR_KT;
+                    motorResistance = Motors.Cim.RESISTANCE;
+                    break;
+                case MINI_CIM:
+                    velocityConstant = Motors.MiniCim.MOTOR_KV;
+                    torqueConstant = Motors.MiniCim.MOTOR_KT;
+                    motorResistance = Motors.MiniCim.RESISTANCE;
+                    break;
+            }
+
+            return new double[]{velocityConstant, torqueConstant, motorResistance};
     }
 }

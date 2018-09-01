@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 
 /**
  * A set of utilities for handling exceptions.
- * 
+ *
  * @author Preston Briggs
  */
 public abstract class ExceptionUtil {
@@ -19,7 +19,7 @@ public abstract class ExceptionUtil {
 	 * Wrap the given method call in a try/catch and log then suppress any
 	 * exceptions. Only used for methods with return type of void. For methods
 	 * with a return value, see {@link #suppress(Callable, String)}.
-	 * 
+	 *
 	 * @param action
 	 *            The method to be called
 	 * @param methodName
@@ -70,12 +70,12 @@ public abstract class ExceptionUtil {
 	// ============================================================
 	/**
 	 * Wrap the given method call in a try/catch and log then suppress any
-	 * exceptions. Returns the value returned from the method call or null if 
+	 * exceptions. Returns the value returned from the method call or null if
 	 * an exception was thrown during invocation.
 	 * <p>
 	 * Use {@link #suppress(Callable, String, Object)} to specify a default return value
 	 * on exception.
-	 * 
+	 *
 	 * @param action The method to be called
 	 * @param methodName Used for logging
 	 * @return The object returned from the action's invocation or null if an exception occurred
@@ -83,7 +83,7 @@ public abstract class ExceptionUtil {
 	public static <R> R suppress(Callable<R> action, String methodName) {
 		return suppress(action, methodName, (R)null);
 	}
-	
+
 	/**
 	 * An alternative to {@link #suppress(Callable, String)} that allows specifying a default value to return.
 	 * @param defaultValue The object returned in case an exception was thrown.
@@ -97,7 +97,7 @@ public abstract class ExceptionUtil {
 	public static <R> R suppress(Callable<R> action, String methodName, String additionalMessage) {
 		return suppress(action, methodName, null, additionalMessage);
 	}
-	
+
 	/** An alternative to {@link #suppress(Callable, String, Object)} that allows specifying an additional message to append. */
 	public static <R> R suppress(Callable<R> action, String methodName, R defaultValue, String additionalMessage) {
 		return suppressInternal(action, methodName, defaultValue, additionalMessage, true);
@@ -129,7 +129,7 @@ public abstract class ExceptionUtil {
 	// ============================================================
 	/**
 	 * The internal method all suppress method use.
-	 * 
+	 *
 	 * @param action The method to be invoked
 	 * @param methodName Used for logging
 	 * @param defaultValue The value to return if an exception occurs
@@ -155,6 +155,10 @@ public abstract class ExceptionUtil {
     // ============================================================
     public static void illegalState(String msg) {
         throw new IllegalStateException(msg);
+    }
+
+    public static void throwUnsupported(String methodName) {
+	    throw new UnsupportedOperationException("The class must override the [" + methodName + "] method to use this method.");
     }
 
 }

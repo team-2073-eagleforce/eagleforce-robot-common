@@ -3,10 +3,11 @@ package com.team2073.common.simulation.env;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.simulation.model.SimulationCycleComponent;
 
 public class SubsystemTestFixtures {
 
-	static class ConstantOutputtingSubsystem implements PeriodicAware {
+	public static class ConstantOutputtingSubsystem implements PeriodicAware {
 		private IMotorController talon;
 
 		public ConstantOutputtingSubsystem(IMotorController talon) {
@@ -18,4 +19,35 @@ public class SubsystemTestFixtures {
 			talon.set(ControlMode.PercentOutput, .5);
 		}
 	}
+
+	public static class BasicCycleComponent implements SimulationCycleComponent {
+
+		int cycles = 0;
+
+		@Override
+		public void cycle(SimulationEnvironment env) {
+			cycles++;
+		}
+
+		public int getCycles() {
+			return cycles;
+		}
+	}
+
+	public static class BasicPeriodicComponent implements PeriodicAware {
+
+		int cycles = 0;
+
+
+		@Override
+		public void onPeriodic() {
+			cycles++;
+		}
+
+		public int getCycles() {
+			return cycles;
+		}
+	}
+
+
 }

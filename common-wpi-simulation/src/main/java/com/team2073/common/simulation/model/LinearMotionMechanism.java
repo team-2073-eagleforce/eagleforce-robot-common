@@ -1,16 +1,14 @@
 package com.team2073.common.simulation.model;
 
-
-import com.team2073.common.simulation.SimulationConstants.Motors;
+import com.team2073.common.simulation.SimulationConstants.MotorType;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
-import static com.team2073.common.util.ConversionUtil.*;
+import static com.team2073.common.simulation.SimulationConstants.calculateConstants;
+import static com.team2073.common.util.ConversionUtil.msToSeconds;
 
 public class LinearMotionMechanism implements SimulationMechanism {
 
 	private final double gearRatio;
-	private final MotorType motor;
-	private final int motorCount;
 	private double massOnSystem;
 	private double velocityConstant;
 	private double torqueConstant;
@@ -33,36 +31,13 @@ public class LinearMotionMechanism implements SimulationMechanism {
 	 */
 	public LinearMotionMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double pulleyRadius) {
 		this.gearRatio = gearRatio;
-		this.motor = motor;
-		this.motorCount = motorCount;
 		this.massOnSystem = massOnSystem;
 		this.pulleyRadius = pulleyRadius;
-		calculateConstants();
-	}
+		double[] constants = calculateConstants(motor);
 
-	private void calculateConstants() {
-		switch (motor) {
-			case PRO:
-				velocityConstant = Motors.Pro.MOTOR_KV;
-				torqueConstant = Motors.Pro.MOTOR_KT;
-				motorResistance = Motors.Pro.RESISTANCE;
-				break;
-			case BAG:
-				velocityConstant = Motors.Bag.MOTOR_KV;
-				torqueConstant = Motors.Bag.MOTOR_KT;
-				motorResistance = Motors.Bag.RESISTANCE;
-				break;
-			case CIM:
-				velocityConstant = Motors.Cim.MOTOR_KV;
-				torqueConstant = Motors.Cim.MOTOR_KT;
-				motorResistance = Motors.Cim.RESISTANCE;
-				break;
-			case MINI_CIM:
-				velocityConstant = Motors.MiniCim.MOTOR_KV;
-				torqueConstant = Motors.MiniCim.MOTOR_KT;
-				motorResistance = Motors.MiniCim.RESISTANCE;
-				break;
-		}
+		velocityConstant = constants[0];
+		torqueConstant = constants[1];
+		motorResistance = constants[2];
 
 //		doubles the stall torque to make "super motor" based on motor count
 		torqueConstant = torqueConstant * 2 * motorCount;
@@ -75,7 +50,7 @@ public class LinearMotionMechanism implements SimulationMechanism {
 
 	@Override
 	public void cycle(SimulationEnvironment env) {
-		calculateDistance(env.getIntervalMs());
+		calculatePosition(env.getIntervalMs());
 		calculateMechanismVelocity(env.getIntervalMs());
 	}
 
@@ -87,16 +62,23 @@ public class LinearMotionMechanism implements SimulationMechanism {
 
 		return currentMechanismAcceleration;
 
-//				-Kt * kG * kG / (Kv * kResistance * kr * kr * kMass) * velocity_ +
-//		           kG * Kt / (kResistance * kr * kMass) * voltage;
-
 	}
 
+	/**
+	 * Integrates over the Acceleration to find how much our velocity has changed in the past interval.
+	 *
+	 * @param intervalInMs
+	 */
 	private void calculateMechanismVelocity(int intervalInMs) {
 		currentMechanismVelocity += msToSeconds(intervalInMs) * calculateMechanismAcceleration();
 	}
 
-	private void calculateDistance(int intervalInMs) {
+	/**
+	 * Integrates over the Velocity to find how much our position has changed in the past interval.
+	 *
+	 * @param intervalInMs
+	 */
+	private void calculatePosition(int intervalInMs) {
 		currentMechanismPosition += msToSeconds(intervalInMs) * currentMechanismVelocity;
 	}
 
@@ -112,10 +94,6 @@ public class LinearMotionMechanism implements SimulationMechanism {
 	@Override
 	public double velocity() {
 		return currentMechanismVelocity;
-	}
-
-	public enum MotorType {
-		PRO, BAG, CIM, MINI_CIM;
 	}
 
 

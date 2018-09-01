@@ -32,7 +32,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../common-wpi-util/src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../../common-wpi-util/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../common-wpi-util/src/main/resources" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
