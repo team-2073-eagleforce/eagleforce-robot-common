@@ -8,7 +8,6 @@ import com.team2073.common.mediator.subsys.ColleagueSubsystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -22,7 +21,6 @@ public class Mediator{
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @PostConstruct
     public void init(Map<Class, ColleagueSubsystem> subsystemMap, Map<Class, ArrayList<Conflict>> conflictMap, Tracker subsystemTracker) {
         this.subsystemMap = subsystemMap;
         this.conflictMap = conflictMap;
