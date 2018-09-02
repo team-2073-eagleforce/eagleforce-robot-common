@@ -2,7 +2,9 @@ package com.team2073.common.simulation.env;
 
 import com.team2073.common.CommonConstants.TestTags;
 import com.team2073.common.simulation.SimulationConstants;
+import com.team2073.common.simulation.component.SimulationComponentFactory;
 import com.team2073.common.simulation.env.SubsystemTestFixtures.ConstantOutputtingSubsystem;
+import com.team2073.common.simulation.env.SubsystemTestFixtures.SolenoidSubsystem;
 import com.team2073.common.simulation.model.ArmMechanism;
 import com.team2073.common.simulation.model.LinearMotionMechanism;
 import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
@@ -42,6 +44,18 @@ public class SimulationMechanismIntegrationTest {
 				.withIterationCount(5)
 				.run(e -> assertTrue(arm.velocity() > 0));
 
+	}
+
+	@Test
+	public void simulationSolenoid_WHEN_set_SHOULD_MoveMechanism() {
+		ArmMechanism arm = new ArmMechanism(55, SimulationConstants.MotorType.MINI_CIM, 2, 15, 13);
+		SolenoidSubsystem subsystem = new SolenoidSubsystem(SimulationComponentFactory.createSimulationSolenoid(arm));
+
+		new SimulationEnvironmentRunner()
+				.withCycleComponent(arm)
+				.withPeriodicComponent(subsystem)
+				.withIterationCount(5)
+				.run(e -> assertTrue(arm.solenoidPosition()));
 	}
 
 

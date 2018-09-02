@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.team2073.common.periodic.PeriodicAware;
 import com.team2073.common.simulation.model.SimulationCycleComponent;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public class SubsystemTestFixtures {
 
@@ -46,6 +47,19 @@ public class SubsystemTestFixtures {
 
 		public int getCycles() {
 			return cycles;
+		}
+	}
+
+	public static class SolenoidSubsystem implements PeriodicAware{
+
+		Solenoid solenoid;
+		public SolenoidSubsystem(Solenoid solenoid) {
+			this.solenoid = solenoid;
+		}
+
+		@Override
+		public void onPeriodic() {
+			solenoid.set(true);
 		}
 	}
 

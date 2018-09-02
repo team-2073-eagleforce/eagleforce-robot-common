@@ -6,7 +6,13 @@ public interface SimulationMechanism extends SimulationCycleComponent {
 
 	double velocity();
 
+	double acceleration();
+
 	void updateVoltage(double voltage);
+
+	void updateSolenoid(boolean on);
+
+	boolean solenoidPosition();
 
 
 }

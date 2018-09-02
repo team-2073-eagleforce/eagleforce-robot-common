@@ -17,6 +17,7 @@ public class LinearMotionMechanism implements SimulationMechanism {
 	private double currentMechanismPosition = 0;
 	private double currentMechanismVelocity = 0;
 	private double currentMechanismAcceleration = 0;
+	private boolean solenoidPosition;
 
 	/**
 	 * For Systems like elevators =)
@@ -80,7 +81,17 @@ public class LinearMotionMechanism implements SimulationMechanism {
 	private void calculatePosition(int intervalInMs) {
 		currentMechanismPosition += msToSeconds(intervalInMs) * currentMechanismVelocity;
 	}
+	@Override
+	public void updateSolenoid(boolean on) {
+		solenoidPosition = on;
+	}
 
+	@Override
+	public boolean solenoidPosition() {
+		return solenoidPosition;
+	}
+
+	@Override
 	public double acceleration() {
 		return currentMechanismAcceleration;
 	}
