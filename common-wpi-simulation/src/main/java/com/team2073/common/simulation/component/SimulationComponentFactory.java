@@ -6,9 +6,9 @@ import static org.mockito.Mockito.*;
 
 public class SimulationComponentFactory {
 
-	public static SimulationSolenoind createSimulationSolenoid(SimulationMechanism mechanism) {
+	public static SimulationSolenoid createSimulationSolenoid(SimulationMechanism mechanism) {
 
-		SimulationSolenoind solenoid = mock(SimulationSolenoind.class);
+		SimulationSolenoid solenoid = mock(SimulationSolenoid.class);
 
 		doAnswer(e -> {
 			e.callRealMethod();
