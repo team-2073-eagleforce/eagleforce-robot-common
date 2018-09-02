@@ -157,8 +157,4 @@ public abstract class ExceptionUtil {
         throw new IllegalStateException(msg);
     }
 
-    public static void throwUnsupported(String methodName) {
-	    throw new UnsupportedOperationException("The class must override the [" + methodName + "] method to use this method.");
-    }
-
 }

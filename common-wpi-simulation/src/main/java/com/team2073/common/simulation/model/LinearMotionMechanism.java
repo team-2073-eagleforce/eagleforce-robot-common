@@ -3,7 +3,6 @@ package com.team2073.common.simulation.model;
 import com.team2073.common.simulation.SimulationConstants.MotorType;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
-import static com.team2073.common.simulation.SimulationConstants.calculateConstants;
 import static com.team2073.common.util.ConversionUtil.msToSeconds;
 
 public class LinearMotionMechanism implements SimulationMechanism {
@@ -27,17 +26,16 @@ public class LinearMotionMechanism implements SimulationMechanism {
 	 * @param gearRatio    Should be > 1, from motor to output
 	 * @param motor        The Type of motor is the system running on.
 	 * @param motorCount   The number of motors for the system.
-	 * @param massOnSystem How much weight are we pulling up. (Probably want to overestimate this a bit)
+	 * @param massOnSystem How much weight are we pulling up. (Probably want to overestimate this kV bit)
 	 */
 	public LinearMotionMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double pulleyRadius) {
 		this.gearRatio = gearRatio;
 		this.massOnSystem = massOnSystem;
 		this.pulleyRadius = pulleyRadius;
-		double[] constants = calculateConstants(motor);
 
-		velocityConstant = constants[0];
-		torqueConstant = constants[1];
-		motorResistance = constants[2];
+		velocityConstant = motor.velocityConstant;
+		torqueConstant = motor.torqueConstant;
+		motorResistance = motor.motorResistance;
 
 //		doubles the stall torque to make "super motor" based on motor count
 		torqueConstant = torqueConstant * 2 * motorCount;
@@ -54,6 +52,9 @@ public class LinearMotionMechanism implements SimulationMechanism {
 		calculateMechanismVelocity(env.getIntervalMs());
 	}
 
+	/**
+	 * Calculates the Mechanism's acceleration given the current mechanism velocity and voltage operating on the motors.
+	 */
 	private double calculateMechanismAcceleration() {
 		currentMechanismAcceleration = (-torqueConstant * gearRatio * gearRatio
 				/ (velocityConstant * motorResistance * pulleyRadius * pulleyRadius * massOnSystem)
@@ -66,7 +67,6 @@ public class LinearMotionMechanism implements SimulationMechanism {
 
 	/**
 	 * Integrates over the Acceleration to find how much our velocity has changed in the past interval.
-	 *
 	 * @param intervalInMs
 	 */
 	private void calculateMechanismVelocity(int intervalInMs) {
@@ -75,7 +75,6 @@ public class LinearMotionMechanism implements SimulationMechanism {
 
 	/**
 	 * Integrates over the Velocity to find how much our position has changed in the past interval.
-	 *
 	 * @param intervalInMs
 	 */
 	private void calculatePosition(int intervalInMs) {

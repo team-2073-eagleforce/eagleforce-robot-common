@@ -1,5 +1,6 @@
 package com.team2073.common.simulation.env;
 
+import com.team2073.common.CommonConstants.TestTags;
 import com.team2073.common.simulation.SimulationConstants;
 import com.team2073.common.simulation.env.SubsystemTestFixtures.ConstantOutputtingSubsystem;
 import com.team2073.common.simulation.model.ArmMechanism;
@@ -7,12 +8,13 @@ import com.team2073.common.simulation.model.LinearMotionMechanism;
 import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSPX;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSRX;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-public class SimulationMechanismTest {
+@Tag(TestTags.INTEGRATION_TEST)
+public class SimulationMechanismIntegrationTest {
 
 	@Test
 	public void simulationEagleSRX_WHEN_set_SHOULD_MoveMechanism() {
@@ -25,7 +27,6 @@ public class SimulationMechanismTest {
 				.withIterationCount(5)
 				.run(e -> {
 					assertTrue(lmm.velocity() > 0);
-
 				});
 
 	}

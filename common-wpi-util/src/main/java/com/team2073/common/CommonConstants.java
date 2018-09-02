@@ -48,4 +48,8 @@ public abstract class CommonConstants {
 		public static final long LONG_ON_PERIODIC_CALL = 3;
 		public static final long LONG_PERIODIC_LOOP = 30;
 	}
+
+	public static abstract class TestTags {
+		public static final String INTEGRATION_TEST = "integration-test";
+	}
 }
