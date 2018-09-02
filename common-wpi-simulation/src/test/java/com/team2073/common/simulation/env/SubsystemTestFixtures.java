@@ -2,9 +2,10 @@ package com.team2073.common.simulation.env;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorController;
+import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
+import com.team2073.common.controlloop.PidfControlLoop;
 import com.team2073.common.periodic.PeriodicAware;
 import com.team2073.common.simulation.model.SimulationCycleComponent;
-import edu.wpi.first.wpilibj.Solenoid;
 
 public class SubsystemTestFixtures {
 
@@ -50,16 +51,33 @@ public class SubsystemTestFixtures {
 		}
 	}
 
-	public static class SolenoidSubsystem implements PeriodicAware{
+	/**
+	 * An example elevator subsystem
+	 * <p>
+	 *     The encoder is on the same shaft of the pulley, and the encoder has 1350 tics per inch of elevator travel.
+	 *     <p/>
+	 */
+	public static class SimulatedElevatorSubsystem implements PeriodicAware {
+		private IMotorControllerEnhanced talon;
+		private boolean started;
+		private double ticsPerInch = 1350;
+//		UNITS FOR P are in percentages per inch
+		private PidfControlLoop pid = new PidfControlLoop(.023, 0 , .02, 0,10 , 1);
 
-		Solenoid solenoid;
-		public SolenoidSubsystem(Solenoid solenoid) {
-			this.solenoid = solenoid;
+		public SimulatedElevatorSubsystem(IMotorControllerEnhanced talon) {
+			this.talon = talon;
+
 		}
 
 		@Override
 		public void onPeriodic() {
-			solenoid.set(true);
+			if(!started){
+				pid.startPID(40);
+				started = true;
+			}
+
+			pid.setNewPosition(talon.getSelectedSensorPosition(0)/ticsPerInch);
+			talon.set(ControlMode.PercentOutput, pid.getOutput());
 		}
 	}
 

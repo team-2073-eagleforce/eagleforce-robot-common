@@ -1,7 +1,5 @@
 package com.team2073.common.controlloop;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 public class PidfControlLoop {
 	private double p;
 	private double i;
@@ -10,7 +8,6 @@ public class PidfControlLoop {
 
 	private double output;
 	private double maxOutput;
-	private TalonSRX talon;
 	private double goal;
 	private double error;
 	private double accumulatedError;
@@ -26,20 +23,18 @@ public class PidfControlLoop {
 	 * @param i
 	 * @param d
 	 * @param f
-	 * @param talon
 	 *            if a different input of error is desired, pass in null for talon
 	 * @param intervalInMilis
 	 * @param maxOutput
 	 *            <p>
 	 *            goal is in units of encoder tics if using a talon
 	 */
-	public PidfControlLoop(double p, double i, double d, double f, TalonSRX talon, long intervalInMilis, double maxOutput) {
+	public PidfControlLoop(double p, double i, double d, double f, long intervalInMilis, double maxOutput) {
 		this.p = p;
 		this.i = i;
 		this.d = d;
 		this.f = f;
 		this.maxOutput = maxOutput;
-		this.talon = talon;
 		if (intervalInMilis <= 0)
 			intervalInMilis = 1;
 		this.intervalInMilis = intervalInMilis;
@@ -60,8 +55,6 @@ public class PidfControlLoop {
 	}
 
 	private void pidCycle() {
-		if (talon != null)
-			position = talon.getSelectedSensorPosition(0);
 		error = goal - position;
 
 		output = 0;
@@ -69,9 +62,7 @@ public class PidfControlLoop {
 		output += p * error;
 		output += i * accumulatedError;
 		output += d * errorVelocity;
-		
-		output = (output / (1000.));
-		
+
 		accumulatedError += error;
 		errorVelocity = (double) ((error - lastError) / (intervalInMilis));
 		error = lastError;
