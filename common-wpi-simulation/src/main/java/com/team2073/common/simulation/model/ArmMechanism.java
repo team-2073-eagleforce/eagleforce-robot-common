@@ -1,142 +1,86 @@
 package com.team2073.common.simulation.model;
 
 
-import com.team2073.common.simulation.SimulationConstants.Motors;
+import com.team2073.common.simulation.SimulationConstants.MotorType;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
+import static com.team2073.common.util.ConversionUtil.msToSeconds;
+
 public class ArmMechanism implements SimulationMechanism {
-	
+
 	private final double gearRatio;
-	private final MotorType motor;
-	private final int motorCount;
 	private double massOnSystem;
-	private double velocityConstant; 
+	private double velocityConstant;
 	private double torqueConstant;
 	private double lengthOfArm;
-	private double motorResitance;
+	private double motorResistance;
 	private double currentVoltage = 0;
 	private double currentMechanismPosition = 0;
 	private double currentMechanismVelocity = 0;
 	private double currentMechanismAcceleration = 0;
-	
-	public enum MotorType {
-		PRO, BAG, CIM, MINI_CIM;
-	}
-	
-	public static void main(String args[]) {
-		ArmMechanism LMM = new ArmMechanism(55, MotorType.MINI_CIM, 2, 15, 13);
-		for(int i = 0; LMM.getCurrentMechanismPosition() < .25; i++) {
-			LMM.updateVoltage(12);
-//			LMM.cycle(1);
-			if(i%25 == 0)
-				System.out.println(i+":" + "\tPosition: " + LMM.getCurrentMechanismPosition() + " \t Velocity: " + LMM.getCurrentMechanismVelocity() + "\t Acceleration: " + LMM.getCurrentMechanismAcceleration());
-		}
-	}
-	
+
 	/**
 	 * For Arm Systems with most of the weight at the end of the arm
-	 *
+	 * <p>
 	 * Units are in terms of RPM, Inches, and Pounds
-	 * 
-	 * @param gearRatio
-	 * Should be > 1, from motor to output 
-	 * 
-	 * @param motor
-	 * The Type of motor is the system running on.
-	 * @param motorCount
-	 * The number of motors for the system.
-	 * @param massOnSystem
-	 * How much weight are we pulling up. (Probably want to overestimate this a bit)
+	 *
+	 * @param gearRatio    Should be > 1, from motor to output
+	 * @param motor        The Type of motor is the system running on.
+	 * @param motorCount   The number of motors for the system.
+	 * @param massOnSystem How much weight are we pulling up. (Probably want to overestimate this kV bit)
 	 */
 	public ArmMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double lengthOfArm) {
 		this.gearRatio = gearRatio;
-		this.motor = motor;
-		this.motorCount = motorCount;
 		this.massOnSystem = massOnSystem;
 		this.lengthOfArm = lengthOfArm;
-		calculateConstants();
-	}
-	
-	private void calculateConstants() {
-		switch (motor) {
-		case PRO:
-			velocityConstant = Motors.Pro.MOTOR_KV;
-			torqueConstant = Motors.Pro.MOTOR_KT;
-			motorResitance = Motors.Pro.RESISTANCE;
-			break;
-		case BAG:
-			velocityConstant = Motors.Bag.MOTOR_KV;
-			torqueConstant = Motors.Bag.MOTOR_KT;
-			motorResitance = Motors.Bag.RESISTANCE;
-			break;
-		case CIM:
-			velocityConstant = Motors.Cim.MOTOR_KV;
-			torqueConstant = Motors.Cim.MOTOR_KT;
-			motorResitance = Motors.Cim.RESISTANCE;
-			break;
-		case MINI_CIM:
-			velocityConstant = Motors.MiniCim.MOTOR_KV;
-			torqueConstant = Motors.MiniCim.MOTOR_KT;
-			motorResitance = Motors.MiniCim.RESISTANCE;
-			break;
-		}
-		
+
+		velocityConstant = motor.velocityConstant;
+		torqueConstant = motor.torqueConstant;
+		motorResistance = motor.motorResistance;
+
 //		Creates "supermotor" with additional torque per motor
 		torqueConstant = torqueConstant * 2 * motorCount;
 	}
-	
+
+	@Override
 	public void updateVoltage(double voltage) {
-		currentVoltage  = voltage;
+		currentVoltage = voltage;
 	}
-	
+
 	@Override
 	public void cycle(SimulationEnvironment env) {
-		calculateDistance(env.getIntervalMs());
+		calculatePosition(env.getIntervalMs());
 		calculateMechanismVelocity(env.getIntervalMs(), currentVoltage);
-//		calculateMechanismAcceleration(currentVoltage);
-//		calculateNewMotorVelocity(currentVoltage, intervalInMs);
 	}
-	
+
+	/**
+	 * Calculates the Mechanism's acceleration given the current mechanism velocity and voltage operating on the motors.
+	 */
 	private double calculateMechanismAcceleration(double voltage) {
 		currentMechanismAcceleration = ((gearRatio * torqueConstant * voltage)
-				- ((1/velocityConstant) * torqueConstant * currentMechanismVelocity * gearRatio * gearRatio))
-				/ (motorResitance * (1./12.) * massOnSystem * Math.pow(lengthOfArm, 2));
-				
+				- ((1 / velocityConstant) * torqueConstant * currentMechanismVelocity * gearRatio * gearRatio))
+				/ (motorResistance * (1. / 12.) * massOnSystem * Math.pow(lengthOfArm, 2));
+
 		return currentMechanismAcceleration;
 	}
 
-//	private void calculateNewMotorVelocity(double voltage, int intervalInMs) {
-//		// TODO: Check units
-//		// InInchesPerMinute^2 at the mechanism
-//		currentMechanismVelocity += currentMechanismAcceleration * msToMinutes(intervalInMs);
-//		double motorVelocity = (currentMechanismVelocity * gearRatio) / (pullyRadius * Math.PI * 2);
-//		currentMotorSpeed = motorVelocity;
-//	}
-	
+	/**
+	 * Integrates over the Acceleration to find how much our velocity has changed in the past interval.
+	 * @param intervalInMs
+	 */
 	private void calculateMechanismVelocity(int intervalInMs, double voltage) {
-//		currentMechanismVelocity =  currentMechanismVelocity + currentMechanismAcceleration * msToSeconds(intervalInMs);
 		currentMechanismVelocity += msToSeconds(intervalInMs) * calculateMechanismAcceleration(voltage);
 	}
-	
-	private double msToSeconds(int timeInMs) {
-		return timeInMs * 0.001;
-	}
-	
-	private void calculateDistance(int intervalInMs) {
-//		currentMechanismPosition += currentMechanismVelocity * msToSeconds(intervalInMs)
-//				+ (1 / 2) * currentMechanismAcceleration * Math.pow(msToSeconds(intervalInMs), 2);
-		currentMechanismPosition += msToSeconds(intervalInMs)*currentMechanismVelocity;
+
+	/**
+	 * Integrates over the Velocity to find how much our position has changed in the past interval.
+	 * @param intervalInMs
+	 */
+	private void calculatePosition(int intervalInMs) {
+		currentMechanismPosition += msToSeconds(intervalInMs) * currentMechanismVelocity;
 	}
 
-	public double getCurrentMechanismPosition() {
-		return currentMechanismPosition;
-	}
-
-	public double getCurrentMechanismVelocity() {
-		return currentMechanismVelocity;
-	}
-
-	public double getCurrentMechanismAcceleration() {
+	public double acceleration() {
 		return currentMechanismAcceleration;
 	}
 
@@ -144,6 +88,11 @@ public class ArmMechanism implements SimulationMechanism {
 	public double position() {
 		return currentMechanismPosition;
 	}
-	
-	
+
+	@Override
+	public double velocity() {
+		return currentMechanismVelocity;
+	}
+
+
 }
