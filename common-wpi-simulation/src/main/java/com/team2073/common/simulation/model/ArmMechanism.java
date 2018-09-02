@@ -18,6 +18,7 @@ public class ArmMechanism implements SimulationMechanism {
 	private double currentMechanismPosition = 0;
 	private double currentMechanismVelocity = 0;
 	private double currentMechanismAcceleration = 0;
+	private boolean solenoidPosition;
 
 	/**
 	 * For Arm Systems with most of the weight at the end of the arm
@@ -80,6 +81,17 @@ public class ArmMechanism implements SimulationMechanism {
 		currentMechanismPosition += msToSeconds(intervalInMs) * currentMechanismVelocity;
 	}
 
+	@Override
+	public void updateSolenoid(boolean on) {
+		solenoidPosition = on;
+	}
+
+	@Override
+	public boolean solenoidPosition() {
+		return solenoidPosition;
+	}
+
+	@Override
 	public double acceleration() {
 		return currentMechanismAcceleration;
 	}
