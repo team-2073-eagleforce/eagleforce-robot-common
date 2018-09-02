@@ -10,8 +10,8 @@ public abstract class BaseSimulationMotorController implements SimulationMotorCo
 
     protected String name;
     protected SimulationMechanism mechanism;
-    protected double maxVoltageForward;
-    protected double maxVoltageReverse;
+    protected double maxVoltageForward = 12;
+    protected double maxVoltageReverse = -12;
     protected double outputVoltage;
 
     public BaseSimulationMotorController(String name, SimulationMechanism mechanism){
