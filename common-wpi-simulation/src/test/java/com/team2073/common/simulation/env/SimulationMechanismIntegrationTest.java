@@ -48,14 +48,16 @@ public class SimulationMechanismIntegrationTest {
 	public void subsystemSimulation_WHEN_usedWithControlloop_SHOULD_moveAccordingly(){
 		LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.PRO, 2, 20, .855);
 		SimulatedElevatorSubsystem subsystem = new SimulatedElevatorSubsystem(new SimulationEagleSRX("ExampleTalon", lmm, 1350));
+		double goalPosition = 25;
 
+		subsystem.set(goalPosition);
 		new SimulationEnvironmentRunner()
 				.withCycleComponent(lmm)
 				.withPeriodicComponent(subsystem)
-				.withIterationCount(500)
+				.withIterationCount(100)
 				.run(e -> {
 					System.out.printf("\n \n POSITION : [%s] \n \n",lmm.position());
-					Assertions.assertThat(lmm.position()).isCloseTo(40.0, Assertions.offset(3.0));
+					Assertions.assertThat(lmm.position()).isCloseTo(goalPosition, Assertions.offset(2.0));
 				});
 	}
 

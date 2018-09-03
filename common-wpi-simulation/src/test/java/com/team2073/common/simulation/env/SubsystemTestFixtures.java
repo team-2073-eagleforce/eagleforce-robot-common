@@ -61,18 +61,24 @@ public class SubsystemTestFixtures {
 		private IMotorControllerEnhanced talon;
 		private boolean started;
 		private double ticsPerInch = 1350;
+		private double setpoint;
 //		UNITS FOR P are in percentages per inch
-		private PidfControlLoop pid = new PidfControlLoop(.023, 0 , .02, 0,10 , 1);
+		private PidfControlLoop pid = new PidfControlLoop(.023, 0.000001 , .02, 0,10 , 1);
 
 		public SimulatedElevatorSubsystem(IMotorControllerEnhanced talon) {
 			this.talon = talon;
+		}
 
+		public void set(double setpoint){
+			this.setpoint = setpoint;
+			pid.stopPID();
+			started = false;
 		}
 
 		@Override
 		public void onPeriodic() {
 			if(!started){
-				pid.startPID(40);
+				pid.startPID(setpoint);
 				started = true;
 			}
 
