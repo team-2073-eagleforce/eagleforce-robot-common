@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 import com.team2073.common.controlloop.PidfControlLoop;
 import com.team2073.common.periodic.PeriodicAware;
 import com.team2073.common.simulation.model.SimulationCycleComponent;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public class SubsystemTestFixtures {
 
@@ -84,6 +85,19 @@ public class SubsystemTestFixtures {
 
 			pid.setNewPosition(talon.getSelectedSensorPosition(0)/ticsPerInch);
 			talon.set(ControlMode.PercentOutput, pid.getOutput());
+		}
+	}
+
+	public static class SolenoidSubsystem implements PeriodicAware{
+
+		Solenoid solenoid;
+		public SolenoidSubsystem(Solenoid solenoid) {
+			this.solenoid = solenoid;
+		}
+
+		@Override
+		public void onPeriodic() {
+			solenoid.set(true);
 		}
 	}
 

@@ -2,12 +2,16 @@ package com.team2073.common.simulation.env;
 
 import com.team2073.common.CommonConstants.TestTags;
 import com.team2073.common.simulation.SimulationConstants;
+import com.team2073.common.simulation.component.SimulationComponentFactory;
 import com.team2073.common.simulation.env.SubsystemTestFixtures.ConstantOutputtingSubsystem;
+import com.team2073.common.simulation.env.SubsystemTestFixtures.SimulatedElevatorSubsystem;
+import com.team2073.common.simulation.env.SubsystemTestFixtures.SolenoidSubsystem;
 import com.team2073.common.simulation.model.ArmMechanism;
 import com.team2073.common.simulation.model.LinearMotionMechanism;
 import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSPX;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSRX;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -45,9 +49,9 @@ public class SimulationMechanismIntegrationTest {
 	}
 
 	@Test
-	public void subsystemSimulation_WHEN_usedWithControlloop_SHOULD_moveAccordingly(){
+	public void subsystemSimulation_WHEN_usedWithControlloop_SHOULD_moveAccordingly() {
 		LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.PRO, 2, 20, .855);
-		SimulatedElevatorSubsystem subsystem = new SimulatedElevatorSubsystem(new SimulationEagleSRX("ExampleTalon", lmm, 1350));
+		SubsystemTestFixtures.SimulatedElevatorSubsystem subsystem = new SimulatedElevatorSubsystem(new SimulationEagleSRX("ExampleTalon", lmm, 1350));
 		double goalPosition = 25;
 
 		subsystem.set(goalPosition);
@@ -56,7 +60,7 @@ public class SimulationMechanismIntegrationTest {
 				.withPeriodicComponent(subsystem)
 				.withIterationCount(100)
 				.run(e -> {
-					System.out.printf("\n \n POSITION : [%s] \n \n",lmm.position());
+					System.out.printf("\n \n POSITION : [%s] \n \n", lmm.position());
 					Assertions.assertThat(lmm.position()).isCloseTo(goalPosition, Assertions.offset(2.0));
 				});
 	}
