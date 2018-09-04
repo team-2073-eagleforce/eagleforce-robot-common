@@ -18,6 +18,7 @@ public class LinearMotionMechanism implements SimulationMechanism {
 	private double currentMechanismVelocity = 0;
 	private double currentMechanismAcceleration = 0;
 	private boolean solenoidPosition;
+	private Runnable whenPistonActive;
 
 	/**
 	 * For Systems like elevators =)
@@ -49,6 +50,10 @@ public class LinearMotionMechanism implements SimulationMechanism {
 
 	@Override
 	public void cycle(SimulationEnvironment env) {
+		if (solenoidPosition) {
+			whenPistonActive.run();
+		}
+
 		calculatePosition(env.getIntervalMs());
 		calculateMechanismVelocity(env.getIntervalMs());
 	}
@@ -63,11 +68,11 @@ public class LinearMotionMechanism implements SimulationMechanism {
 				+ gearRatio * torqueConstant / (motorResistance * pulleyRadius * massOnSystem) * currentVoltage);
 
 		return currentMechanismAcceleration;
-
 	}
 
 	/**
 	 * Integrates over the Acceleration to find how much our velocity has changed in the past interval.
+	 *
 	 * @param intervalInMs
 	 */
 	private void calculateMechanismVelocity(int intervalInMs) {
@@ -76,11 +81,13 @@ public class LinearMotionMechanism implements SimulationMechanism {
 
 	/**
 	 * Integrates over the Velocity to find how much our position has changed in the past interval.
+	 *
 	 * @param intervalInMs
 	 */
 	private void calculatePosition(int intervalInMs) {
 		currentMechanismPosition += msToSeconds(intervalInMs) * currentMechanismVelocity;
 	}
+
 	@Override
 	public void updateSolenoid(boolean on) {
 		solenoidPosition = on;
@@ -106,5 +113,23 @@ public class LinearMotionMechanism implements SimulationMechanism {
 		return currentMechanismVelocity;
 	}
 
+	@Override
+	public void whenSolenoidActive(Runnable function) {
+		this.whenPistonActive = function;
+	}
 
+	@Override
+	public void setPosition(double position) {
+		this.currentMechanismPosition = position;
+	}
+
+	@Override
+	public void setVelocity(double velocity) {
+		this.currentMechanismVelocity = velocity;
+	}
+
+	@Override
+	public void setAcceleration(double acceleration) {
+		this.currentMechanismAcceleration = acceleration;
+	}
 }

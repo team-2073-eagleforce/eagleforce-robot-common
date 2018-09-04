@@ -19,6 +19,7 @@ public class ArmMechanism implements SimulationMechanism {
 	private double currentMechanismVelocity = 0;
 	private double currentMechanismAcceleration = 0;
 	private boolean solenoidPosition;
+	private Runnable whenPistonActive;
 
 	/**
 	 * For Arm Systems with most of the weight at the end of the arm
@@ -50,6 +51,10 @@ public class ArmMechanism implements SimulationMechanism {
 
 	@Override
 	public void cycle(SimulationEnvironment env) {
+		if (solenoidPosition) {
+			whenPistonActive.run();
+		}
+
 		calculatePosition(env.getIntervalMs());
 		calculateMechanismVelocity(env.getIntervalMs(), currentVoltage);
 	}
@@ -67,6 +72,7 @@ public class ArmMechanism implements SimulationMechanism {
 
 	/**
 	 * Integrates over the Acceleration to find how much our velocity has changed in the past interval.
+	 *
 	 * @param intervalInMs
 	 */
 	private void calculateMechanismVelocity(int intervalInMs, double voltage) {
@@ -75,6 +81,7 @@ public class ArmMechanism implements SimulationMechanism {
 
 	/**
 	 * Integrates over the Velocity to find how much our position has changed in the past interval.
+	 *
 	 * @param intervalInMs
 	 */
 	private void calculatePosition(int intervalInMs) {
@@ -107,4 +114,23 @@ public class ArmMechanism implements SimulationMechanism {
 	}
 
 
+	@Override
+	public void whenSolenoidActive(Runnable function) {
+		whenPistonActive = function;
+	}
+
+	@Override
+	public void setPosition(double position) {
+		currentMechanismPosition = position;
+	}
+
+	@Override
+	public void setVelocity(double velocity) {
+		currentMechanismVelocity = velocity;
+	}
+
+	@Override
+	public void setAcceleration(double acceleration) {
+		currentMechanismAcceleration = acceleration;
+	}
 }
