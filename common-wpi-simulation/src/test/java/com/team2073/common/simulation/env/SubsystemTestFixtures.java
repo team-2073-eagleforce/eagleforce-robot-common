@@ -25,6 +25,8 @@ public class SubsystemTestFixtures {
 
 		int cycles = 0;
 
+
+
 		@Override
 		public void cycle(SimulationEnvironment env) {
 			cycles++;
