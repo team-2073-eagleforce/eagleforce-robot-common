@@ -19,6 +19,8 @@ public class SubsystemTestFixtures {
 		public void onPeriodic() {
 			talon.set(ControlMode.PercentOutput, .5);
 		}
+
+
 	}
 
 	public static class BasicCycleComponent implements SimulationCycleComponent {
