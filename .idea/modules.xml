@@ -9,6 +9,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-util/common-util_main.iml" filepath="$PROJECT_DIR$/.idea/modules/common-util/common-util_main.iml" group="common-util" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-util/common-util_test.iml" filepath="$PROJECT_DIR$/.idea/modules/common-util/common-util_test.iml" group="common-util" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-wpi-simulation.iml" filepath="$PROJECT_DIR$/.idea/modules/common-wpi-simulation.iml" group="common-wpi-simulation" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-wpi-simulation-stubs.iml" filepath="$PROJECT_DIR$/.idea/modules/common-wpi-simulation-stubs.iml" group="common-wpi-simulation-stubs" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-wpi-simulation-stubs/common-wpi-simulation-stubs_main.iml" filepath="$PROJECT_DIR$/.idea/modules/common-wpi-simulation-stubs/common-wpi-simulation-stubs_main.iml" group="common-wpi-simulation-stubs" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-wpi-simulation-stubs/common-wpi-simulation-stubs_test.iml" filepath="$PROJECT_DIR$/.idea/modules/common-wpi-simulation-stubs/common-wpi-simulation-stubs_test.iml" group="common-wpi-simulation-stubs" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-wpi-simulation/common-wpi-simulation_main.iml" filepath="$PROJECT_DIR$/.idea/modules/common-wpi-simulation/common-wpi-simulation_main.iml" group="common-wpi-simulation" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-wpi-simulation/common-wpi-simulation_test.iml" filepath="$PROJECT_DIR$/.idea/modules/common-wpi-simulation/common-wpi-simulation_test.iml" group="common-wpi-simulation" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-wpi-util.iml" filepath="$PROJECT_DIR$/.idea/modules/common-wpi-util.iml" group="common-wpi-util" />

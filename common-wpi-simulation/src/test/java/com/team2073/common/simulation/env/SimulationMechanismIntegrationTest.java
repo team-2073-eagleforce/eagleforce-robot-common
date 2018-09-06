@@ -72,7 +72,7 @@ public class SimulationMechanismIntegrationTest {
 //		No changes to the subsystem should be made between working on the robot and running simulation, if things change, your testing could be invalidated.
 		SimulatedElevatorSubsystem subsystem = new SimulatedElevatorSubsystem(srx, sensor, solenoid);
 
-//		Tell the mechanism what to do when the solenoid is active, this will often differe for different mechanisms, and many won't even have a solenoid.
+//		Tell the mechanism what to do when the solenoid is active, this will often differ for different mechanisms, and many won't even have a solenoid.
 		lmm.whenSolenoidActive(() -> {
 			lmm.setVelocity(0);
 			lmm.setAcceleration(0);
@@ -81,7 +81,7 @@ public class SimulationMechanismIntegrationTest {
 //		This is just giving hte subsystem a setpoint, nothing fancy here.
 		subsystem.set(goalPosition);
 
-//		This is the big fancy SimulationEnviornment Runner, it will handle running the "Real World" cycle, and the software periodic loops,
+//		This is the big fancy SimulationEnvironment Runner, it will handle running the "Real World" cycle, and the software periodic loops,
 //      just pass in your mechanism, subsystem, and tell how long you want it to run for before executing the methods in the run method.
 //      (That is where you should place your assertions.)
 		new SimulationEnvironmentRunner()
