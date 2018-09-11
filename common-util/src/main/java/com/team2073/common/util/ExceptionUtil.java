@@ -153,8 +153,12 @@ public abstract class ExceptionUtil {
 
     // Other methods
     // ============================================================
-    public static void illegalState(String msg) {
-        throw new IllegalStateException(msg);
-    }
+	public static void illegalState(String msg, Object... args) {
+		throw new IllegalStateException(String.format(msg, args));
+	}
+
+	public static void illegalState(String msg, Throwable cause, Object... args) {
+		throw new IllegalStateException(String.format(msg, args), cause);
+	}
 
 }

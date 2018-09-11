@@ -312,6 +312,7 @@ public class PeriodicRunner implements SmartDashboardAware, PeriodicAware {
 		return singleton;
 	}
 
+	// TODO: Change name to PeriodicRegistration to match pattern of RecordableRegistration
 	public static class PeriodicInstance {
 		private final PeriodicAware instance;
 		private final DurationHistory history = new DurationHistory();

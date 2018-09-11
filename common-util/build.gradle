@@ -9,4 +9,7 @@ apply plugin: 'kotlin'
 
 dependencies {
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8'
+
 }
