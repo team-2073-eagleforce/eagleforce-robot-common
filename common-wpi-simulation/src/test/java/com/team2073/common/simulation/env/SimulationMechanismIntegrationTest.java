@@ -13,10 +13,11 @@ import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSPX;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.offset;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag(TestTags.INTEGRATION_TEST)
@@ -89,8 +90,7 @@ public class SimulationMechanismIntegrationTest {
 				.withPeriodicComponent(subsystem)
 				.withIterationCount(300)
 				.run(e -> {
-					System.out.printf("\n \n POSITION : [%s] \n \n", lmm.position());
-					Assertions.assertThat(lmm.position()).isCloseTo(goalPosition, Assertions.offset(2.0));
+					assertThat(lmm.position()).isCloseTo(goalPosition, offset(2.0));
 				});
 
 	}
@@ -104,7 +104,7 @@ public class SimulationMechanismIntegrationTest {
 				.withCycleComponent(arm)
 				.withPeriodicComponent(subsystem)
 				.withIterationCount(5)
-				.run(e -> assertTrue(arm.solenoidPosition()));
+				.run(e -> assertTrue(arm.isSolenoidExtended()));
 	}
 
 

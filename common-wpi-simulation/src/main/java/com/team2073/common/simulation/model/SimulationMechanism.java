@@ -12,7 +12,7 @@ public interface SimulationMechanism extends SimulationCycleComponent {
 
 	void updateSolenoid(boolean on);
 
-	boolean solenoidPosition();
+	boolean isSolenoidExtended();
 
 	void whenSolenoidActive(Runnable function);
 
@@ -21,5 +21,11 @@ public interface SimulationMechanism extends SimulationCycleComponent {
 	void setVelocity(double velocity);
 
 	void setAcceleration(double acceleration);
+
+	double calculateAcceleration();
+
+	double calculateVelocity(int intervalInMs);
+
+	double calculatePosition(int intervalInMs);
 
 }

@@ -5,7 +5,7 @@ import com.team2073.common.simulation.env.SimulationEnvironment;
 
 import static com.team2073.common.util.ConversionUtil.msToSeconds;
 
-public class LinearMotionMechanism implements SimulationMechanism {
+public class LinearMotionMechanism extends AbstractSimulationMechanism implements SimulationMechanism {
 
 	private final double gearRatio;
 	private double massOnSystem;
@@ -14,11 +14,6 @@ public class LinearMotionMechanism implements SimulationMechanism {
 	private double pulleyRadius;
 	private double motorResistance;
 	private double currentVoltage = 0;
-	private double currentMechanismPosition = 0;
-	private double currentMechanismVelocity = 0;
-	private double currentMechanismAcceleration = 0;
-	private boolean solenoidPosition;
-	private Runnable whenPistonActive;
 
 	/**
 	 * For Systems like elevators =)
@@ -50,24 +45,23 @@ public class LinearMotionMechanism implements SimulationMechanism {
 
 	@Override
 	public void cycle(SimulationEnvironment env) {
-		if (solenoidPosition) {
-			whenPistonActive.run();
-		}
+		super.cycle(env);
 
 		calculatePosition(env.getIntervalMs());
-		calculateMechanismVelocity(env.getIntervalMs());
+		calculateVelocity(env.getIntervalMs());
 	}
 
 	/**
 	 * Calculates the Mechanism's acceleration given the current mechanism velocity and voltage operating on the motors.
 	 */
-	private double calculateMechanismAcceleration() {
-		currentMechanismAcceleration = (-torqueConstant * gearRatio * gearRatio
+	@Override
+	public double calculateAcceleration() {
+		acceleration = (-torqueConstant * gearRatio * gearRatio
 				/ (velocityConstant * motorResistance * pulleyRadius * pulleyRadius * massOnSystem)
-				* currentMechanismVelocity
+				* velocity
 				+ gearRatio * torqueConstant / (motorResistance * pulleyRadius * massOnSystem) * currentVoltage);
 
-		return currentMechanismAcceleration;
+		return acceleration;
 	}
 
 	/**
@@ -75,8 +69,10 @@ public class LinearMotionMechanism implements SimulationMechanism {
 	 *
 	 * @param intervalInMs
 	 */
-	private void calculateMechanismVelocity(int intervalInMs) {
-		currentMechanismVelocity += msToSeconds(intervalInMs) * calculateMechanismAcceleration();
+	@Override
+	public double calculateVelocity(int intervalInMs) {
+		velocity += msToSeconds(intervalInMs) * calculateAcceleration();
+		return velocity;
 	}
 
 	/**
@@ -84,52 +80,10 @@ public class LinearMotionMechanism implements SimulationMechanism {
 	 *
 	 * @param intervalInMs
 	 */
-	private void calculatePosition(int intervalInMs) {
-		currentMechanismPosition += msToSeconds(intervalInMs) * currentMechanismVelocity;
+	@Override
+	public double calculatePosition(int intervalInMs) {
+		position += msToSeconds(intervalInMs) * velocity;
+		return position;
 	}
 
-	@Override
-	public void updateSolenoid(boolean on) {
-		solenoidPosition = on;
-	}
-
-	@Override
-	public boolean solenoidPosition() {
-		return solenoidPosition;
-	}
-
-	@Override
-	public double acceleration() {
-		return currentMechanismAcceleration;
-	}
-
-	@Override
-	public double position() {
-		return currentMechanismPosition;
-	}
-
-	@Override
-	public double velocity() {
-		return currentMechanismVelocity;
-	}
-
-	@Override
-	public void whenSolenoidActive(Runnable function) {
-		this.whenPistonActive = function;
-	}
-
-	@Override
-	public void setPosition(double position) {
-		this.currentMechanismPosition = position;
-	}
-
-	@Override
-	public void setVelocity(double velocity) {
-		this.currentMechanismVelocity = velocity;
-	}
-
-	@Override
-	public void setAcceleration(double acceleration) {
-		this.currentMechanismAcceleration = acceleration;
-	}
 }

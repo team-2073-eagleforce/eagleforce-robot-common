@@ -6,7 +6,7 @@ import com.team2073.common.simulation.env.SimulationEnvironment;
 
 import static com.team2073.common.util.ConversionUtil.msToSeconds;
 
-public class ArmMechanism implements SimulationMechanism {
+public class ArmMechanism extends AbstractSimulationMechanism implements SimulationMechanism {
 
 	private final double gearRatio;
 	private double massOnSystem;
@@ -15,11 +15,6 @@ public class ArmMechanism implements SimulationMechanism {
 	private double lengthOfArm;
 	private double motorResistance;
 	private double currentVoltage = 0;
-	private double currentMechanismPosition = 0;
-	private double currentMechanismVelocity = 0;
-	private double currentMechanismAcceleration = 0;
-	private boolean solenoidPosition;
-	private Runnable whenPistonActive;
 
 	/**
 	 * For Arm Systems with most of the weight at the end of the arm
@@ -51,23 +46,22 @@ public class ArmMechanism implements SimulationMechanism {
 
 	@Override
 	public void cycle(SimulationEnvironment env) {
-		if (solenoidPosition) {
-			whenPistonActive.run();
-		}
+		super.cycle(env);
 
 		calculatePosition(env.getIntervalMs());
-		calculateMechanismVelocity(env.getIntervalMs(), currentVoltage);
+		calculateVelocity(env.getIntervalMs());
 	}
 
 	/**
 	 * Calculates the Mechanism's acceleration given the current mechanism velocity and voltage operating on the motors.
 	 */
-	private double calculateMechanismAcceleration(double voltage) {
-		currentMechanismAcceleration = ((gearRatio * torqueConstant * voltage)
-				- ((1 / velocityConstant) * torqueConstant * currentMechanismVelocity * gearRatio * gearRatio))
+	@Override
+	public double calculateAcceleration() {
+		acceleration = ((gearRatio * torqueConstant * currentVoltage)
+				- ((1 / velocityConstant) * torqueConstant * velocity * gearRatio * gearRatio))
 				/ (motorResistance * (1. / 12.) * massOnSystem * Math.pow(lengthOfArm, 2));
 
-		return currentMechanismAcceleration;
+		return acceleration;
 	}
 
 	/**
@@ -75,8 +69,10 @@ public class ArmMechanism implements SimulationMechanism {
 	 *
 	 * @param intervalInMs
 	 */
-	private void calculateMechanismVelocity(int intervalInMs, double voltage) {
-		currentMechanismVelocity += msToSeconds(intervalInMs) * calculateMechanismAcceleration(voltage);
+	@Override
+	public double calculateVelocity(int intervalInMs) {
+		velocity += msToSeconds(intervalInMs) * calculateAcceleration();
+		return velocity;
 	}
 
 	/**
@@ -84,53 +80,10 @@ public class ArmMechanism implements SimulationMechanism {
 	 *
 	 * @param intervalInMs
 	 */
-	private void calculatePosition(int intervalInMs) {
-		currentMechanismPosition += msToSeconds(intervalInMs) * currentMechanismVelocity;
-	}
-
 	@Override
-	public void updateSolenoid(boolean on) {
-		solenoidPosition = on;
+	public double calculatePosition(int intervalInMs) {
+		position += msToSeconds(intervalInMs) * velocity;
+		return position;
 	}
 
-	@Override
-	public boolean solenoidPosition() {
-		return solenoidPosition;
-	}
-
-	@Override
-	public double acceleration() {
-		return currentMechanismAcceleration;
-	}
-
-	@Override
-	public double position() {
-		return currentMechanismPosition;
-	}
-
-	@Override
-	public double velocity() {
-		return currentMechanismVelocity;
-	}
-
-
-	@Override
-	public void whenSolenoidActive(Runnable function) {
-		whenPistonActive = function;
-	}
-
-	@Override
-	public void setPosition(double position) {
-		currentMechanismPosition = position;
-	}
-
-	@Override
-	public void setVelocity(double velocity) {
-		currentMechanismVelocity = velocity;
-	}
-
-	@Override
-	public void setAcceleration(double acceleration) {
-		currentMechanismAcceleration = acceleration;
-	}
 }

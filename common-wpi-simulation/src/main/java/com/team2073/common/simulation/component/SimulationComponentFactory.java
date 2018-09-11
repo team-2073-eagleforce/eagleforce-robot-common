@@ -1,6 +1,7 @@
 package com.team2073.common.simulation.component;
 
 import com.team2073.common.simulation.model.SimulationMechanism;
+import com.team2073.common.util.MockUtil;
 
 import static org.mockito.Mockito.*;
 
@@ -10,13 +11,9 @@ public class SimulationComponentFactory {
 
 		SimulationSolenoid solenoid = mock(SimulationSolenoid.class);
 
-		doAnswer(e -> {
-			e.callRealMethod();
-			mechanism.updateSolenoid(solenoid.get());
-			return null;
-		}).when(solenoid).set(anyBoolean());
+		MockUtil.callRealVoidMethod(solenoid, () -> mechanism.updateSolenoid(solenoid.get())).set(anyBoolean());
 
-		when(solenoid.get()).thenCallRealMethod();
+		MockUtil.callRealMethod(solenoid.get());
 
 		return solenoid;
 	}
@@ -31,22 +28,14 @@ public class SimulationComponentFactory {
 
 		SimulationDigitalInput digitalInput = mock(SimulationDigitalInput.class);
 
-		doAnswer(e -> {
-			e.callRealMethod();
-			return null;
-		}).when(digitalInput).setMechanism(any());
 
-		doAnswer(e -> {
-			e.callRealMethod();
-			return null;
-		}).when(digitalInput).setLocation(anyDouble());
+		MockUtil.callRealVoidMethod(digitalInput).setMechanism(any());
 
-		doAnswer(e -> {
-			e.callRealMethod();
-			return null;
-		}).when(digitalInput).setOffset(anyDouble());
+		MockUtil.callRealVoidMethod(digitalInput).setLocation(anyDouble());
 
-		when(digitalInput.get()).thenCallRealMethod();
+		MockUtil.callRealVoidMethod(digitalInput).setOffset(anyDouble());
+
+		MockUtil.callRealMethod(digitalInput.get());
 
 		digitalInput.setMechanism(mechanism);
 		digitalInput.setLocation(location);
