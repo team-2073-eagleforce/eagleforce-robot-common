@@ -5,15 +5,10 @@ import com.team2073.common.simulation.env.SimulationEnvironment;
 
 import static com.team2073.common.util.ConversionUtil.msToSeconds;
 
-public class LinearMotionMechanism extends AbstractSimulationMechanism implements SimulationMechanism {
+public class LinearMotionMechanism extends AbstractSimulationMechanism {
 
-	private final double gearRatio;
-	private double massOnSystem;
-	private double velocityConstant;
-	private double torqueConstant;
+
 	private double pulleyRadius;
-	private double motorResistance;
-	private double currentVoltage = 0;
 
 	/**
 	 * For Systems like elevators =)

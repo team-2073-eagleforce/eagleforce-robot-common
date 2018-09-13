@@ -5,15 +5,22 @@ import com.team2073.common.simulation.env.SimulationEnvironment;
 public abstract class AbstractSimulationMechanism implements SimulationMechanism {
 
 	protected Runnable whenSolenoidActive;
-	protected boolean isSoleniodExtended;
+	protected boolean isSolenoidExtended;
 
 	protected double position;
 	protected double velocity;
 	protected double acceleration;
 
+	protected double gearRatio;
+	protected double massOnSystem;
+	protected double velocityConstant;
+	protected double torqueConstant;
+	protected double motorResistance;
+	protected double currentVoltage = 0;
+
 	@Override
 	public boolean isSolenoidExtended() {
-		return isSoleniodExtended;
+		return isSolenoidExtended;
 	}
 
 	@Override
@@ -60,6 +67,6 @@ public abstract class AbstractSimulationMechanism implements SimulationMechanism
 
 	@Override
 	public void updateSolenoid(boolean on) {
-		isSoleniodExtended = on;
+		isSolenoidExtended = on;
 	}
 }

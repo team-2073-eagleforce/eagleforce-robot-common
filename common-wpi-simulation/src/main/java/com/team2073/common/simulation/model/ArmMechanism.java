@@ -6,15 +6,9 @@ import com.team2073.common.simulation.env.SimulationEnvironment;
 
 import static com.team2073.common.util.ConversionUtil.msToSeconds;
 
-public class ArmMechanism extends AbstractSimulationMechanism implements SimulationMechanism {
+public class ArmMechanism extends AbstractSimulationMechanism {
 
-	private final double gearRatio;
-	private double massOnSystem;
-	private double velocityConstant;
-	private double torqueConstant;
 	private double lengthOfArm;
-	private double motorResistance;
-	private double currentVoltage = 0;
 
 	/**
 	 * For Arm Systems with most of the weight at the end of the arm
