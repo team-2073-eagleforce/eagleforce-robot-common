@@ -4,33 +4,20 @@ package com.team2073.common.simulation.model;
 import com.team2073.common.simulation.SimulationConstants.MotorType;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
-import static com.team2073.common.util.ConversionUtil.msToSeconds;
+import static com.team2073.common.util.ConversionUtil.*;
 
+/**
+ * For Arm Systems with most of the weight at the end of the arm
+ *
+ * @author Jason Stanley
+ */
 public class ArmMechanism extends AbstractSimulationMechanism {
 
 	private double lengthOfArm;
 
-	/**
-	 * For Arm Systems with most of the weight at the end of the arm
-	 * <p>
-	 * Units are in terms of RPM, Inches, and Pounds
-	 *
-	 * @param gearRatio    Should be > 1, from motor to output
-	 * @param motor        The Type of motor is the system running on.
-	 * @param motorCount   The number of motors for the system.
-	 * @param massOnSystem How much weight are we pulling up. (Probably want to overestimate this kV bit)
-	 */
 	public ArmMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double lengthOfArm) {
-		this.gearRatio = gearRatio;
-		this.massOnSystem = massOnSystem;
+		super(gearRatio, motor, motorCount, massOnSystem, lengthOfArm);
 		this.lengthOfArm = lengthOfArm;
-
-		velocityConstant = motor.velocityConstant;
-		torqueConstant = motor.torqueConstant;
-		motorResistance = motor.motorResistance;
-
-//		Creates "supermotor" with additional torque per motor
-		torqueConstant = torqueConstant * 2 * motorCount;
 	}
 
 	@Override
