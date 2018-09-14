@@ -7,4 +7,8 @@ data class Request<T : Condition, C : ColleagueSubsystem>(val subsystem: Class<C
                                                      val condition: T) {
 
     var hasBeenRequested = false
+
+    fun getName(): String{
+        return "REQUEST| SUBSYSTEM: " + subsystem.simpleName + " CONDITION: " + condition.toString()
+    }
 }
