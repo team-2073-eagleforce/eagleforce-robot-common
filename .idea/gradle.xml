@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/common-guice" />
             <option value="$PROJECT_DIR$/common-util" />
             <option value="$PROJECT_DIR$/common-wpi-simulation" />
+            <option value="$PROJECT_DIR$/common-wpi-simulation-stubs" />
             <option value="$PROJECT_DIR$/common-wpi-util" />
           </set>
         </option>
