@@ -1,6 +1,6 @@
 package com.team2073.common.drive;
 
-import com.sun.javafx.geom.Vec2d;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PurePursuitDrive {
 	private DeadReckoningTracker robotPose = new DeadReckoningTracker(null, null, null, 10);
-	private List<Vec2d> desiredVectors = new ArrayList<>();
+	private List<Vector2D> desiredVectors = new ArrayList<>();
 	private List<Point2D> desiredPoints = new ArrayList<>();
 	private final double maxVelocity;
 	private final double pathRadius;
@@ -22,23 +22,23 @@ public class PurePursuitDrive {
 		this.lookAheadIntervalOnPath = lookAheadIntervalOnPath;
 	}
 
-	private Vec2d steeringVector(Vec2d desiredVector) {
-		return new Vec2d((desiredVector.x - robotPose.getCurrentRobotVector().x),
-				(desiredVector.y - robotPose.getCurrentRobotVector().y));
+	private Vector2D steeringVector(Vector2D desiredVector) {
+		return new Vector2D((desiredVector.getX() - robotPose.getCurrentRobotVector().getX()),
+				(desiredVector.getY() - robotPose.getCurrentRobotVector().getY()));
 	}
 
 	private Point2D lookAheadPoint() {
 		Point2D lookAhead = new Point2D.Double();
-		double distanceToLookAhead = map(robotPose.getCurrentRobotVector().x, 0, maxVelocity, 0,
+		double distanceToLookAhead = map(robotPose.getCurrentRobotVector().getX(), 0, maxVelocity, 0,
 				lookAheadAtMaxVelocity);
-		double distanceOnX = Math.cos(robotPose.getCurrentRobotVector().y * (Math.PI / 180)) * distanceToLookAhead;
-		double distanceOnY = Math.sin(robotPose.getCurrentRobotVector().y * (Math.PI / 180)) * distanceToLookAhead;
+		double distanceOnX = Math.cos(robotPose.getCurrentRobotVector().getY() * (Math.PI / 180)) * distanceToLookAhead;
+		double distanceOnY = Math.sin(robotPose.getCurrentRobotVector().getY() * (Math.PI / 180)) * distanceToLookAhead;
 		lookAhead.setLocation(robotPose.getCurrentLocation().getX() + distanceOnX,
 				robotPose.getCurrentLocation().getY() + distanceOnY);
 		return lookAhead;
 	}
 
-	private double seekSteeringVector(Vec2d steeringVector) {
+	private double seekSteeringVector(Vector2D steeringVector) {
 		System.out.println(steeringVector);
 		return 0;
 	}
@@ -57,7 +57,7 @@ public class PurePursuitDrive {
 		
 	}
 	
-	private Vec2d pointToVector(Point2D point) {
+	private Vector2D pointToVector(Point2D point) {
 		int i = 0;
 		for (Point2D goal : desiredPoints) {
 			if(point.equals(goal)) {
@@ -94,7 +94,7 @@ public class PurePursuitDrive {
 	}
 	
 	private Point2D futurePointOnPath(Point2D closestPointOnPath) {
-		double distanceToLookAhead = map(robotPose.getCurrentRobotVector().x, 0, maxVelocity, 0,
+		double distanceToLookAhead = map(robotPose.getCurrentRobotVector().getX(), 0, maxVelocity, 0,
 				lookAheadAtMaxVelocity);
 		int futurePointOnPath = (int) Math.round(map(distanceToLookAhead, 0, lookAheadAtMaxVelocity, 0, lookAheadIntervalOnPath));
 		return desiredPoints.get(futurePointOnPath);
