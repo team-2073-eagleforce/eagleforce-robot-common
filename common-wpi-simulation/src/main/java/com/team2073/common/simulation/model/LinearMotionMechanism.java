@@ -3,7 +3,7 @@ package com.team2073.common.simulation.model;
 import com.team2073.common.simulation.SimulationConstants.MotorType;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
-import static com.team2073.common.util.ConversionUtil.*;
+import static com.team2073.common.util.ConversionUtil.msToSeconds;
 
 /**
  * For Systems like elevators =)
@@ -14,9 +14,9 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 
 	private double pulleyRadius;
 
-	public LinearMotionMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double lengthOfArm) {
-		super(gearRatio, motor, motorCount, massOnSystem, lengthOfArm);
-		this.pulleyRadius = pulleyRadius;
+	public LinearMotionMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double pullyRadius) {
+		super(gearRatio, motor, motorCount, massOnSystem);
+		this.pulleyRadius = pullyRadius;
 	}
 
 	@Override

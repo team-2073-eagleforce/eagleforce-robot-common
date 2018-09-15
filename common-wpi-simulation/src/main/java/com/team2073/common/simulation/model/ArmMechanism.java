@@ -4,7 +4,7 @@ package com.team2073.common.simulation.model;
 import com.team2073.common.simulation.SimulationConstants.MotorType;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
-import static com.team2073.common.util.ConversionUtil.*;
+import static com.team2073.common.util.ConversionUtil.msToSeconds;
 
 /**
  * For Arm Systems with most of the weight at the end of the arm
@@ -16,7 +16,7 @@ public class ArmMechanism extends AbstractSimulationMechanism {
 	private double lengthOfArm;
 
 	public ArmMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double lengthOfArm) {
-		super(gearRatio, motor, motorCount, massOnSystem, lengthOfArm);
+		super(gearRatio, motor, motorCount, massOnSystem);
 		this.lengthOfArm = lengthOfArm;
 	}
 

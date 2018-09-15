@@ -12,9 +12,9 @@ public abstract class AbstractSimulationMechanism implements SimulationMechanism
 	protected Runnable whenSolenoidActive;
 	protected boolean isSolenoidExtended;
 
-	protected double position;
-	protected double velocity;
-	protected double acceleration;
+	protected double position = 0;
+	protected double velocity = 0;
+	protected double acceleration = 0;
 
 	protected double gearRatio;
 	protected double massOnSystem;
@@ -31,7 +31,7 @@ public abstract class AbstractSimulationMechanism implements SimulationMechanism
 	 * @param motorCount   The number of motors for the system.
 	 * @param massOnSystem How much weight are we pulling up. (Probably want to overestimate this kV bit)
 	 */
-	public AbstractSimulationMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double lengthOfArm) {
+	public AbstractSimulationMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem) {
 		this.gearRatio = gearRatio;
 		this.massOnSystem = massOnSystem;
 
