@@ -15,22 +15,24 @@ public class SCurveProfileGenerator {
 	private final double t1;
 	private final double t2;
 	private final double tAccel;
+	private final double tAtMaxVel;
 	private final double t3;
 	private final double t4;
 	private final double tTotal;
 
-	private final double tAtMaxVel;
 
 	private final double p1;
 	private final double p2;
 	private final double pAccel;
 	private final double pAtMaxVel;
+	private final double p3;
+	private final double p4;
+
 	private final double v1;
 	private final double v2;
-	private double p3;
-	private double p4;
-	private double v3;
-	private double v4;
+	private final double v3;
+	private final double v4;
+
 
 	private double currentTime;
 
@@ -105,7 +107,9 @@ public class SCurveProfileGenerator {
 			position = p3 + v3 * (currentTime - t3) - (aMax / 2) * pow(currentTime - t3, 2);
 		} else if (isBetweenTimes(t4, tTotal)) {
 			position = p4 + v4 * (currentTime - t4) - (aMax / 2) * pow(currentTime - t4, 2) + (jMax / 6) * pow(currentTime - t4, 3);
-		} else {
+		} else if (currentTime >= tTotal){
+			position = goalPosition;
+		}else {
 			throw new OutOfRangeException(currentTime, 0, tTotal);
 		}
 
@@ -128,8 +132,10 @@ public class SCurveProfileGenerator {
 		} else if (isBetweenTimes(t3, t4)) {
 			velocity = v3 - aMax * (currentTime - t3);
 		} else if (isBetweenTimes(t4, tTotal)) {
-			velocity = v4 - aMax * (currentTime - t4) + (jMax / 6) * pow(currentTime - t4, 3);
-		} else {
+			velocity = v4 - aMax * (currentTime - t4) + (jMax / 2) * pow(currentTime - t4, 2);
+		} else if (currentTime >= tTotal){
+			velocity = 0;
+		}else{
 			throw new OutOfRangeException(currentTime, 0, tTotal);
 		}
 		return velocity;
@@ -151,7 +157,9 @@ public class SCurveProfileGenerator {
 			acceleration = -aMax;
 		} else if (isBetweenTimes(t4, tTotal)) {
 			acceleration = -aMax + jMax * (currentTime - t4);
-		} else {
+		} else if(currentTime >= tTotal){
+			acceleration = 0;
+		} else{
 			throw new OutOfRangeException(currentTime, 0, tTotal);
 		}
 		return acceleration;
@@ -173,7 +181,9 @@ public class SCurveProfileGenerator {
 			jerk = 0;
 		} else if (isBetweenTimes(t4, tTotal)) {
 			jerk = jMax;
-		} else {
+		} else if(currentTime >= tTotal){
+			jerk = 0;
+		} else{
 			throw new OutOfRangeException(currentTime, 0, tTotal);
 		}
 		return jerk;
