@@ -2,11 +2,11 @@ package com.team2073.common.drive;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.sun.javafx.geom.Vec2d;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 public class PathSteering extends DeadReckoningTracker {
-	private Vec2d currentRobotVelocity = new Vec2d(0, 0);
-	private Vec2d desiredRobotVelocity = new Vec2d(0, 0);
+	private Vector2D currentRobotVelocity = new Vector2D(0, 0);
+	private Vector2D desiredRobotVelocity = new Vector2D(0, 0);
 	private TalonSRX leftMotor;
 	private TalonSRX rightMotor;
 	private PigeonIMU gyro;
@@ -16,7 +16,6 @@ public class PathSteering extends DeadReckoningTracker {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 		this.gyro = gyro;
-		currentRobotVelocity.set(0, 0);
 	}
 
 	/**
@@ -28,7 +27,7 @@ public class PathSteering extends DeadReckoningTracker {
 		double robotAbsoluteAngle = gyro.getAbsoluteCompassHeading();
 		double x = avgVelocity * Math.cos(degreesToRadians(robotAbsoluteAngle));
 		double y = avgVelocity * Math.sin(degreesToRadians(robotAbsoluteAngle));
-		currentRobotVelocity.set(x, y);
+		currentRobotVelocity.add(new Vector2D(x, y).subtract(currentRobotVelocity));
 	}
 
 	private double radiansToDegrees(double radians) {
@@ -45,11 +44,11 @@ public class PathSteering extends DeadReckoningTracker {
 	public void setDesiredVelocity(double velocity, double heading) {
 		double x = velocity * Math.cos(degreesToRadians(heading));
 		double y = velocity * Math.sin(degreesToRadians(heading));
-		desiredRobotVelocity.set(x, y);
+		desiredRobotVelocity.add(new Vector2D(x, y).subtract(desiredRobotVelocity));
 	}
 	
 	private void steeringCalc() {
-		Vec2d steering = new Vec2d(desiredRobotVelocity.x - currentRobotVelocity.x, desiredRobotVelocity.y - currentRobotVelocity.y);
+		Vector2D steering = new Vector2D(desiredRobotVelocity.getX() - currentRobotVelocity.getX(), desiredRobotVelocity.getY() - currentRobotVelocity.getY());
 	}
 	
 	private void steer() {
