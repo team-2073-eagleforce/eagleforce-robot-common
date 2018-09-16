@@ -19,4 +19,8 @@ public abstract class ConversionUtil {
 		return timeInMs * 0.001;
 	}
 
+	public static long secondsToMs(double timeInSeconds) {
+		return (long) (timeInSeconds * 1000);
+	}
+
 }

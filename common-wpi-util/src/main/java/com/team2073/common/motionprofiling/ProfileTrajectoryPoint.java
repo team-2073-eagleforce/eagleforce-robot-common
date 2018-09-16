@@ -44,4 +44,9 @@ public class ProfileTrajectoryPoint {
 	public double getJerk() {
 		return jerk;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("Time: [%s] \t Position: [%s] \t Velocity: [%s] \t Acceleration: [%s] \t Jerk: [%s]",currentTime, position, velocity, acceleration, jerk);
+	}
 }

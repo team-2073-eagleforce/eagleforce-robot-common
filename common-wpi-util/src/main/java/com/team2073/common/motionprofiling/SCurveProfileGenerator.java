@@ -60,7 +60,7 @@ public class SCurveProfileGenerator {
 
 		p1 = ((jMax / 6) * pow(t1, 3));
 
-		p2 = p1 + v1 * (t2-t1) + (aMax / 2) * pow(t2-t1, 2);
+		p2 = p1 + v1 * (t2 - t1) + (aMax / 2) * pow(t2 - t1, 2);
 
 		pAccel = p2 + v2 * (tAccel - t2) + (aMax / 2) * pow(tAccel - t2, 2) - (jMax / 6) * pow(tAccel - t2, 3);
 
@@ -107,9 +107,9 @@ public class SCurveProfileGenerator {
 			position = p3 + v3 * (currentTime - t3) - (aMax / 2) * pow(currentTime - t3, 2);
 		} else if (isBetweenTimes(t4, tTotal)) {
 			position = p4 + v4 * (currentTime - t4) - (aMax / 2) * pow(currentTime - t4, 2) + (jMax / 6) * pow(currentTime - t4, 3);
-		} else if (currentTime >= tTotal){
+		} else if (currentTime >= tTotal) {
 			position = goalPosition;
-		}else {
+		} else {
 			throw new OutOfRangeException(currentTime, 0, tTotal);
 		}
 
@@ -133,9 +133,9 @@ public class SCurveProfileGenerator {
 			velocity = v3 - aMax * (currentTime - t3);
 		} else if (isBetweenTimes(t4, tTotal)) {
 			velocity = v4 - aMax * (currentTime - t4) + (jMax / 2) * pow(currentTime - t4, 2);
-		} else if (currentTime >= tTotal){
+		} else if (currentTime >= tTotal) {
 			velocity = 0;
-		}else{
+		} else {
 			throw new OutOfRangeException(currentTime, 0, tTotal);
 		}
 		return velocity;
@@ -157,9 +157,9 @@ public class SCurveProfileGenerator {
 			acceleration = -aMax;
 		} else if (isBetweenTimes(t4, tTotal)) {
 			acceleration = -aMax + jMax * (currentTime - t4);
-		} else if(currentTime >= tTotal){
+		} else if (currentTime >= tTotal) {
 			acceleration = 0;
-		} else{
+		} else {
 			throw new OutOfRangeException(currentTime, 0, tTotal);
 		}
 		return acceleration;
@@ -181,9 +181,9 @@ public class SCurveProfileGenerator {
 			jerk = 0;
 		} else if (isBetweenTimes(t4, tTotal)) {
 			jerk = jMax;
-		} else if(currentTime >= tTotal){
+		} else if (currentTime >= tTotal) {
 			jerk = 0;
-		} else{
+		} else {
 			throw new OutOfRangeException(currentTime, 0, tTotal);
 		}
 		return jerk;
@@ -196,5 +196,17 @@ public class SCurveProfileGenerator {
 
 	public double getTotalTime() {
 		return tTotal;
+	}
+
+	public double currentPosition() {
+		return calcPosition();
+	}
+
+	public double currentVelocity() {
+		return calcVelocity();
+	}
+
+	public double currentAcceleration() {
+		return calcAcceleration();
 	}
 }
