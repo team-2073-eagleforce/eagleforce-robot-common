@@ -47,7 +47,7 @@ public class MotionProfileControlloop {
 					try {
 						MotionProfileControlloop.this.currentPoint = dataPointUpdater.call();
 						MotionProfileControlloop.this.position = positionUpdater.call();
-					}catch (Exception e){
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 					pidCycle();
@@ -83,11 +83,11 @@ public class MotionProfileControlloop {
 		}
 	}
 
-	public void dataPointCallable(Callable<ProfileTrajectoryPoint> desiredPoint){
+	public void dataPointCallable(Callable<ProfileTrajectoryPoint> desiredPoint) {
 		this.dataPointUpdater = desiredPoint;
 	}
 
-	public void updatePosition(Callable<Double> returnsPosition){
+	public void updatePosition(Callable<Double> returnsPosition) {
 		this.positionUpdater = returnsPosition;
 	}
 
@@ -96,11 +96,11 @@ public class MotionProfileControlloop {
 	}
 
 	public void start() {
-		if(!periodic.isAlive())
+		if (!periodic.isAlive())
 			periodic.start();
 	}
 
-	public void stopPID() {
+	public void stop() {
 		periodic.interrupt();
 	}
 

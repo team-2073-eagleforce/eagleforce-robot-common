@@ -34,7 +34,7 @@ public class SCurveTests {
 		ProfileTrajectoryPoint point;
 		SCurveProfileGenerator profile = new SCurveProfileGenerator(
 				goalPosition, maxVelcoity, maxAcceleration, averageAcceleration);
-		MotionProfileControlloop mpc = new MotionProfileControlloop(.1, .01, .1666 , .005, .01, 1);
+		MotionProfileControlloop mpc = new MotionProfileControlloop(.05, .01, .1666 , .005, .01, 1);
 
 		mpc.dataPointCallable(() -> {
 			ProfileTrajectoryPoint p = profile.nextPoint(.01);
