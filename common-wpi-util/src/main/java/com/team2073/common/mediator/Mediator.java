@@ -8,6 +8,7 @@ import com.team2073.common.mediator.conflict.ConflictMap;
 import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.ColleagueSubsystem;
 import com.team2073.common.mediator.subsys.SubsystemMap;
+import com.team2073.common.periodic.PeriodicAware;
 import com.team2073.common.util.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,21 +19,22 @@ import java.util.ListIterator;
 import java.util.Map;
 
 /**
- * Manages how ColleagueSubsystems interact by checking for Conflicts and resolving them
+ * Manages how {@link ColleagueSubsystem}s interact by checking for and resolving Conflicts between
+ * {@link Request}s and {@link Condition}s.
  *
  * <h3>Use</h3>
- * Call {@link #periodic()} in a periodic method like Robot.Periodic and add to the {@link ConflictMap} and {@link SubsystemMap}<br\>
- * In robot commands, call {@link #add(Request)} to pass in a movement which will be iterated over
+ * Call {@link #onPeriodic()} in a periodic method like Robot.periodic() and add to the {@link ConflictMap} and {@link SubsystemMap}
+ * from robot commands using {@link #add(Request)} to pass in a movement which will be iterated over.
  *
  * <h3>Configuration</h3>
- * Needs <ul>
+ * Needs the following to know which subsystems to 'mediate':
+ * <ul>
  * <li>{@link ConflictMap}</li>
  * <li>{@link SubsystemMap}</li>
  * <li>{@link Tracker}</li>
  * </ul>
- * to know which subsystems to 'mediate'
  */
-public class Mediator {
+public class Mediator implements PeriodicAware {
     private Map<Class, ColleagueSubsystem> subsystemMap;
     private Map<Class, ArrayList<Conflict>> conflictMap;
     private Tracker subsystemTracker;
@@ -53,79 +55,84 @@ public class Mediator {
     }
 
     /**
-     * For requested subsystem movements, the {@link #execute(Request)} method is ran on each <br/>
-     * Checks Request lists in the {@link #executeList} and removes them if they're done <br\>
+     * Call this method continuously. Iterates through the list of {@link Request}s and attempts to execute them,
+     * first resolving their conflicts if any.
      */
-    public void periodic() {
+//    /**
+//     * Call this method continuously. Tries to execute the current Request, first resolving its conflicts, if any.
+//     */
+    @Override
+    public void onPeriodic() {
         executeList.removeIf(list -> list.isEmpty());
+        // I feel like you will only actually want to process the top Request here, remember this needs to run really
+        // fast. Each time it should check if the top Request has finished and either remove it or execute it
+        // If this is true change the javadoc to the commented one
         for (ArrayList<Request> requestList : executeList) {
-            ListIterator itr = requestList.listIterator(requestList.size());
+            ListIterator<Request> itr = requestList.listIterator(requestList.size());
             while (itr.hasPrevious()) {
-                execute((Request) itr.previous());
+                execute(itr.previous());
             }
         }
     }
 
     /**
-     * Either {@link #execute(Request)} the request or creates new requests that resolve conflicts
-     * @param request the Condition for the subsystem to be in
-     * <p>
+     * Add a request to the list for processing.
+     * @param request The Condition for the subsystem to be in
      */
     public void add(Request request) {
         Assert.assertNotNull(request, "request");
 
         ArrayList<Conflict> conflicts = findConflicts(request);
-        if (conflicts == null || conflicts.isEmpty()) {
-            execute(request);
-        } else {
-            ArrayList<Request> requestList = new ArrayList<>();
-            for (Conflict conflict : conflicts) {
-                requestList.add(request);
+        ArrayList<Request> requestList = new ArrayList<>();
+        for (Conflict conflict : conflicts) {
+            requestList.add(request);
 
-                logger.debug("Added request: " + request.getName());
-                Request listRequest = new Request(conflict.getConflictingSubsystem(),
-                        conflict.getResolution(conflict.getConflictingCondition(),
+            // What is the difference between these different places
+            logger.trace("Added request: [{}].", request.getName());
+            // IDEA is complaining about unchecked casting here. There's probably something missing from your class
+            // hierarchy and generics
+            Request listRequest = new Request(conflict.getConflictingSubsystem(),
+                    conflict.getResolution(conflict.getConflictingCondition(),
+                            subsystemMap.get(conflict.getConflictingSubsystem())));
+            ArrayList<Conflict> innerConflicts = findConflicts(listRequest);
+            for (Conflict innerConflict : innerConflicts) {
+                Request innerConflictRequest = new Request(innerConflict.getConflictingSubsystem(),
+                        innerConflict.getResolution(innerConflict.getConflictingCondition(),
                                 subsystemMap.get(conflict.getConflictingSubsystem())));
-                ArrayList<Conflict> innerConflicts = findConflicts(listRequest);
-                for (Conflict innerConflict : innerConflicts) {
-                    Request innerConflictRequest = new Request(innerConflict.getConflictingSubsystem(),
-                            innerConflict.getResolution(innerConflict.getConflictingCondition(),
-                                    subsystemMap.get(conflict.getConflictingSubsystem())));
-                    requestList.add(innerConflictRequest);
-                    logger.debug("Added request: " + innerConflictRequest.getName());
-                }
-                requestList.add(listRequest);
-                logger.debug("Added request: " + listRequest.getName());
+                requestList.add(innerConflictRequest);
+                logger.trace("Added request: [{}].", innerConflictRequest.getName());
             }
-            executeList.add(requestList);
+            requestList.add(listRequest);
+            logger.trace("Added request: [{}].", listRequest.getName());
         }
+        executeList.add(requestList);
     }
 
     /**
-     * Checks if there are no conflicts with the request and then moves the subsystem
+     * Resolves any conflicts with the Request and then moves the subsystem.
      *
      * @param request the request to be fulfilled <br\>
      */
     public void execute(Request request) {
         Assert.assertNotNull(request, "request");
-        logger.debug("Executing request [{}]", request.getName());
         ArrayList<Conflict> conflicts = findConflicts(request);
-        logger.debug("There are [{}] conflicts.", conflicts.size());
+        logger.trace("Executing request [{}]. Conflicts: [{}]", request.getName(), conflicts.size());
         for (Conflict conf : conflicts) {
-            logger.debug(conf.toString());
-            logger.debug("ORIGIN: " + conf.getOriginCondition().toString());
-            logger.debug("CONFLICT: " + conf.getConflictingCondition().toString());
+            // You are never actually resolving conflicts are you?
+            logger.trace("Conflict [{}]", conf.toString());
+            logger.trace("Origin Condition: [{}]", conf.getOriginCondition().toString());
+            logger.trace("Conflicting Condition: [{}]", conf.getConflictingCondition().toString());
         }
         Condition condition = request.getCondition();
         Class subsystem = request.getSubsystem();
 
-        if (conflicts != null || !conflicts.isEmpty()) {
+        if (!conflicts.isEmpty()) {
             subsystemMap.get(subsystem).set(condition.getConditionValue());
             removeRequest(request);
             return;
         }
 
-        logger.debug("Executing request [{}] complete", request.getName());
+        logger.trace("Executing request [{}] complete", request.getName());
     }
 
     /**
@@ -135,25 +142,25 @@ public class Mediator {
      */
     private void removeRequest(Request request) {
         Assert.assertNotNull(request, "request");
-        logger.debug("Removing request [{}]", request.getName());
+        logger.trace("Removing request [{}]", request.getName());
 
-        for (Iterator<ArrayList<Request>> executeListIterator = executeList.iterator(); executeListIterator.hasNext(); ) {
+        for (Iterator<ArrayList<Request>> executeListIterator = executeList.iterator(); executeListIterator.hasNext();) {
             ArrayList<Request> list = executeListIterator.next();
             list.removeIf(listRequest -> listRequest == request);
         }
-        logger.debug("Removing request [{}] complete", request.getName());
+        logger.trace("Removing request [{}] complete", request.getName());
     }
 
 
     /**
-     * Uses a {@link ConflictMap}  to determine whether the requested condition is conflicting with current subsystem positions
+     * Uses a {@link ConflictMap} to determine whether the requested condition is conflicting with current subsystem positions
      *
      * @param request the request that is being checked
      * @return found conflicts in a list or just an empty list if there aren't any
      * <p>
      */
     private ArrayList<Conflict> findConflicts(Request request) {
-        logger.debug("finding conflicts");
+        logger.trace("Finding conflicts for Request [{}]...", request.getName());
         Class subsystem = request.getSubsystem();
         ArrayList<Conflict> possibleConflicts = conflictMap.get(subsystem);
         ArrayList<Conflict> conflicts = new ArrayList<>();
@@ -164,12 +171,14 @@ public class Mediator {
 
         for (Conflict conflict : possibleConflicts) {
             boolean isConflicting = conflict.isConflicting(conflict, request, subsystemTracker.findSubsystemCondition(conflict.getConflictingSubsystem()));
-            logger.debug("isconflicting: " + isConflicting);
             if (isConflicting) {
+//                logger.trace("Adding conflicting conflict: [{}].", conflict.getName());
+                logger.trace("Adding conflicting conflict: [TODO - get conflict name].");
                 conflicts.add(conflict);
             }
         }
 
+        logger.trace("Finding conflicts for Request [{}] complete.", request.getName());
         return conflicts;
     }
 }
