@@ -118,10 +118,12 @@ public class Mediator implements PeriodicAware {
         ArrayList<Conflict> conflicts = findConflicts(request);
         logger.trace("Executing request [{}]. Conflicts: [{}]", request.getName(), conflicts.size());
         for (Conflict conf : conflicts) {
-            // You are never actually resolving conflicts are you?
             logger.trace("Conflict [{}]", conf.toString());
             logger.trace("Origin Condition: [{}]", conf.getOriginCondition().toString());
             logger.trace("Conflicting Condition: [{}]", conf.getConflictingCondition().toString());
+
+            ColleagueSubsystem conflictingSubsystem = subsystemMap.get(conf.getConflictingSubsystem());
+            conflictingSubsystem.set(conf.getResolution(subsystemTracker.findSubsystemCondition(conf.getConflictingSubsystem()), conflictingSubsystem));
         }
         Condition condition = request.getCondition();
         Class subsystem = request.getSubsystem();
@@ -172,8 +174,7 @@ public class Mediator implements PeriodicAware {
         for (Conflict conflict : possibleConflicts) {
             boolean isConflicting = conflict.isConflicting(conflict, request, subsystemTracker.findSubsystemCondition(conflict.getConflictingSubsystem()));
             if (isConflicting) {
-//                logger.trace("Adding conflicting conflict: [{}].", conflict.getName());
-                logger.trace("Adding conflicting conflict: [TODO - get conflict name].");
+                logger.trace("Adding conflicting conflict: [{}].", conflict.getName());
                 conflicts.add(conflict);
             }
         }
