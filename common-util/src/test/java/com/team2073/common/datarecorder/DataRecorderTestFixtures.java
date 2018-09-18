@@ -1,5 +1,8 @@
 package com.team2073.common.datarecorder;
 
+import com.team2073.common.datarecorder.model.DataPoint;
+import com.team2073.common.datarecorder.model.Recordable;
+
 import java.util.Random;
 
 /**
@@ -10,6 +13,8 @@ public abstract class DataRecorderTestFixtures {
     public static class BasicRecordable implements Recordable {
 
         private String state = "INITIALIZING";
+
+        @DataPoint(name = "#")
         private int iterations = 0;
         private double position = 2.34;
 //        private long longVar = 47;
@@ -43,11 +48,6 @@ public abstract class DataRecorderTestFixtures {
         private double doubleVar = 2.22;
         private long longVar = 222;
         private boolean booleanVar = true;
-
-        @Override
-        public void onBeforeRecord() {
-
-        }
     }
 
 }

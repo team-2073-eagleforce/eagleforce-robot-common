@@ -1,16 +1,17 @@
-package com.team2073.common.datarecorder;
+package com.team2073.common.datarecorder.model;
 
 /**
+ *
+ *
  * @author pbriggs
  */
-class DataRecord<T> {
+public class DataRecord<T> {
 
     private final String fieldName;
     private final T fieldValue;
-//    private final RecordableRegistration registration;
-    private final FieldMapping mapping;
+    private final FieldMapping<T> mapping;
 
-    public DataRecord(String fieldName, T fieldValue, FieldMapping mapping) {
+    public DataRecord(String fieldName, T fieldValue, FieldMapping<T> mapping) {
         this.fieldName = fieldName;
         this.fieldValue = fieldValue;
         this.mapping = mapping;

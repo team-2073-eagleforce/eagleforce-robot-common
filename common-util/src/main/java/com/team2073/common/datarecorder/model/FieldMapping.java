@@ -1,4 +1,4 @@
-package com.team2073.common.datarecorder;
+package com.team2073.common.datarecorder.model;
 
 import com.team2073.common.util.ExceptionUtil;
 
@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 /**
  * @author pbriggs
  */
-abstract class FieldMapping<T> {
+public abstract class FieldMapping<T> {
 
     private final Field field;
     private final String dataPointName;
@@ -51,28 +51,28 @@ abstract class FieldMapping<T> {
     public String toString() {
         return fieldToString();
     }
-}
 
-class StringFieldMapping extends FieldMapping<String> {
-    public StringFieldMapping(Field field, String dataPointName, Recordable instance) {
-        super(field, dataPointName, instance);
+    public static class StringFieldMapping extends FieldMapping<String> {
+        public StringFieldMapping(Field field, String dataPointName, Recordable instance) {
+            super(field, dataPointName, instance);
+        }
     }
-}
 
-class DoubleFieldMapping extends FieldMapping<Double> {
-    public DoubleFieldMapping(Field field, String dataPointName, Recordable instance) {
-        super(field, dataPointName, instance);
+    public static class DoubleFieldMapping extends FieldMapping<Double> {
+        public DoubleFieldMapping(Field field, String dataPointName, Recordable instance) {
+            super(field, dataPointName, instance);
+        }
     }
-}
 
-class LongFieldMapping extends FieldMapping<Long> {
-    public LongFieldMapping(Field field, String dataPointName, Recordable instance) {
-        super(field, dataPointName, instance);
+    public static class LongFieldMapping extends FieldMapping<Long> {
+        public LongFieldMapping(Field field, String dataPointName, Recordable instance) {
+            super(field, dataPointName, instance);
+        }
     }
-}
 
-class BooleanFieldMapping extends FieldMapping<Boolean> {
-    public BooleanFieldMapping(Field field, String dataPointName, Recordable instance) {
-        super(field, dataPointName, instance);
+    public static class BooleanFieldMapping extends FieldMapping<Boolean> {
+        public BooleanFieldMapping(Field field, String dataPointName, Recordable instance) {
+            super(field, dataPointName, instance);
+        }
     }
 }

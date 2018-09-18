@@ -1,5 +1,6 @@
 package com.team2073.common.datarecorder;
 
+import com.team2073.common.datarecorder.model.Recordable;
 import com.team2073.common.util.ExceptionUtil;
 
 /**

@@ -1,4 +1,4 @@
-package com.team2073.common.datarecorder;
+package com.team2073.common.datarecorder.model;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
