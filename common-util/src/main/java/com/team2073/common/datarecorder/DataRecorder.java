@@ -40,6 +40,10 @@ public class DataRecorder {
     // -If no output handlers registered don't iterate
     // -Change DataRecordOutputHandler to interface
     // -Create "strategies" for resolving field names (snake case, etc.)
+    // -Allow changing delimmiter on console and csv
+    // -getHeaders method on Registration (or instance actually?)
+    //      -Two methods?, one returning String array, one accepting delimitters and new line
+    //      -boolean to include timestamp as column
 
     public static final long DEFAULT_PERIOD = 20;
 
