@@ -9,7 +9,7 @@ import com.team2073.common.simulation.env.SimulationEnvironment;
  */
 public abstract class AbstractSimulationMechanism implements SimulationMechanism {
 
-	protected Runnable whenSolenoidActive;
+	protected Runnable whenSolenoidActive = () -> {};
 	protected boolean isSolenoidExtended;
 
 	protected double position = 0;

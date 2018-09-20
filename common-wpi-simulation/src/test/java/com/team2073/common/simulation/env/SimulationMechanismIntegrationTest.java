@@ -6,6 +6,7 @@ import com.team2073.common.simulation.component.SimulationComponentFactory;
 import com.team2073.common.simulation.component.SimulationSolenoid;
 import com.team2073.common.simulation.env.SubsystemTestFixtures.ConstantOutputtingSubsystem;
 import com.team2073.common.simulation.env.SubsystemTestFixtures.SimulatedElevatorSubsystem;
+import com.team2073.common.simulation.env.SubsystemTestFixtures.SimulatedMotionProfileElevatorSubsystem;
 import com.team2073.common.simulation.env.SubsystemTestFixtures.SolenoidSubsystem;
 import com.team2073.common.simulation.model.ArmMechanism;
 import com.team2073.common.simulation.model.LinearMotionMechanism;
@@ -91,6 +92,39 @@ public class SimulationMechanismIntegrationTest {
 				.withIterationCount(300)
 				.run(e -> {
 					assertThat(lmm.position()).isCloseTo(goalPosition, offset(2.0));
+				});
+
+	}
+
+	@Test
+	public void subsystemSimulation_WHEN_usedWithMotionProfile_SHOULD_moveAccordingly() {
+
+		double goalPosition = 25;
+
+		LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.PRO, 2, 20, .855);
+
+
+		SimulationEagleSRX srx = new SimulationEagleSRX("ExampleTalon", lmm, 1350);
+
+		DigitalInput sensor = SimulationComponentFactory.createSimulationDigitalInput(lmm, goalPosition, .5);
+
+		SimulationSolenoid solenoid = SimulationComponentFactory.createSimulationSolenoid(lmm);
+
+		SimulatedMotionProfileElevatorSubsystem subsystem = new SimulatedMotionProfileElevatorSubsystem(srx, sensor, solenoid);
+
+		lmm.whenSolenoidActive(() -> {
+			lmm.setVelocity(0);
+			lmm.setAcceleration(0);
+		});
+
+		subsystem.set(goalPosition);
+
+		new SimulationEnvironmentRunner()
+				.withCycleComponent(lmm)
+				.withPeriodicComponent(subsystem)
+				.withIterationCount(300)
+				.run(e -> {
+					assertThat(lmm.position()).isCloseTo(goalPosition, offset(5.0));
 				});
 
 	}

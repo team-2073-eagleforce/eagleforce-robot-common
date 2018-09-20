@@ -40,7 +40,6 @@ public class TrapezoidalVelocityProfile {
 //		maxVelocity = initialVelocity + acceleration * time
 //		position = initialSpeed*time + (1/2)*acceleration*time^2
 //		maxVelocity^2 = initialVelocity^2 + 2*acceleration*initialVelocity
-        ProfileTrajectoryPoint trajPoint = new ProfileTrajectoryPoint();
         if (currentTime < timeToAccelerate) {
             currentAcceleration = maxAcceleration;
             currentVelocity += currentAcceleration * timeStep;
@@ -61,11 +60,7 @@ public class TrapezoidalVelocityProfile {
             }
         }
 
-        trajPoint.setPosition(currentPosition);
-        trajPoint.setVelocity(currentVelocity);
-        trajPoint.setAcceleration(currentAcceleration);
-        trajPoint.setTimeStep(timeStep);
-        trajPoint.setCurrentTime(currentTime);
+        ProfileTrajectoryPoint trajPoint = new ProfileTrajectoryPoint(currentPosition, currentVelocity, currentAcceleration, 0 , timeStep, currentTime);
         currentTime += timeStep;
         return trajPoint;
     }
