@@ -1,6 +1,7 @@
 package com.team2073.common.motionprofiling;
 
 import com.team2073.common.controlloop.MotionProfileControlloop;
+import com.team2073.common.util.ThreadUtil;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
@@ -36,21 +37,11 @@ public class SCurveTests {
 				goalPosition, maxVelcoity, maxAcceleration, averageAcceleration);
 		MotionProfileControlloop mpc = new MotionProfileControlloop(.05, .01, .1666 , .005, .01, 1);
 
-		mpc.dataPointCallable(() -> {
-			ProfileTrajectoryPoint p = profile.nextPoint(.01);
-			return p;
-		});
-
+		mpc.dataPointCallable(() -> profile.nextPoint(.01));
 		mpc.updatePosition(() -> profile.currentPosition());
 
 		mpc.start();
-
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
+		ThreadUtil.sleep(500);
 		assertThat(mpc.getOutput()).isNotZero();
 	}
 

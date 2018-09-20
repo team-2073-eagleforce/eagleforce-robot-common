@@ -37,22 +37,30 @@ public class SCurveProfileGenerator {
 	private double currentTime;
 
 
-	public SCurveProfileGenerator(double goalPosition, double maxVelocity, double maxAcceleration, double averageAccelerarion) {
+	/**
+	 * Creates a series of 7-segment piecewise functions for each of Position, Velocity, Acceleration, and Jerk. <br/>
+	 * On construction, calculates each point of domain change for the various piecewise sections. \(ax^2 + bx + c\)
+	 * @param goalPosition
+	 * @param maxVelocity
+	 * @param maxAcceleration
+	 * @param averageAcceleration
+	 */
+	public SCurveProfileGenerator(double goalPosition, double maxVelocity, double maxAcceleration, double averageAcceleration) {
 		this.goalPosition = goalPosition;
 
 		this.mV = maxVelocity;
 
 		this.aMax = maxAcceleration;
-		this.aAvg = averageAccelerarion;
+		this.aAvg = averageAcceleration;
 
 
-		jMax = (pow(aMax, 2) * averageAccelerarion) / (maxVelocity * (aMax - averageAccelerarion));
+		jMax = (pow(aMax, 2) * averageAcceleration) / (maxVelocity * (aMax - averageAcceleration));
 
 		t1 = aMax / jMax;
 
-		t2 = maxVelocity / averageAccelerarion - t1;
+		t2 = maxVelocity / averageAcceleration - t1;
 
-		tAccel = maxVelocity / averageAccelerarion;
+		tAccel = maxVelocity / averageAcceleration;
 
 		v1 = (jMax / 2) * pow(t1, 2);
 
@@ -85,12 +93,19 @@ public class SCurveProfileGenerator {
 
 	}
 
-
 	public ProfileTrajectoryPoint nextPoint(double interval) {
 		currentTime += interval;
 		return new ProfileTrajectoryPoint(calcPosition(), calcVelocity(), calcAcceleration(), calcJerk(), interval, currentTime);
 	}
 
+
+	/**
+	 * Derived from integrating the velocity function on the same time interval, assuming a constant jerk value for each segment.
+	 *
+	 * Generally follows the pattern of \(ax^2 + bx + c\)
+	 * @return The position corresponding with the current time segment.
+	 *
+	 */
 	private double calcPosition() {
 		double position;
 		if (isBetweenTimes(0, t1)) {
@@ -116,7 +131,12 @@ public class SCurveProfileGenerator {
 		return position;
 	}
 
-
+	/**
+	 * Derived from integrating the Acceleration function on the same time interval, assuming a constant jerk value for each segment.
+	 *
+	 * @return The position corresponding with the current time segment.
+	 *
+	 */
 	private double calcVelocity() {
 		double velocity;
 		if (isBetweenTimes(0, t1)) {
@@ -141,6 +161,12 @@ public class SCurveProfileGenerator {
 		return velocity;
 	}
 
+	/**
+	 * Derived from integrating the Jerk function on the same time interval, assuming a constant jerk value for each segment.
+	 *
+	 * @return The Acceleration corresponding with the current time segment.
+	 *
+	 */
 	private double calcAcceleration() {
 		double acceleration;
 		if (isBetweenTimes(0, t1)) {
@@ -165,6 +191,11 @@ public class SCurveProfileGenerator {
 		return acceleration;
 	}
 
+	/**
+	 *
+	 * @return The Jerk corresponding with the current time segment.
+	 *
+	 */
 	private double calcJerk() {
 		double jerk;
 		if (isBetweenTimes(0, t1)) {
