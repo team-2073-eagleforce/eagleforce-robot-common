@@ -19,7 +19,8 @@
     <!-- common-util -->
     <!-- ============================================================ -->
 
-	<!--<logger name="com.team2073.common.datarecorder" level="DEBUG" />-->
+	<!--<logger name="com.team2073.common.datarecorder" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.datarecorder.output" level="TRACE" />-->
 
 
     <!-- common-wpi-util -->

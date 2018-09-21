@@ -80,4 +80,16 @@ public abstract class LogUtil {
 	public static void traceInitEnd(Class<?> clazz, Logger logger) {
 		logger.trace(INITIALIZE_END_MSG, clazz.getSimpleName());
 	}
+
+	// Other util methods
+	// ================================================================================
+	/** Converts Logger format "{}" to String.format style "%s". */
+	public static String convertLogToStrFmt(String string) {
+		return string.replace("{}", "%s");
+	}
+
+	/** Converts String.format style "%s" to Logger style "{}". */
+	public static String convertStrFmtToLog(String string) {
+		return string.replace("%s", "{}");
+	}
 }

@@ -15,6 +15,11 @@ import java.util.stream.Collectors;
 public class DataRecordOutputHandlerConsoleImpl implements DataRecordOutputHandler {
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void flushTable(RecordableRegistration registration, DataRecordTable table) {
         String delimitter = "\t";
         System.out.println("============================================================");

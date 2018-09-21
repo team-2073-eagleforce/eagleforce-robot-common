@@ -1,7 +1,7 @@
 package com.team2073.common.datarecorder;
 
 import com.team2073.common.datarecorder.model.Recordable;
-import com.team2073.common.util.ExceptionUtil;
+import com.team2073.common.util.Throw;
 
 /**
  * @author pbriggs
@@ -29,7 +29,7 @@ public class DataRecorderRegistry {
 
     public static void setInstance(DataRecorder instance) {
         if (DataRecorderRegistry.instance != null) {
-            ExceptionUtil.illegalState("Cannot set [%s] after it has already been set. Either setInstance(...) was " +
+            Throw.illegalState("Cannot set [%s] after it has already been set. Either setInstance(...) was " +
                     "called twice or getInstance()/register() was called prior to calling setInstance(...).",
                     DataRecorder.class.getSimpleName());
         }

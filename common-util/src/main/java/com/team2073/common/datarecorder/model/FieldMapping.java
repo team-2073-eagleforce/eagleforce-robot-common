@@ -1,6 +1,6 @@
 package com.team2073.common.datarecorder.model;
 
-import com.team2073.common.util.ExceptionUtil;
+import com.team2073.common.util.Throw;
 
 import java.lang.reflect.Field;
 
@@ -23,8 +23,8 @@ public abstract class FieldMapping<T> {
         try {
             return (T) getField().get(getInstance());
         } catch (IllegalAccessException e) {
-            ExceptionUtil.illegalState("Exception occurred attempting to access field [%s] value from class " +
-                    "[%s]. Exception: ", e, field.getName(), instance.getClass().getSimpleName());
+            Throw.illegalState("Exception occurred attempting to access field [%s] value from class " +
+                    "[%s]. Exception: ", field.getName(), instance.getClass().getSimpleName(), e);
 
             // dead code
             return null;

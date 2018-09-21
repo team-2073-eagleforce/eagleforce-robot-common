@@ -11,6 +11,9 @@ import java.util.Map.Entry;
  */
 public interface DataRecordOutputHandler {
 
+    /** Do any initialization such as creating files, connecting to databases, verifying state, etc. */
+    void init();
+
     default void flushAllTables(Map<RecordableRegistration, DataRecordTable> dataRecordMap) {
         for (Entry<RecordableRegistration, DataRecordTable> table : dataRecordMap.entrySet()) {
             flushTable(table.getKey(), table.getValue());
