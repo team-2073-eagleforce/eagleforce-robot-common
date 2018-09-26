@@ -18,7 +18,7 @@ plugins {
 }
 
 group 'com.team2073'
-version '0.2.0-FINAL'
+version '0.3.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -39,7 +39,7 @@ publishing {
 //            Defined by 'group' and 'version' above
 //            groupId 'com.team2073'
 //            artifactId 'eagleforce-robot-common'
-//            version '0.2.0-FINAL'
+//            version '0.3.0-SNAPSHOT'
 
             artifact sourceJar {
                 classifier "sources"
@@ -85,7 +85,7 @@ publishToMavenLocal {
 subprojects {
 
     group 'com.team2073'
-    version '0.2.0-FINAL'
+    version '0.3.0-SNAPSHOT'
     sourceCompatibility = 1.8
 // Project name defined in settings.gradle > rootProject.name
 
@@ -96,7 +96,7 @@ subprojects {
 
     dependencies {
         // TODO: Apply to all projects except util
-//        compile group: 'com.team2073', name: 'common-util', version: '0.2.0-FINAL'
+//        compile group: 'com.team2073', name: 'common-util', version: '0.3.0-SNAPSHOT'
         compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
         compile group: 'org.mockito', name: 'mockito-core', version: '2.15.0'
         compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
@@ -120,7 +120,7 @@ subprojects {
 //            Defined by 'group' and 'version' above
 //            groupId 'com.team2073'
 //            artifactId 'eagleforce-robot-common'
-//            version '0.2.0-FINAL'
+//            version '0.3.0-SNAPSHOT'
 
                 artifact sourceJar {
                     classifier "sources"
