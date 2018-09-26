@@ -13,10 +13,8 @@ import com.team2073.common.util.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Manages how {@link ColleagueSubsystem}s interact by checking for and resolving Conflicts between
@@ -39,7 +37,8 @@ public class Mediator implements PeriodicAware {
     private Map<Class, ArrayList<Conflict>> conflictMap;
     private Tracker subsystemTracker;
 
-    private ArrayList<ArrayList<Request>> executeList = new ArrayList<>();
+    private List<List<Request>> executeList = new CopyOnWriteArrayList<>();
+
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -63,28 +62,38 @@ public class Mediator implements PeriodicAware {
 //     */
     @Override
     public void onPeriodic() {
-        executeList.removeIf(list -> list.isEmpty());
         // I feel like you will only actually want to process the top Request here, remember this needs to run really
         // fast. Each time it should check if the top Request has finished and either remove it or execute it
         // If this is true change the javadoc to the commented one
-        for (ArrayList<Request> requestList : executeList) {
+        ListIterator<List<Request>> exeItr = executeList.listIterator();
+
+//        executeList.removeIf(list -> list.isEmpty());
+        logger.trace("hi");
+
+        if (exeItr.hasNext()) {
+            List<Request> requestList = exeItr.next();
             ListIterator<Request> itr = requestList.listIterator(requestList.size());
-            while (itr.hasPrevious()) {
+            if (itr.hasPrevious()) {
+                //TODO check if finished
                 execute(itr.previous());
+                itr.remove();
             }
         }
     }
 
     /**
      * Add a request to the list for processing.
+     *
      * @param request The Condition for the subsystem to be in
      */
     public void add(Request request) {
         Assert.assertNotNull(request, "request");
+        System.out.println("adding");
 
         ArrayList<Conflict> conflicts = findConflicts(request);
         ArrayList<Request> requestList = new ArrayList<>();
         for (Conflict conflict : conflicts) {
+            //TODO make continuous loops
             requestList.add(request);
 
             // What is the difference between these different places
@@ -123,36 +132,18 @@ public class Mediator implements PeriodicAware {
             logger.trace("Conflicting Condition: [{}]", conf.getConflictingCondition().toString());
 
             ColleagueSubsystem conflictingSubsystem = subsystemMap.get(conf.getConflictingSubsystem());
-            conflictingSubsystem.set(conf.getResolution(subsystemTracker.findSubsystemCondition(conf.getConflictingSubsystem()), conflictingSubsystem));
+            conflictingSubsystem.set(conf.getResolution(subsystemTracker.findSubsystemCondition(conf.getConflictingSubsystem()), conflictingSubsystem).getConditionValue());
         }
         Condition condition = request.getCondition();
         Class subsystem = request.getSubsystem();
 
         if (!conflicts.isEmpty()) {
             subsystemMap.get(subsystem).set(condition.getConditionValue());
-            removeRequest(request);
             return;
         }
 
         logger.trace("Executing request [{}] complete", request.getName());
     }
-
-    /**
-     * Removes requests in the request lists within the {@link #executeList}
-     *
-     * @param request the request to be removed
-     */
-    private void removeRequest(Request request) {
-        Assert.assertNotNull(request, "request");
-        logger.trace("Removing request [{}]", request.getName());
-
-        for (Iterator<ArrayList<Request>> executeListIterator = executeList.iterator(); executeListIterator.hasNext();) {
-            ArrayList<Request> list = executeListIterator.next();
-            list.removeIf(listRequest -> listRequest == request);
-        }
-        logger.trace("Removing request [{}] complete", request.getName());
-    }
-
 
     /**
      * Uses a {@link ConflictMap} to determine whether the requested condition is conflicting with current subsystem positions
