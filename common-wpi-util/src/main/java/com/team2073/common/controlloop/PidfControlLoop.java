@@ -92,6 +92,16 @@ public class PidfControlLoop {
 
 	public void stopPID() {
 		periodic.interrupt();
+		lastError = 0;
+		accumulatedError = 0;
+		errorVelocity = 0;
 	}
 
+	public void updateSetPoint(double newGoal){
+		this.goal = newGoal;
+	}
+
+	public double getError(){
+		return error;
+	}
 }
