@@ -6,41 +6,47 @@ public class ProfileTrajectoryPoint {
 	private double acceleration;
 	private double timeStep;
 	private double currentTime;
+	private double jerk;
+
+	public ProfileTrajectoryPoint(double position, double velocity, double acceleration, double jerk, double timeStep, double currentTime) {
+		this.position = position;
+		this.velocity = velocity;
+		this.acceleration = acceleration;
+		this.jerk = jerk;
+		this.timeStep = timeStep;
+		this.currentTime = currentTime;
+	}
 
 	public double getPosition() {
 		return position;
 	}
 
-	public void setPosition(double position) {
-		this.position = position;
-	}
 
 	public double getVelocity() {
 		return velocity;
 	}
 
-	public void setVelocity(double velocity) {
-		this.velocity = velocity;
-	}
 
 	public double getAcceleration() {
 		return acceleration;
 	}
 
-	public void setAcceleration(double acceleration) {
-		this.acceleration = acceleration;
-	}
 
 	public double getTimeStep() {
 		return timeStep;
 	}
 
-	public void setTimeStep(double timeStep) {
-		this.timeStep = timeStep;
+
+	public double getCurrentTime() {
+		return currentTime;
 	}
 
-	public void setCurrentTime(double currentTime) {
-		this.currentTime = currentTime;
+	public double getJerk() {
+		return jerk;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("Time: [%s] \t Position: [%s] \t Velocity: [%s] \t Acceleration: [%s] \t Jerk: [%s]",currentTime, position, velocity, acceleration, jerk);
+	}
 }

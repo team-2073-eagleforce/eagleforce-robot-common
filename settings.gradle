@@ -3,4 +3,5 @@ include 'common-util'
 include 'common-wpi-util'
 include 'common-guice'
 include 'common-wpi-simulation'
+include 'common-wpi-simulation-stubs'
 

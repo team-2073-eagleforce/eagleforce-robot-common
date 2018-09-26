@@ -10,7 +10,11 @@ abstract class Conflict<O : Condition, C : Condition, Z : ColleagueSubsystem>(va
                                                                               var conflictingCondition: C) {
     abstract fun invert(): Conflict<C, O, Z>
 
-    abstract fun isConflicting(conflict: Conflict<C, O, Z>, request: Request<O, Z>): Boolean
+    abstract fun isConflicting(conflict: Conflict<C, O, Z>, request: Request<O, Z>, currentCondition: Condition): Boolean
 
-    abstract fun<T> getResolution(): T
+    abstract fun getResolution(currentCondition: Condition, subsystem: ColleagueSubsystem): Condition
+
+    override fun toString(): String {
+        return "Origin Subsystem [" + originSubsystem.simpleName + "] conflicts with [" + conflictingSubsystem.simpleName + "]"
+    }
 }

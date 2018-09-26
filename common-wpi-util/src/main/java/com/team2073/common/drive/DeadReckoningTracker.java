@@ -3,13 +3,13 @@ package com.team2073.common.drive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
-import com.sun.javafx.geom.Vec2d;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 import java.awt.geom.Point2D;
 
 public class DeadReckoningTracker {
     private Point2D currentRobotLocation = new Point2D.Double();
-    private Vec2d currentRobotVector = new Vec2d(0, 0);
+    private Vector2D currentRobotVector = new Vector2D(0, 0);
     private PigeonIMU gyro;
     private TalonSRX leftMotor;
     private TalonSRX rightMotor;
@@ -64,14 +64,14 @@ public class DeadReckoningTracker {
     /**
      * @return a vector of the robots velocity and heading angle <velocity, heading>
      */
-    public Vec2d getCurrentRobotVector() {
+    public Vector2D getCurrentRobotVector() {
         return currentRobotVector;
     }
 
     public void updateCurrentLocation() {
         calculateNewPosition();
         currentRobotLocation.setLocation(xPosition, yPosition);
-        currentRobotVector.set(calculateVelocity(), adjustHeading(currentHeading()));
+        currentRobotVector.add(new Vector2D(calculateVelocity(), adjustHeading(currentHeading())).subtract(currentRobotVector));
         updateLasts();
     }
 

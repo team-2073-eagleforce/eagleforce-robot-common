@@ -19,6 +19,7 @@ out/
 .idea/usage.statistics.xml
 .idea/tasks.xml
 .idea/libraries
+.idea/dictionaries
 
 #   From: Preston
 .idea/uiDesigner.xml

@@ -1,16 +1,38 @@
 package com.team2073.common.simulation;
 
+import com.team2073.common.simulation.SimulationConstants.Motors.Bag;
+import com.team2073.common.simulation.SimulationConstants.Motors.Cim;
+import com.team2073.common.simulation.SimulationConstants.Motors.MiniCim;
+import com.team2073.common.simulation.SimulationConstants.Motors.Pro;
+
 /**
  * @author pbriggs
  */
 public class SimulationConstants {
 
     /**
-     * Units are in terms of RPM, Amps, watts, and inch pounds
+     * Units are in terms of RPM, amps, watts, and inch pounds, unless otherwise specified.
      *
      * kv units are rps per volt
      * kt units are inch pounds per amp
      */
+    public enum MotorType {
+        PRO(Pro.MOTOR_KV, Pro.MOTOR_KT, Pro.RESISTANCE),
+        BAG(Bag.MOTOR_KV, Bag.MOTOR_KT, Bag.RESISTANCE),
+        CIM(Cim.MOTOR_KV, Cim.MOTOR_KT, Cim.RESISTANCE),
+        MINI_CIM(MiniCim.MOTOR_KV, MiniCim.MOTOR_KT, MiniCim.RESISTANCE);
+        
+        public final double velocityConstant;
+        public final double torqueConstant;
+        public final double motorResistance;
+
+        MotorType(double velocityConstant, double torqueConstant, double motorResistance) {
+            this.velocityConstant = velocityConstant;
+            this.torqueConstant = torqueConstant;
+            this.motorResistance = motorResistance;
+        }
+    }
+
     public abstract class Motors {
 
         public abstract class Pro {
@@ -62,4 +84,5 @@ public class SimulationConstants {
         }
 
     }
+
 }

@@ -1,6 +1,6 @@
 package com.team2073.common.periodic;
 
-import com.team2073.common.CommonTestingConstants.TestTags;
+import com.team2073.common.CommonConstants.TestTags;
 import com.team2073.common.periodic.PeriodicRunner.InstanceAwareDurationHistory;
 import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
 import org.junit.jupiter.api.Tag;
@@ -9,7 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.team2073.common.periodic.PeriodicRunnerIntegrationTestHelper.*;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.withinPercentage;
 
 /**
  * @author pbriggs

@@ -1,19 +1,9 @@
 package com.team2073.common.mediator.subsys
 
-import edu.wpi.first.wpilibj.command.Subsystem
+import com.team2073.common.periodic.PeriodicAware
 
-abstract class ColleagueSubsystem : Subsystem {
-
-    constructor(name: String) : super(name)
-    constructor() : super()
-
-    override fun initDefaultCommand() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+abstract class ColleagueSubsystem : PeriodicAware {
 
     abstract fun<T> set(place: T)
-
-    abstract fun init()
-
 
 }

@@ -17,6 +17,7 @@
     </ExternalSystemSettings>
     <method v="2">
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Publish Maven Local (common-wpi-util)" run_configuration_type="GradleRunConfiguration" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Publish Maven Local (common-wpi-simulation-stubs)" run_configuration_type="GradleRunConfiguration" />
     </method>
   </configuration>
 </component>
