@@ -36,10 +36,7 @@ public class Mediator implements PeriodicAware {
     private Map<Class, ColleagueSubsystem> subsystemMap;
     private Map<Class, ArrayList<Conflict>> conflictMap;
     private Tracker subsystemTracker;
-
-    private List<List<Request>> executeList = new CopyOnWriteArrayList<>();
-
-
+    private Deque<Deque<Request>> executeList = new LinkedList<>();
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public void init(Map<Class, ColleagueSubsystem> subsystemMap, Map<Class, ArrayList<Conflict>> conflictMap, Tracker subsystemTracker) {
@@ -54,67 +51,41 @@ public class Mediator implements PeriodicAware {
     }
 
     /**
-     * Call this method continuously. Iterates through the list of {@link Request}s and attempts to execute them,
-     * first resolving their conflicts if any.
-     */
-//    /**
-//     * Call this method continuously. Tries to execute the current Request, first resolving its conflicts, if any.
-//     */
-    @Override
-    public void onPeriodic() {
-        // I feel like you will only actually want to process the top Request here, remember this needs to run really
-        // fast. Each time it should check if the top Request has finished and either remove it or execute it
-        // If this is true change the javadoc to the commented one
-        ListIterator<List<Request>> exeItr = executeList.listIterator();
-
-//        executeList.removeIf(list -> list.isEmpty());
-        logger.trace("hi");
-
-        if (exeItr.hasNext()) {
-            List<Request> requestList = exeItr.next();
-            ListIterator<Request> itr = requestList.listIterator(requestList.size());
-            if (itr.hasPrevious()) {
-                //TODO check if finished
-                execute(itr.previous());
-                itr.remove();
-            }
-        }
-    }
-
-    /**
      * Add a request to the list for processing.
      *
      * @param request The Condition for the subsystem to be in
      */
     public void add(Request request) {
         Assert.assertNotNull(request, "request");
-        System.out.println("adding");
+        Deque<Request> requestList = new LinkedList<>();
+        logger.trace("Added request: [{}].", request.getName());
 
-        ArrayList<Conflict> conflicts = findConflicts(request);
-        ArrayList<Request> requestList = new ArrayList<>();
-        for (Conflict conflict : conflicts) {
-            //TODO make continuous loops
-            requestList.add(request);
-
-            // What is the difference between these different places
-            logger.trace("Added request: [{}].", request.getName());
-            // IDEA is complaining about unchecked casting here. There's probably something missing from your class
-            // hierarchy and generics
-            Request listRequest = new Request(conflict.getConflictingSubsystem(),
-                    conflict.getResolution(conflict.getConflictingCondition(),
-                            subsystemMap.get(conflict.getConflictingSubsystem())));
-            ArrayList<Conflict> innerConflicts = findConflicts(listRequest);
-            for (Conflict innerConflict : innerConflicts) {
-                Request innerConflictRequest = new Request(innerConflict.getConflictingSubsystem(),
-                        innerConflict.getResolution(innerConflict.getConflictingCondition(),
-                                subsystemMap.get(conflict.getConflictingSubsystem())));
-                requestList.add(innerConflictRequest);
-                logger.trace("Added request: [{}].", innerConflictRequest.getName());
-            }
-            requestList.add(listRequest);
-            logger.trace("Added request: [{}].", listRequest.getName());
-        }
+        requestList.add(request);
         executeList.add(requestList);
+
+    }
+
+    /**
+     * Call this method continuously. Iterates through the list of {@link Request}s and attempts to execute them,
+     * first resolving their conflicts if any.
+     */
+    @Override
+    public void onPeriodic() {
+        Iterator<Deque<Request>> exeItr = executeList.iterator();
+
+        if (exeItr.hasNext()) {
+            Deque<Request> requestList = exeItr.next();
+            Iterator<Request> itr = requestList.descendingIterator();
+            if (itr.hasNext()) {
+                Request request = itr.next();
+                //TODO point of interest
+                if (!request.getCondition().isInCondition(subsystemTracker.findSubsystemCondition(request.getSubsystem()))) {
+                    execute(request);
+                } else {
+                    itr.remove();
+                }
+            }
+        }
     }
 
     /**
@@ -125,21 +96,26 @@ public class Mediator implements PeriodicAware {
     public void execute(Request request) {
         Assert.assertNotNull(request, "request");
         ArrayList<Conflict> conflicts = findConflicts(request);
-        logger.trace("Executing request [{}]. Conflicts: [{}]", request.getName(), conflicts.size());
-        for (Conflict conf : conflicts) {
-            logger.trace("Conflict [{}]", conf.toString());
-            logger.trace("Origin Condition: [{}]", conf.getOriginCondition().toString());
-            logger.trace("Conflicting Condition: [{}]", conf.getConflictingCondition().toString());
+        Deque<Request> requestList = new LinkedList<>();
 
-            ColleagueSubsystem conflictingSubsystem = subsystemMap.get(conf.getConflictingSubsystem());
-            conflictingSubsystem.set(conf.getResolution(subsystemTracker.findSubsystemCondition(conf.getConflictingSubsystem()), conflictingSubsystem).getConditionValue());
-        }
         Condition condition = request.getCondition();
         Class subsystem = request.getSubsystem();
 
-        if (!conflicts.isEmpty()) {
+        if (conflicts.isEmpty()) {
+            logger.trace("Executing request [{}]. Conflicts: [{}]", request.getName(), conflicts.size());
             subsystemMap.get(subsystem).set(condition.getConditionValue());
-            return;
+        } else {
+            for (Conflict conflict : conflicts) {
+                logger.trace("Conflict [{}]", conflict.toString());
+                logger.trace("Origin Condition: [{}]", conflict.getOriginCondition().toString());
+                logger.trace("Conflicting Condition: [{}]", conflict.getConflictingCondition().toString());
+
+                Request listRequest = createConflictRequest(conflict);
+                requestList.add(listRequest);
+                logger.trace("Added request: [{}].", listRequest.getName());
+//                executeList.addFirst(requestList);
+                execute(listRequest);
+            }
         }
 
         logger.trace("Executing request [{}] complete", request.getName());
@@ -172,5 +148,15 @@ public class Mediator implements PeriodicAware {
 
         logger.trace("Finding conflicts for Request [{}] complete.", request.getName());
         return conflicts;
+    }
+
+
+    /**
+     * @return a {@link Request} that resolves the {@link Conflict}
+     */
+    public Request createConflictRequest(Conflict conflict) {
+        return new Request(conflict.getConflictingSubsystem(),
+                conflict.getResolution(conflict.getConflictingCondition(),
+                        subsystemMap.get(conflict.getConflictingSubsystem())));
     }
 }
