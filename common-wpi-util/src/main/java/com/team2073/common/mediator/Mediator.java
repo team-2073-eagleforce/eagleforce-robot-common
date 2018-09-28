@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Manages how {@link ColleagueSubsystem}s interact by checking for and resolving Conflicts between
@@ -58,7 +57,7 @@ public class Mediator implements PeriodicAware {
     public void add(Request request) {
         Assert.assertNotNull(request, "request");
         Deque<Request> requestList = new LinkedList<>();
-        logger.trace("Added request: [{}].", request.getName());
+        logger.debug("Added request: [{}].", request.getName());
 
         requestList.add(request);
         executeList.add(requestList);
@@ -75,6 +74,7 @@ public class Mediator implements PeriodicAware {
 
         if (exeItr.hasNext()) {
             Deque<Request> requestList = exeItr.next();
+            logger.trace("Iterating through requestList [{}]", requestList.toString());
             Iterator<Request> itr = requestList.descendingIterator();
             if (itr.hasNext()) {
                 Request request = itr.next();
@@ -82,7 +82,9 @@ public class Mediator implements PeriodicAware {
                 if (!request.getCondition().isInCondition(subsystemTracker.findSubsystemCondition(request.getSubsystem()))) {
                     execute(request);
                 } else {
+                    logger.debug("Finished request with [{}] in condition: [{}]", request.getSubsystem(), subsystemTracker.findSubsystemCondition(request.getSubsystem()));
                     itr.remove();
+                    exeItr.remove();
                 }
             }
         }
@@ -102,23 +104,23 @@ public class Mediator implements PeriodicAware {
         Class subsystem = request.getSubsystem();
 
         if (conflicts.isEmpty()) {
-            logger.trace("Executing request [{}]. Conflicts: [{}]", request.getName(), conflicts.size());
+            logger.debug("Executing request [{}]. Conflicts: [{}]", request.getName(), conflicts.size());
             subsystemMap.get(subsystem).set(condition.getConditionValue());
         } else {
             for (Conflict conflict : conflicts) {
-                logger.trace("Conflict [{}]", conflict.toString());
-                logger.trace("Origin Condition: [{}]", conflict.getOriginCondition().toString());
-                logger.trace("Conflicting Condition: [{}]", conflict.getConflictingCondition().toString());
+                logger.debug("Conflict [{}]", conflict.toString());
+                logger.debug("Origin Condition: [{}]", conflict.getOriginCondition().toString());
+                logger.debug("Conflicting Condition: [{}]", conflict.getConflictingCondition().toString());
 
                 Request listRequest = createConflictRequest(conflict);
                 requestList.add(listRequest);
-                logger.trace("Added request: [{}].", listRequest.getName());
-//                executeList.addFirst(requestList);
-                execute(listRequest);
+                logger.debug("Added request: [{}].", listRequest.getName());
+                executeList.addFirst(requestList);
+//                execute(listRequest);
             }
         }
 
-        logger.trace("Executing request [{}] complete", request.getName());
+        logger.debug("Executing request [{}] complete", request.getName());
     }
 
     /**
@@ -129,7 +131,7 @@ public class Mediator implements PeriodicAware {
      * <p>
      */
     private ArrayList<Conflict> findConflicts(Request request) {
-        logger.trace("Finding conflicts for Request [{}]...", request.getName());
+        logger.debug("Finding conflicts for Request [{}]...", request.getName());
         Class subsystem = request.getSubsystem();
         ArrayList<Conflict> possibleConflicts = conflictMap.get(subsystem);
         ArrayList<Conflict> conflicts = new ArrayList<>();
@@ -141,12 +143,12 @@ public class Mediator implements PeriodicAware {
         for (Conflict conflict : possibleConflicts) {
             boolean isConflicting = conflict.isConflicting(conflict, request, subsystemTracker.findSubsystemCondition(conflict.getConflictingSubsystem()));
             if (isConflicting) {
-                logger.trace("Adding conflicting conflict: [{}].", conflict.getName());
+                logger.debug("Adding conflicting conflict: [{}].", conflict.getName());
                 conflicts.add(conflict);
             }
         }
 
-        logger.trace("Finding conflicts for Request [{}] complete.", request.getName());
+        logger.debug("Finding conflicts for Request [{}] complete.", request.getName());
         return conflicts;
     }
 
