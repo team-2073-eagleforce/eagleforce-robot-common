@@ -16,7 +16,7 @@ class StateBasedConflict<O : Condition, C : Condition, Z : ColleagueSubsystem>(v
         return StateBasedCondition(resolveState)
     }
 
-    override fun isConflicting(conflict: Conflict<C, O, Z>, request: Request<O, Z>, currentCondition: Condition): Boolean {
+    override fun isConflicting(conflict: Conflict<C, O, Z>, request: Request<C, Z>, currentCondition: Condition): Boolean {
         return conflict.originCondition.isInCondition(request.condition) && currentCondition.isInCondition(conflict.conflictingCondition)
     }
 

@@ -1,15 +1,14 @@
 package com.team2073.common.position.zeroer;
 
-import com.team2073.common.position.converter.NoOpPositionConverter;
-import com.team2073.common.position.converter.PositionConverter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.periodic.PeriodicAware;
-
+import com.team2073.common.position.converter.NoOpPositionConverter;
+import com.team2073.common.position.converter.PositionConverter;
 import edu.wpi.first.wpilibj.DigitalInput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manages monitoring a zero sensor for zeroing 'events' and setting a corresponding motor controller's position.
@@ -70,6 +69,8 @@ public class Zeroer implements PeriodicAware {
 
 	// Optional
 	private ZeroEventListener listener = new NoOpZeroEventListener();
+	private SensorCollection zeroSensorCollection;
+	private boolean isForwardLimit;
 
 	// Customizable config
 	private int offset;
@@ -147,11 +148,26 @@ public class Zeroer implements PeriodicAware {
 		setPositionUnit(converter.positionalUnit());
 	}
 
+	public Zeroer(SensorCollection zeroSensor, BaseMotorController motor, PositionConverter converter, boolean isForwardLimit){
+		this.zeroSensor = null;
+		this.zeroSensorCollection = zeroSensor;
+		this.motor = motor;
+		setConverter(converter);
+		this.isForwardLimit = isForwardLimit;
+
+	}
+
 
 	// Public methods
 	// ============================================================
 	public boolean atSensor() {
-		return inverted ? zeroSensor.get() : !zeroSensor.get();
+		if(zeroSensor != null){
+			return inverted ? zeroSensor.get() : !zeroSensor.get();
+		}else if(isForwardLimit){
+			return zeroSensorCollection.isFwdLimitSwitchClosed();
+		}else{
+			return zeroSensorCollection.isRevLimitSwitchClosed();
+		}
 	}
 
 	/**

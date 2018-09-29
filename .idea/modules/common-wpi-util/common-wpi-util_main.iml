@@ -32,7 +32,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../common-wpi-util/src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../../common-wpi-util/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../common-wpi-util/src/main/resources" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -61,5 +60,21 @@
     <orderEntry type="library" name="Gradle: org.objenesis:objenesis:2.6" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.2.51" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
+    <orderEntry type="module-library">
+      <library name="WPILib User Lib Directory">
+        <CLASSES>
+          <root url="file://$USER_HOME$/wpilib/user/java/lib" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="file://$USER_HOME$/wpilib/user/java/lib" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="file://$USER_HOME$/wpilib/user/java/lib" />
+        </SOURCES>
+        <jarDirectory url="file://$USER_HOME$/wpilib/user/java/lib" recursive="true" />
+        <jarDirectory url="file://$USER_HOME$/wpilib/user/java/lib" recursive="true" type="JAVADOC" />
+        <jarDirectory url="file://$USER_HOME$/wpilib/user/java/lib" recursive="true" type="SOURCES" />
+      </library>
+    </orderEntry>
   </component>
 </module>
