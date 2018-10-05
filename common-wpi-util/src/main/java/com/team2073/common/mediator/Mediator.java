@@ -5,6 +5,7 @@ import com.team2073.common.mediator.Tracker.Tracker;
 import com.team2073.common.mediator.condition.Condition;
 import com.team2073.common.mediator.conflict.Conflict;
 import com.team2073.common.mediator.conflict.ConflictMap;
+import com.team2073.common.mediator.conflict.SpecialCaseConflict;
 import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.ColleagueSubsystem;
 import com.team2073.common.mediator.subsys.SubsystemMap;
@@ -115,11 +116,16 @@ public class Mediator implements PeriodicAware {
                 logger.debug("Origin Condition: [{}]", conflict.getOriginCondition().toString());
                 logger.debug("Conflicting Condition: [{}]", conflict.getConflictingCondition().toString());
 
-                Request listRequest = createConflictRequest(conflict);
-                requestList.add(listRequest);
-                logger.debug("Added request: [{}].", listRequest.getName());
-                executeList.addFirst(requestList);
+                if (conflict instanceof SpecialCaseConflict) {
+                    ((SpecialCaseConflict) conflict).getSpecialResolution().run();
+                    return;
+                } else {
+                    Request listRequest = createConflictRequest(conflict);
+                    requestList.add(listRequest);
+                    logger.debug("Added request: [{}].", listRequest.getName());
+                    executeList.addFirst(requestList);
 //                execute(listRequest);
+                }
             }
         }
 
