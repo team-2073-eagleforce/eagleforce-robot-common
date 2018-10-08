@@ -79,13 +79,16 @@ public class Mediator implements PeriodicAware {
             if (itr.hasNext()) {
                 Request request = itr.next();
                 //TODO point of interest
+                logger.debug("RequestedCondition: [{}]... ActualPosition: [{}]", request.getCondition(), subsystemTracker.findSubsystemCondition(request.getSubsystem()));
+                logger.debug("Requested position is actual position: [{}]", request.getCondition().isInCondition(subsystemTracker.findSubsystemCondition(request.getSubsystem())));
                 if (!request.getCondition().isInCondition(subsystemTracker.findSubsystemCondition(request.getSubsystem()))) {
                     execute(request);
                 } else {
                     logger.debug("Finished request with [{}] in condition: [{}]", request.getSubsystem(), subsystemTracker.findSubsystemCondition(request.getSubsystem()));
                     itr.remove();
-                    exeItr.remove();
                 }
+            } else {
+                exeItr.remove();
             }
         }
     }

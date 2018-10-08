@@ -10,7 +10,7 @@ class StateBasedCondition(val state: SubsystemStateCondition?) : Condition {
 //    return some type of identifier
 
     override fun isInCondition(condition: Condition): Boolean {
-        return this.state == state
+        return state == condition.getConditionValue()
     }
 
     override fun toString(): String {
