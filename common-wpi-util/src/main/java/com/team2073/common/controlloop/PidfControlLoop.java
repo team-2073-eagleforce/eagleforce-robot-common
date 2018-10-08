@@ -1,5 +1,7 @@
 package com.team2073.common.controlloop;
 
+import java.util.concurrent.Callable;
+
 public class PidfControlLoop {
 	private double p;
 	private double i;
@@ -13,38 +15,38 @@ public class PidfControlLoop {
 	private double accumulatedError;
 	private double errorVelocity;
 	private double lastError;
-	private long intervalInMilis;
+	private long intervalInMillis;
 	private Thread periodic;
 	private double position;
+	private Double maxIContribution = null;
+	private Callable<Boolean> fCondition;
 
 	/**
-	 * 
 	 * @param p
 	 * @param i
 	 * @param d
-	 * @param f
-	 *            if a different input of error is desired, pass in null for talon
-	 * @param intervalInMilis
-	 * @param maxOutput
-	 *            <p>
-	 *            goal is in units of encoder tics if using a talon
+	 * @param f if a different input of error is desired, pass in null for talon
+	 * @param intervalInMillis
+	 * @param maxOutput goal is in units of encoder tics if using a talon
 	 */
-	public PidfControlLoop(double p, double i, double d, double f, long intervalInMilis, double maxOutput) {
+	public PidfControlLoop(double p, double i, double d, double f, long intervalInMillis, double maxOutput) {
 		this.p = p;
 		this.i = i;
 		this.d = d;
 		this.f = f;
 		this.maxOutput = maxOutput;
-		if (intervalInMilis <= 0)
-			intervalInMilis = 1;
-		this.intervalInMilis = intervalInMilis;
+		if (intervalInMillis <= 0)
+			intervalInMillis = 1;
+		this.intervalInMillis = intervalInMillis;
 		periodic = new Thread(new Runnable() {
 			public void run() {
 				while (true) {
-					pidCycle();
 					try {
-						Thread.sleep(PidfControlLoop.this.intervalInMilis);
+						pidCycle();
+						Thread.sleep(PidfControlLoop.this.intervalInMillis);
 					} catch (InterruptedException e) {
+						e.printStackTrace();
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 
@@ -54,17 +56,24 @@ public class PidfControlLoop {
 
 	}
 
-	private void pidCycle() {
+	private void pidCycle() throws Exception {
 		error = goal - position;
 
 		output = 0;
-		output += f;
+
+		if(fCondition == null || fCondition.call()){
+			output += f;
+		}
+
 		output += p * error;
-		output += i * accumulatedError;
+		if (maxIContribution == null)
+			output += i * accumulatedError;
+		else
+			output += Math.min(i * accumulatedError, maxIContribution);
 		output += d * errorVelocity;
 
 		accumulatedError += error;
-		errorVelocity = (double) ((error - lastError) / (intervalInMilis));
+		errorVelocity = ((error - lastError) / (intervalInMillis));
 		error = lastError;
 
 		if (Math.abs(output) >= maxOutput) {
@@ -86,7 +95,7 @@ public class PidfControlLoop {
 
 	public void startPID(double goal) {
 		this.goal = goal;
-		if(!periodic.isAlive())
+		if (!periodic.isAlive())
 			periodic.start();
 	}
 
@@ -97,11 +106,26 @@ public class PidfControlLoop {
 		errorVelocity = 0;
 	}
 
-	public void updateSetPoint(double newGoal){
+	public void updateSetPoint(double newGoal) {
 		this.goal = newGoal;
 	}
 
-	public double getError(){
+	public double getError() {
 		return error;
+	}
+
+	public void configMaxIContribution(double maxContribution) {
+		this.maxIContribution = maxContribution;
+	}
+
+	public void resetAccumulatedError(){
+		this.accumulatedError = 0;
+	}
+
+	/**
+	 * The F gain will only be applied if this condition is true, if not specified, F gain will always be used.
+	 */
+	public void useFCondition(Callable<Boolean> fCondition){
+		this.fCondition = fCondition;
 	}
 }

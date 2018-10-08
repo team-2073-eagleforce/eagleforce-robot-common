@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id=":common-guice:test" external.linked.project.path="$MODULE_DIR$/../../../common-guice" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="com.team2073" external.system.module.type="sourceSet" external.system.module.version="0.2.0-SNAPSHOT" type="JAVA_MODULE" version="4">
+<module external.linked.project.id=":common-guice:test" external.linked.project.path="$MODULE_DIR$/../../../common-guice" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="com.team2073" external.system.module.type="sourceSet" external.system.module.version="0.3.0-SNAPSHOT" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="kotlin-language" name="Kotlin">
       <configuration version="3" platform="JVM 1.8" useProjectSettings="false">
@@ -31,7 +31,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="common-guice_main" />
-    <orderEntry type="library" name="Gradle: com.team2073:common-util:0.2.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Gradle: com.team2073:common-util:0.3.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: com.google.inject.extensions:guice-assistedinject:4.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.inject.extensions:guice-throwingproviders:4.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.mycila.guice.extensions:mycila-guice-jsr250:4.0.rc1" level="project" />
@@ -59,8 +59,8 @@
     <orderEntry type="library" name="Gradle: org.apiguardian:apiguardian-api:1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.opentest4j:opentest4j:1.1.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.2.51" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.junit.platform:junit-platform-engine:1.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="common-guice_main" />
 </module>
