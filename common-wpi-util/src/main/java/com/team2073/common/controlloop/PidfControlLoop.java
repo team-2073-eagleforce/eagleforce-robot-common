@@ -1,5 +1,7 @@
 package com.team2073.common.controlloop;
 
+import java.util.concurrent.Callable;
+
 public class PidfControlLoop {
 	private double p;
 	private double i;
@@ -17,6 +19,7 @@ public class PidfControlLoop {
 	private Thread periodic;
 	private double position;
 	private Double maxIContribution = null;
+	private Callable<Boolean> fCondition;
 
 	/**
 	 * @param p
@@ -38,10 +41,12 @@ public class PidfControlLoop {
 		periodic = new Thread(new Runnable() {
 			public void run() {
 				while (true) {
-					pidCycle();
 					try {
+						pidCycle();
 						Thread.sleep(PidfControlLoop.this.intervalInMillis);
 					} catch (InterruptedException e) {
+						e.printStackTrace();
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 
@@ -51,11 +56,15 @@ public class PidfControlLoop {
 
 	}
 
-	private void pidCycle() {
+	private void pidCycle() throws Exception {
 		error = goal - position;
 
 		output = 0;
-		output += f;
+
+		if(fCondition == null || fCondition.call()){
+			output += f;
+		}
+
 		output += p * error;
 		if (maxIContribution == null)
 			output += i * accumulatedError;
@@ -111,5 +120,12 @@ public class PidfControlLoop {
 
 	public void resetAccumulatedError(){
 		this.accumulatedError = 0;
+	}
+
+	/**
+	 * The F gain will only be applied if this condition is true, if not specified, F gain will always be used.
+	 */
+	public void useFCondition(Callable<Boolean> fCondition){
+		this.fCondition = fCondition;
 	}
 }
