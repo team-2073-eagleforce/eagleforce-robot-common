@@ -5,6 +5,7 @@ import com.team2073.common.mediator.Tracker.Tracker;
 import com.team2073.common.mediator.condition.Condition;
 import com.team2073.common.mediator.conflict.Conflict;
 import com.team2073.common.mediator.conflict.ConflictMap;
+import com.team2073.common.mediator.conflict.NoResolutionConflict;
 import com.team2073.common.mediator.conflict.SpecialCaseConflict;
 import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.ColleagueSubsystem;
@@ -83,7 +84,7 @@ public class Mediator implements PeriodicAware {
                 logger.debug("RequestedCondition: [{}]... ActualPosition: [{}]", request.getCondition(), subsystemTracker.findSubsystemCondition(request.getSubsystem()));
                 logger.debug("Requested position is actual position: [{}]", request.getCondition().isInCondition(subsystemTracker.findSubsystemCondition(request.getSubsystem())));
                 if (!request.getCondition().isInCondition(subsystemTracker.findSubsystemCondition(request.getSubsystem()))) {
-                    execute(request);
+                    execute(request, itr);
                 } else {
                     logger.debug("Finished request with [{}] in condition: [{}]", request.getSubsystem(), subsystemTracker.findSubsystemCondition(request.getSubsystem()));
                     itr.remove();
@@ -98,8 +99,9 @@ public class Mediator implements PeriodicAware {
      * Resolves any conflicts with the Request and then moves the subsystem.
      *
      * @param request the request to be fulfilled <br\>
+     * @param itr     an iterator of the inner list of requests
      */
-    public void execute(Request request) {
+    public void execute(Request request, Iterator<Request> itr) {
         Assert.assertNotNull(request, "request");
         ArrayList<Conflict> conflicts = findConflicts(request);
         Deque<Request> requestList = new LinkedList<>();
@@ -118,7 +120,9 @@ public class Mediator implements PeriodicAware {
 
                 if (conflict instanceof SpecialCaseConflict) {
                     ((SpecialCaseConflict) conflict).getSpecialResolution().run();
-                    return;
+                    itr.remove();
+                } else if (conflict instanceof NoResolutionConflict) {
+                    itr.remove();
                 } else {
                     Request listRequest = createConflictRequest(conflict);
                     requestList.add(listRequest);
@@ -165,7 +169,7 @@ public class Mediator implements PeriodicAware {
     /**
      * @return a {@link Request} that resolves the {@link Conflict}
      */
-    public Request createConflictRequest(Conflict conflict) {
+    private Request createConflictRequest(Conflict conflict) {
         return new Request(conflict.getConflictingSubsystem(),
                 conflict.getResolution(conflict.getConflictingCondition(),
                         subsystemMap.get(conflict.getConflictingSubsystem())));

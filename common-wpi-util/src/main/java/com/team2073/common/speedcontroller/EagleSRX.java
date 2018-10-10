@@ -1,9 +1,11 @@
 package com.team2073.common.speedcontroller;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
-//import com.google.inject.Inject;
+import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.team2073.common.periodic.PeriodicAware;
 import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.smartdashboard.SmartDashboardAwareRunner;
@@ -12,12 +14,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+//import com.google.inject.Inject;
 
 public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardAware {
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -255,8 +255,8 @@ public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardA
     }
 
     private class TalonOutputTask {
-        private ControlMode controlMode;
-        private double outputValue;
+        private ControlMode controlMode = ControlMode.PercentOutput;
+        private double outputValue = 0;
 
         public void run() {
             setInternal(controlMode, outputValue);
