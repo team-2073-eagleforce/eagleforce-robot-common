@@ -68,8 +68,15 @@ public class PidfControlLoop {
 		output += p * error;
 		if (maxIContribution == null)
 			output += i * accumulatedError;
-		else
-			output += Math.min(i * accumulatedError, maxIContribution);
+		else {
+			if (accumulatedError > 0) {
+				output += Math.min(i * accumulatedError, maxIContribution);
+			}else{
+				output += Math.max(i * accumulatedError, -maxIContribution);
+			}
+
+		}
+
 		output += d * errorVelocity;
 
 		accumulatedError += error;
@@ -128,4 +135,20 @@ public class PidfControlLoop {
 	public void useFCondition(Callable<Boolean> fCondition){
 		this.fCondition = fCondition;
 	}
+
+	public void setF(double f){
+	    this.f = f;
+    }
+
+    public void setP(double p){
+	    this.p = p;
+    }
+
+    public void setI(double i){
+        this.p = i;
+    }
+
+    public void setD(double d){
+        this.d = d;
+    }
 }

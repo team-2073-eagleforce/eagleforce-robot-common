@@ -112,7 +112,7 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 		logAllChecks();
 		logStartingConfig();
 		ExceptionUtil.suppressVoid(robot::robotPeriodic, "robot::robotPeriodic");
-		// TODO: Test this, merged from driving-practice branch
+		// TODO: test this, merged from driving-practice branch
 		PeriodicRunner.runPeriodic();
 		// TODO: Have the LoggingRegistry get called by the PeriodicRunner instead
 		OccasionalLoggingRunner.startOccasionalLogging();

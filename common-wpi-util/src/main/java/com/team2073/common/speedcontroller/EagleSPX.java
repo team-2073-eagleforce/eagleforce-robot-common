@@ -54,7 +54,7 @@ public class EagleSPX extends VictorSPX implements SmartDashboardAware {
 
 	@Override
 	public void updateSmartDashboard() {
-		SmartDashboard.setDefaultBoolean(name + " Enable Test Mode", false);
+		SmartDashboard.setDefaultBoolean(name + " Enable test Mode", false);
 		if (logger.isTraceEnabled()) {
 			SmartDashboard.putNumber(name, this.getMotorOutputVoltage());
 		}
@@ -62,7 +62,7 @@ public class EagleSPX extends VictorSPX implements SmartDashboardAware {
 
 	@Override
 	public void readSmartDashboard() {
-		isTestingEnabled = SmartDashboard.getBoolean(name + " Enable Test Mode", false);
+		isTestingEnabled = SmartDashboard.getBoolean(name + " Enable test Mode", false);
 		if (isTestingEnabled && (timer.hasWaited(1000) || !enabledTestingMode)) {
 			timer.start();
 			enabledTestingMode = true;
