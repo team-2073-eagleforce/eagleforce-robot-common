@@ -12,7 +12,7 @@ public class PathSteering extends DeadReckoningTracker {
 	private PigeonIMU gyro;
 
 	public PathSteering(PigeonIMU gyro, TalonSRX leftMotor, TalonSRX rightMotor) {
-		super(gyro, leftMotor, rightMotor, 10);
+		super(null, null, null, null, null, 10, 25.5);
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 		this.gyro = gyro;

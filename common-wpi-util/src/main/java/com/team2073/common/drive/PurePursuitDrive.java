@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PurePursuitDrive {
-	private DeadReckoningTracker robotPose = new DeadReckoningTracker(null, null, null, 10);
+	private DeadReckoningTracker robotPose = new DeadReckoningTracker(null, null, null, null, null, 10, 25.5);
 	private List<Vector2D> desiredVectors = new ArrayList<>();
 	private List<Point2D> desiredPoints = new ArrayList<>();
 	private final double maxVelocity;
