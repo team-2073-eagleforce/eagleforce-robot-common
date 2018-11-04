@@ -1,9 +1,11 @@
 package com.team2073.common.util;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -13,6 +15,10 @@ public abstract class ThreadUtil {
 
     private static Logger log = LoggerFactory.getLogger(ThreadUtil.class);
 
+    /**
+     * WARNING: This is not accurate. Do not use when precise timing is required.
+     * @param millis
+     */
     public static void sleep(long millis) {
         try {
             Thread.sleep(millis);
@@ -42,4 +48,9 @@ public abstract class ThreadUtil {
             return false;
         }
     }
+
+    public static ThreadFactory withThreadNamePattern(String pattern) {
+        return new ThreadFactoryBuilder().setNameFormat(pattern).build();
+    }
+
 }
