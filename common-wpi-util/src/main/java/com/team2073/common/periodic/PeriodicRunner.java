@@ -171,7 +171,7 @@ public class PeriodicRunner implements SmartDashboardAware, PeriodicAware {
 
 	private void checkStarted(String instanceName) {
 		if (started)
-			ExceptionUtil.illegalState(String.format("Cannot register instance [%s]. [%s] already started.",
+			throw new IllegalStateException(String.format("Cannot register instance [%s]. [%s] already started.",
 					instanceName, getClass().getSimpleName()));
 	}
 

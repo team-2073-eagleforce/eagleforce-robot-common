@@ -55,15 +55,18 @@ public class PidfControlLoop {
 		});
 
 	}
+	double interval = 0;
+	long lastTime = System.currentTimeMillis();
 
 	private void pidCycle() throws Exception {
 		error = goal - position;
+		interval = intervalInMillis/ 1000d;
 
 		output = 0;
 
-		if(fCondition == null || fCondition.call()){
-			output += f;
-		}
+//		if(fCondition == null || fCondition.call()){
+//			output += f;
+//		}
 
 		output += p * error;
 		if (maxIContribution == null)
@@ -78,10 +81,9 @@ public class PidfControlLoop {
 		}
 
 		output += d * errorVelocity;
-
-		accumulatedError += error;
-		errorVelocity = ((error - lastError) / (intervalInMillis));
-		error = lastError;
+		accumulatedError += error * interval;
+		errorVelocity = ((error - lastError) / (interval));
+		lastError = error;
 
 		if (Math.abs(output) >= maxOutput) {
 			if (output > 0) {

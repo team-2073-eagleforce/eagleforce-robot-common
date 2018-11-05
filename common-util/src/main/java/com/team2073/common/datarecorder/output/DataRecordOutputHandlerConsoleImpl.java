@@ -29,8 +29,8 @@ public class DataRecordOutputHandlerConsoleImpl implements DataRecordOutputHandl
                 .stream()
                 .map(e -> e.getDataPointName())
                 .collect(Collectors.joining(delimitter, delimitter, "\n"));
-        for (Entry<LocalDateTime, DataRecordRow> row : table.entrySet()) {
-            data += row.getKey().toEpochSecond(ZoneOffset.UTC) + delimitter;
+        for (Entry<Long, DataRecordRow> row : table.entrySet()) {
+            data += row.getKey() + delimitter;
             data = row.getValue()
                     .stream()
                     .map(e -> e.getFieldToString())

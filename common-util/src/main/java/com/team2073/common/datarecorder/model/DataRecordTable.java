@@ -6,6 +6,6 @@ import java.util.TreeMap;
 /**
  * @author pbriggs
  */
-public class DataRecordTable extends TreeMap<LocalDateTime, DataRecordRow> {
+public class DataRecordTable extends TreeMap<Long, DataRecordRow> {
 
 }

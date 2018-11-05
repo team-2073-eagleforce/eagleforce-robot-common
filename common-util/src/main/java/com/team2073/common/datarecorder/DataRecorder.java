@@ -75,6 +75,7 @@ public class DataRecorder {
 
     private Logger log = LoggerFactory.getLogger(getClass());
     private DataRecorderState state = DataRecorderState.NEW;
+    private long initialTime = System.currentTimeMillis();
     private RecordingType recordingType;
     private boolean initializedOutputHandlers;
     private Map<RecordableRegistration, DataRecordTable> dataRecordMap = new HashMap<>();
@@ -273,7 +274,8 @@ public class DataRecorder {
     }
 
     private void recordInternal() {
-        LocalDateTime timeStamp = LocalDateTime.now();
+//        LocalDateTime timeStamp = LocalDateTime.now();
+        long timeStamp = System.currentTimeMillis() - initialTime;
         Set<RecordableRegistration> tableList = dataRecordMap.keySet();
         for (Entry<RecordableRegistration, DataRecordTable> entry : dataRecordMap.entrySet()) {
             RecordableRegistration recordable = entry.getKey();

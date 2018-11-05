@@ -82,12 +82,15 @@ public class DataRecordOutputHandlerCsvImpl implements DataRecordOutputHandler {
         if (!timestampedOutputDir.exists()) {
             try {
                 FileUtils.forceMkdir(timestampedOutputDir);
+                log.info("Created CSV output dir at: \t" + timestampedOutputDir.getAbsolutePath() );
             } catch (IOException e) {
                 state = INITIALIZATION_FAILED;
                 log.warn("Failed to create output directory. Disabling future output. Directory: [{}].",
                         timestampedOutputDir.getAbsolutePath(), e);
                 return;
             }
+        }else{
+            log.info("File already exited at:\t" +timestampedOutputDir.getAbsolutePath() );
         }
 
         if (state == INITIALIZING)
@@ -168,8 +171,8 @@ public class DataRecordOutputHandlerCsvImpl implements DataRecordOutputHandler {
         }
 
         String data = "";
-        for (Entry<LocalDateTime, DataRecordRow> row : table.entrySet()) {
-            data += row.getKey().toEpochSecond(ZoneOffset.UTC) + delimitter;
+        for (Entry<Long, DataRecordRow> row : table.entrySet()) {
+            data += row.getKey() + delimitter;
             data = row.getValue()
                     .stream()
                     .map(e -> e.getFieldToString())
