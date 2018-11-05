@@ -40,7 +40,7 @@ public class ArmMechanism extends AbstractSimulationMechanism {
 	public double calculateAcceleration() {
 		acceleration = ((gearRatio * torqueConstant * currentVoltage)
 				- ((1 / velocityConstant) * torqueConstant * velocity * gearRatio * gearRatio))
-				/ (motorResistance * (1. / 12.) * massOnSystem * Math.pow(lengthOfArm, 2));
+				/ (motorResistance * massOnSystem * Math.pow(lengthOfArm, 2));
 
 		return acceleration;
 	}

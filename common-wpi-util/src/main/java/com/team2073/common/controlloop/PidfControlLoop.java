@@ -21,14 +21,6 @@ public class PidfControlLoop {
 	private Double maxIContribution = null;
 	private Callable<Boolean> fCondition;
 
-	/**
-	 * @param p
-	 * @param i
-	 * @param d
-	 * @param f if a different input of error is desired, pass in null for talon
-	 * @param intervalInMillis
-	 * @param maxOutput goal is in units of encoder tics if using a talon
-	 */
 	public PidfControlLoop(double p, double i, double d, double f, long intervalInMillis, double maxOutput) {
 		this.p = p;
 		this.i = i;
@@ -36,7 +28,7 @@ public class PidfControlLoop {
 		this.f = f;
 		this.maxOutput = maxOutput;
 		if (intervalInMillis <= 0)
-			intervalInMillis = 1;
+			intervalInMillis = 10;
 		this.intervalInMillis = intervalInMillis;
 		periodic = new Thread(new Runnable() {
 			public void run() {
@@ -65,6 +57,9 @@ public class PidfControlLoop {
 			output += f;
 		}
 
+		accumulatedError += error * (intervalInMillis / 1000d);
+		errorVelocity = ((error - lastError) / (intervalInMillis / 1000d));
+
 		output += p * error;
 		if (maxIContribution == null)
 			output += i * accumulatedError;
@@ -72,9 +67,7 @@ public class PidfControlLoop {
 			output += Math.min(i * accumulatedError, maxIContribution);
 		output += d * errorVelocity;
 
-		accumulatedError += error;
-		errorVelocity = ((error - lastError) / (intervalInMillis));
-		error = lastError;
+		lastError = error;
 
 		if (Math.abs(output) >= maxOutput) {
 			if (output > 0) {
