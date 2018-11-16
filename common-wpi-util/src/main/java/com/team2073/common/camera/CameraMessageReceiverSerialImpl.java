@@ -1,13 +1,11 @@
 package com.team2073.common.camera;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.team2073.common.smartdashboard.SmartDashboardAware;
-
+import com.team2073.common.periodic.SmartDashboardAware;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CameraMessageReceiverSerialImpl implements CameraMessageReceiver, SmartDashboardAware {
 

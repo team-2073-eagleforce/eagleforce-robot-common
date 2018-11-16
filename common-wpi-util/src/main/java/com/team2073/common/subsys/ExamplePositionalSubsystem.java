@@ -1,24 +1,20 @@
 package com.team2073.common.subsys;
 
-import com.team2073.common.smartdashboard.SmartDashboardAwareRunner;
-import com.team2073.common.subsys.ExampleAppConstants.DashboardKeys;
-import com.team2073.common.subsys.ExampleAppConstants.Defaults;
-import com.team2073.common.subsys.ExampleAppConstants.Shooter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-//import com.google.inject.Inject;
-//import com.google.inject.name.Named;
+import com.team2073.common.periodic.SmartDashboardAware;
+import com.team2073.common.periodic.SmartDashboardAwareRunner;
 import com.team2073.common.position.Position;
 import com.team2073.common.position.PositionContainer;
 import com.team2073.common.position.converter.PositionConverter;
-import com.team2073.common.smartdashboard.SmartDashboardAware;
 import com.team2073.common.speedcontroller.EagleSRX;
+import com.team2073.common.subsys.ExampleAppConstants.DashboardKeys;
+import com.team2073.common.subsys.ExampleAppConstants.Defaults;
+import com.team2073.common.subsys.ExampleAppConstants.Shooter;
 import com.team2073.common.subsys.ExamplePositionalSubsystem.Angle;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExamplePositionalSubsystem extends PositionalMechanismController<Angle> {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
