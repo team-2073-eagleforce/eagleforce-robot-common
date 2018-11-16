@@ -1,7 +1,7 @@
 package com.team2073.common.position.zeroer;
 
+import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
-import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.periodic.PeriodicAware;
 import com.team2073.common.position.converter.NoOpPositionConverter;
@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * Records the beginning and end of a zeroing 'session' and sets the zero using the middle of the range.
  *
  * <h3>Use</h3>
- * At the bare minimum this requires a {@link DigitalInput} to monitor and a {@link BaseMotorController}
+ * At the bare minimum this requires a {@link DigitalInput} to monitor and a {@link IMotorController}
  * to update on zero events (required by all constructors).
  * <p>
  * After that just call {@link #onPeriodic()} once per periodic iteration and zeroing will be 100% managed for you.
@@ -65,7 +65,7 @@ public class Zeroer implements PeriodicAware {
 
 	// IO
 	private final DigitalInput zeroSensor;
-	private final BaseMotorController motor;
+	private final IMotorController motor;
 
 	// Optional
 	private ZeroEventListener listener = new NoOpZeroEventListener();
@@ -87,12 +87,12 @@ public class Zeroer implements PeriodicAware {
 
 	// Constructors
 	// ============================================================
-	public Zeroer(DigitalInput zeroSensor, BaseMotorController motor) {
+	public Zeroer(DigitalInput zeroSensor, IMotorController motor) {
 		this.zeroSensor = zeroSensor;
 		this.motor = motor;
 	}
 
-	public Zeroer(DigitalInput zeroSensor, BaseMotorController motor,
+	public Zeroer(DigitalInput zeroSensor, IMotorController motor,
 			int offset, int pidIdx, boolean inverted) {
 
 		this.zeroSensor = zeroSensor;
@@ -102,7 +102,7 @@ public class Zeroer implements PeriodicAware {
 		this.inverted = inverted;
 	}
 
-	public Zeroer(DigitalInput zeroSensor, BaseMotorController motor, PositionConverter converter, String name) {
+	public Zeroer(DigitalInput zeroSensor, IMotorController motor, PositionConverter converter, String name) {
 		this.zeroSensor = zeroSensor;
 		this.motor = motor;
 		setConverter(converter);
@@ -110,7 +110,7 @@ public class Zeroer implements PeriodicAware {
 		setPositionUnit(converter.positionalUnit());
 	}
 
-	public Zeroer(DigitalInput zeroSensor, BaseMotorController motor, PositionConverter converter, int offset,
+	public Zeroer(DigitalInput zeroSensor, IMotorController motor, PositionConverter converter, int offset,
 			int pidIdx, boolean inverted) {
 
 		this.zeroSensor = zeroSensor;
@@ -121,7 +121,7 @@ public class Zeroer implements PeriodicAware {
 		this.inverted = inverted;
 	}
 
-	public Zeroer(DigitalInput zeroSensor, BaseMotorController motor, PositionConverter converter, int offset,
+	public Zeroer(DigitalInput zeroSensor, IMotorController motor, PositionConverter converter, int offset,
 			int pidIdx, boolean inverted, String name) {
 
 		this.zeroSensor = zeroSensor;
@@ -134,7 +134,7 @@ public class Zeroer implements PeriodicAware {
 		setPositionUnit(converter.positionalUnit());
 	}
 
-	public Zeroer(DigitalInput zeroSensor, BaseMotorController motor, PositionConverter converter,
+	public Zeroer(DigitalInput zeroSensor, IMotorController motor, PositionConverter converter,
 			ZeroEventListener listener, int offset, int pidIdx, boolean inverted, String name) {
 
 		this.zeroSensor = zeroSensor;
@@ -148,7 +148,7 @@ public class Zeroer implements PeriodicAware {
 		setPositionUnit(converter.positionalUnit());
 	}
 
-	public Zeroer(SensorCollection zeroSensor, BaseMotorController motor, PositionConverter converter, boolean isForwardLimit){
+	public Zeroer(SensorCollection zeroSensor, IMotorController motor, PositionConverter converter, boolean isForwardLimit){
 		this.zeroSensor = null;
 		this.zeroSensorCollection = zeroSensor;
 		this.motor = motor;
@@ -161,11 +161,11 @@ public class Zeroer implements PeriodicAware {
 	// Public methods
 	// ============================================================
 	public boolean atSensor() {
-		if(zeroSensor != null){
+		if (zeroSensor != null) {
 			return inverted ? zeroSensor.get() : !zeroSensor.get();
-		}else if(isForwardLimit){
+		} else if (isForwardLimit) {
 			return zeroSensorCollection.isFwdLimitSwitchClosed();
-		}else{
+		} else {
 			return zeroSensorCollection.isRevLimitSwitchClosed();
 		}
 	}
@@ -267,7 +267,7 @@ public class Zeroer implements PeriodicAware {
 
 	private void zeroEncoder() {
 		if(zeroStartPos == null || zeroEndPos == null) {
-			logger.warn("Error zeroing [{}] zeroer. Start or end position was not set. Start [{} tics] End: [{} tics]", name, zeroStartPos, zeroEndPos);
+			warn("Error zeroing [{}] zeroer. Start or end position was not set. Start [{} tics] End: [{} tics]", name, zeroStartPos, zeroEndPos);
 			reset();
 			return;
 		}
@@ -425,8 +425,8 @@ public class Zeroer implements PeriodicAware {
 	 * <p>
 	 * 0 for Primary closed-loop. 1 for cascaded closed-loop. See Phoenix-Documentation for how to interpret.
 	 *
-	 * @see BaseMotorController#getSelectedSensorPosition(int)
-	 * @see BaseMotorController#setSelectedSensorPosition(int, int, int)
+	 * @see IMotorController#getSelectedSensorPosition(int)
+	 * @see IMotorController#setSelectedSensorPosition(int, int, int)
 	 */
 	public Zeroer setPidIdx(int pidIdx) {
 		this.pidIdx = pidIdx;
