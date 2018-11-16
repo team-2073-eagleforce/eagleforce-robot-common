@@ -3,6 +3,7 @@ package com.team2073.common.simulation.runner;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.simulation.env.SimulationCycleEnvironment;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 import com.team2073.common.simulation.function.ExitSimulationDecider;
@@ -15,7 +16,12 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author pbriggs
@@ -40,7 +46,8 @@ public class SimulationEnvironmentRunner {
     private final SimulationCycleEnvironment cycleEnv = new SimulationCycleEnvironment();
     private final EnvironmentCycleTask cycleTask = new EnvironmentCycleTask(simEnv);
     private final List<SimulationCycleComponent> cycleComponentList = new ArrayList<>();
-    private Exception cycleException;
+    private Throwable cycleException;
+    private Throwable periodicException;
 
     // Periodic members
     private final ExecutorService periodicThreadRunner = Executors
@@ -98,18 +105,25 @@ public class SimulationEnvironmentRunner {
         log.debug("SimRunner: Exiting simulation environment finished. Cycle iterations: [{}]. Periodic iterations: [{}].",
                 simEnv.getCurrCycle(), simEnv.getCurrRobotPeriodic());
 
-        if (exceptionOccurred()) {
-            log.warn("SimRunner: Simulation environment did not finish due to exception [{}] \n\nException:\n\n", cycleException.getMessage());
+        Throwable ex = null;
+        if (cycleExceptionOccurred()) {
+            ex = cycleException;
+        } else if (periodicExceptionOccurred()) {
+            ex = periodicException;
+        }
+
+        if (ex != null) {
+            log.warn("SimRunner: Simulation environment did not finish due to exception [{}] \n\nException:\n\n", ex.getMessage());
 
             // Sleeps for synchronization of logger vs console output
             ThreadUtil.sleep(5);
-            cycleException.printStackTrace();
+            ex.printStackTrace();
             ThreadUtil.sleep(5);
             System.out.println("\n\n\n");
             ThreadUtil.sleep(5);
             log.warn("SimRunner: Not running assertions... Exiting...");
 
-            throw new SimulationInternalException(cycleException);
+            throw new SimulationInternalException(ex);
         } else {
             // Provide an opportunity to run assertions
             log.debug("SimRunner: Calling onComplete callback...");
@@ -133,6 +147,10 @@ public class SimulationEnvironmentRunner {
         Assert.assertNotNull(robotRunner, "robotRunner");
         this.robotRunner = robotRunner;
         return this;
+    }
+
+    public SimulationEnvironmentRunner withPeriodicRunner(PeriodicRunner periodicRunner) {
+        return withPeriodicComponent(() -> periodicRunner.invokePeriodicInstances());
     }
 
     public SimulationEnvironmentRunner withPeriodicComponent(PeriodicAware... periodicAware) {
@@ -171,12 +189,24 @@ public class SimulationEnvironmentRunner {
         log.debug("SimRunner: Killing cycle thread finished.");
     }
 
-    private void exitOnException(Exception e) {
+    private void exitOnCycleException(Throwable e) {
         cycleException = e;
     }
 
+    private void exitOnPeriodicException(Throwable e) {
+        periodicException = e;
+    }
+
     private boolean exceptionOccurred() {
+        return cycleExceptionOccurred() || periodicExceptionOccurred();
+    }
+
+    private boolean cycleExceptionOccurred() {
         return cycleException != null;
+    }
+
+    private boolean periodicExceptionOccurred() {
+        return periodicException != null;
     }
 
     private class EnvironmentCycleTask extends TimerTask {
@@ -195,7 +225,7 @@ public class SimulationEnvironmentRunner {
         public void run() {
 
             // Block until run() method has a chance to call kill()
-            if (exceptionOccurred()) {
+            if (cycleExceptionOccurred()) {
                 log.trace("CycleTask: Exception has occurred. Ignoring this cycle invocation...");
                 return;
             }
@@ -232,9 +262,9 @@ public class SimulationEnvironmentRunner {
             log.trace("CycleTask: Invoking cycle environment...");
             try {
                 cycleEnv.cycle(simEnv);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 log.warn("CycleTask: Exception invoking cycle environment [{}]", e.getMessage(), e);
-                exitOnException(e);
+                exitOnCycleException(e);
                 return;
             }
             log.trace("CycleTask: Invoking cycle environment complete.");
@@ -265,7 +295,15 @@ public class SimulationEnvironmentRunner {
             else
                 log.trace("PeriodicTask: Running periodic iteration [{}].", currRobotPeriodic);
 
-            periodicList.forEach(e -> e.onPeriodic());
+            for (PeriodicAware instance : periodicList) {
+                try {
+                    instance.onPeriodic();
+                } catch (Throwable ex) {
+                    exitOnPeriodicException(ex);
+                    return;
+                }
+            }
+
             log.trace("PeriodicTask: Finished running periodic iteration [{}].", currRobotPeriodic);
         }
     }
