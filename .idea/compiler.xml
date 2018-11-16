@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+    </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="common-guice_main" target="1.8" />
       <module name="common-guice_test" target="1.8" />
+      <module name="common-util-test_main" target="1.8" />
+      <module name="common-util-test_test" target="1.8" />
       <module name="common-util_main" target="1.8" />
       <module name="common-util_test" target="1.8" />
       <module name="common-wpi-simulation-stubs_main" target="1.8" />
       <module name="common-wpi-simulation-stubs_test" target="1.8" />
       <module name="common-wpi-simulation_main" target="1.8" />
       <module name="common-wpi-simulation_test" target="1.8" />
+      <module name="common-wpi-util-test_main" target="1.8" />
+      <module name="common-wpi-util-test_test" target="1.8" />
       <module name="common-wpi-util_main" target="1.8" />
       <module name="common-wpi-util_test" target="1.8" />
       <module name="eagleforce-robot-common_main" target="1.8" />
