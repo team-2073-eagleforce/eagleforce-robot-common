@@ -1,17 +1,15 @@
 package com.team2073.common.dev.simulation;
 
-import org.slf4j.LoggerFactory;
-
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import com.team2073.common.dev.objective.DevObjectiveFactory;
 import com.team2073.common.dev.simulation.subsys.DevElevatorSubsystem;
 import com.team2073.common.dev.simulation.subsys.DevIntakeSideRollerSubsystem;
 import com.team2073.common.dev.simulation.subsys.DevShooterPivotSubsystem;
 import com.team2073.common.dev.simulation.subsys.DevSubsystemCoordinatorImpl;
 import com.team2073.common.robot.AbstractRobotDelegate;
-
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import org.slf4j.LoggerFactory;
 
 public class SimulationRobot extends AbstractRobotDelegate {
 
