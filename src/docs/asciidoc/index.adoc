@@ -1,0 +1,601 @@
+= Eagleforce Common - Reference Guide
+Jason Stanley; Minh Nguyen; Gabe Bui; Preston Briggs <pbriggs28@gmail.com>;
+//Version 0.3.0-SNAPSHOT, 11/14/2018: Alpha
+:revnumber: 0.3.0-SNAPSHOT
+:revdate: 11/14/2018
+:revremark: Alpha
+:sectnums:
+:toc: left
+:toclevels: 5
+//:toc-title: My Content
+:experimental:
+//:description: Example AsciiDoc document
+//:keywords: AsciiDoc
+:imagesdir: ./images
+:source-highlighter: prettify
+:icons: font
+
+// Custom variables
+// == Modules
+:module-common-util: common-util
+
+// == Packages
+:package-common-util-util: com.team2073.common.util
+
+// == Classes
+:class-DataRecorder: DataRecorder
+
+
+// Links
+
+// == Definitions
+:link-def-pojo: 
+
+
+== Overview
+
+TODO
+
+== Quick Start
+
+TODO
+
+
+
+
+== WPI Modules
+//==== Camera Parsing
+//==== Command Wrapping
+//==== Property Loader
+//==== Controllers/Joysticks
+//==== Control Loops
+//==== Robot Context
+=== Data Recorder
+==== Overview
+
+The Data Recorder module is used to automatically record data from objects on a periodic basis and output their data for analysis.
+For instance, recording position, velocity, acceleration, and voltage and then graphing these values to help tune motion profiles.
+
+image::simple-graph.png[dd]
+
+The Data Recorder module consists of 3 main components:
+
+Recordables::
+These are the objects holding the data you would like to record. 
+These can be any Java object, there is no need to implement an interface or add an annotation.
+The fields do not need to be public and no getters/setters are required.
+All this allows the flexibility to record any object, even classes you can't modify, such as a those from 3rd party libraries (for example, a Talon).
+
+[IMPORTANT]
+====
+The only exception to this is primitives and primitive wrapper types which are not allowed. 
+There is no sense in graphing data on a primitive/primitive wrapper since it's value is immutable (cannot change).
+====
+
+[NOTE]
+====
+Registering a Collection/Array will result in each object in the Collection/Array being registered, and not the actual Collection/Array being registered since you most likely do not want to graph data on the internals of a Collection/Array.
+====
+
+Data Recorder::
+Responsible for periodically querying the data from the registered Recordables and storing the data temporarily until it can be flushed to the various output handlers. 
+Simply register all your Recordables and output handlers with the DataRecorder and then start recording and everything will be taken care of for you.
+
+Output Handlers::
+The Objects capable of receiving data from the DataRecorder and outputting it in some form. 
+For example outputting to a csv file, printing to the console, or updating the SmartDashboard. 
+There are a few built in output handlers but you can write your own for your own custom output.
+
+
+==== Quick Start
+
+There are 3 steps to configuring and running a DataRecorder:
+
+[source,java]
+----
+DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+recorder.registerRecordable(intakeSubsystem); // <1>
+recorder.registerRecordable(elevatorSubsystem); // <1>
+
+// Register output handlers (optional, by default a csv output handler will be registered)
+DataRecordOutputHandler customOutputHandler = // get your own custom output handler if you want
+recorder.registerCsvOutputHandler(); // <2>
+recorder.registerSmartDashboardOutputHandler(); // <2>
+recorder.registerOutputHandler(customOutputHandler); // <2>
+
+recorder.startAutoRecordAndFlush(); // <3>
+----
+
+<1> Register objects to record
+<2> Register output handlers (optional, by default a csv output handler will be registered if no other handlers are registered)
+<3> Start the DataRecorder
+
+==== Recordables
+
+You can think of a Recordable as one csv (Excel) spreadsheet and each field in that Recordable as a column in that spreadsheet. 
+
+So the following Recordable...
+
+[source,java]
+----
+
+public class ElevatorSubsystem {
+    private double position;
+    private double velocity;
+    private double acceleration;
+}
+----
+
+...would result in a csv similar to:
+
+[width="100%",options="header"]
+|====================
+|position|velocity|acceleration  
+|0.054235775	|0.536928869	|2.644106451
+|0.063723158	|0.581877371	|2.643961171
+|0.066066531	|0.592453131	|2.643926989
+|====================
+
+===== Supported Field Types
+Although any Object is eligible for recording, the fields of an Object to be recorded act a little differently. 
+Certain field types can never be mapped (for example Collections/Arrays) and others (most Object types) are not mapped by default. 
+
+[NOTE]
+====
+See Including/Excluding Fields section for how to map a field that is not mapped by default.
+====
+
+[source,java]
+----
+
+public class ElevatorSubsystem {
+
+    public enum State {
+        NEW,
+        INITIALIZING,
+        RUNNING,
+        SHUTDOWN
+    }
+
+    // The following will all be mapped automatically
+    private double position;
+    private double velocity;
+    private double acceleration;
+    private Integer currentCycle;
+    private String lastError;
+    private State state = State.NEW;
+
+    // Collections/Arrays are not ever mappable
+    private int[] arrayField;
+    private Collection<Integer> collectionField;
+
+    // Objects are not mapped by default
+    private Command currentCommand;
+}
+----
+
+|====
+|DataType	                                    |Supported	    |Mapped by Default	|Notes
+|Primitive Types (int, double, etc.)	        |Yes	        |Yes                |
+|Primitive Wrappers (Integer, Double, etc.)	    |Yes	        |Yes                |
+|Strings	                                    |Yes	        |Yes                |
+|Enums	                                        |Yes	        |Yes	            |Use EnumDataPoint to control the output value
+|Objects	                                    |Future Support	|No                 |
+|Inner Class Objects	                        |Future Support?|No                 |
+|Optional of Primitive Wrapper/String or Enum	|Future Support	|Yes                |
+|Optional of Object	                            |Future Support	|No                 |
+|Arrays	                                        |Never	        |N/A                |
+|Collections	                                |Never	        |N/A                |
+|====
+
+How a field's value maps to the actual output is pretty straight forward for most types. 
+There are a few special cases, however.
+
+Booleans::
+Booleans will output a `1` or `0` instead of `true` or `false` so they graph properly.
+
+Enums::
+By default, an enum will simply output its `toString()` value which is the name of the enum. 
+This can be customized by having the Enum implement `EnumDataPoint` and overriding `convertToDataPoint()`. 
+This way the enum value can graph properly as a number.
+
+[source,java]
+----
+public enum State implements EnumDataPoint {
+    NEW(1),
+    INITIALIZING(2),
+    RUNNING(3),
+    SHUTDOWN(4);
+
+    private final long outputValue;
+
+    State(long outputValue) {
+        this.outputValue = outputValue;
+    }
+
+    @Override
+    public Long convertToDataPoint() {
+        return outputValue;
+    }
+}
+----
+
+Optionals::
+Java's `Optional` class is used to mark a variable that might be null. 
+This helps avoid NullPointerExceptions. 
+If a field is of type `Optional`, it will be unwrapped. 
+If the value is `null`, that will be the output, if the value is not null, it will follow the normal mapping rules (map primitives, enums, etc. automatically, only map Object types if explicitly told to do so with `@DataPoint`).
+
+[IMPORTANT]
+====
+Feature not active: Mapping of Optionals is not yet supported. Coming soon!
+====
+
+Inner Classes::
+Mapping of Objects that are an inner class is not yet supported and might not ever be.
+
+
+====== Including/Excluding Fields
+
+By default, all primitives, primitive wrappers, Strings, enums, and Optionals (holding any of the previoulsy listed types) will be mapped automatically. 
+Most Objects will not be mapped by default.
+
+
+====== Including Fields with `@DataPoint`
+To map a field that is by default not mapped, simply annotate it with `@DataPoint`:
+
+[IMPORTANT]
+====
+Feature not active: Using `@DataPoint` to map nested objects is not yet implemented. Coming soon!
+====
+
+[source,java]
+----
+
+public class ElevatorSubsystem {
+
+    // This field will not be mapped
+    private TalonSRX elevatorMotor = new TalonSRX(0);
+
+    
+    // This field will be mapped
+    // NOTE: This feature is not yet implemented. Coming soon!
+    @DataPoint
+    private TalonSRX elevatorMotor = new TalonSRX(1);
+    
+}
+----
+
+[NOTE]
+====
+Static and final fields are not mapped by default since static does not relate to the instance being recorded and final fields will never change. 
+Use `@DataPoint` to map these.
+====
+
+====== Excluding Fields with `@DataPointIgnore`
+
+To ignore a field that is mapped by default, annotate it with `@DataPointIgnore`:
+
+[source,java]
+----
+
+public class ElevatorSubsystem {
+
+    // This field will be mapped
+    private double position;
+    
+    // This field will not be mapped
+    @DataPointIgnore
+    private double velocity;
+    
+}
+----
+
+====== Configuring Recordable Name
+
+By default, the simple name of the Recordable's class is used by the output handlers (in the case of a csv outputter, this would correlate to the name of the csv file). When multiple Recordable instances of the same class are registered, a number will be incremented and suffixed on the name. For example `TalonSRX`, `TalonSRX2`, `TalonSRX3`, and so on. Note that the first instance will not have a number suffixed.
+
+There are two ways to customize the name of a Recordable, statically via the `@Recordable` annotation and dynamically by implementing `NameAware`.
+
+To customize the name of a Recordable in a static manner, annotate the Recordable class with `@Recordable` and specify the `name` attribute. This applies to all instances of this class so you can have the same name collision issues as before and the will be resolved the same way, by suffixing a number.
+
+[source,java]
+----
+@Recordable(name = "MyCustomRecordableName")
+public class ElevatorSubsystem {
+    // fields excluded for brevity
+}
+----
+
+To customize the name of a Recordable in a dynamic way at runtime, implement `NameAware`. This will allow you to generate a name of off dynamic data at runtime, like for instance, the port number of a `TalonSRX`.
+
+[source,java]
+----
+public class IntakePivotArm implements NameAware { // <1>
+
+    public enum Side {
+        LEFT,
+        RIGHT;
+    }
+
+    private final Side side;
+    private TalonSRX armMotor = new TalonSRX(0);
+
+    public IntakePivotArm(Side side) {
+        this.side = side;
+    }
+
+    @Override
+    public String getName() { // <2>
+        // Would return either:
+        // IntakePivotArm-LEFT[0]
+        // IntakePivotArm-RIGHT[0]
+        return "IntakePivotArm-" + side + "[" + armMotor.getDeviceID() +"]";
+    }
+}
+----
+<1> Implement `NameAware`
+<2> Override `getName()` providing a custom name (unique if possible)
+
+====== Configuring Recordable Field Names
+
+To configure the output name of a field, use the `@DataPoint` annotation and specify the `name` attribute.
+
+[source,java]
+----
+public class ElevatorSubsystem {
+
+    // This field will be named: position
+    private double position;
+
+    // This field will be named: v
+    @DataPoint(name = "v")
+    private double velocity;
+}
+----
+
+==== DataRecorder
+
+===== Registering Recordables
+
+Any type of Object (besides primitives and primitive wrappers) can be registered with the DataRecorder.
+
+[source,java]
+----
+DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+recorder.registerRecordable(intakeSubsystem);
+----
+
+By default, instances will be registered with a default interval retrieved from `CommonProperties`. This is the interval inbetween records.
+
+[IMPORTANT]
+====
+Feature not active: Customizing recording interval is not yet supported. Coming soon!
+====
+
+To change this interval for all Recordable instances change the property _before_ registering any instances:
+
+[source,java]
+----
+// Time is in millis
+RobotContext.getInstance().getCommonProps().setDataRecorderDefaultRecordInterval(10);
+----
+
+To change this interval for one instance, use the method accepting an interval. This is generally not recommended as this will cause your Recordable instances to have different timestamps which can make it harder to graph them together.
+
+[source,java]
+----
+DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+// Time is in millis
+recorder.registerRecordable(intakeSubsystem, 10);
+----
+
+===== Registering Output Handlers
+
+By default, if no output handlers are registered a `DataRecorderOutputHandlerCsvImpl` will be registered and output files to `~/data-recorder`. A sub directory will be created with the current timestamp.
+
+To register additional output handlers, either use the built in methods:
+
+[source,java]
+----
+DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+recorder.registerConsoleOutputHandler();
+recorder.registerCsvOutputHandler();
+recorder.registerSmartDashboardOutputHandler();
+----
+
+...or register your own custom output handler:
+
+[source,java]
+----
+DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+DataRecordOutputHandler customOutputHandler;
+recorder.registerOutputHandler(customOutputHandler);
+----
+
+[IMPORTANT]
+====
+A CSV output handler will only be automatically registered if no other handlers are registered.
+====
+
+===== Running the DataRecorder
+
+There are three ways to run the DataRecorder however only two of them are recommended. If you are using `PeriodicRunner` already, run it with that. If not, have it run in auto-record mode. Running manually should be your last resort.
+
+====== Running with Periodic Runner (Recommended)
+If you are already using a `PeriodicRunner` (calling `invokePeriodicInstances()` on it) or are using an `AbstractRobotDelegator` (handles running `PeriodicRunner` for you), then it is recommended to use that approach.
+
+You cannot simply register the `DataRecorder` with the `PeriodicRunner` as you normally do. There is special multi threading logic involved and it needs to register twice (record and flush) so the `DataRecorder` needs to register itself.
+
+[source,java]
+----
+DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+recorder.registerWithPeriodicRunner();
+----
+
+If you are using a custom `PeriodicRunner` and haven't configured the `RobotContext` with it, you can pass it in to the `DataRecorder`.
+
+[source,java]
+----
+PeriodicRunner periodicRunner = RobotContext.getInstance().getPeriodicRunner();
+DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+recorder.registerWithPeriodicRunner(periodicRunner);
+----
+
+[WARNING]
+====
+Neither of these will work if the `PeriodicRunner` is not being ran. Either call the method `periodicRunner.invokePeriodicInstances()` in your robot's `robotPeriodic()` method or simply use an `AbstractRobotDelegator` which handles this for you.
+====
+
+====== Running in Auto-Record Mode
+If you cannot use the `PeriodicRunner` for some reason, you can have the `DataRecorder` automatically run itself.
+
+[source,java]
+----
+DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+recorder.startAutoRecordAndFlush();
+----
+
+You can optionally customize the interval at which it flushes data to the output handlers.
+
+[source,java]
+----
+DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+// Time is in millis
+recorder.startAutoRecordAndFlush(5000);
+----
+
+====== Running Manually (Not Recommended)
+
+[IMPORTANT]
+====
+This section is for advanced users. If you do not feel comfortable with anything in this section, run either in auto-record mode or with the `PeriodicRunner`.
+====
+
+Only run manually if you have a specific reason to do so. For instance if you need to implement some custom logic for precisely when to record or flush.
+
+If running manually, call `manualRecord()` on every iteration (or as often as you want to record data) and call `manualFlush()` about every 2-10 seconds (or however often you want to dump your data). The longer you wait, the more JVM memory will be consumed by the data waiting to be flushed.
+
+[IMPORTANT]
+====
+If you forget to flush, you will likely run out of JVM memory.
+====
+
+[source,java]
+----
+public class MyRobot extends TimedRobot {
+
+	int iteration = 0;
+	private DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+
+	@Override
+	public void robotPeriodic() {
+	    // This call is non-blocking
+		recorder.manualRecord();
+		if (iteration++ % 100 == 0) {
+		    // flush every 100 iterations
+			recorder.manualFlush();
+		}
+	}
+}
+----
+
+Both of these calls are non-blocking. If you don't know what non-blocking is and the implications of blocking calls, you should not be running this manually.
+
+Both of these calls are non-blocking, meaning when you call either of them, your code will return _immediately_ before the recording or flushing is completed (or even started for that matter). How it does this is internally there is another thread running to handle record/flush requests. When calling this method, the `DataRecorder` processes the request on these other threads so the main thread can continue executing.
+
+This is _extremely_ important when running on the main robot thread (if you don't know whether you are, then you are). If these calls were blocking, then when you called them, it could take anywhere from 1/16 to 2 seconds (depending on the flush interval and how much data has accumulated) for the method to finish. During this time, none of your motors would update and the robot would continue outputting at the same voltage regardless of the driver's input. More likely it will be about 1/4 second if you are outputting to files but that is still significant lag that will impact your drivers.
+
+If for some reason you need to know when a record or a flush finished, you can call `block()` on the returned value.
+
+[IMPORTANT]
+====
+DO NOT DO THIS ON THE MAIN ROBOT THREAD. ADVANCED USERS ONLY.
+====
+
+[source,java]
+----
+DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+// These calls are blocking!!!!!
+recorder.manualRecord().block();
+recorder.manualFlush().block();
+----
+
+===== Stopping the DataRecorder
+
+You can stop and start the `DataRecorder` as much as needed, for instance, turning it off when the robot is disabled.
+
+
+[source,java]
+----
+public class MyRobot extends TimedRobot {
+
+    private DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+
+	@Override
+	public void disabledInit() {
+        recorder.disable();
+	}
+
+	@Override
+	public void teleopInit() {
+        recorder.enable();
+	}
+}
+----
+
+===== Configuring the DataRecorder
+
+TODO
+
+==== Output Handlers
+
+TODO
+
+[IMPORTANT]
+====
+This section is for advanced users
+====
+
+//=== Event Publishing
+//==== Mediator
+//==== Motion Profiling
+//==== Subsystem Coordinator
+//==== Periodic Runner and Friends
+//===== Periodic Runner
+//===== Occasional Logging Runner
+//===== Smartdashboard Runner
+
+
+== WPI Simulation Modules
+
+
+== Common Utilities
+This section only lists a few of the most useful utility classes.
+The rest can be found in the *{module-common-util}* module, in the package `{package-common-util-util}`.
+
+=== Args
+
+TODO
+
+=== EnumUtil
+
+TODO
+
+=== ExceptionUtil
+
+TODO
+
+=== LogUtil
+
+TODO
+
+=== ThreadUtil
+
+TODO
+
+=== Throw
+
+TODO
+
+== Appendix
