@@ -1,9 +1,12 @@
 package com.team2073.common.simulation.speedcontroller;
 
+import com.team2073.common.datarecorder.model.DataPointIgnore;
 import com.team2073.common.simulation.model.SimulationMechanism;
 
-public class SimulationEagleSRX extends BaseSimulationMotorController implements SimulationMotorControllerEnhanced{
-	private double encoderTicsPerUnitOfMechanism;
+public class SimulationEagleSRX extends BaseSimulationMotorController implements SimulationMotorControllerEnhanced {
+
+	@DataPointIgnore
+	private final double encoderTicsPerUnitOfMechanism;
 
 	/**
 	 * Simulated TalonSRX
