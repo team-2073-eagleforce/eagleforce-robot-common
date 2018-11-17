@@ -1,12 +1,34 @@
 package com.team2073.common.controlloop;
 
+import com.team2073.common.ctx.RobotContext;
+import com.team2073.common.datarecorder.model.DataPointIgnore;
+import com.team2073.common.datarecorder.model.LifecycleAwareRecordable;
+import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.util.Throw;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.Callable;
 
-public class PidfControlLoop {
-	private double p;
-	private double i;
-	private double d;
-	private double f;
+public class PidfControlLoop implements LifecycleAwareRecordable, PeriodicAware {
+
+	@DataPointIgnore
+	private static final int DEFAULT_INTERVAL = 10;
+	@DataPointIgnore
+	private static final int MAX_FCONDITION_EXCEPTIONS_TO_LOG = 5;
+
+	private Logger log = LoggerFactory.getLogger(getClass());
+
+	private boolean active;
+
+	@DataPointIgnore
+	private final double p;
+	@DataPointIgnore
+	private final double i;
+	@DataPointIgnore
+	private final double d;
+	@DataPointIgnore
+	private final double f;
 
 	private double output;
 	private double maxOutput;
@@ -15,55 +37,56 @@ public class PidfControlLoop {
 	private double accumulatedError;
 	private double errorVelocity;
 	private double lastError;
-	private long intervalInMillis;
-	private Thread periodic;
+	private final long intervalInMillis;
 	private double position;
 	private Double maxIContribution = null;
+	private PositionSupplier positionSupplier;
 	private Callable<Boolean> fCondition;
+	private int fConditionExceptionCount;
 
-	/**
-	 * @param p
-	 * @param i
-	 * @param d
-	 * @param f if a different input of error is desired, pass in null for talon
-	 * @param intervalInMillis
-	 * @param maxOutput goal is in units of encoder tics if using a talon
-	 */
 	public PidfControlLoop(double p, double i, double d, double f, long intervalInMillis, double maxOutput) {
 		this.p = p;
 		this.i = i;
 		this.d = d;
 		this.f = f;
 		this.maxOutput = maxOutput;
-		if (intervalInMillis <= 0)
-			intervalInMillis = 1;
+		if (intervalInMillis <= 0) {
+			log.warn("Interval provided ([{}]) was <= 0. Overriding to [{}].", intervalInMillis, DEFAULT_INTERVAL);
+			intervalInMillis = DEFAULT_INTERVAL;
+		}
 		this.intervalInMillis = intervalInMillis;
-		periodic = new Thread(new Runnable() {
-			public void run() {
-				while (true) {
-					try {
-						pidCycle();
-						Thread.sleep(PidfControlLoop.this.intervalInMillis);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-
-				}
-			}
-		});
-
+		RobotContext.getInstance().getPeriodicRunner().registerAsync(this, intervalInMillis);
+		RobotContext.getInstance().getDataRecorder().registerRecordable(this);
 	}
 
-	private void pidCycle() throws Exception {
+	@Override
+	public void onPeriodic() {
+
+		if (!active)
+			return;
+
+		if (positionSupplier == null)
+			Throw.illegalState("[{}] must not be null.", PositionSupplier.class.getSimpleName());
+
+		position = positionSupplier.currentPosition();
+
 		error = goal - position;
 
 		output = 0;
 
-		if(fCondition == null || fCondition.call()){
-			output += f;
+		try {
+			if(fCondition == null || fCondition.call()){
+				output += f;
+			}
+		} catch (Exception e) {
+			// TODO: Jason, should we still continue executing? What happens if we skip f?
+			fConditionExceptionCount++;
+			if (fConditionExceptionCount < MAX_FCONDITION_EXCEPTIONS_TO_LOG)
+				log.warn("Exception calling fCondition: ", e);
 		}
+
+		accumulatedError += error * (intervalInMillis / 1000d);
+		errorVelocity = ((error - lastError) / (intervalInMillis / 1000d));
 
 		output += p * error;
 		if (maxIContribution == null)
@@ -72,9 +95,7 @@ public class PidfControlLoop {
 			output += Math.min(i * accumulatedError, maxIContribution);
 		output += d * errorVelocity;
 
-		accumulatedError += error;
-		errorVelocity = ((error - lastError) / (intervalInMillis));
-		error = lastError;
+		lastError = error;
 
 		if (Math.abs(output) >= maxOutput) {
 			if (output > 0) {
@@ -94,13 +115,12 @@ public class PidfControlLoop {
 	}
 
 	public void startPID(double goal) {
-		this.goal = goal;
-		if (!periodic.isAlive())
-			periodic.start();
+		updateSetPoint(goal);
+		active = true;
 	}
 
 	public void stopPID() {
-		periodic.interrupt();
+		active = false;
 		lastError = 0;
 		accumulatedError = 0;
 		errorVelocity = 0;
@@ -127,5 +147,13 @@ public class PidfControlLoop {
 	 */
 	public void useFCondition(Callable<Boolean> fCondition){
 		this.fCondition = fCondition;
+	}
+
+	public void setPositionSupplier(PositionSupplier positionSupplier) {
+		this.positionSupplier = positionSupplier;
+	}
+
+	public interface PositionSupplier {
+		double currentPosition();
 	}
 }
