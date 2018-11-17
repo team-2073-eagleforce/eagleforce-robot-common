@@ -1,5 +1,13 @@
 package com.team2073.common.objective;
 
+import com.team2073.common.objective.Objective.ConflictingStrategy;
+import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.util.LogUtil;
+import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
@@ -7,17 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.team2073.common.objective.Objective.ConflictingStrategy;
-import com.team2073.common.periodic.PeriodicAware;
-import com.team2073.common.periodic.PeriodicRunner;
-import com.team2073.common.util.LogUtil;
-
-import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public abstract class AbstractSubsystemCoordinator implements PeriodicAware {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -27,7 +24,7 @@ public abstract class AbstractSubsystemCoordinator implements PeriodicAware {
 
 	public AbstractSubsystemCoordinator() {
 		LogUtil.infoConstruct(getClass(), logger);
-		PeriodicRunner.registerInstance(this);
+		// TODO: Should we register with PeriodicRunner?
 	}
 	
 	/**
@@ -52,7 +49,7 @@ public abstract class AbstractSubsystemCoordinator implements PeriodicAware {
 		objectiveRequestStack.clear();
 	}
 
-	// TODO: Create a periodic interface
+	@Override
 	public void onPeriodic() {
 		
 		// Iterate through all objective stacks, which run in parallel to each other
@@ -277,7 +274,7 @@ public abstract class AbstractSubsystemCoordinator implements PeriodicAware {
 	}
 	
 	private void interruptConflictingRequests(Deque<ObjectiveRequest> objectiveRequestStack) {
-		logger.debug("Interrupting conflicting requests of stack [{}]", stackToString(objectiveRequestStack));
+		logger.debug("Checking for conflicts of stack [{}]", stackToString(objectiveRequestStack));
 		for (ObjectiveRequest objectiveRequest : objectiveRequestStack) {
 			Deque<ObjectiveRequest> conflictingStack = getConflictingStack(objectiveRequest.getRequestedObjective());
 			if (conflictingStack == null) {

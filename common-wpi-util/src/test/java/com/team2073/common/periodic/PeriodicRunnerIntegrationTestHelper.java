@@ -14,6 +14,8 @@ public class PeriodicRunnerIntegrationTestHelper {
         String errMsg = env.getClass().getSimpleName() + " did not run properly. Simulation problem, " +
                 "likely not a problem with the code under test.";
         int envIterations = env.getCurrRobotPeriodic();
+
+        // TODO: Change to assume
         assertThat(envIterations).as(errMsg).isGreaterThan(0);
     }
 

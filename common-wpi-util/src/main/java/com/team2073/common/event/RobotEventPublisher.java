@@ -1,5 +1,6 @@
 package com.team2073.common.event;
 
+import com.team2073.common.periodic.PeriodicAware;
 import com.team2073.common.util.ExceptionUtil;
 
 import java.util.HashMap;
@@ -9,9 +10,16 @@ import java.util.Map;
 /**
  * @author pbriggs
  */
-public class RobotEventPublisher {
-    private static RobotStateEvent currentEvent;
-    private static Map<RobotStateEvent, LinkedList<EventListener>> instancesMap = new HashMap<>();
+public class RobotEventPublisher implements PeriodicAware {
+
+    // TODO:
+    // -Create shutdown event.
+    //      -Either:
+    //          -Tie this to the user button on the RIO
+    //          -Setup a capacitor to give us 2 seconds after kill switch (create trigger on main voltage loss)
+
+    // Places to integrate:
+    // -PositionalMechanismController#updateHoldPosition()
 
     public enum RobotStateEvent {
         PERIODIC(-1),
@@ -42,25 +50,30 @@ public class RobotEventPublisher {
         }
     }
 
+    private RobotStateEvent currentEvent;
+    private Map<RobotStateEvent, LinkedList<EventListener>> instancesMap = new HashMap<>();
+
     public RobotEventPublisher() {
         for (RobotStateEvent event : RobotStateEvent.values())
             instancesMap.put(event, new LinkedList<>());
     }
 
-    public static void setCurrentEvent(RobotStateEvent currentEvent) {
+    public void setCurrentEvent(RobotStateEvent currentEvent) {
+        // TODO: What the heck is this doing?
         if((currentEvent.getEventNumber() & 1) != 0 && currentEvent.getEventNumber() != -1) {
-            RobotEventPublisher.currentEvent = currentEvent.getRobotStateEvent(currentEvent.getEventNumber()+1);
+            this.currentEvent = currentEvent.getRobotStateEvent(currentEvent.getEventNumber()+1);
         }else {
-            RobotEventPublisher.currentEvent = currentEvent;
+            this.currentEvent = currentEvent;
         }
     }
 
-    public static void registerInstance(RobotStateEvent event, EventListener eventListener) {
+    public void register(RobotStateEvent event, EventListener eventListener) {
         instancesMap.get(event).add(eventListener);
     }
 
-
-    public static void runEventListeners() {
+    @Override
+    public void onPeriodic() {
+        // This will call every instance every periodic loop. Need to fix this.
         instancesMap.get(currentEvent).forEach(instance ->
                 ExceptionUtil.suppressVoid(instance::onEvent, instance.getClass().getSimpleName() + " ::onEvent"));
     }

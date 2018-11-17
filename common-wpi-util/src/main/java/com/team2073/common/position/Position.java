@@ -38,12 +38,12 @@ public class Position {
 	}
 
 	public boolean pastBounds(double currentPosition, double startingPosition) {
-		boolean movingUp = currentPosition > startingPosition || currentPosition < midPoint;
-		return pastBounds(currentPosition, movingUp);
+		boolean goalIsToMoveUp = startingPosition < midPoint;
+		return pastBounds(currentPosition, goalIsToMoveUp);
 	}
 	
-	public boolean pastBounds(double currentPosition, boolean movingUp) {
-		if(movingUp) {
+	public boolean pastBounds(double currentPosition, boolean goalIsToMoveUp) {
+		if(goalIsToMoveUp) {
 			return currentPosition > upperBound;
 		} else {
 			return currentPosition < lowerBound;

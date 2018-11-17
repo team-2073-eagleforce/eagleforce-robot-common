@@ -5,27 +5,26 @@ import com.team2073.common.simulation.SimulationConstants;
 import com.team2073.common.simulation.component.SimulationComponentFactory;
 import com.team2073.common.simulation.component.SimulationSolenoid;
 import com.team2073.common.simulation.env.SubsystemTestFixtures.ConstantOutputtingSubsystem;
-import com.team2073.common.simulation.env.SubsystemTestFixtures.SimulatedElevatorSubsystem;
-import com.team2073.common.simulation.env.SubsystemTestFixtures.SimulatedMotionProfileElevatorSubsystem;
 import com.team2073.common.simulation.env.SubsystemTestFixtures.SolenoidSubsystem;
 import com.team2073.common.simulation.model.ArmMechanism;
 import com.team2073.common.simulation.model.LinearMotionMechanism;
 import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSPX;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSRX;
+import com.team2073.common.simulation.subsystem.SimulatedElevatorSubsystem;
+import com.team2073.common.simulation.subsystem.SimulatedMotionProfileElevatorSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.offset;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Tag(TestTags.INTEGRATION_TEST)
-public class SimulationMechanismIntegrationTest {
+class SimulationMechanismIntegrationTest {
 
 	@Test
-	public void simulationEagleSRX_WHEN_set_SHOULD_MoveMechanism() {
+	void simulationEagleSRX_WHEN_set_SHOULD_MoveMechanism() {
 		LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.CIM, 2, 30, .855);
 		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(new SimulationEagleSRX("ExampleTalon", lmm, 4096));
 
@@ -40,7 +39,7 @@ public class SimulationMechanismIntegrationTest {
 	}
 
 	@Test
-	public void simulationEagleSPX_WHEN_set_SHOULD_MoveMechanism() {
+	void simulationEagleSPX_WHEN_set_SHOULD_MoveMechanism() {
 		ArmMechanism arm = new ArmMechanism(55, SimulationConstants.MotorType.MINI_CIM, 2, 15, 13);
 		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(new SimulationEagleSPX("ExampleTalon", arm));
 
@@ -53,7 +52,7 @@ public class SimulationMechanismIntegrationTest {
 	}
 
 	@Test
-	public void subsystemSimulation_WHEN_usedWithControlloop_SHOULD_moveAccordingly() {
+	void subsystemSimulation_WHEN_usedWithControlloop_SHOULD_moveAccordingly() {
 		double goalPosition = 25;
 
 //		Creates mechanism that will be simulated. Specify gear Ratio, motor types, and other physical properties of the mechanism.
@@ -97,7 +96,7 @@ public class SimulationMechanismIntegrationTest {
 	}
 
 	@Test
-	public void subsystemSimulation_WHEN_usedWithMotionProfile_SHOULD_moveAccordingly() {
+	void subsystemSimulation_WHEN_usedWithMotionProfile_SHOULD_moveAccordingly() {
 
 		double goalPosition = 25;
 
@@ -130,7 +129,7 @@ public class SimulationMechanismIntegrationTest {
 	}
 
 	@Test
-	public void simulationSolenoid_WHEN_set_SHOULD_MoveMechanism() {
+	void simulationSolenoid_WHEN_set_SHOULD_MoveMechanism() {
 		ArmMechanism arm = new ArmMechanism(55, SimulationConstants.MotorType.MINI_CIM, 2, 15, 13);
 		SolenoidSubsystem subsystem = new SolenoidSubsystem(SimulationComponentFactory.createSimulationSolenoid(arm));
 

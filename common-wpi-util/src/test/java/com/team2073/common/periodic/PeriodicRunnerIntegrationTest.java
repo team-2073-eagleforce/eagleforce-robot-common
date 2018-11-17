@@ -9,8 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.team2073.common.periodic.PeriodicRunnerIntegrationTestHelper.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.withinPercentage;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author pbriggs
@@ -36,7 +35,7 @@ class PeriodicRunnerIntegrationTest {
         runner.register(periodic1);
 
         SimulationEnvironmentRunner.create()
-                .withPeriodicComponent(runner)
+                .withPeriodicRunner(runner)
                 .run(env -> {
                     assertEnvironmentRan(env);
                     assertPeriodicAwareInstanceCalledAtLeastOnce(periodic1);
@@ -55,7 +54,7 @@ class PeriodicRunnerIntegrationTest {
         runner.register(periodic3);
 
         SimulationEnvironmentRunner.create()
-                .withPeriodicComponent(runner)
+                .withPeriodicRunner(runner)
                 .run(env -> {
                     String errMsg;
                     assertEnvironmentRan(env);
@@ -97,7 +96,7 @@ class PeriodicRunnerIntegrationTest {
         runner.register(new IterationAwarePeriodicAwareImpl(), "Just here to make sure the non-async loop has something to loop over :) ");
 
         SimulationEnvironmentRunner.create()
-                .withPeriodicComponent(runner)
+                .withPeriodicRunner(runner)
                 .withIterationCount(400)
                 .run(env -> {
                     String errMsg;

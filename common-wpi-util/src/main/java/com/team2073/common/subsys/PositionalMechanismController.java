@@ -1,11 +1,16 @@
 package com.team2073.common.subsys;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.team2073.common.assertion.Assert;
+import com.team2073.common.config.CommonProperties;
+import com.team2073.common.ctx.RobotContext;
+import com.team2073.common.datarecorder.model.LifecycleAwareRecordable;
 import com.team2073.common.objective.StatusChecker;
 import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.SmartDashboardAware;
+import com.team2073.common.periodic.SmartDashboardAwareRunner;
 import com.team2073.common.position.Position;
 import com.team2073.common.position.PositionContainer;
 import com.team2073.common.position.converter.NoOpPositionConverter;
@@ -13,14 +18,11 @@ import com.team2073.common.position.converter.PositionConverter;
 import com.team2073.common.position.hold.DisabledHoldingStrategy;
 import com.team2073.common.position.hold.HoldingStrategy;
 import com.team2073.common.position.hold.PIDHoldingStrategy;
-import com.team2073.common.smartdashboard.SmartDashboardAware;
-import com.team2073.common.smartdashboard.SmartDashboardAwareRunner;
+import com.team2073.common.smartdashboard.adapter.NetworkTableAdapter;
+import com.team2073.common.smartdashboard.adapter.NetworkTableEntryAdapter;
 import com.team2073.common.speedcontroller.PidIndex;
+import com.team2073.common.subsys.PositionalMechanismController.IOGateway.Info;
 import com.team2073.common.util.StringUtil;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
 import org.apache.commons.math3.util.Precision;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +40,7 @@ import java.util.function.Consumer;
  *
  * @param <T> The enum that defines the various positions this subsystem is capable of.
  */
-public abstract class PositionalMechanismController<T extends Enum<T> & PositionContainer> implements SmartDashboardAware, PeriodicAware {
+public class PositionalMechanismController<T extends Enum<T> & PositionContainer> implements SmartDashboardAware, PeriodicAware {
 
 	public enum GoalState {
 		WAITING_FOR_GOAL,
@@ -70,6 +72,7 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 
 	// Diagnostics
 	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private final PositionalMechanismControllerData data;
 	private final NetworkTableGrouping logTable;
 	private String baseName;
 	private String name;
@@ -86,8 +89,8 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 	private StatusChecker goalStatus = null;
 	
 	// Internal fields
-	private Set<BaseMotorController> motorList = new HashSet<>();
-	private BaseMotorController mainMotor;
+	private Set<IMotorController> motorList = new HashSet<>();
+	private IMotorController mainMotor;
 	private PositionConverter converter;
 	private HoldingStrategy hold;
 	
@@ -95,30 +98,34 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 	// TODO: Create setter
 	private int pidIdx = PidIndex.PRIMARY.id;
 	private int slotIdx = 0;
-	
-	public PositionalMechanismController(BaseMotorController... motors) {
+	private CommonProperties props = RobotContext.getInstance().getCommonProps();
+
+
+	public PositionalMechanismController(IMotorController... motors) {
 		this(unnamed(), motors);
 	}
 	
-	public PositionalMechanismController(String name, BaseMotorController... motors) {
+	public PositionalMechanismController(String name, IMotorController... motors) {
 		this(name, new NoOpPositionConverter(), motors);
 	}
 	
-	public PositionalMechanismController(PositionConverter converter, BaseMotorController... motors) {
+	public PositionalMechanismController(PositionConverter converter, IMotorController... motors) {
 		this(unnamed(), converter, motors);
 	}
 	
-	public PositionalMechanismController(String name, PositionConverter converter, BaseMotorController... motors) {
+	public PositionalMechanismController(String name, PositionConverter converter, IMotorController... motors) {
 		this(name, converter, HoldType.DISABLE, motors);
 	}
 	
-	public PositionalMechanismController(String name, PositionConverter converter, HoldType holdingStrategy, BaseMotorController... motors) {
+	public PositionalMechanismController(String name, PositionConverter converter, HoldType holdingStrategy, IMotorController... motors) {
 		setName(name);
 		setConverter(converter);
 		add(motors);
 		setHoldingStrategy(holdingStrategy);
 		io = new IOGateway();
 		logTable = new NetworkTableGrouping(StringUtil.toFileCase(baseName));
+		data = new PositionalMechanismControllerData(this);
+		RobotContext.getInstance().getDataRecorder().registerRecordable(data);
 	}
 
 	// Implementation Methods
@@ -127,7 +134,7 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 	public void registerSmartDashboardAware(SmartDashboardAwareRunner smartDashboardAwareRunner) {
 		smartDashboardAwareRunner.registerInstance(this);
 	}
-	
+
 	@Override
 	public void updateSmartDashboard() {
 		logTable.update();
@@ -163,7 +170,7 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 		boolean completeGoal = false;
 		GoalState nextState = goalState;
 		holdingPosition = false;
-		
+
 		// 1) Check if we have anything to process
 		if (goalPosition == null) {
 			nextState = GoalState.WAITING_FOR_GOAL;
@@ -174,63 +181,66 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 				io.holdPosition();
 			}
 			
-			return;
-		}
-
-		double midPoint = goalPosition.midPoint;
-		
-		// Quick assertion check
-		if(goalStatus == null) {
-			// This will not be required once we incorporate the goal into the StatusChecker
-			goalState = GoalState.ERROR;
-			logPositon(currPosition);
-			throw new IllegalStateException("goalStatus must not be null when goalPosition is not null!");
-			
-			
-		// 2) Check if we're interrupted
-		} else if (goalStatus.isInterrupted()) {
-			nextState = GoalState.INTERRUPTED;
-			io.info.setHoldPosition(currPosition);
-			completeGoal = true;
-			
-
-		// 3) Check if we have initialized the goal yet
-		} else if(goalState == GoalState.GOAL_REQUESTED) {
-				
-			if(!positionAllowed(midPoint)) {
-				warn("Blocked attempt to move to unsafe position [{}].", midPoint);
-				nextState = GoalState.INVALID;
-				completeGoal = true;
-				
-			} else if(goalPosition.withinBounds(currPosition)) {
-				debug("Already within requested setpoint bounds. Ignoring request. Bounds; [{} - {}]. Current Position: [{}]."
-						, goalPosition.lowerBound, goalPosition.upperBound, currPosition);
-				nextState = GoalState.COMPLETED;
-				io.info.setHoldPosition(midPoint);
-				completeGoal = true;
-				
-			} else {
-				nextState = GoalState.INITIALIZING_GOAL;
-				io.requestPosition(midPoint);
-			}
-			
-			
-		// 4) Check if goal position reached
-		} else if (goalPosition.withinOrPastBounds(currPosition, getStartingPosition())) {
-			nextState = GoalState.COMPLETED;
-			io.info.setHoldPosition(midPoint);
-			completeGoal = true;
-			
-			
-		// 5) None of the above were true. Start/continue moving towards goal position
 		} else {
-			nextState = GoalState.PROCESSING_GOAL;
-			movePeriodic();
+
+			double midPoint = goalPosition.midPoint;
+
+			// Quick assertion check
+			if(goalStatus == null) {
+				// This will not be required once we incorporate the goal into the StatusChecker
+				goalState = GoalState.ERROR;
+				logPositon(currPosition);
+				throw new IllegalStateException("goalStatus must not be null when goalPosition is not null!");
+
+
+				// 2) Check if we're interrupted
+			} else if (goalStatus.isInterrupted()) {
+				nextState = GoalState.INTERRUPTED;
+				io.info.setHoldPosition(currPosition);
+				completeGoal = true;
+
+
+				// 3) Check if we have initialized the goal yet
+			} else if(goalState == GoalState.GOAL_REQUESTED) {
+
+				hadGoalPositionBefore = true;
+
+				if(!positionAllowed(midPoint)) {
+					warn("Blocked attempt to move to unsafe position [{}].", midPoint);
+					nextState = GoalState.INVALID;
+					completeGoal = true;
+
+				} else if(goalPosition.withinBounds(currPosition)) {
+					debug("Already within requested setpoint bounds. Ignoring request. Bounds; [{} - {}]. Current Position: [{}]."
+							, goalPosition.lowerBound, goalPosition.upperBound, currPosition);
+					nextState = GoalState.COMPLETED;
+					io.info.setHoldPosition(midPoint);
+					completeGoal = true;
+
+				} else {
+					nextState = GoalState.INITIALIZING_GOAL;
+					io.requestPosition(midPoint);
+				}
+
+
+				// 4) Check if goal position reached
+			} else if (goalPosition.withinOrPastBounds(currPosition, getStartingPosition())) {
+				nextState = GoalState.COMPLETED;
+				io.info.setHoldPosition(midPoint, true);
+				completeGoal = true;
+
+
+				// 5) None of the above were true. Start/continue moving towards goal position
+			} else {
+				nextState = GoalState.PROCESSING_GOAL;
+				movePeriodic();
+			}
 		}
-		
+
+
 		if(logPosition)
 			logPositon(currPosition);
-		
+
 		goalState = nextState;
 		
 		if(completeGoal)
@@ -249,32 +259,35 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 
 	// Protected methods
 	// ============================================================
-	protected void add(BaseMotorController motorController) {
+	protected void add(IMotorController motorController) {
 		Assert.assertNotNull(motorController, "motorController");
 		motorList.add(motorController);
 		if(mainMotor == null)
 			setMainMotor(motorController);
 	}
 	
-	protected void add(List<BaseMotorController> motorControllerList) {
+	protected void add(List<IMotorController> motorControllerList) {
 		Assert.assertNotNull(motorControllerList, "motorControllerList");
 		motorControllerList.forEach(motor -> add(motor));
 	}
 	
-	protected void add(BaseMotorController... motorControllers) {
+	protected void add(IMotorController... motorControllers) {
 		Assert.assertNotNull(motorControllers, "motorControllers");
+		if (motorControllers.length < 1)
+			throw new IllegalArgumentException(String.format(
+					"Must pass at least one motor controller into [%s]", getClass().getSimpleName()));
 		add(Arrays.asList(motorControllers));
 	}
 	
-	protected void doToMotors(Consumer<BaseMotorController> function) {
+	protected void doToMotors(Consumer<IMotorController> function) {
 		motorList.forEach(mtr -> function.accept(mtr));
 	}
 	
-	protected BaseMotorController getMainMotor() {
+	protected IMotorController getMainMotor() {
 		return mainMotor;
 	}
 	
-	protected void setMainMotor(BaseMotorController motor) {
+	protected void setMainMotor(IMotorController motor) {
 		Assert.assertNotNull(motor, "motor");
 		this.mainMotor = motor;
 		// No worry of duplicates (motorList is a set)
@@ -378,12 +391,11 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 
 	// Inner classes
 	// ============================================================
-	private class IOGateway {
+	class IOGateway {
 		
 		private Info info = new Info();
 		
 		public IOGateway() {
-//			this.periodic();
 			info.updateCurrentPosition();
 			double initialHoldPosition = info.currentPosition();
 			info("Setting initial hold position to [{}].", initialHoldPosition);
@@ -415,7 +427,7 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 		}
 
 		public void holdPosition() {
-			moveToPosition(io.info.getHoldPosition());
+			hold.holdPosition();
 		}
 		
 		/**
@@ -432,7 +444,7 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 			
 		}
 		
-		private class Info {
+		class Info {
 
 			private double requestedPosition;
 			private boolean enabled = false;
@@ -445,7 +457,7 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 			private double startingPosition;
 
 			/** Returns the current cached tics. See {@link #updateCurrentPosition()} for more info. */
-			public double currentTics() {
+			public int currentTics() {
 				return converter.asTics(currentPosition());
 			}
 
@@ -480,12 +492,18 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 			}
 
 			public void setHoldPosition(double holdPosition) {
-				debug("Setting hold position to [{}].", holdPosition);
+				setHoldPosition(holdPosition, false);
+			}
+
+			public void setHoldPosition(double holdPosition, boolean goalCompleted) {
+				String prependMsg = goalCompleted ? "Goal completed. " : "";
+				debug("{}Setting hold position to [{}].", prependMsg, holdPosition);
 				hold.setHoldPosition(holdPosition);
 			}
 
 			private void updateHoldPosition() {
-				enabled = DriverStation.getInstance().isEnabled();
+				// TODO: Change to use robot event pattern
+				enabled = RobotContext.getInstance().getDriverStation().isEnabled();
 				
 				if(enabled != enabledPrevIteration && enabled) {
 					onEnabled();
@@ -504,23 +522,23 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 	private class NetworkTableGrouping {
 		public static final int PRECISION = 5;
 		
-		private NetworkTable table;
-		private NetworkTableEntry hadGoalEntry;
-		private NetworkTableEntry goalStateEntry;
-		private NetworkTableEntry goalStartPosEntry;
-		private NetworkTableEntry goalReqPosEntry;
-		private NetworkTableEntry goalNameEntry;
-		private NetworkTableEntry goalStatusEntry;
-		private NetworkTableEntry holdPosEntry;
-		private NetworkTableEntry holdActiveEntry;
-		private NetworkTableEntry currPosEntry;
-		private NetworkTableEntry currTicsEntry;
+		private NetworkTableAdapter table;
+		private NetworkTableEntryAdapter hadGoalEntry;
+		private NetworkTableEntryAdapter goalStateEntry;
+		private NetworkTableEntryAdapter goalStartPosEntry;
+		private NetworkTableEntryAdapter goalReqPosEntry;
+		private NetworkTableEntryAdapter goalNameEntry;
+		private NetworkTableEntryAdapter goalStatusEntry;
+		private NetworkTableEntryAdapter holdPosEntry;
+		private NetworkTableEntryAdapter holdActiveEntry;
+		private NetworkTableEntryAdapter currPosEntry;
+		private NetworkTableEntryAdapter currTicsEntry;
 
 		public NetworkTableGrouping(String baseTableName) {
-			this(NetworkTableInstance.getDefault().getTable("subsys").getSubTable(baseTableName).getSubTable("pos-ctrl"));
+			this(RobotContext.getInstance().getSmartDashboard().getTable("subsys").getSubTable(baseTableName).getSubTable("pos-ctrl"));
 		}
 		
-		public NetworkTableGrouping(NetworkTable baseTable) {
+		public NetworkTableGrouping(NetworkTableAdapter baseTable) {
 			this.table = baseTable;
 			hadGoalEntry = table.getEntry("had-goal");
 			goalStateEntry = table.getEntry("goal-state");
@@ -554,7 +572,63 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 			}
 		}
 	}
-	
+
+	public static class PositionalMechanismControllerData implements LifecycleAwareRecordable {
+
+		private final PositionalMechanismController pmc;
+
+		// pmc data
+		private int goalStateOrdinal;
+		private String goalStateEnum;
+		private boolean holdingPosition;
+		private boolean hadGoalPositionBefore;
+		private double goalPositionLowerBound;
+		private double goalPositionMidPoint;
+		private double goalPositionUpperBound;
+		private boolean statusCheckerNotNull;
+		private boolean statusCheckerComplete;
+		private boolean statusCheckerInterrupted;
+
+		// io.info data
+		private long tics;
+		private double position;
+		private double requestedPosition;
+		private double startingPosition;
+		private double holdPosition;
+
+
+		public PositionalMechanismControllerData(PositionalMechanismController pmc) {
+			this.pmc = pmc;
+		}
+
+		@Override
+		public void onBeforeRecord() {
+			goalStateOrdinal = pmc.goalState.ordinal();
+			goalStateEnum = pmc.goalState.toString();
+			holdingPosition = pmc.holdingPosition;
+			hadGoalPositionBefore = pmc.hadGoalPositionBefore;
+			Position goalPosition = pmc.goalPosition;
+			goalPositionLowerBound = goalPosition == null ? 0 : goalPosition.lowerBound;
+			goalPositionMidPoint = goalPosition == null ? 0 : goalPosition.midPoint;
+			goalPositionUpperBound = goalPosition == null ? 0 : goalPosition.upperBound;
+			statusCheckerNotNull = pmc.goalStatus != null;
+			statusCheckerComplete = statusCheckerNotNull ? pmc.goalStatus.isComplete() : false;
+			statusCheckerInterrupted = statusCheckerNotNull ? pmc.goalStatus.isInterrupted() : false;
+
+			Info info = pmc.io.info;
+			tics = info.currentTics();
+			position = info.currentPosition();
+			requestedPosition = info.getRequestedPosition();
+			startingPosition = info.getStartingPosition();
+			holdPosition = info.getHoldPosition();
+		}
+
+	}
+
+	public GoalState getGoalState() {
+		return goalState;
+	}
+
 	// Getters/setters
 	// ============================================================
 	public PositionalMechanismController<T> setConverter(PositionConverter converter) {
@@ -603,10 +677,10 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 	public PositionalMechanismController<T> setHoldingStrategy(HoldType holdingStrategy) {
 		Assert.assertNotNull(holdingStrategy, "holdingStrategy");
 		debug("Setting holding strategy to [{}].", holdingStrategy);
-		
+
 		switch (holdingStrategy) {
 		case PID:
-			setHoldingStrategy(new PIDHoldingStrategy(converter, currentPosition(), motorList));
+			setHoldingStrategy(new PIDHoldingStrategy(converter, motorList));
 			break;
 		case DISABLE:
 			setHoldingStrategy(new DisabledHoldingStrategy(motorList));
@@ -625,5 +699,5 @@ public abstract class PositionalMechanismController<T extends Enum<T> & Position
 		
 		return this;
 	}
-	
+
 }

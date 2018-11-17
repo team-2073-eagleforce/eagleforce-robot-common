@@ -1,10 +1,11 @@
 package com.team2073.common.simulation.model;
 
 
+import com.team2073.common.datarecorder.model.DataPointIgnore;
 import com.team2073.common.simulation.SimulationConstants.MotorType;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
-import static com.team2073.common.util.ConversionUtil.msToSeconds;
+import static com.team2073.common.util.ConversionUtil.*;
 
 /**
  * For Arm Systems with most of the weight at the end of the arm
@@ -13,7 +14,8 @@ import static com.team2073.common.util.ConversionUtil.msToSeconds;
  */
 public class ArmMechanism extends AbstractSimulationMechanism {
 
-	private double lengthOfArm;
+	@DataPointIgnore
+	private final double lengthOfArm;
 
 	public ArmMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double lengthOfArm) {
 		super(gearRatio, motor, motorCount, massOnSystem);
@@ -40,7 +42,7 @@ public class ArmMechanism extends AbstractSimulationMechanism {
 	public double calculateAcceleration() {
 		acceleration = ((gearRatio * torqueConstant * currentVoltage)
 				- ((1 / velocityConstant) * torqueConstant * velocity * gearRatio * gearRatio))
-				/ (motorResistance * (1. / 12.) * massOnSystem * Math.pow(lengthOfArm, 2));
+				/ (motorResistance * massOnSystem * Math.pow(lengthOfArm, 2));
 
 		return acceleration;
 	}

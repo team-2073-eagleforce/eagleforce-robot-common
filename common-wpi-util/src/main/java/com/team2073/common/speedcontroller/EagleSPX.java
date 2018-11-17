@@ -1,16 +1,15 @@
 package com.team2073.common.speedcontroller;
 
+import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.team2073.common.periodic.SmartDashboardAware;
+import com.team2073.common.periodic.SmartDashboardAwareRunner;
 import com.team2073.common.util.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 //import com.google.inject.Inject;
-import com.team2073.common.smartdashboard.SmartDashboardAware;
-import com.team2073.common.smartdashboard.SmartDashboardAwareRunner;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class EagleSPX extends VictorSPX implements SmartDashboardAware {
 	private final Logger logger = LoggerFactory.getLogger(getClass());

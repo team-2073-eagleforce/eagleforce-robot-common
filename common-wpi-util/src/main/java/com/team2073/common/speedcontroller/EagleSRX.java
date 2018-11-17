@@ -1,30 +1,37 @@
 package com.team2073.common.speedcontroller;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
-//import com.google.inject.Inject;
-import com.team2073.common.periodic.PeriodicAware;
-import com.team2073.common.smartdashboard.SmartDashboardAware;
-import com.team2073.common.smartdashboard.SmartDashboardAwareRunner;
-import com.team2073.common.util.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.team2073.common.ctx.RobotContext;
+import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.SmartDashboardAware;
+import com.team2073.common.util.EnumUtil;
+import com.team2073.common.util.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+import static com.team2073.common.util.ClassUtil.*;
 
 public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardAware {
+
+    // TODO: Change case to EagleSrx (same with EagleSPX)
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private String name;
     private boolean isTestingEnabled = false;
     private double safePercentage = .5;
 	private Timer timer = new Timer();
+
+    private ControlMode nextControlMode = ControlMode.PercentOutput;
+    private double nextOutputValue = 0;
 
     private double lastPercentOutForward = 0;
     private double lastPercentOutReverse = 0;
@@ -46,7 +53,6 @@ public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardA
 
     private LoadingCache<DataType, Double> talonDataCache;
     private Timer outputTimer = new Timer();
-    private TalonOutputTask talonOutputTask;
 
     /**
      *
@@ -73,25 +79,22 @@ public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardA
                             case VELOCITY:
                                 return (double) getSelectedSensorVelocityInternal(currentPidIdx);
                             default:
-                                throw new IllegalStateException("Unknown value [" + key + "]");
+                                EnumUtil.throwUnknownValueException(key);
+                                // dead code
+                                return null;
                         }
 
                     }
                 });
-        talonOutputTask = new TalonOutputTask();
+        // TODO: Do we want this to be async or nah?
+        RobotContext.getInstance().getPeriodicRunner().registerAsync(this, simpleName(this) + "[" + deviceNumber + "]");
+        RobotContext.getInstance().getSmartDashboardRunner().registerInstance(this);
 
-        logger.info(name + " Talon has been initialized on port " + deviceNumber);
-    }
-
-    // TODO: Can't use inject in common project
-//    @Inject
-    public void registerSmartDashboardAware(SmartDashboardAwareRunner smartDashboardAwareRunner) {
-        smartDashboardAwareRunner.registerInstance(this);
+        logger.info("[{}] Talon has been initialized on port [{}].", name, deviceNumber);
     }
 
     @Override
     public void updateSmartDashboard() {
-        SmartDashboard.setDefaultBoolean(name + " Enable Test Mode", false);
         if (logger.isTraceEnabled()) {
             SmartDashboard.putNumber(name, this.getMotorOutputVoltage());
         }
@@ -99,13 +102,12 @@ public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardA
 
     @Override
     public void readSmartDashboard() {
-        isTestingEnabled = SmartDashboard.getBoolean(name + " Enable Test Mode", false);
+        isTestingEnabled = SmartDashboard.setDefaultBoolean(name + " Enable Test Mode", false);
         if (isTestingEnabled && (timer.hasWaited(1000) || !enabledTestingMode)) {
             timer.start();
             enabledTestingMode = true;
             reloadPIDFValues();
         }
-
     }
 
     /**
@@ -250,35 +252,21 @@ public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardA
 
     @Override
     public void set(ControlMode mode, double outputValue) {
-        talonOutputTask.updateOutput(outputValue);
-        talonOutputTask.updateControlMode(mode);
-    }
-
-    private class TalonOutputTask {
-        private ControlMode controlMode;
-        private double outputValue;
-
-        public void run() {
-            setInternal(controlMode, outputValue);
-        }
-
-        public void updateOutput(double outputValue) {
-            this.outputValue = outputValue;
-        }
-
-        public void updateControlMode(ControlMode mode) {
-            this.controlMode = mode;
-        }
-
-    }
-
-    private void setInternal(ControlMode mode, double outputValue) {
-        super.set(mode, outputValue);
+        this.nextControlMode = mode;
+        this.nextOutputValue = outputValue;
     }
 
     @Override
     public void onPeriodic() {
-        talonOutputTask.run();
+        super.set(getNextControlMode(), getNextOutputValue());
+    }
+
+    protected ControlMode getNextControlMode() {
+        return nextControlMode;
+    }
+
+    protected double getNextOutputValue() {
+        return nextOutputValue;
     }
 
 }

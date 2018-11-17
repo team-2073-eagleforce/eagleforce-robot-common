@@ -12,17 +12,32 @@ public abstract class LogUtil {
 	// Constructor start
 	// ================================================================================
 	/** Logs the start of object construction. Ex message: "Constructing [SomeClassName]." <p>
-	 * Example use: <p><b>LogUtil.infoConstruct(this.getClass(), logger);</b> */
+	 * Example use: <p><b>LogUtil.infoConstruct(this, logger);</b> */
+	public static void infoConstruct(Object clazz, Logger logger) {
+		infoConstruct(clazz.getClass(), logger);
+	}
+
+	/** See {@link #infoConstruct(Object, Logger)}. */
 	public static void infoConstruct(Class<?> clazz, Logger logger) {
 		logger.info(CONSTRUCTOR_MSG, clazz.getSimpleName());
 	}
 
-	/** See {@link #infoConstruct(Class, Logger)}. */
+	/** See {@link #infoConstruct(Object, Logger)}. */
+	public static void debugConstruct(Object clazz, Logger logger) {
+		debugConstruct(clazz.getClass(), logger);
+	}
+
+	/** See {@link #infoConstruct(Object, Logger)}. */
 	public static void debugConstruct(Class<?> clazz, Logger logger) {
 		logger.debug(CONSTRUCTOR_MSG, clazz.getSimpleName());
 	}
 
-	/** See {@link #infoConstruct(Class, Logger)}. */
+	/** See {@link #infoConstruct(Object, Logger)}. */
+	public static void traceConstruct(Object clazz, Logger logger) {
+		traceConstruct(clazz.getClass(), logger);
+	}
+
+	/** See {@link #infoConstruct(Object, Logger)}. */
 	public static void traceConstruct(Class<?> clazz, Logger logger) {
 		logger.trace(CONSTRUCTOR_MSG, clazz.getSimpleName());
 	}
@@ -31,16 +46,31 @@ public abstract class LogUtil {
 	// ================================================================================
 	/** Logs object construction complete. Ex message: "Constructing [SomeClassName] complete." <p>
 	 * Example use: <p><b>LogUtil.infoConstructEnd(this.getClass(), logger);</b> */
+	public static void infoConstructEnd(Object clazz, Logger logger) {
+		infoConstructEnd(clazz.getClass(), logger);
+	}
+
+	/** See {@link #infoConstructEnd(Object, Logger)}. */
 	public static void infoConstructEnd(Class<?> clazz, Logger logger) {
 		logger.info(CONSTRUCTOR_END_MSG, clazz.getSimpleName());
 	}
 
-	/** See {@link #infoConstructEnd(Class, Logger)}. */
+	/** See {@link #infoConstructEnd(Object, Logger)}. */
+	public static void debugConstructEnd(Object clazz, Logger logger) {
+		debugConstructEnd(clazz.getClass(), logger);
+	}
+
+	/** See {@link #infoConstructEnd(Object, Logger)}. */
 	public static void debugConstructEnd(Class<?> clazz, Logger logger) {
 		logger.debug(CONSTRUCTOR_END_MSG, clazz.getSimpleName());
 	}
 
-	/** See {@link #infoConstructEnd(Class, Logger)}. */
+	/** See {@link #infoConstructEnd(Object, Logger)}. */
+	public static void traceConstructEnd(Object clazz, Logger logger) {
+		traceConstructEnd(clazz.getClass(), logger);
+	}
+
+	/** See {@link #infoConstructEnd(Object, Logger)}. */
 	public static void traceConstructEnd(Class<?> clazz, Logger logger) {
 		logger.trace(CONSTRUCTOR_END_MSG, clazz.getSimpleName());
 	}
@@ -48,17 +78,32 @@ public abstract class LogUtil {
 	// Initialization start
 	// ================================================================================
 	/** Logs the start of object initialization. Ex message: "Initializing [SomeClassName]." <p>
-	 * Example use: <p><b>LogUtil.infoInit(this.getClass(), logger);</b> */
+	 * Example use: <p><b>LogUtil.infoInit(this, logger);</b> */
+	public static void infoInit(Object clazz, Logger logger) {
+		infoInit(clazz.getClass(), logger);
+	}
+
+	/** See {@link #infoInit(Object, Logger)}. */
 	public static void infoInit(Class<?> clazz, Logger logger) {
 		logger.info(INITIALIZE_MSG, clazz.getSimpleName());
 	}
 
-	/** See {@link #infoInit(Class, Logger)}. */
+	/** See {@link #infoInit(Object, Logger)}. */
+	public static void debugInit(Object clazz, Logger logger) {
+		debugInit(clazz.getClass(), logger);
+	}
+
+	/** See {@link #infoInit(Object, Logger)}. */
 	public static void debugInit(Class<?> clazz, Logger logger) {
 		logger.debug(INITIALIZE_MSG, clazz.getSimpleName());
 	}
 
-	/** See {@link #infoInit(Class, Logger)}. */
+	/** See {@link #infoInit(Object, Logger)}. */
+	public static void traceInit(Object clazz, Logger logger) {
+		traceInit(clazz.getClass(), logger);
+	}
+
+	/** See {@link #infoInit(Object, Logger)}. */
 	public static void traceInit(Class<?> clazz, Logger logger) {
 		logger.trace(INITIALIZE_MSG, clazz.getSimpleName());
 	}
@@ -67,17 +112,44 @@ public abstract class LogUtil {
 	// ================================================================================
 	/** Logs object initialization complete. Ex message: "Initializing [SomeClassName] complete." <p>
 	 * Example use: <p><b>LogUtil.infoInitEnd(this.getClass(), logger);</b> */
+	public static void infoInitEnd(Object clazz, Logger logger) {
+		infoInitEnd(clazz.getClass(), logger);
+	}
+
+	/** See {@link #infoInitEnd(Object, Logger)}. */
 	public static void infoInitEnd(Class<?> clazz, Logger logger) {
 		logger.info(INITIALIZE_END_MSG, clazz.getSimpleName());
 	}
 
-	/** See {@link #infoInitEnd(Class, Logger)}. */
+	/** See {@link #infoInitEnd(Object, Logger)}. */
+	public static void debugInitEnd(Object clazz, Logger logger) {
+		debugInitEnd(clazz.getClass(), logger);
+	}
+
+	/** See {@link #infoInitEnd(Object, Logger)}. */
 	public static void debugInitEnd(Class<?> clazz, Logger logger) {
 		logger.debug(INITIALIZE_END_MSG, clazz.getSimpleName());
 	}
 
-	/** See {@link #infoInitEnd(Class, Logger)}. */
+	/** See {@link #infoInitEnd(Object, Logger)}. */
+	public static void traceInitEnd(Object clazz, Logger logger) {
+		traceInitEnd(clazz.getClass(), logger);
+	}
+
+	/** See {@link #infoInitEnd(Object, Logger)}. */
 	public static void traceInitEnd(Class<?> clazz, Logger logger) {
 		logger.trace(INITIALIZE_END_MSG, clazz.getSimpleName());
+	}
+
+	// Other util methods
+	// ================================================================================
+	/** Converts Logger format "{}" to String.format style "%s". */
+	public static String convertLogToStrFmt(String string) {
+		return string.replace("{}", "%s");
+	}
+
+	/** Converts String.format style "%s" to Logger style "{}". */
+	public static String convertStrFmtToLog(String string) {
+		return string.replace("%s", "{}");
 	}
 }

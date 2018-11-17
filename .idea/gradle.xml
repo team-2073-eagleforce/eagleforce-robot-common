@@ -10,9 +10,11 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/common-guice" />
             <option value="$PROJECT_DIR$/common-util" />
+            <option value="$PROJECT_DIR$/common-util-test" />
             <option value="$PROJECT_DIR$/common-wpi-simulation" />
             <option value="$PROJECT_DIR$/common-wpi-simulation-stubs" />
             <option value="$PROJECT_DIR$/common-wpi-util" />
+            <option value="$PROJECT_DIR$/common-wpi-util-test" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -1,8 +1,8 @@
 package com.team2073.common.position.hold;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.team2073.common.assertion.Assert;
 
 import java.util.Collection;
@@ -18,22 +18,22 @@ public class DisabledHoldingStrategy extends MotorAwareHoldingStrategy {
 	private NeutralMode mode;
 	
 	/** @see DisabledHoldingStrategy */
-	public DisabledHoldingStrategy(Collection<BaseMotorController> motorControllers) {
-		this(-1, motorControllers);
+	public DisabledHoldingStrategy(Collection<IMotorController> motorControllers) {
+		this(0, motorControllers);
 	}
 
 	/** @see DisabledHoldingStrategy */
-	public DisabledHoldingStrategy(double initialHoldPosition, Collection<BaseMotorController> motorControllers) {
+	public DisabledHoldingStrategy(double initialHoldPosition, Collection<IMotorController> motorControllers) {
 		super(initialHoldPosition, motorControllers);
 	}
 
 	/** @see DisabledHoldingStrategy */ 
-	public DisabledHoldingStrategy(NeutralMode mode, Collection<BaseMotorController> motorControllers) {
+	public DisabledHoldingStrategy(NeutralMode mode, Collection<IMotorController> motorControllers) {
 		this(-1, mode, motorControllers);
 	}
 
 	/** @see DisabledHoldingStrategy */ 
-	public DisabledHoldingStrategy(double initialHoldPosition, NeutralMode mode, Collection<BaseMotorController> motorControllers) {
+	public DisabledHoldingStrategy(double initialHoldPosition, NeutralMode mode, Collection<IMotorController> motorControllers) {
 		super(initialHoldPosition, motorControllers);
 		Assert.assertNotNull(mode, "mode");
 		this.mode = mode;

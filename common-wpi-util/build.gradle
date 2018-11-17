@@ -12,13 +12,15 @@ apply plugin: 'kotlin'
 dependencies {
     compile wpilib()
     compile ctre()
-    compile group: 'com.team2073', name: 'common-util', version: '0.3.0-SNAPSHOT'
-    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    compile "com.team2073:common-util:${commonVersion}"
+    compile 'commons-io:commons-io:2.5'
     compile 'org.apache.commons:commons-math3:3.6.1'
     compile 'javax.validation:validation-api:2.0.0.Final'
     compile 'org.reflections:reflections:0.9.11'
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+    compile 'com.google.guava:guava:19.0'
 
-    testCompile group: 'com.team2073', name: 'common-wpi-simulation', version: '0.3.0-SNAPSHOT'
+    testCompile "com.team2073:common-util-test:${commonVersion}"
+    testCompile "com.team2073:common-wpi-simulation:${commonVersion}"
+    testCompile "com.team2073:common-wpi-util-test:${commonVersion}"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
