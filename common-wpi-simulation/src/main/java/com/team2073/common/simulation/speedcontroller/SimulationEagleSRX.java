@@ -29,4 +29,8 @@ public class SimulationEagleSRX extends BaseSimulationMotorController implements
 		return (int) Math.round(mechanism.velocity() * encoderTicsPerUnitOfMechanism);
 	}
 
+	@Override
+	public void selectProfileSlot(int slotIdx, int pidIdx) {
+		// I needed this for testing PositionalMechanismController: motor.selectProfileSlot(slotIdx, pidIdx)
+	}
 }
