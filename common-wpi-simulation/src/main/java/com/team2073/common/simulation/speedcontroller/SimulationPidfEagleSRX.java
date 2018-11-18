@@ -15,7 +15,7 @@ public class SimulationPidfEagleSRX extends SimulationEagleSRX {
     public SimulationPidfEagleSRX(String name, SimulationMechanism mechanism, int encoderTicsPerUnitOfMechanism, PidfControlLoop pid) {
         super(name, mechanism, encoderTicsPerUnitOfMechanism);
         this.pid = pid;
-        pid.setPositionSupplier(() -> getSelectedSensorPosition(0));
+        pid.setPositionSupplier(() -> (double) getSelectedSensorPosition(0));
     }
 
     @Override

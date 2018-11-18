@@ -16,7 +16,7 @@ public class SimulatedMotionProfileElevatorSubsystem implements PeriodicAware {
     double maxAcceleration = 20;
     double averageAcceleration = 15;
     SCurveProfileGenerator profile;
-    MotionProfileControlloop mpc = new MotionProfileControlloop(.005, 0.0001, .0155, .012, .01, 1);
+    MotionProfileControlloop mpc = new MotionProfileControlloop(.005, 0.0001, .0155, .012, 1);
     private IMotorControllerEnhanced talon;
     private DigitalInput zeroSensor;
     private Solenoid brake;
@@ -38,17 +38,16 @@ public class SimulatedMotionProfileElevatorSubsystem implements PeriodicAware {
         this.setpoint = setpoint;
         profile = new SCurveProfileGenerator(
                 setpoint, maxVelocity, maxAcceleration, averageAcceleration);
-        mpc.stop();
         started = false;
     }
 
     @Override
     public void onPeriodic() {
         if (!started) {
-            mpc.start();
             brake.set(false);
             started = true;
         }
+        mpc.update(.01);
 
         if (zeroSensor.get()) {
             brake.set(true);
