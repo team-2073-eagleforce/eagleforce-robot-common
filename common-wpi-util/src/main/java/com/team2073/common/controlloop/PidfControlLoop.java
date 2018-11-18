@@ -43,7 +43,7 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 	private double lastError;
 	private double position;
 	private Double maxIContribution = null;
-	private PositionSupplier positionSupplier;
+	private Callable<Double> positionSupplier;
 	private Callable<Boolean> fCondition;
 	private int fConditionExceptionCount;
 	private double lastTime = ConversionUtil.msToSeconds(System.currentTimeMillis());
@@ -57,12 +57,26 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 		RobotContext.getInstance().getDataRecorder().registerRecordable(this);
 	}
 
+    public PidfControlLoop(double p, double i, double d, double f, double maxOutput, Callable<Double> positionSupplier) {
+        this.p = p;
+        this.i = i;
+        this.d = d;
+        this.f = f;
+        this.maxOutput = maxOutput;
+        this.positionSupplier = positionSupplier;
+        RobotContext.getInstance().getDataRecorder().registerRecordable(this);
+    }
+
 	public void updatePID(double interval) {
 
 		if (positionSupplier == null)
-			Throw.illegalState("[{}] must not be null.", PositionSupplier.class.getSimpleName());
+			Throw.illegalState("PositionSupplier must not be null.");
 
-		position = positionSupplier.currentPosition();
+		try {
+			position = positionSupplier.call();
+		} catch (Exception e) {
+            Throw.illegalState("[{}] did not return a valid output.", PositionSupplier.class.getSimpleName());
+        }
 
 		error = goal - position;
 
@@ -73,19 +87,18 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 				output += f;
 			}
 		} catch (Exception e) {
-			// TODO: Jason, should we still continue executing? What happens if we skip f?
 			fConditionExceptionCount++;
 			if (fConditionExceptionCount < MAX_FCONDITION_EXCEPTIONS_TO_LOG)
 				log.warn("Exception calling fCondition: ", e);
 		}
 
 		output += p * error;
-		if (maxIContribution == null) {
+
+		if (maxIContribution == null)
 			output += i * accumulatedError;
-		}
-		else {
+		else
 			output += Math.min(i * accumulatedError, maxIContribution);
-		}
+
 		output += d * errorVelocity;
 
 		accumulatedError += error * (interval);
@@ -115,10 +128,6 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 		return output;
 	}
 
-	public void setNewPosition(double position) {
-		this.position = position;
-	}
-
 	public void updateSetPoint(double newGoal) {
 		this.goal = newGoal;
 	}
@@ -127,7 +136,7 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 		return error;
 	}
 
-	public void configMaxIContribution(double maxContribution) {
+	public void setMaxIContribution(double maxContribution) {
 		this.maxIContribution = maxContribution;
 	}
 
@@ -142,11 +151,8 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 		this.fCondition = fCondition;
 	}
 
-	public void setPositionSupplier(PositionSupplier positionSupplier) {
+	public void setPositionSupplier(Callable<Double> positionSupplier) {
 		this.positionSupplier = positionSupplier;
 	}
 
-	public interface PositionSupplier {
-		double currentPosition();
-	}
 }

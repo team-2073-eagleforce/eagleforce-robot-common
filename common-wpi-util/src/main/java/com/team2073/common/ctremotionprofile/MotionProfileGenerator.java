@@ -1,13 +1,13 @@
-package com.team2073.common.motionprofiling;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package com.team2073.common.ctremotionprofile;
 
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;
+import com.team2073.common.motionprofiling.MotionProfileConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MotionProfileGenerator {
 	private static final Logger logger = LoggerFactory.getLogger(MotionProfileGenerator.class);

@@ -22,6 +22,7 @@ public class PidfEagleSrx extends EagleSRX {
         if (mode != ControlMode.Position)
             super.set(mode, outputValue);
 
+        pid.updateSetPoint(outputValue);
     }
 
     @Override
