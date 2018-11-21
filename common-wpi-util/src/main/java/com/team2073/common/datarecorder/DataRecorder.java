@@ -17,7 +17,7 @@ import com.team2073.common.datarecorder.output.DataRecordOutputHandler;
 import com.team2073.common.datarecorder.output.DataRecordOutputHandlerConsoleImpl;
 import com.team2073.common.datarecorder.output.DataRecordOutputHandlerCsvImpl;
 import com.team2073.common.datarecorder.output.DataRecordOutputHandlerSmartDashboardImpl;
-import com.team2073.common.periodic.PeriodicRunnable;
+import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.util.ExceptionUtil;
 import com.team2073.common.util.ReflectionUtil;
@@ -266,8 +266,8 @@ public class DataRecorder {
     // Periodic Runner methods
     // ============================================================
 
-    private final PeriodicRunnable periodicRecord = () -> periodicRunnerRecord();
-    private final PeriodicRunnable periodicFlush = () -> periodicRunnerFlush();
+    private final AsyncPeriodicRunnable periodicRecord = () -> periodicRunnerRecord();
+    private final AsyncPeriodicRunnable periodicFlush = () -> periodicRunnerFlush();
 
     /** See {@link #registerWithPeriodicRunner(PeriodicRunner, long)} */
     public void registerWithPeriodicRunner() {

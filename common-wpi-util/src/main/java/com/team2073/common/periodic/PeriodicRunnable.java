@@ -1,11 +1,17 @@
 package com.team2073.common.periodic;
 
-/** @see PeriodicRunner */
+/**
+ * See {@link PeriodicRunner}
+ *
+ * @author Preston Briggs
+ */
 public interface PeriodicRunnable {
 
-	/** @see PeriodicRunner */
+	/** See {@link PeriodicRunner} */
 	void onPeriodic();
 
+	/** @deprecated Use {@code RobotContext.getInstance().getPeriodicRunner().register(...)} instead. */
+	@Deprecated
 	default void registerSelf(PeriodicRunner periodicRunner) {
 		periodicRunner.register(this);
 	}

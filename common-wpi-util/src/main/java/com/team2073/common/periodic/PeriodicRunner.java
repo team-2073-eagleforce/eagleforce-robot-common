@@ -107,7 +107,7 @@ public class PeriodicRunner implements SmartDashboardAware {
 	private static final Logger logger = LoggerFactory.getLogger(PeriodicRunner.class);
 
 	private final Map<PeriodicRunnable, PeriodicInstance> instanceMap = new HashMap<>();
-	private final Map<PeriodicRunnable, AsyncPeriodicInstance> asyncInstanceMap = new HashMap<>();
+	private final Map<AsyncPeriodicRunnable, AsyncPeriodicInstance> asyncInstanceMap = new HashMap<>();
 	private Timer instanceLoopTimer = new Timer();
 	private Timer fullLoopTimer = new Timer();
 	private Timer overallTimer = new Timer();
@@ -145,19 +145,19 @@ public class PeriodicRunner implements SmartDashboardAware {
         logger.debug("Registering periodic instance: [{}] complete.", name);
     }
 
-    /** @see #registerAsync(PeriodicRunnable, String, long)  */
-    public void registerAsync(PeriodicRunnable instance) {
+    /** @see #registerAsync(AsyncPeriodicRunnable, String, long)  */
+    public void registerAsync(AsyncPeriodicRunnable instance) {
         registerAsync(instance, DEFAULT_ASYNC_PERIOD);
     }
 
-    /** @see #registerAsync(PeriodicRunnable, String, long)  */
-    public void registerAsync(PeriodicRunnable instance, long period) {
+    /** @see #registerAsync(AsyncPeriodicRunnable, String, long)  */
+    public void registerAsync(AsyncPeriodicRunnable instance, long period) {
         Assert.assertNotNull(instance, "instance");
         registerAsync(instance, instance.getClass().getSimpleName(), period);
     }
 
-    /** @see #registerAsync(PeriodicRunnable, String, long)  */
-    public void registerAsync(PeriodicRunnable instance, String name) {
+    /** @see #registerAsync(AsyncPeriodicRunnable, String, long)  */
+    public void registerAsync(AsyncPeriodicRunnable instance, String name) {
         registerAsync(instance, name, DEFAULT_ASYNC_PERIOD);
     }
 
@@ -173,7 +173,7 @@ public class PeriodicRunner implements SmartDashboardAware {
      * @param instance The instance to invoke periodically
      * @param period The interval between invocations
      */
-	public void registerAsync(PeriodicRunnable instance, String name, long period) {
+	public void registerAsync(AsyncPeriodicRunnable instance, String name, long period) {
 		Assert.assertNotNull(instance, "instance");
         logger.info("Registering ASYNC periodic instance: [{}].", name);
 		checkStarted(name);
@@ -183,14 +183,10 @@ public class PeriodicRunner implements SmartDashboardAware {
 	}
 
 	public boolean isRegistered(PeriodicRunnable instance) {
-		return isRegisteredAsNonAsync(instance) || isRegisteredAsAsync(instance);
-	}
-
-	public boolean isRegisteredAsNonAsync(PeriodicRunnable instance) {
 		return instanceMap.containsKey(instance);
 	}
 
-	public boolean isRegisteredAsAsync(PeriodicRunnable instance) {
+	public boolean isRegistered(AsyncPeriodicRunnable instance) {
 		return asyncInstanceMap.containsKey(instance);
 	}
 
@@ -332,13 +328,13 @@ public class PeriodicRunner implements SmartDashboardAware {
 		return currInstanceLoopHistory;
 	}
 
-    // TODO: Change name to PeriodicRegistration to match pattern of RecordableRegistration
-	public static class PeriodicInstance {
-		private final PeriodicRunnable instance;
+	private static abstract class BaseRegistration<T> {
+
+		protected final T instance;
 		private final DurationHistory history = new DurationHistory();
 		private final String name;
 
-		public PeriodicInstance(PeriodicRunnable instance, String name) {
+		public BaseRegistration(T instance, String name) {
 			this.instance = instance;
 			this.name = name;
 		}
@@ -347,42 +343,52 @@ public class PeriodicRunner implements SmartDashboardAware {
 			history.update(time);
 		}
 
-
 		public double getAverage() {
 			return history.getAverage();
 		}
 
-        public PeriodicRunnable getInstance() {
-            return instance;
-        }
-
-        public DurationHistory getHistory() {
-            return history;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			PeriodicInstance that = (PeriodicInstance) o;
-			return Objects.equal(instance, that.instance);
+		public T getInstance() {
+			return instance;
 		}
 
-		@Override
-		public int hashCode() {
-			return Objects.hashCode(instance);
+		public DurationHistory getHistory() {
+			return history;
 		}
+
+		public String getName() {
+			return name;
+		}
+
+		// I don't think we need this now that it is not a key in the map
+
+//		@Override
+//		public boolean equals(Object o) {
+//			if (this == o) return true;
+//			if (o == null || getClass() != o.getClass()) return false;
+//			PeriodicInstance that = (PeriodicInstance) o;
+//			return Objects.equal(instance, that.instance);
+//		}
+//
+//		@Override
+//		public int hashCode() {
+//			return Objects.hashCode(instance);
+//		}
 	}
 
-    public static class AsyncPeriodicInstance extends PeriodicInstance {
+    // TODO: Change name to PeriodicRegistration to match pattern of RecordableRegistration
+	private static class PeriodicInstance extends BaseRegistration<PeriodicRunnable> {
+
+		public PeriodicInstance(PeriodicRunnable instance, String name) {
+			super(instance, name);
+		}
+
+	}
+
+    private static class AsyncPeriodicInstance extends BaseRegistration<AsyncPeriodicRunnable> {
 
 	    private final long period;
 
-        public AsyncPeriodicInstance(PeriodicRunnable instance, String name, long period) {
+        public AsyncPeriodicInstance(AsyncPeriodicRunnable instance, String name, long period) {
             super(instance, name);
             this.period = period;
         }
@@ -391,22 +397,22 @@ public class PeriodicRunner implements SmartDashboardAware {
             return period;
         }
 
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			if (!super.equals(o)) return false;
-			AsyncPeriodicInstance that = (AsyncPeriodicInstance) o;
-			return period == that.period;
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hashCode(super.hashCode(), period);
-		}
+//		@Override
+//		public boolean equals(Object o) {
+//			if (this == o) return true;
+//			if (o == null || getClass() != o.getClass()) return false;
+//			if (!super.equals(o)) return false;
+//			AsyncPeriodicInstance that = (AsyncPeriodicInstance) o;
+//			return period == that.period;
+//		}
+//
+//		@Override
+//		public int hashCode() {
+//			return Objects.hashCode(super.hashCode(), period);
+//		}
 	}
 
-	public static class DurationHistory {
+	private static class DurationHistory {
 		protected long total;
 		protected long longest;
 		protected long count;
@@ -436,7 +442,8 @@ public class PeriodicRunner implements SmartDashboardAware {
 		}
 	}
 
-	public static class InstanceAwareDurationHistory extends DurationHistory {
+	@VisibleForTesting
+	static class InstanceAwareDurationHistory extends DurationHistory {
 
 		protected PeriodicInstance longestInstance;
 
@@ -454,15 +461,15 @@ public class PeriodicRunner implements SmartDashboardAware {
 
 	private static class AsyncRunnable implements Runnable {
 
-		private PeriodicInstance instance;
+		private AsyncPeriodicInstance instance;
 
-		public AsyncRunnable(PeriodicInstance instance) {
+		public AsyncRunnable(AsyncPeriodicInstance instance) {
 			this.instance = instance;
 		}
 
 		@Override
 		public void run() {
-			ExceptionUtil.suppressVoid(instance.instance::onPeriodic, "instance::onPeriodic");
+			ExceptionUtil.suppressVoid(instance.instance::onPeriodicAsync, "instance::onPeriodicAsync");
 		}
 	}
 }

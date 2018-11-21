@@ -7,22 +7,24 @@ import com.team2073.common.util.ExceptionUtil;
 
 import java.util.LinkedList;
 
-public class OccasionalLoggingRunner implements PeriodicRunnable {
+public class OccasionalLoggingRunner implements AsyncPeriodicRunnable {
 
     private LinkedList<OccasionalLoggingAware> instanceList = new LinkedList<>();
+
+    public OccasionalLoggingRunner() {
+        RobotContext robotContext = RobotContext.getInstance();
+        robotContext.getPeriodicRunner().registerAsync(this, robotContext.getCommonProps().getLoggingAsyncPeriod());
+    }
 
     public void register(OccasionalLoggingAware instance) {
         Assert.assertNotNull(instance, "instance");
         instanceList.add(instance);
     }
 
-    public void onPeriodic() {
+    @Override
+    public void onPeriodicAsync() {
         instanceList.forEach(instance ->
                 ExceptionUtil.suppressVoid(instance::occasionalLogging, instance.getClass().getSimpleName() + " ::occasionalLogging"));
     }
 
-    @Override
-    public void registerSelf(PeriodicRunner periodicRunner) {
-        periodicRunner.registerAsync(this, RobotContext.getInstance().getCommonProps().getLoggingAsyncPeriod());
-    }
 }

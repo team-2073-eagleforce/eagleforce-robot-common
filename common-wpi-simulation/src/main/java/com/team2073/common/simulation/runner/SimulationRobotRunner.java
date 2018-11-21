@@ -1,6 +1,6 @@
 package com.team2073.common.simulation.runner;
 
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.robot.DetailedRobotState.RobotMode;
 import com.team2073.common.simulation.env.SimulationRobot;
 import com.team2073.common.util.EnumUtil;
@@ -8,7 +8,7 @@ import com.team2073.common.util.EnumUtil;
 /**
  * @author pbriggs
  */
-public class SimulationRobotRunner implements PeriodicAware {
+public class SimulationRobotRunner implements PeriodicRunnable {
 
     private SimulationRobot robot = new SimulationRobot();
 

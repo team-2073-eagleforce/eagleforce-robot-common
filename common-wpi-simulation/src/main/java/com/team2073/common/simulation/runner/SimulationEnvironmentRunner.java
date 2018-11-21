@@ -2,7 +2,7 @@ package com.team2073.common.simulation.runner;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.team2073.common.assertion.Assert;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.simulation.env.SimulationCycleEnvironment;
 import com.team2073.common.simulation.env.SimulationEnvironment;
@@ -52,7 +52,7 @@ public class SimulationEnvironmentRunner {
     // Periodic members
     private final ExecutorService periodicThreadRunner = Executors
             .newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat(PERIODIC_THREAD_NAME).build());
-    private final List<PeriodicAware> periodicList = new ArrayList<>();
+    private final List<PeriodicRunnable> periodicList = new ArrayList<>();
     private final RobotPeriodicTask periodicTask = new RobotPeriodicTask();
     private ScheduledFuture<?> periodicTaskResult;
 
@@ -153,9 +153,9 @@ public class SimulationEnvironmentRunner {
         return withPeriodicComponent(() -> periodicRunner.invokePeriodicInstances());
     }
 
-    public SimulationEnvironmentRunner withPeriodicComponent(PeriodicAware... periodicAware) {
+    public SimulationEnvironmentRunner withPeriodicComponent(PeriodicRunnable... periodicAware) {
         Assert.assertNotNull(periodicAware, "periodicAware");
-        for (PeriodicAware periodic : periodicAware) {
+        for (PeriodicRunnable periodic : periodicAware) {
             Assert.assertNotNull(periodic, "periodic");
             periodicList.add(periodic);
         }
@@ -295,7 +295,7 @@ public class SimulationEnvironmentRunner {
             else
                 log.trace("PeriodicTask: Running periodic iteration [{}].", currRobotPeriodic);
 
-            for (PeriodicAware instance : periodicList) {
+            for (PeriodicRunnable instance : periodicList) {
                 try {
                     instance.onPeriodic();
                 } catch (Throwable ex) {

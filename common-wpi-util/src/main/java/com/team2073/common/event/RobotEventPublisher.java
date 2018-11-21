@@ -1,5 +1,6 @@
 package com.team2073.common.event;
 
+import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.util.ExceptionUtil;
 
@@ -54,6 +55,7 @@ public class RobotEventPublisher implements PeriodicRunnable {
     private Map<RobotStateEvent, LinkedList<EventListener>> instancesMap = new HashMap<>();
 
     public RobotEventPublisher() {
+        RobotContext.getInstance().getPeriodicRunner().register(this);
         for (RobotStateEvent event : RobotStateEvent.values())
             instancesMap.put(event, new LinkedList<>());
     }

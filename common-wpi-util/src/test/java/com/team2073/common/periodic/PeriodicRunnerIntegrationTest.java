@@ -103,9 +103,9 @@ class PeriodicRunnerIntegrationTest {
 
                     assertEnvironmentRan(env);
                     assertPeriodicRunnerRan(runner);
-                    assertDurationAwareInstanceCalledAtLeastOnce(periodic1);
-                    assertDurationAwareInstanceCalledAtLeastOnce(periodic2);
-                    assertDurationAwareInstanceCalledAtLeastOnce(periodic3);
+                    PeriodicRunnerIntegrationTestHelper.assertDurationAwareInstanceCalledAtLeastOnce(periodic1);
+                    PeriodicRunnerIntegrationTestHelper.assertDurationAwareInstanceCalledAtLeastOnce(periodic2);
+                    PeriodicRunnerIntegrationTestHelper.assertDurationAwareInstanceCalledAtLeastOnce(periodic3);
 
                     errMsg = "Expected PeriodicRunnable component to get called about once every [%s] millis but it did " +
                             "not. Verify the async loop is functioning in " + PeriodicRunner.class.getSimpleName() + ".";
