@@ -10,16 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
 
-public class PidfControlLoop implements LifecycleAwareRecordable {
+public class PidfControlLoop {
 
-	@DataPointIgnore
-	private static final int MAX_FCONDITION_EXCEPTIONS_TO_LOG = 5;
-
-	@DataPointIgnore
-	private static final double LONG_PID_INTERVAL = .2;
-
-	@DataPointIgnore
-	private static final double DEFAULT_INTERVAL = .01;
+    private static final int MAX_FCONDITION_EXCEPTIONS_TO_LOG = 5;
+    private static final double LONG_PID_INTERVAL = .2;
+    private static final double DEFAULT_INTERVAL = .01;
 
 	private Logger log = LoggerFactory.getLogger(getClass());
 

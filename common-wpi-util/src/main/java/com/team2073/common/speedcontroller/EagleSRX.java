@@ -7,7 +7,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.team2073.common.ctx.RobotContext;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.periodic.SmartDashboardAware;
 import com.team2073.common.util.EnumUtil;
 import com.team2073.common.util.Timer;
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.team2073.common.util.ClassUtil.*;
 
-public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardAware {
+public class EagleSRX extends TalonSRX implements PeriodicRunnable, SmartDashboardAware {
 
     // TODO: Change case to EagleSrx (same with EagleSPX)
 

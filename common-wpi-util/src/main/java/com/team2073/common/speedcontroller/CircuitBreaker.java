@@ -2,10 +2,10 @@ package com.team2073.common.speedcontroller;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2073.common.ctx.RobotContext;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 
 // TODO: This should be a wrapper around a BaseMotorController. See LogWrappingCommand for example
-public class CircuitBreaker implements PeriodicAware {
+public class CircuitBreaker implements PeriodicRunnable {
 	private double minimumVoltageToMove;
 	private double minimumVoltageToMoveNegatively;
 	private double maxAllowableCurrent;

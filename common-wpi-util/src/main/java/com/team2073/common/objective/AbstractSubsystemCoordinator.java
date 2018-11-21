@@ -1,7 +1,7 @@
 package com.team2073.common.objective;
 
 import com.team2073.common.objective.Objective.ConflictingStrategy;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.util.LogUtil;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class AbstractSubsystemCoordinator implements PeriodicAware {
+public abstract class AbstractSubsystemCoordinator implements PeriodicRunnable {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private List<Deque<ObjectiveRequest>> objectiveRequestStacks = new LinkedList<>();

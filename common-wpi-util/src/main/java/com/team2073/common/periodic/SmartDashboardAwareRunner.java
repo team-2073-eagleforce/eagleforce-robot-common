@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SmartDashboardAwareRunner implements PeriodicAware {
+public class SmartDashboardAwareRunner implements PeriodicRunnable {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final List<SmartDashboardAware> instanceList = new LinkedList<>();

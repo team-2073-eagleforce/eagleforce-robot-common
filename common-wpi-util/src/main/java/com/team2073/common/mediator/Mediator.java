@@ -8,7 +8,7 @@ import com.team2073.common.mediator.conflict.ConflictMap;
 import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.ColleagueSubsystem;
 import com.team2073.common.mediator.subsys.SubsystemMap;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.util.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ import java.util.*;
  * <li>{@link Tracker}</li>
  * </ul>
  */
-public class Mediator implements PeriodicAware {
+public class Mediator implements PeriodicRunnable {
     private Map<Class, ColleagueSubsystem> subsystemMap;
     private Map<Class, ArrayList<Conflict>> conflictMap;
     private Tracker subsystemTracker;

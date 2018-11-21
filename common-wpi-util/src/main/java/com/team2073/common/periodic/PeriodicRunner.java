@@ -26,15 +26,15 @@ import java.util.concurrent.TimeUnit;
 import static com.team2073.common.util.ThreadUtil.*;
 
 /**
- * Manages periodically invoking instances of {@link PeriodicAware}.
+ * Manages periodically invoking instances of {@link PeriodicRunnable}.
  *
  * <h3>Usage</h3>
  * <ol>
  *     <li>
  *         Register instances using either:
  *         <ul>
- *             <li>{@link #register(PeriodicAware, String)}</li>
- *             <li>{@link #registerAsync(PeriodicAware, String, long)}</li>
+ *             <li>{@link #register(PeriodicRunnable, String)}</li>
+ *             <li>{@link #registerAsync(PeriodicRunnable, String, long)}</li>
  *         </ul>
  *     </li>
  *     <li>
@@ -54,16 +54,16 @@ import static com.team2073.common.util.ThreadUtil.*;
  * will cause the robot to stop abruptly requiring a restart.
  *
  * <h3>Elapsed Time Logging</h3>
- * The total elapsed time of a {@link PeriodicAware#onPeriodic()} iteration is captured and instances consuming too much
+ * The total elapsed time of a {@link PeriodicRunnable#onPeriodic()} iteration is captured and instances consuming too much
  * time are logged. Averages and total iteration counts are also recorded and logged. All of this information is available
- * on the SmartDashboard. This only occurs for non-async instances on the main robot thread ({@link #register(PeriodicAware)})
+ * on the SmartDashboard. This only occurs for non-async instances on the main robot thread ({@link #register(PeriodicRunnable)})
  * since elapsed time of instances in the async thread pool do not matter (a long running instance will not affect other instances).
  *
  * <h3>Asynchronous Registration</h3>
  * Instances can be registered as async which will add them to a separate thread pool so they do not consume time on the
  * main robot thread. This is useful for things that are low priority, are time consuming, or do not need to happen in
  * a specific/deterministic order such as updating the SmartDashboard. The interval (period) at which the instance should
- * be called can be set using {@link #registerAsync(PeriodicAware, long)}.
+ * be called can be set using {@link #registerAsync(PeriodicRunnable, long)}.
  *
  * <h3>Circuit Breaker</h3>
  * Instances that throw exceptions will be monitored and a "circuit breaker" will be applied if necessary. Basically we
@@ -106,8 +106,8 @@ public class PeriodicRunner implements SmartDashboardAware {
 
 	private static final Logger logger = LoggerFactory.getLogger(PeriodicRunner.class);
 
-	private final Map<PeriodicAware, PeriodicInstance> instanceMap = new HashMap<>();
-	private final Map<PeriodicAware, AsyncPeriodicInstance> asyncInstanceMap = new HashMap<>();
+	private final Map<PeriodicRunnable, PeriodicInstance> instanceMap = new HashMap<>();
+	private final Map<PeriodicRunnable, AsyncPeriodicInstance> asyncInstanceMap = new HashMap<>();
 	private Timer instanceLoopTimer = new Timer();
 	private Timer fullLoopTimer = new Timer();
 	private Timer overallTimer = new Timer();
@@ -130,13 +130,13 @@ public class PeriodicRunner implements SmartDashboardAware {
 	 * (it's 'longest' cycle refers to the longest of the current periodic cycle). */
 	private InstanceAwareDurationHistory currInstanceLoopHistory;
 
-	public void register(PeriodicAware instance) {
+	public void register(PeriodicRunnable instance) {
 		Assert.assertNotNull(instance, "instance");
 		register(instance, instance.getClass().getSimpleName());
 	}
 
 	/** Register an instance to be called periodically on the main robot thread. */
-	public void register(PeriodicAware instance, String name) {
+	public void register(PeriodicRunnable instance, String name) {
         Assert.assertNotNull(instance, "instance");
         logger.info("Registering periodic instance: [{}].", name);
         checkStarted(name);
@@ -145,19 +145,19 @@ public class PeriodicRunner implements SmartDashboardAware {
         logger.debug("Registering periodic instance: [{}] complete.", name);
     }
 
-    /** @see #registerAsync(PeriodicAware, String, long)  */
-    public void registerAsync(PeriodicAware instance) {
+    /** @see #registerAsync(PeriodicRunnable, String, long)  */
+    public void registerAsync(PeriodicRunnable instance) {
         registerAsync(instance, DEFAULT_ASYNC_PERIOD);
     }
 
-    /** @see #registerAsync(PeriodicAware, String, long)  */
-    public void registerAsync(PeriodicAware instance, long period) {
+    /** @see #registerAsync(PeriodicRunnable, String, long)  */
+    public void registerAsync(PeriodicRunnable instance, long period) {
         Assert.assertNotNull(instance, "instance");
         registerAsync(instance, instance.getClass().getSimpleName(), period);
     }
 
-    /** @see #registerAsync(PeriodicAware, String, long)  */
-    public void registerAsync(PeriodicAware instance, String name) {
+    /** @see #registerAsync(PeriodicRunnable, String, long)  */
+    public void registerAsync(PeriodicRunnable instance, String name) {
         registerAsync(instance, name, DEFAULT_ASYNC_PERIOD);
     }
 
@@ -173,7 +173,7 @@ public class PeriodicRunner implements SmartDashboardAware {
      * @param instance The instance to invoke periodically
      * @param period The interval between invocations
      */
-	public void registerAsync(PeriodicAware instance, String name, long period) {
+	public void registerAsync(PeriodicRunnable instance, String name, long period) {
 		Assert.assertNotNull(instance, "instance");
         logger.info("Registering ASYNC periodic instance: [{}].", name);
 		checkStarted(name);
@@ -182,15 +182,15 @@ public class PeriodicRunner implements SmartDashboardAware {
         logger.debug("Registering ASYNC periodic instance: [{}] complete.", name);
 	}
 
-	public boolean isRegistered(PeriodicAware instance) {
+	public boolean isRegistered(PeriodicRunnable instance) {
 		return isRegisteredAsNonAsync(instance) || isRegisteredAsAsync(instance);
 	}
 
-	public boolean isRegisteredAsNonAsync(PeriodicAware instance) {
+	public boolean isRegisteredAsNonAsync(PeriodicRunnable instance) {
 		return instanceMap.containsKey(instance);
 	}
 
-	public boolean isRegisteredAsAsync(PeriodicAware instance) {
+	public boolean isRegisteredAsAsync(PeriodicRunnable instance) {
 		return asyncInstanceMap.containsKey(instance);
 	}
 
@@ -242,7 +242,7 @@ public class PeriodicRunner implements SmartDashboardAware {
 		fullLoopTimer.start();
 
 		for (PeriodicInstance wrapper : instanceMap.values()) {
-			PeriodicAware instance = wrapper.instance;
+			PeriodicRunnable instance = wrapper.instance;
 			instanceLoopTimer.start();
 			ExceptionUtil.suppressVoid(instance::onPeriodic, wrapper.getName() + " ::onPeriodic");
 			instanceLoopTimer.stop();
@@ -334,11 +334,11 @@ public class PeriodicRunner implements SmartDashboardAware {
 
     // TODO: Change name to PeriodicRegistration to match pattern of RecordableRegistration
 	public static class PeriodicInstance {
-		private final PeriodicAware instance;
+		private final PeriodicRunnable instance;
 		private final DurationHistory history = new DurationHistory();
 		private final String name;
 
-		public PeriodicInstance(PeriodicAware instance, String name) {
+		public PeriodicInstance(PeriodicRunnable instance, String name) {
 			this.instance = instance;
 			this.name = name;
 		}
@@ -352,7 +352,7 @@ public class PeriodicRunner implements SmartDashboardAware {
 			return history.getAverage();
 		}
 
-        public PeriodicAware getInstance() {
+        public PeriodicRunnable getInstance() {
             return instance;
         }
 
@@ -382,7 +382,7 @@ public class PeriodicRunner implements SmartDashboardAware {
 
 	    private final long period;
 
-        public AsyncPeriodicInstance(PeriodicAware instance, String name, long period) {
+        public AsyncPeriodicInstance(PeriodicRunnable instance, String name, long period) {
             super(instance, name);
             this.period = period;
         }

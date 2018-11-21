@@ -3,7 +3,7 @@ package com.team2073.common.position.zeroer;
 import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.team2073.common.assertion.Assert;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.position.converter.NoOpPositionConverter;
 import com.team2073.common.position.converter.PositionConverter;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Preston Briggs
  */
-public class Zeroer implements PeriodicAware {
+public class Zeroer implements PeriodicRunnable {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	// State

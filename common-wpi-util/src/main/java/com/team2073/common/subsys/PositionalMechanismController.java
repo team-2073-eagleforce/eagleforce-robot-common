@@ -8,7 +8,7 @@ import com.team2073.common.config.CommonProperties;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.datarecorder.model.LifecycleAwareRecordable;
 import com.team2073.common.objective.StatusChecker;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.periodic.SmartDashboardAware;
 import com.team2073.common.periodic.SmartDashboardAwareRunner;
 import com.team2073.common.position.Position;
@@ -40,7 +40,7 @@ import java.util.function.Consumer;
  *
  * @param <T> The enum that defines the various positions this subsystem is capable of.
  */
-public class PositionalMechanismController<T extends Enum<T> & PositionContainer> implements SmartDashboardAware, PeriodicAware {
+public class PositionalMechanismController<T extends Enum<T> & PositionContainer> implements SmartDashboardAware, PeriodicRunnable {
 
 	public enum GoalState {
 		WAITING_FOR_GOAL,

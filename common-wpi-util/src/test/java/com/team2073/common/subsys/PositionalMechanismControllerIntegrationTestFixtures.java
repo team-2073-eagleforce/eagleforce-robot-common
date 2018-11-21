@@ -1,7 +1,7 @@
 package com.team2073.common.subsys;
 
 import com.team2073.common.objective.StatusChecker;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.position.Position;
 import com.team2073.common.position.PositionContainer;
 import com.team2073.common.position.converter.PositionConverter;
@@ -54,7 +54,7 @@ public class PositionalMechanismControllerIntegrationTestFixtures {
         }
     }
 
-    public static class ElevatorGoalSupplier implements PeriodicAware {
+    public static class ElevatorGoalSupplier implements PeriodicRunnable {
 
         private Logger log = LoggerFactory.getLogger(getClass());
 

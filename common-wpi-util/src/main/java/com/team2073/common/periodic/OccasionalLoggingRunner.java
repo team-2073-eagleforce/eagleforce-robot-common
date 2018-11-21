@@ -7,7 +7,7 @@ import com.team2073.common.util.ExceptionUtil;
 
 import java.util.LinkedList;
 
-public class OccasionalLoggingRunner implements PeriodicAware {
+public class OccasionalLoggingRunner implements PeriodicRunnable {
 
     private LinkedList<OccasionalLoggingAware> instanceList = new LinkedList<>();
 

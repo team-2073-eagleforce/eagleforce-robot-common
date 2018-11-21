@@ -1,6 +1,6 @@
 package com.team2073.common.event;
 
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.util.ExceptionUtil;
 
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author pbriggs
  */
-public class RobotEventPublisher implements PeriodicAware {
+public class RobotEventPublisher implements PeriodicRunnable {
 
     // TODO:
     // -Create shutdown event.

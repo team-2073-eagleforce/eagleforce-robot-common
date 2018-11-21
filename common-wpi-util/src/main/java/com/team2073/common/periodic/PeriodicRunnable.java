@@ -1,7 +1,7 @@
 package com.team2073.common.periodic;
 
 /** @see PeriodicRunner */
-public interface PeriodicAware {
+public interface PeriodicRunnable {
 
 	/** @see PeriodicRunner */
 	void onPeriodic();
