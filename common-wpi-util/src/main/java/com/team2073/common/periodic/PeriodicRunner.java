@@ -1,7 +1,6 @@
 package com.team2073.common.periodic;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Objects;
 import com.team2073.common.CommonConstants;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.exception.NotYetImplementedException;
@@ -34,7 +33,7 @@ import static com.team2073.common.util.ThreadUtil.*;
  *         Register instances using either:
  *         <ul>
  *             <li>{@link #register(PeriodicRunnable, String)}</li>
- *             <li>{@link #registerAsync(PeriodicRunnable, String, long)}</li>
+ *             <li>{@link #registerAsync(AsyncPeriodicRunnable, String, long)}</li>
  *         </ul>
  *     </li>
  *     <li>
@@ -63,7 +62,7 @@ import static com.team2073.common.util.ThreadUtil.*;
  * Instances can be registered as async which will add them to a separate thread pool so they do not consume time on the
  * main robot thread. This is useful for things that are low priority, are time consuming, or do not need to happen in
  * a specific/deterministic order such as updating the SmartDashboard. The interval (period) at which the instance should
- * be called can be set using {@link #registerAsync(PeriodicRunnable, long)}.
+ * be called can be set using {@link #registerAsync(AsyncPeriodicRunnable, long)}.
  *
  * <h3>Circuit Breaker</h3>
  * Instances that throw exceptions will be monitored and a "circuit breaker" will be applied if necessary. Basically we

@@ -76,7 +76,6 @@ public class RobotContext {
 
     public void registerPeriodicInstances() {
         log.info("Registering Periodic instances...");
-        eventPublisher.registerSelf(periodicRunner);
 //        smartDashboardRunner.registerSelf(periodicRunner);
 //        loggingRunner.registerSelf(periodicRunner);
         // TODO: Check if we are already registered. Currently, this is blocking implementations from customizing the registration

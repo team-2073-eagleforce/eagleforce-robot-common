@@ -47,6 +47,7 @@ public class Mediator implements PeriodicRunnable {
         this.conflictMap = conflictMap;
         this.subsystemTracker = subsystemTracker;
         LogUtil.infoInit(this.getClass(), logger);
+        registerWithPeriodicRunner();
     }
 
     /**

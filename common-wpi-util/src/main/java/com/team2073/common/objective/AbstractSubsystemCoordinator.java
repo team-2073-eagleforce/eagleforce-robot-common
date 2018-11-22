@@ -25,6 +25,7 @@ public abstract class AbstractSubsystemCoordinator implements PeriodicRunnable {
 	public AbstractSubsystemCoordinator() {
 		LogUtil.infoConstruct(getClass(), logger);
 		// TODO: Should we register with PeriodicRunner?
+		registerWithPeriodicRunner();
 	}
 	
 	/**

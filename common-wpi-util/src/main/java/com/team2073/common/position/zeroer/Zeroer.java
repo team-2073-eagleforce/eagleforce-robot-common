@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.team2073.common.util.ClassUtil.*;
+
 /**
  * Manages monitoring a zero sensor for zeroing 'events' and setting a corresponding motor controller's position.
  * Records the beginning and end of a zeroing 'session' and sets the zero using the middle of the range.
@@ -87,9 +89,14 @@ public class Zeroer implements PeriodicRunnable {
 
 	// Constructors
 	// ============================================================
+
+	// TODO: Change these constructors to call each other
+
 	public Zeroer(DigitalInput zeroSensor, IMotorController motor) {
 		this.zeroSensor = zeroSensor;
 		this.motor = motor;
+		setName(motor);
+		registerWithPeriodicRunner(getName());
 	}
 
 	public Zeroer(DigitalInput zeroSensor, IMotorController motor,
@@ -100,6 +107,8 @@ public class Zeroer implements PeriodicRunnable {
 		this.offset = offset;
 		this.pidIdx = pidIdx;
 		this.inverted = inverted;
+		setName(motor);
+		registerWithPeriodicRunner(getName());
 	}
 
 	public Zeroer(DigitalInput zeroSensor, IMotorController motor, PositionConverter converter, String name) {
@@ -108,6 +117,7 @@ public class Zeroer implements PeriodicRunnable {
 		setConverter(converter);
 		setName(name);
 		setPositionUnit(converter.positionalUnit());
+		registerWithPeriodicRunner(getName());
 	}
 
 	public Zeroer(DigitalInput zeroSensor, IMotorController motor, PositionConverter converter, int offset,
@@ -119,6 +129,8 @@ public class Zeroer implements PeriodicRunnable {
 		this.offset = offset;
 		this.pidIdx = pidIdx;
 		this.inverted = inverted;
+		setName(motor);
+		registerWithPeriodicRunner(getName());
 	}
 
 	public Zeroer(DigitalInput zeroSensor, IMotorController motor, PositionConverter converter, int offset,
@@ -132,6 +144,7 @@ public class Zeroer implements PeriodicRunnable {
 		this.inverted = inverted;
 		setName(name);
 		setPositionUnit(converter.positionalUnit());
+		registerWithPeriodicRunner(getName());
 	}
 
 	public Zeroer(DigitalInput zeroSensor, IMotorController motor, PositionConverter converter,
@@ -146,6 +159,7 @@ public class Zeroer implements PeriodicRunnable {
 		this.inverted = inverted;
 		setName(name);
 		setPositionUnit(converter.positionalUnit());
+		registerWithPeriodicRunner(getName());
 	}
 
 	public Zeroer(SensorCollection zeroSensor, IMotorController motor, PositionConverter converter, boolean isForwardLimit){
@@ -154,6 +168,8 @@ public class Zeroer implements PeriodicRunnable {
 		this.motor = motor;
 		setConverter(converter);
 		this.isForwardLimit = isForwardLimit;
+		setName(motor);
+		registerWithPeriodicRunner(getName());
 
 	}
 
@@ -459,6 +475,10 @@ public class Zeroer implements PeriodicRunnable {
 
 	public String getName() {
 		return name;
+	}
+
+	public Zeroer setName(IMotorController motor) {
+		return setName(simpleName(this) + "[Motor:" + motor.getBaseID() + "]");
 	}
 
 	/**

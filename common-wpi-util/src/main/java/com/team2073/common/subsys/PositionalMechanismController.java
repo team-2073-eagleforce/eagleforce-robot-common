@@ -126,6 +126,7 @@ public class PositionalMechanismController<T extends Enum<T> & PositionContainer
 		logTable = new NetworkTableGrouping(StringUtil.toFileCase(baseName));
 		data = new PositionalMechanismControllerData(this);
 		RobotContext.getInstance().getDataRecorder().registerRecordable(data);
+		registerWithPeriodicRunner(getName());
 	}
 
 	// Implementation Methods
