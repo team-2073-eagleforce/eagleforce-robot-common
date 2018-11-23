@@ -36,11 +36,20 @@ public class PeriodicRunnerIntegrationTestHelper {
         }
     }
 
+    public static void assertPeriodicAwareInstanceCalledAtLeastOnce(IterationAwareAsyncPeriodicRunnable... periodicAware) {
+        String errMsg = "[%s] was never called. Check " + PeriodicRunner.class.getSimpleName() + ".";
+        for (IterationAwareAsyncPeriodicRunnable periodic : periodicAware) {
+            String className = periodic.getClass().getSimpleName();
+            int observedIterations = periodic.getTotalIterations();
+            assertThat(observedIterations).as(errMsg, className).isGreaterThan(0);
+        }
+    }
+
     public static void assertDurationAwareInstanceCalledAtLeastOnce(DurationAwarePeriodicRunnable... periodicAware) {
         String errMsg = "[%s] was never called. Check " + PeriodicRunner.class.getSimpleName() + ".";
         for (DurationAwarePeriodicRunnable periodic : periodicAware) {
             String className = periodic.getClass().getSimpleName();
-            assertPeriodicAwareInstanceCalledAtLeastOnce((IterationAwarePeriodicRunnable) periodic);
+            assertPeriodicAwareInstanceCalledAtLeastOnce(periodic);
             long totalDelay = periodic.totalDelay();
             assertThat(totalDelay).as(errMsg, className).isGreaterThan(0);
         }
@@ -50,7 +59,7 @@ public class PeriodicRunnerIntegrationTestHelper {
         String errMsg = "[%s] was never called. Check " + PeriodicRunner.class.getSimpleName() + ".";
         for (DurationAwareAsyncPeriodicRunnable periodic : periodicAware) {
             String className = periodic.getClass().getSimpleName();
-            assertPeriodicAwareInstanceCalledAtLeastOnce((IterationAwarePeriodicRunnable) periodic);
+            assertPeriodicAwareInstanceCalledAtLeastOnce(periodic);
             long totalDelay = periodic.totalDelay();
             assertThat(totalDelay).as(errMsg, className).isGreaterThan(0);
         }
