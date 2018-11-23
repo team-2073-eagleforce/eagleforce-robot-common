@@ -69,6 +69,8 @@ public class RobotContext {
         instance = new RobotContext();
         instance.setSmartDashboard(SmartDashboardAdapterSimulationImpl.getInstance());
         instance.setDriverStation(DriverStationAdapterSimulationImpl.getInstance());
+        instance.getDataRecorder().requestShutdown();
+        instance.setDataRecorder(new DataRecorder());
         return instance;
     }
 
