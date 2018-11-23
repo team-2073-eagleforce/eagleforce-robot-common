@@ -10,10 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
 
-public class PidfControlLoop implements LifecycleAwareRecordable, PeriodicAware {
+public class PidfControlLoop implements LifecycleAwareRecordable {
 
-	@DataPointIgnore
-	private static final int DEFAULT_INTERVAL = 10;
 	@DataPointIgnore
 	private static final int MAX_FCONDITION_EXCEPTIONS_TO_LOG = 5;
 
@@ -37,33 +35,22 @@ public class PidfControlLoop implements LifecycleAwareRecordable, PeriodicAware 
 	private double accumulatedError;
 	private double errorVelocity;
 	private double lastError;
-	private final long intervalInMillis;
 	private double position;
 	private Double maxIContribution = null;
 	private PositionSupplier positionSupplier;
 	private Callable<Boolean> fCondition;
 	private int fConditionExceptionCount;
 
-	public PidfControlLoop(double p, double i, double d, double f, long intervalInMillis, double maxOutput) {
+	public PidfControlLoop(double p, double i, double d, double f, double maxOutput) {
 		this.p = p;
 		this.i = i;
 		this.d = d;
 		this.f = f;
 		this.maxOutput = maxOutput;
-		if (intervalInMillis <= 0) {
-			log.warn("Interval provided ([{}]) was <= 0. Overriding to [{}].", intervalInMillis, DEFAULT_INTERVAL);
-			intervalInMillis = DEFAULT_INTERVAL;
-		}
-		this.intervalInMillis = intervalInMillis;
-		RobotContext.getInstance().getPeriodicRunner().registerAsync(this, intervalInMillis);
 		RobotContext.getInstance().getDataRecorder().registerRecordable(this);
 	}
 
-	@Override
-	public void onPeriodic() {
-
-		if (!active)
-			return;
+	public void udatePID(double interval) {
 
 		if (positionSupplier == null)
 			Throw.illegalState("[{}] must not be null.", PositionSupplier.class.getSimpleName());
@@ -85,8 +72,8 @@ public class PidfControlLoop implements LifecycleAwareRecordable, PeriodicAware 
 				log.warn("Exception calling fCondition: ", e);
 		}
 
-		accumulatedError += error * (intervalInMillis / 1000d);
-		errorVelocity = ((error - lastError) / (intervalInMillis / 1000d));
+		accumulatedError += error * (interval);
+		errorVelocity = ((error - lastError) / (interval));
 
 		output += p * error;
 		if (maxIContribution == null)
@@ -112,18 +99,6 @@ public class PidfControlLoop implements LifecycleAwareRecordable, PeriodicAware 
 
 	public void setNewPosition(double position) {
 		this.position = position;
-	}
-
-	public void startPID(double goal) {
-		updateSetPoint(goal);
-		active = true;
-	}
-
-	public void stopPID() {
-		active = false;
-		lastError = 0;
-		accumulatedError = 0;
-		errorVelocity = 0;
 	}
 
 	public void updateSetPoint(double newGoal) {

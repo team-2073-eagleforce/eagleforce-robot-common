@@ -15,16 +15,26 @@ import com.team2073.common.subsys.PositionalMechanismControllerIntegrationTestFi
 import com.team2073.common.subsys.PositionalMechanismControllerIntegrationTestFixtures.ElevatorGoalSupplier;
 import com.team2073.common.subsys.PositionalMechanismControllerIntegrationTestFixtures.ElevatorPositionConverter;
 import com.team2073.common.util.ThreadUtil;
+import com.team2073.common.wpitest.BaseWpiTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author pbriggs
  */
-class PositionalMechanismControllerIntegrationTest {
+class PositionalMechanismControllerIntegrationTest extends BaseWpiTest {
 
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    @BeforeEach
+    void baseWpiTestInit() {
+        robotContext = RobotContext.resetTestInstance();
+        assertThat(robotContext).isNotNull();
+    }
 
     @Test
     public void simpleTestLinearMechanism() {
@@ -34,7 +44,7 @@ class PositionalMechanismControllerIntegrationTest {
         dataRecorder.registerWithPeriodicRunner(periodicRunner);
 
         LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.PRO, 2, 2, .855);
-        PidfControlLoop pid = new PidfControlLoop(.023, 0, .02, 0, 10, 1);
+        PidfControlLoop pid = new PidfControlLoop(.023, 0, .02, 0,  1);
         SimulationEagleSRX srx = new SimulationPidfEagleSRX("ExampleTalon", lmm, 1350, pid);
         PositionalMechanismController<ElevatorGoal> mechanismController = new PositionalMechanismController<ElevatorGoal>("Simulation Elevator", new ElevatorPositionConverter(), HoldType.PID , srx);
         ElevatorGoalSupplier goalSupplier = new ElevatorGoalSupplier(mechanismController);
@@ -60,7 +70,7 @@ class PositionalMechanismControllerIntegrationTest {
         dataRecorder.registerWithPeriodicRunner(periodicRunner);
 
         ArmMechanism lmm = new ArmMechanism(100d, SimulationConstants.MotorType.BAG, 1, 2, 12);
-        PidfControlLoop pid = new PidfControlLoop(.023, 0, .02, 0, 10, 1);
+        PidfControlLoop pid = new PidfControlLoop(.023, 0, .02, 0, 1);
         SimulationEagleSRX srx = new SimulationPidfEagleSRX("ExampleTalon", lmm, 1350, pid);
         PositionalMechanismController<ElevatorGoal> mechanismController = new PositionalMechanismController<ElevatorGoal>("Simulation Elevator", new ElevatorPositionConverter(), HoldType.PID, srx);
         ElevatorGoalSupplier goalSupplier = new ElevatorGoalSupplier(mechanismController);

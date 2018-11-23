@@ -1,6 +1,11 @@
 package com.team2073.common.simulation.env;
 
+import com.ctre.phoenix.motorcontrol.IMotorController;
+import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 import com.team2073.common.CommonConstants.TestTags;
+import com.team2073.common.ctx.RobotContext;
+import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.simulation.SimulationConstants;
 import com.team2073.common.simulation.component.SimulationComponentFactory;
 import com.team2073.common.simulation.component.SimulationSolenoid;
@@ -13,7 +18,9 @@ import com.team2073.common.simulation.speedcontroller.SimulationEagleSPX;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSRX;
 import com.team2073.common.simulation.subsystem.SimulatedElevatorSubsystem;
 import com.team2073.common.simulation.subsystem.SimulatedMotionProfileElevatorSubsystem;
+import com.team2073.common.wpitest.BaseWpiTest;
 import edu.wpi.first.wpilibj.DigitalInput;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -21,17 +28,27 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Tag(TestTags.INTEGRATION_TEST)
-class SimulationMechanismIntegrationTest {
+class SimulationMechanismIntegrationTest extends BaseWpiTest {
+
+    @BeforeEach
+    void baseWpiTestInit() {
+        robotContext = RobotContext.resetTestInstance();
+        assertThat(robotContext).isNotNull();
+    }
 
 	@Test
 	void simulationEagleSRX_WHEN_set_SHOULD_MoveMechanism() {
 		LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.CIM, 2, 30, .855);
-		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(new SimulationEagleSRX("ExampleTalon", lmm, 4096));
+
+		SimulationEagleSRX talon = new SimulationEagleSRX("ExampleTalon", lmm, 4096);
+        robotContext.getPeriodicRunner().register( talon);
+		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(talon);
 
 		new SimulationEnvironmentRunner()
 				.withCycleComponent(lmm)
 				.withPeriodicComponent(subsystem)
-				.withIterationCount(5)
+				.withPeriodicRunner(robotContext.getPeriodicRunner())
+				.withIterationCount(50)
 				.run(e -> {
 					assertTrue(lmm.velocity() > 0);
 				});
@@ -41,12 +58,14 @@ class SimulationMechanismIntegrationTest {
 	@Test
 	void simulationEagleSPX_WHEN_set_SHOULD_MoveMechanism() {
 		ArmMechanism arm = new ArmMechanism(55, SimulationConstants.MotorType.MINI_CIM, 2, 15, 13);
-		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(new SimulationEagleSPX("ExampleTalon", arm));
-
+		IMotorController victor = new SimulationEagleSPX("ExampleTalon", arm);
+        robotContext.getPeriodicRunner().register((PeriodicAware) victor);
+		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(victor);
 		new SimulationEnvironmentRunner()
 				.withCycleComponent(arm)
 				.withPeriodicComponent(subsystem)
-				.withIterationCount(5)
+				.withPeriodicRunner(robotContext.getPeriodicRunner())
+				.withIterationCount(50)
 				.run(e -> assertTrue(arm.velocity() > 0));
 
 	}
@@ -58,11 +77,10 @@ class SimulationMechanismIntegrationTest {
 //		Creates mechanism that will be simulated. Specify gear Ratio, motor types, and other physical properties of the mechanism.
 		LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.PRO, 2, 20, .855);
 
-
 //		Create each component for the subsystem, these will have additional parameters than their non Simulation counterparts
 //      due to information like where the physical sensor is, knowledge of the mechanism they are interacting with, etc.
 		SimulationEagleSRX srx = new SimulationEagleSRX("ExampleTalon", lmm, 1350);
-
+        robotContext.getPeriodicRunner().register(srx);
 //		Think hall effect sensor or limit switch, pass in the values at which mechanism position will it be reading true and the width that it reads them.
 		DigitalInput sensor = SimulationComponentFactory.createSimulationDigitalInput(lmm, goalPosition, .5);
 
@@ -88,6 +106,7 @@ class SimulationMechanismIntegrationTest {
 		new SimulationEnvironmentRunner()
 				.withCycleComponent(lmm)
 				.withPeriodicComponent(subsystem)
+                .withPeriodicRunner(robotContext.getPeriodicRunner())
 				.withIterationCount(300)
 				.run(e -> {
 					assertThat(lmm.position()).isCloseTo(goalPosition, offset(2.0));
@@ -102,9 +121,8 @@ class SimulationMechanismIntegrationTest {
 
 		LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.PRO, 2, 20, .855);
 
-
 		SimulationEagleSRX srx = new SimulationEagleSRX("ExampleTalon", lmm, 1350);
-
+        robotContext.getPeriodicRunner().register(srx);
 		DigitalInput sensor = SimulationComponentFactory.createSimulationDigitalInput(lmm, goalPosition, .5);
 
 		SimulationSolenoid solenoid = SimulationComponentFactory.createSimulationSolenoid(lmm);
@@ -121,6 +139,7 @@ class SimulationMechanismIntegrationTest {
 		new SimulationEnvironmentRunner()
 				.withCycleComponent(lmm)
 				.withPeriodicComponent(subsystem)
+                .withPeriodicRunner(robotContext.getPeriodicRunner())
 				.withIterationCount(300)
 				.run(e -> {
 					assertThat(lmm.position()).isCloseTo(goalPosition, offset(5.0));

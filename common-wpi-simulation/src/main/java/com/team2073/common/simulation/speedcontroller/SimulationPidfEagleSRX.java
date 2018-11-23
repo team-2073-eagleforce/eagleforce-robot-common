@@ -23,15 +23,13 @@ public class SimulationPidfEagleSRX extends SimulationEagleSRX {
         this.mode = mode;
         if (mode != ControlMode.Position) {
             super.set(mode, outputValue);
-            pid.stopPID();
-        } else {
-            pid.startPID(outputValue);
         }
     }
 
     @Override
     public void onPeriodic() {
         getSelectedSensorPosition(0);
+        pid.udatePID(.01);
         if (mode == ControlMode.Position)
             setOutputPercent(pid.getOutput());
 
