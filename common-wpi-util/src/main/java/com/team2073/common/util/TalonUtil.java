@@ -6,40 +6,43 @@ import com.ctre.phoenix.motorcontrol.*;
 public class TalonUtil {
 	private final static int kTimeoutMs = 100;
 
-	public static class Configuration {
-		public NeutralMode NEUTRAL_MODE = NeutralMode.Coast;
+	private static class Configuration {
+		private NeutralMode NEUTRAL_MODE = NeutralMode.Coast;
 		// This is factory default.
-		public double NEUTRAL_DEADBAND = 0.04;
+		private double NEUTRAL_DEADBAND = 0.04;
 
-		public boolean ENABLE_CURRENT_LIMIT = false;
-		public boolean ENABLE_SOFT_LIMIT = false;
-		public boolean ENABLE_LIMIT_SWITCH = false;
-		public int FORWARD_SOFT_LIMIT = 0;
-		public int REVERSE_SOFT_LIMIT = 0;
+		private boolean ENABLE_CURRENT_LIMIT = false;
+		private boolean ENABLE_SOFT_LIMIT = false;
+		private boolean ENABLE_LIMIT_SWITCH = false;
+		private int FORWARD_SOFT_LIMIT = 0;
+		private int REVERSE_SOFT_LIMIT = 0;
 
-		public boolean INVERTED = false;
-		public boolean SENSOR_PHASE = false;
+		private boolean INVERTED = false;
+		private boolean SENSOR_PHASE = false;
 
-		public int CONTROL_FRAME_PERIOD_MS = 5;
-		public int MOTION_CONTROL_FRAME_PERIOD_MS = 100;
-		public int GENERAL_STATUS_FRAME_RATE_MS = 5;
-		public int FEEDBACK_STATUS_FRAME_RATE_MS = 100;
-		public int QUAD_ENCODER_STATUS_FRAME_RATE_MS = 100;
-		public int ANALOG_TEMP_VBAT_STATUS_FRAME_RATE_MS = 100;
-		public int PULSE_WIDTH_STATUS_FRAME_RATE_MS = 100;
-		public int BASE_PIDF_STATUS_FRAME_RATE_MS = 100;
+		private int CONTROL_FRAME_PERIOD_MS = 5;
+		private int MOTION_CONTROL_FRAME_PERIOD_MS = 100;
+		private int GENERAL_STATUS_FRAME_RATE_MS = 5;
+		private int FEEDBACK_STATUS_FRAME_RATE_MS = 100;
+		private int QUAD_ENCODER_STATUS_FRAME_RATE_MS = 100;
+		private int ANALOG_TEMP_VBAT_STATUS_FRAME_RATE_MS = 100;
+		private int PULSE_WIDTH_STATUS_FRAME_RATE_MS = 100;
+		private int BASE_PIDF_STATUS_FRAME_RATE_MS = 100;
 
-		public VelocityMeasPeriod VELOCITY_MEASUREMENT_PERIOD = VelocityMeasPeriod.Period_100Ms;
-		public int VELOCITY_MEASUREMENT_ROLLING_AVERAGE_WINDOW = 64;
+		private VelocityMeasPeriod VELOCITY_MEASUREMENT_PERIOD = VelocityMeasPeriod.Period_100Ms;
+		private int VELOCITY_MEASUREMENT_ROLLING_AVERAGE_WINDOW = 64;
 
-		public double OPEN_LOOP_RAMP_RATE = 0.0;
-		public double CLOSED_LOOP_RAMP_RATE = 0.0;
+		private double OPEN_LOOP_RAMP_RATE = 0.0;
+		private double CLOSED_LOOP_RAMP_RATE = 0.0;
 	}
 
 	private static final Configuration kDefaultConfiguration = new Configuration();
 	private static final Configuration kSlaveConfiguration = new Configuration();
 	private static final Configuration kSensorConfiguration = new Configuration();
 
+	/**
+	 * Should Match how the controller is being used, default is factory default settings and is the base configuration.
+	 */
 	public enum ConfigurationType{
 		DEFAULT,
 		SLAVE,
@@ -64,11 +67,10 @@ public class TalonUtil {
 	}
 
 	/**
-	 * Sets the
-	 * @param talon
+	 * Resets talon to default settings and adjusts settings from there based on the ConfigurationType
 	 * @return the talon
 	 */
-	public static IMotorControllerEnhanced resetTalon(IMotorControllerEnhanced talon, ConfigurationType configType) {
+	public static void resetTalon(IMotorControllerEnhanced talon, ConfigurationType configType) {
 		Configuration config;
 		switch (configType) {
 			case SENSOR:
@@ -152,10 +154,13 @@ public class TalonUtil {
 
 		talon.setControlFramePeriod(ControlFrame.Control_3_General, config.CONTROL_FRAME_PERIOD_MS);
 
-		return talon;
 	}
 
-	public static IMotorController resetVictor(IMotorController victor, ConfigurationType configType) {
+	/**
+	 * Resets victor to default settings and adjusts settings from there based on the ConfigurationType
+	 * Should usually be Slave mode for those being used with a talon, or default for open loop controls.
+	 */
+	public static void resetVictor(IMotorController victor, ConfigurationType configType) {
 		Configuration config;
 		switch (configType) {
 			case SENSOR:
@@ -226,6 +231,5 @@ public class TalonUtil {
 
 		victor.setControlFramePeriod(ControlFrame.Control_3_General, config.CONTROL_FRAME_PERIOD_MS);
 
-		return victor;
 	}
 }
