@@ -1,11 +1,8 @@
 package com.team2073.common.simulation.env;
 
 import com.ctre.phoenix.motorcontrol.IMotorController;
-import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 import com.team2073.common.CommonConstants.TestTags;
-import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.PeriodicAware;
-import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.simulation.SimulationConstants;
 import com.team2073.common.simulation.component.SimulationComponentFactory;
 import com.team2073.common.simulation.component.SimulationSolenoid;
@@ -20,21 +17,15 @@ import com.team2073.common.simulation.subsystem.SimulatedElevatorSubsystem;
 import com.team2073.common.simulation.subsystem.SimulatedMotionProfileElevatorSubsystem;
 import com.team2073.common.wpitest.BaseWpiTest;
 import edu.wpi.first.wpilibj.DigitalInput;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.offset;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag(TestTags.INTEGRATION_TEST)
 class SimulationMechanismIntegrationTest extends BaseWpiTest {
-
-    @BeforeEach
-    void baseWpiTestInit() {
-        robotContext = RobotContext.resetTestInstance();
-        assertThat(robotContext).isNotNull();
-    }
 
 	@Test
 	void simulationEagleSRX_WHEN_set_SHOULD_MoveMechanism() {

@@ -28,12 +28,12 @@ public class SimulatedElevatorSubsystem implements PeriodicAware {
         this.talon = talon;
         this.zeroSensor = zeroSensor;
         this.brake = brake;
+        pid.setPositionSupplier(() -> talon.getSelectedSensorPosition(0) / ticsPerInch);
     }
 
     public void set(double setpoint) {
         started = false;
         pid.updateSetPoint(setpoint);
-        pid.setPositionSupplier(() -> talon.getSelectedSensorPosition(0) / ticsPerInch);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class SimulatedElevatorSubsystem implements PeriodicAware {
             brake.set(false);
             started = true;
         }
-        pid.udatePID(.01);
+        pid.updatePID(.01);
 
         if (zeroSensor.get()) {
             brake.set(true);

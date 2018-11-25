@@ -29,7 +29,7 @@ public class SimulationPidfEagleSRX extends SimulationEagleSRX {
     @Override
     public void onPeriodic() {
         getSelectedSensorPosition(0);
-        pid.udatePID(.01);
+        pid.updatePID(.01);
         if (mode == ControlMode.Position)
             setOutputPercent(pid.getOutput());
 

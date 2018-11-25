@@ -3,7 +3,7 @@ package com.team2073.common.controlloop;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.datarecorder.model.DataPointIgnore;
 import com.team2073.common.datarecorder.model.LifecycleAwareRecordable;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.util.ConversionUtil;
 import com.team2073.common.util.Throw;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +14,12 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 
 	@DataPointIgnore
 	private static final int MAX_FCONDITION_EXCEPTIONS_TO_LOG = 5;
+
+	@DataPointIgnore
+	private static final double LONG_PID_INTERVAL = .2;
+
+	@DataPointIgnore
+	private static final double DEFAULT_INTERVAL = .01;
 
 	private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -40,6 +46,7 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 	private PositionSupplier positionSupplier;
 	private Callable<Boolean> fCondition;
 	private int fConditionExceptionCount;
+	private double lastTime = ConversionUtil.msToSeconds(System.currentTimeMillis());
 
 	public PidfControlLoop(double p, double i, double d, double f, double maxOutput) {
 		this.p = p;
@@ -50,7 +57,7 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 		RobotContext.getInstance().getDataRecorder().registerRecordable(this);
 	}
 
-	public void udatePID(double interval) {
+	public void updatePID(double interval) {
 
 		if (positionSupplier == null)
 			Throw.illegalState("[{}] must not be null.", PositionSupplier.class.getSimpleName());
@@ -72,16 +79,17 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 				log.warn("Exception calling fCondition: ", e);
 		}
 
-		accumulatedError += error * (interval);
-		errorVelocity = ((error - lastError) / (interval));
-
 		output += p * error;
-		if (maxIContribution == null)
+		if (maxIContribution == null) {
 			output += i * accumulatedError;
-		else
+		}
+		else {
 			output += Math.min(i * accumulatedError, maxIContribution);
+		}
 		output += d * errorVelocity;
 
+		accumulatedError += error * (interval);
+		errorVelocity = ((error - lastError) / (interval));
 		lastError = error;
 
 		if (Math.abs(output) >= maxOutput) {
@@ -91,6 +99,16 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 				output = -maxOutput;
 			}
 		}
+	}
+
+	public void updatePID(){
+		double currentTime = ConversionUtil.msToSeconds(System.currentTimeMillis());
+		if(currentTime - lastTime > LONG_PID_INTERVAL){
+			updatePID(DEFAULT_INTERVAL);
+		}else{
+			updatePID(currentTime - lastTime);
+		}
+		lastTime = currentTime;
 	}
 
 	public double getOutput() {
