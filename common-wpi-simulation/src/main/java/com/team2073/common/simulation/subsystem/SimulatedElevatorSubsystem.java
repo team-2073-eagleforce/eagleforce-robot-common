@@ -20,31 +20,29 @@ public class SimulatedElevatorSubsystem implements PeriodicAware {
 
     private boolean started;
     private double ticsPerInch = 1350;
-    private double setpoint;
 
     //		UNITS FOR P are in percentages per inch
-    private PidfControlLoop pid = new PidfControlLoop(.023, 0, .02, 0, 10, 1);
+    private PidfControlLoop pid = new PidfControlLoop(.023, 0, .02, 0, 1);
 
     public SimulatedElevatorSubsystem(IMotorControllerEnhanced talon, DigitalInput zeroSensor, Solenoid brake) {
         this.talon = talon;
         this.zeroSensor = zeroSensor;
         this.brake = brake;
+        pid.setPositionSupplier(() -> talon.getSelectedSensorPosition(0) / ticsPerInch);
     }
 
     public void set(double setpoint) {
-        this.setpoint = setpoint;
-        pid.stopPID();
         started = false;
+        pid.updateSetPoint(setpoint);
     }
 
     @Override
     public void onPeriodic() {
         if (!started) {
-            pid.startPID(setpoint);
             brake.set(false);
             started = true;
         }
-        pid.setNewPosition(talon.getSelectedSensorPosition(0) / ticsPerInch);
+        pid.updatePID(.01);
 
         if (zeroSensor.get()) {
             brake.set(true);
