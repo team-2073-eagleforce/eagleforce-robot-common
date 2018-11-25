@@ -23,7 +23,7 @@ public class SimulatedElevatorSubsystem implements PeriodicAware {
     private double setpoint;
 
     //		UNITS FOR P are in percentages per inch
-    private PidfControlLoop pid = new PidfControlLoop(.023, 0, .02, 0, 10, 1);
+    private PidfControlLoop pid = new PidfControlLoop(.023, 0, .02, 0, 1);
 
     public SimulatedElevatorSubsystem(IMotorControllerEnhanced talon, DigitalInput zeroSensor, Solenoid brake) {
         this.talon = talon;

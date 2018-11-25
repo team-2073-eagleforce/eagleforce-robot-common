@@ -109,7 +109,7 @@ public class TrapezoidalProfileManager {
 			if (holdingPID != null) {
 				holdingPID.updateSetPoint(setpoint);
 				try {
-					holdingPID.update(configuration.getInterval());
+					holdingPID.updatePID(configuration.getInterval());
 					output = holdingPID.getOutput();
 				} catch (Exception e) {
 					e.printStackTrace();

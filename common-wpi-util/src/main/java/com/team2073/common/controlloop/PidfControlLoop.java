@@ -75,7 +75,7 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 		try {
 			position = positionSupplier.call();
 		} catch (Exception e) {
-            Throw.illegalState("[{}] did not return a valid output.", PositionSupplier.class.getSimpleName());
+            Throw.illegalState("Position Supplier did not return a valid output.");
         }
 
 		error = goal - position;
