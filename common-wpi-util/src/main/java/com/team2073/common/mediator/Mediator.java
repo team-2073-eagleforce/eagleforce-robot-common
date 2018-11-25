@@ -13,7 +13,11 @@ import com.team2073.common.util.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Manages how {@link ColleagueSubsystem}s interact by checking for and resolving Conflicts between
@@ -47,7 +51,7 @@ public class Mediator implements PeriodicRunnable {
         this.conflictMap = conflictMap;
         this.subsystemTracker = subsystemTracker;
         LogUtil.infoInit(this.getClass(), logger);
-        registerWithPeriodicRunner();
+        autoRegisterWithPeriodicRunner();
     }
 
     /**

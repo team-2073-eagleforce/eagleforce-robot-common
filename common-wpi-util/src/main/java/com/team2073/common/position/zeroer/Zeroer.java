@@ -51,6 +51,7 @@ import static com.team2073.common.util.ClassUtil.*;
  * @author Preston Briggs
  */
 public class Zeroer implements PeriodicRunnable {
+
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	// State
@@ -96,7 +97,7 @@ public class Zeroer implements PeriodicRunnable {
 		this.zeroSensor = zeroSensor;
 		this.motor = motor;
 		setName(motor);
-		registerWithPeriodicRunner(getName());
+		autoRegisterWithPeriodicRunner(getName());
 	}
 
 	public Zeroer(DigitalInput zeroSensor, IMotorController motor,
@@ -108,7 +109,7 @@ public class Zeroer implements PeriodicRunnable {
 		this.pidIdx = pidIdx;
 		this.inverted = inverted;
 		setName(motor);
-		registerWithPeriodicRunner(getName());
+		autoRegisterWithPeriodicRunner(getName());
 	}
 
 	public Zeroer(DigitalInput zeroSensor, IMotorController motor, PositionConverter converter, String name) {
@@ -117,7 +118,7 @@ public class Zeroer implements PeriodicRunnable {
 		setConverter(converter);
 		setName(name);
 		setPositionUnit(converter.positionalUnit());
-		registerWithPeriodicRunner(getName());
+		autoRegisterWithPeriodicRunner(getName());
 	}
 
 	public Zeroer(DigitalInput zeroSensor, IMotorController motor, PositionConverter converter, int offset,
@@ -130,7 +131,7 @@ public class Zeroer implements PeriodicRunnable {
 		this.pidIdx = pidIdx;
 		this.inverted = inverted;
 		setName(motor);
-		registerWithPeriodicRunner(getName());
+		autoRegisterWithPeriodicRunner(getName());
 	}
 
 	public Zeroer(DigitalInput zeroSensor, IMotorController motor, PositionConverter converter, int offset,
@@ -144,7 +145,7 @@ public class Zeroer implements PeriodicRunnable {
 		this.inverted = inverted;
 		setName(name);
 		setPositionUnit(converter.positionalUnit());
-		registerWithPeriodicRunner(getName());
+		autoRegisterWithPeriodicRunner(getName());
 	}
 
 	public Zeroer(DigitalInput zeroSensor, IMotorController motor, PositionConverter converter,
@@ -159,7 +160,7 @@ public class Zeroer implements PeriodicRunnable {
 		this.inverted = inverted;
 		setName(name);
 		setPositionUnit(converter.positionalUnit());
-		registerWithPeriodicRunner(getName());
+		autoRegisterWithPeriodicRunner(getName());
 	}
 
 	public Zeroer(SensorCollection zeroSensor, IMotorController motor, PositionConverter converter, boolean isForwardLimit){
@@ -169,7 +170,7 @@ public class Zeroer implements PeriodicRunnable {
 		setConverter(converter);
 		this.isForwardLimit = isForwardLimit;
 		setName(motor);
-		registerWithPeriodicRunner(getName());
+		autoRegisterWithPeriodicRunner(getName());
 
 	}
 

@@ -25,7 +25,7 @@ public interface PeriodicRunnable {
 	 * public class Foo implements PeriodicRunnable {
 	 *
 	 * 	public Foo() {
-	 * 	   registerWithPeriodicRunner();
+	 * 	   autoRegisterWithPeriodicRunner();
 	 * 	}
 	 *
 	 * 	{@literal @}Override
@@ -35,13 +35,13 @@ public interface PeriodicRunnable {
 	 * }
 	 * </pre>
 	 */
-	default void registerWithPeriodicRunner() {
-		RobotContext.getInstance().getPeriodicRunner().register(this);
+	default void autoRegisterWithPeriodicRunner() {
+		RobotContext.getInstance().getPeriodicRunner().autoRegister(this);
 	}
 
-	/** See {@link #registerWithPeriodicRunner()} */
-	default void registerWithPeriodicRunner(String name) {
-		RobotContext.getInstance().getPeriodicRunner().register(this, name);
+	/** See {@link #autoRegisterWithPeriodicRunner()} */
+	default void autoRegisterWithPeriodicRunner(String name) {
+		RobotContext.getInstance().getPeriodicRunner().autoRegister(this, name);
 	}
 
 }

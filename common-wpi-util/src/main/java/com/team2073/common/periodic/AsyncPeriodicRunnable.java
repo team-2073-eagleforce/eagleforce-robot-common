@@ -12,23 +12,23 @@ public interface AsyncPeriodicRunnable {
     /** See {@link PeriodicRunner} */
     void onPeriodicAsync();
 
-    /** See {@link PeriodicRunnable#registerWithPeriodicRunner()} */
-    default void registerWithPeriodicRunner() {
-        RobotContext.getInstance().getPeriodicRunner().registerAsync(this);
+    /** See {@link PeriodicRunnable#autoRegisterWithPeriodicRunner()} */
+    default void autoRegisterWithPeriodicRunner() {
+        RobotContext.getInstance().getPeriodicRunner().autoRegisterAsync(this);
     }
 
-    /** See {@link PeriodicRunnable#registerWithPeriodicRunner()} */
-    default void registerWithPeriodicRunner(String name) {
-        RobotContext.getInstance().getPeriodicRunner().registerAsync(this, name);
+    /** See {@link PeriodicRunnable#autoRegisterWithPeriodicRunner()} */
+    default void autoRegisterWithPeriodicRunner(String name) {
+        RobotContext.getInstance().getPeriodicRunner().autoRegisterAsync(this, name);
     }
 
-    /** See {@link PeriodicRunnable#registerWithPeriodicRunner()} */
-    default void registerWithPeriodicRunner(int interval) {
-        RobotContext.getInstance().getPeriodicRunner().registerAsync(this, interval);
+    /** See {@link PeriodicRunnable#autoRegisterWithPeriodicRunner()} */
+    default void autoRegisterWithPeriodicRunner(int interval) {
+        RobotContext.getInstance().getPeriodicRunner().autoRegisterAsync(this, interval);
     }
 
-    /** See {@link PeriodicRunnable#registerWithPeriodicRunner()} */
-    default void registerWithPeriodicRunner(String name, int interval) {
-        RobotContext.getInstance().getPeriodicRunner().registerAsync(this, name, interval);
+    /** See {@link PeriodicRunnable#autoRegisterWithPeriodicRunner()} */
+    default void autoRegisterWithPeriodicRunner(String name, int interval) {
+        RobotContext.getInstance().getPeriodicRunner().autoRegisterAsync(this, name, interval);
     }
 }

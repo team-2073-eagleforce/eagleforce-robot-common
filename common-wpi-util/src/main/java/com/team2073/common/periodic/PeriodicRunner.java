@@ -3,6 +3,8 @@ package com.team2073.common.periodic;
 import com.google.common.annotations.VisibleForTesting;
 import com.team2073.common.CommonConstants;
 import com.team2073.common.assertion.Assert;
+import com.team2073.common.config.CommonProperties;
+import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.exception.NotYetImplementedException;
 import com.team2073.common.util.ExceptionUtil;
 import com.team2073.common.util.Throw;
@@ -22,6 +24,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.team2073.common.util.ClassUtil.*;
 import static com.team2073.common.util.ThreadUtil.*;
 
 /**
@@ -77,28 +80,15 @@ public class PeriodicRunner implements SmartDashboardAware {
 	// TODO:
     // 	-Allow customizing the thread pool size (extract to properties)
     // 	-Extract to properties
-	// 	-Write tests to verify the instance sets are not accepting duplicates (async should allow the same instance but with different periods) (but maybe log this just to be informational)
+	// 	-Write tests to verify the instance sets are not accepting duplicates
 	//	-Redesign the pattern for instances registering themselves (registerSelf(PeriodicRunner runner))
 	//		-Have instances call autoRegister(...) to register in constructor and then PeriodicRunner will check Common props to see if auto register is enabled (and if periodic runner is even enabled)
 	//		-An alternative method register(...) will just check if periodic runner is enabled
 	// 		-Create a method to check if an instance is already registered
 	// -First time running, print a list of the instances so we can see what order they are being called in (include async with their interval)
-	// -Extract the section of code to run an instance and return a data object about the run
-	//		-Allow instances to call this manually (example: PivotIntakeSubsystem calling left/right arms)
-	// 		-How should this be handled regarding the overall time?
-	//			-Easiest would be to just ignore these iterations but the whole point would be to get data on these
-	//			-Better solution would be to somehow create a 'hierarchy' that we could record
-	//			-The Root instance would have its overall time recorded (includes inner calls) but also its actual time recorded (excludes inner calls)
-	//				-Start timer: PivotIntakeSubsystem
-	//				-Pause timer: PivotIntakeSubsystem
-	//				-Start timer: leftArm
-	//				-Stop timer: leftArm
-	//				-Resume timer: PivotIntakeSubsystem
-	//				-Pause timer: PivotIntakeSubsystem
-	//				-Start timer: rightArm
-	//				-Stop timer: rightArm
-	//				-Resume timer: PivotIntakeSubsystem
-	//				-Stop timer: PivotIntakeSubsystem
+	// -COMMON-200: Extract the section of code to run an instance and return a data object about the run
+	// -Implement circuit breaker
+
 
     public static final long DEFAULT_ASYNC_PERIOD = 20;
     public static final long DEFAULT_SYNC_PERIOD = 20;
@@ -129,9 +119,33 @@ public class PeriodicRunner implements SmartDashboardAware {
 	 * (it's 'longest' cycle refers to the longest of the current periodic cycle). */
 	private InstanceAwareDurationHistory currInstanceLoopHistory;
 
+	// Sync-registration
+	// ============================================================
+	/** See {@link #autoRegister(PeriodicRunnable, String)} */
+	public void autoRegister(PeriodicRunnable instance) {
+		autoRegister(instance, simpleNameSafe(instance));
+	}
+
+	/** See {@link #register(PeriodicRunnable, String)} */
 	public void register(PeriodicRunnable instance) {
-		Assert.assertNotNull(instance, "instance");
-		register(instance, instance.getClass().getSimpleName());
+		register(instance, simpleNameSafe(instance));
+	}
+
+	/**
+	 * Registers this {@link PeriodicRunnable} only if auto register in enabled (controlled via
+	 * {@link CommonProperties#getPeriodicRunnerAutoRegister()}). <br/>
+	 * <br/>
+	 * This is meant to be called from the constructor of every {@link PeriodicRunnable}. This way, instances
+	 * do not need to be registered manually but if for some reason, manual registration is preferred, the property
+	 * can be set to false and these auto registrations will be ignored so you can register manually.<br/>
+	 * <br/>
+	 * There is a convenience method to handle this: {@link PeriodicRunnable#autoRegisterWithPeriodicRunner()}.
+	 */
+	public void autoRegister(PeriodicRunnable instance, String name) {
+		if (RobotContext.getInstance().getCommonProps().getPeriodicRunnerAutoRegister())
+			register(instance, name);
+		else
+			logger.debug("Periodic Runner Auto Register is disabled. Ignoring registering [{}].", simpleNameSafe(instance));
 	}
 
 	/** Register an instance to be called periodically on the main robot thread. */
@@ -144,21 +158,46 @@ public class PeriodicRunner implements SmartDashboardAware {
         logger.debug("Registering periodic instance: [{}] complete.", name);
     }
 
+
+	// Async-registration
+	// ============================================================
+	/** See {@link #autoRegister(PeriodicRunnable, String)} */
+	public void autoRegisterAsync(AsyncPeriodicRunnable instance) {
+		autoRegisterAsync(instance, DEFAULT_ASYNC_PERIOD);
+	}
+
     /** @see #registerAsync(AsyncPeriodicRunnable, String, long)  */
     public void registerAsync(AsyncPeriodicRunnable instance) {
         registerAsync(instance, DEFAULT_ASYNC_PERIOD);
     }
 
+	/** See {@link #autoRegister(PeriodicRunnable, String)} */
+	public void autoRegisterAsync(AsyncPeriodicRunnable instance, long period) {
+		autoRegisterAsync(instance, simpleNameSafe(instance), period);
+	}
+
     /** @see #registerAsync(AsyncPeriodicRunnable, String, long)  */
     public void registerAsync(AsyncPeriodicRunnable instance, long period) {
-        Assert.assertNotNull(instance, "instance");
-        registerAsync(instance, instance.getClass().getSimpleName(), period);
+        registerAsync(instance, simpleNameSafe(instance), period);
     }
+
+	/** See {@link #autoRegister(PeriodicRunnable, String)} */
+	public void autoRegisterAsync(AsyncPeriodicRunnable instance, String name) {
+		autoRegisterAsync(instance, name, DEFAULT_ASYNC_PERIOD);
+	}
 
     /** @see #registerAsync(AsyncPeriodicRunnable, String, long)  */
     public void registerAsync(AsyncPeriodicRunnable instance, String name) {
         registerAsync(instance, name, DEFAULT_ASYNC_PERIOD);
     }
+
+	/** See {@link #autoRegister(PeriodicRunnable, String)} */
+	public void autoRegisterAsync(AsyncPeriodicRunnable instance, String name, long period) {
+		if (RobotContext.getInstance().getCommonProps().getPeriodicRunnerAutoRegister())
+			registerAsync(instance, name);
+		else
+			logger.debug("Periodic Runner Auto Register is disabled. Ignoring registering [{}].", simpleNameSafe(instance));
+	}
 
     /**
      * Register an instance to be called at a specified interval. These instances will be ran on a separate
@@ -181,6 +220,9 @@ public class PeriodicRunner implements SmartDashboardAware {
         logger.debug("Registering ASYNC periodic instance: [{}] complete.", name);
 	}
 
+
+	// Other public methods
+	// ============================================================
 	public boolean isRegistered(PeriodicRunnable instance) {
 		return instanceMap.containsKey(instance);
 	}
@@ -199,6 +241,8 @@ public class PeriodicRunner implements SmartDashboardAware {
 		 return Double.parseDouble(formatter.format(number));
 	}
 
+	// Runnable invocation methods
+	// ============================================================
     public void startPeriodicLoop() {
 	    startPeriodicLoop(DEFAULT_SYNC_PERIOD);
     }
@@ -309,6 +353,10 @@ public class PeriodicRunner implements SmartDashboardAware {
 	public void readSmartDashboard() {
 	}
 
+
+	// Testing methods
+	// ============================================================
+
 	/** @see #fullLoopHistory */
 	@VisibleForTesting
 	InstanceAwareDurationHistory getFullLoopHistory() {
@@ -326,6 +374,9 @@ public class PeriodicRunner implements SmartDashboardAware {
 	InstanceAwareDurationHistory getCurrInstanceLoopHistory() {
 		return currInstanceLoopHistory;
 	}
+
+	// Inner classes
+	// ============================================================
 
 	private static abstract class BaseRegistration<T> {
 

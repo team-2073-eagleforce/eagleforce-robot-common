@@ -37,7 +37,7 @@ public class CircuitBreaker implements PeriodicRunnable {
 		this.maxAllowableCurrent = maxAllowableAmperage;
 		this.allowableTimeAtStall = allowableTimeAtStallInMillis;
 		this.talon = talon;
-		registerWithPeriodicRunner(setAndGetName(talon));
+		autoRegisterWithPeriodicRunner(setAndGetName(talon));
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class CircuitBreaker implements PeriodicRunnable {
 		this.maxAllowableCurrent = maxAllowableAmperage;
 		this.allowableTimeAtStall = allowableTimeAtStallInMillis;
 		this.talon = talon;
-		registerWithPeriodicRunner(setAndGetName(talon));
+		autoRegisterWithPeriodicRunner(setAndGetName(talon));
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class CircuitBreaker implements PeriodicRunnable {
 		this.minTravel = minTravel;
 		this.maxTravel = maxTravel;
 		this.talon = talon;
-		registerWithPeriodicRunner(setAndGetName(talon));
+		autoRegisterWithPeriodicRunner(setAndGetName(talon));
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class CircuitBreaker implements PeriodicRunnable {
 		this.minTravel = minTravel;
 		this.maxTravel = maxTravel;
 		this.talon = talon;
-		registerWithPeriodicRunner(setAndGetName(talon));
+		autoRegisterWithPeriodicRunner(setAndGetName(talon));
 	}
 
 	@Override
