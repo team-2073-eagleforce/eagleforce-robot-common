@@ -12,8 +12,7 @@ public class OccasionalLoggingRunner implements AsyncPeriodicRunnable {
     private LinkedList<OccasionalLoggingAware> instanceList = new LinkedList<>();
 
     public OccasionalLoggingRunner() {
-        RobotContext robotContext = RobotContext.getInstance();
-        robotContext.getPeriodicRunner().registerAsync(this, robotContext.getCommonProps().getLoggingAsyncPeriod());
+        autoRegisterWithPeriodicRunner(RobotContext.getInstance().getCommonProps().getLoggingAsyncPeriod());
     }
 
     public void register(OccasionalLoggingAware instance) {

@@ -16,9 +16,8 @@ public class SmartDashboardAwareRunner implements AsyncPeriodicRunnable {
 
 	public SmartDashboardAwareRunner() {
 		RobotContext robotContext = RobotContext.getInstance();
-		PeriodicRunner periodicRunner = robotContext.getPeriodicRunner();
-		periodicRunner.registerAsync(this, robotContext.getCommonProps().getSmartDashboardAsyncPeriod());
-		periodicRunner.registerSmartDashboard(this);
+		autoRegisterWithPeriodicRunner(robotContext.getCommonProps().getSmartDashboardAsyncPeriod());
+		robotContext.getPeriodicRunner().registerSmartDashboard(this);
 	}
 
 	public void registerInstance(SmartDashboardAware instance) {

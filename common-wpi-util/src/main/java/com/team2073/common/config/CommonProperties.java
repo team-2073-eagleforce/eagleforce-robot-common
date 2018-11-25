@@ -18,8 +18,8 @@ public class CommonProperties {
 
     // PeriodicRunner
     private Boolean periodicRunnerAutoRegister = true;
-    private long loggingAsyncPeriod = 20;
-    private long smartDashboardAsyncPeriod = 20;
+    private int loggingAsyncPeriod = 20;
+    private int smartDashboardAsyncPeriod = 20;
     private boolean publishToSmartDashboard = true;
 
     // DataRecorder
@@ -47,19 +47,19 @@ public class CommonProperties {
         this.periodicRunnerAutoRegister = periodicRunnerAutoRegister;
     }
 
-    public long getLoggingAsyncPeriod() {
+    public int getLoggingAsyncPeriod() {
         return loggingAsyncPeriod;
     }
 
-    public void setLoggingAsyncPeriod(long loggingAsyncPeriod) {
+    public void setLoggingAsyncPeriod(int loggingAsyncPeriod) {
         this.loggingAsyncPeriod = loggingAsyncPeriod;
     }
 
-    public long getSmartDashboardAsyncPeriod() {
+    public int getSmartDashboardAsyncPeriod() {
         return smartDashboardAsyncPeriod;
     }
 
-    public void setSmartDashboardAsyncPeriod(long smartDashboardAsyncPeriod) {
+    public void setSmartDashboardAsyncPeriod(int smartDashboardAsyncPeriod) {
         this.smartDashboardAsyncPeriod = smartDashboardAsyncPeriod;
     }
 

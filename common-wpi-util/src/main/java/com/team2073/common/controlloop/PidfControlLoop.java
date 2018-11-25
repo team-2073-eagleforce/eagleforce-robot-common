@@ -20,13 +20,9 @@ public class PidfControlLoop {
 
 	private boolean active;
 
-	@DataPointIgnore
 	private final double p;
-	@DataPointIgnore
 	private final double i;
-	@DataPointIgnore
 	private final double d;
-	@DataPointIgnore
 	private final double f;
 
 	private double output;

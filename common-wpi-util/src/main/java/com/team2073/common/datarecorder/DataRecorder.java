@@ -287,7 +287,7 @@ public class DataRecorder {
     /** TODO */
     public void registerWithPeriodicRunner(PeriodicRunner periodicRunner, long flushInterval) {
         if (state.recording.isPeriodicRecordingActive()) {
-            log.info("Ignoring call to activate periodic recording, it is already active.", flushInterval);
+            log.info("Ignoring call to activate periodic recording with interval of [{}], it is already active.", flushInterval);
             return;
         }
 
