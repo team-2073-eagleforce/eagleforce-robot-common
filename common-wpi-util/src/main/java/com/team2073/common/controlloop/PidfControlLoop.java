@@ -57,13 +57,22 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 		RobotContext.getInstance().getDataRecorder().registerRecordable(this);
 	}
 
+    public PidfControlLoop(double p, double i, double d, double f, double maxOutput, PositionSupplier positionSupplier) {
+        this.p = p;
+        this.i = i;
+        this.d = d;
+        this.f = f;
+        this.maxOutput = maxOutput;
+        this.positionSupplier = positionSupplier;
+        RobotContext.getInstance().getDataRecorder().registerRecordable(this);
+    }
+
 	public void updatePID(double interval) {
 
 		if (positionSupplier == null)
-			Throw.illegalState("[{}] must not be null.", PositionSupplier.class.getSimpleName());
+			Throw.illegalState("PositionSupplier must not be null.");
 
 		position = positionSupplier.currentPosition();
-
 		error = goal - position;
 
 		output = 0;
@@ -73,19 +82,18 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 				output += f;
 			}
 		} catch (Exception e) {
-			// TODO: Jason, should we still continue executing? What happens if we skip f?
 			fConditionExceptionCount++;
 			if (fConditionExceptionCount < MAX_FCONDITION_EXCEPTIONS_TO_LOG)
 				log.warn("Exception calling fCondition: ", e);
 		}
 
 		output += p * error;
-		if (maxIContribution == null) {
+
+		if (maxIContribution == null)
 			output += i * accumulatedError;
-		}
-		else {
+		else
 			output += Math.min(i * accumulatedError, maxIContribution);
-		}
+
 		output += d * errorVelocity;
 
 		accumulatedError += error * (interval);
@@ -115,10 +123,6 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 		return output;
 	}
 
-	public void setNewPosition(double position) {
-		this.position = position;
-	}
-
 	public void updateSetPoint(double newGoal) {
 		this.goal = newGoal;
 	}
@@ -127,7 +131,7 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 		return error;
 	}
 
-	public void configMaxIContribution(double maxContribution) {
+	public void setMaxIContribution(double maxContribution) {
 		this.maxIContribution = maxContribution;
 	}
 

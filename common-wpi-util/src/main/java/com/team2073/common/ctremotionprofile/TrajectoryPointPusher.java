@@ -1,4 +1,4 @@
-package com.team2073.common.motionprofiling;
+package com.team2073.common.ctremotionprofile;
 
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.team2073.common.concurrency.InterruptibleRunnable;
