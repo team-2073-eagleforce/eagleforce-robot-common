@@ -43,7 +43,7 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 	private double lastError;
 	private double position;
 	private Double maxIContribution = null;
-	private Callable<Double> positionSupplier;
+	private PositionSupplier positionSupplier;
 	private Callable<Boolean> fCondition;
 	private int fConditionExceptionCount;
 	private double lastTime = ConversionUtil.msToSeconds(System.currentTimeMillis());
@@ -57,7 +57,7 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 		RobotContext.getInstance().getDataRecorder().registerRecordable(this);
 	}
 
-    public PidfControlLoop(double p, double i, double d, double f, double maxOutput, Callable<Double> positionSupplier) {
+    public PidfControlLoop(double p, double i, double d, double f, double maxOutput, PositionSupplier positionSupplier) {
         this.p = p;
         this.i = i;
         this.d = d;
@@ -72,12 +72,7 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 		if (positionSupplier == null)
 			Throw.illegalState("PositionSupplier must not be null.");
 
-		try {
-			position = positionSupplier.call();
-		} catch (Exception e) {
-            Throw.illegalState("Position Supplier did not return a valid output.");
-        }
-
+		position = positionSupplier.currentPosition();
 		error = goal - position;
 
 		output = 0;
@@ -151,8 +146,11 @@ public class PidfControlLoop implements LifecycleAwareRecordable {
 		this.fCondition = fCondition;
 	}
 
-	public void setPositionSupplier(Callable<Double> positionSupplier) {
+	public void setPositionSupplier(PositionSupplier positionSupplier) {
 		this.positionSupplier = positionSupplier;
 	}
 
+	public interface PositionSupplier {
+		double currentPosition();
+	}
 }

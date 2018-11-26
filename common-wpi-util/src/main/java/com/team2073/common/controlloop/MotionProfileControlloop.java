@@ -4,6 +4,8 @@ import com.team2073.common.motionprofiling.ProfileTrajectoryPoint;
 
 import java.util.concurrent.Callable;
 
+import static com.team2073.common.controlloop.PidfControlLoop.PositionSupplier;
+
 public class MotionProfileControlloop {
 	private double p;
 	private double d;
@@ -17,7 +19,7 @@ public class MotionProfileControlloop {
 	private double position;
 	private ProfileTrajectoryPoint currentPoint;
 	private Callable<ProfileTrajectoryPoint> dataPointUpdater;
-	private Callable<Double> positionUpdater;
+	private PositionSupplier positionUpdater;
 
 	/**
 	 * @param p         proportional gain
@@ -37,7 +39,7 @@ public class MotionProfileControlloop {
 	public void update(double interval) {
 		try {
 			this.currentPoint = dataPointUpdater.call();
-			this.position = positionUpdater.call();
+			this.position = positionUpdater.currentPosition();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -69,7 +71,7 @@ public class MotionProfileControlloop {
 		this.dataPointUpdater = desiredPoint;
 	}
 
-	public void updatePosition(Callable<Double> returnsPosition) {
+	public void updatePosition(PositionSupplier returnsPosition) {
 		this.positionUpdater = returnsPosition;
 	}
 

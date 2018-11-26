@@ -5,12 +5,14 @@ import com.team2073.common.controlloop.PidfControlLoop;
 
 import java.util.concurrent.Callable;
 
+import static com.team2073.common.controlloop.PidfControlLoop.PositionSupplier;
+
 public class TrapezoidalProfileManager {
 
 	private MotionProfileControlloop controller;
 	private ProfileConfiguration configuration;
 	private TrapezoidalVelocityProfile profile;
-	private Callable<Double> currentPosition;
+	private PositionSupplier currentPosition;
 	private Callable<Double> betweenProfiles;
 	private PidfControlLoop holdingPID;
 	private double setpoint;
@@ -21,7 +23,7 @@ public class TrapezoidalProfileManager {
 	 * @param currentPosition Provides the current position of the mechanism. Ensure units match that of the profile
 	 *                        and of the controller.
 	 */
-	public TrapezoidalProfileManager(MotionProfileControlloop controller, ProfileConfiguration configuration, Callable<Double> currentPosition) {
+	public TrapezoidalProfileManager(MotionProfileControlloop controller, ProfileConfiguration configuration, PositionSupplier currentPosition) {
 		this.controller = controller;
 		this.configuration = configuration;
 		this.currentPosition = currentPosition;
@@ -37,7 +39,7 @@ public class TrapezoidalProfileManager {
 	 * @param betweenProfiles After a profile has executed before the next setpoint is given, usually a method for
 	 *                        holding the mechanism in place. The callable should return a percent or voltage output for the motor.
 	 */
-	public TrapezoidalProfileManager(MotionProfileControlloop controller, ProfileConfiguration configuration, Callable<Double> currentPosition, Callable<Double> betweenProfiles) {
+	public TrapezoidalProfileManager(MotionProfileControlloop controller, ProfileConfiguration configuration, PositionSupplier currentPosition, Callable<Double> betweenProfiles) {
 		this.controller = controller;
 		this.configuration = configuration;
 		this.currentPosition = currentPosition;
@@ -53,7 +55,7 @@ public class TrapezoidalProfileManager {
 	 *                        and of the controller.
 	 * @param holdingPID      A manged pid controller for holding positions after finishing a profile. Otherwise provide a callable that returns a percent output or voltage.
 	 */
-	public TrapezoidalProfileManager(MotionProfileControlloop controller, ProfileConfiguration configuration, Callable<Double> currentPosition, PidfControlLoop holdingPID) {
+	public TrapezoidalProfileManager(MotionProfileControlloop controller, ProfileConfiguration configuration, PositionSupplier currentPosition, PidfControlLoop holdingPID) {
 		this.controller = controller;
 		this.configuration = configuration;
 		this.currentPosition = currentPosition;
@@ -82,14 +84,10 @@ public class TrapezoidalProfileManager {
 	public void setPoint(double setpoint) {
 		this.setpoint = setpoint;
 		if (profile == null || (profile.isFinished() && lastSetpoint != setpoint)) {
-			try {
-				lastSetpoint = setpoint;
-				if (holdingPID != null)
-					holdingPID.resetAccumulatedError();
-				profile = new TrapezoidalVelocityProfile(currentPosition.call(), setpoint, configuration);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			lastSetpoint = setpoint;
+			if (holdingPID != null)
+				holdingPID.resetAccumulatedError();
+			profile = new TrapezoidalVelocityProfile(currentPosition.currentPosition(), setpoint, configuration);
 		}
 	}
 
