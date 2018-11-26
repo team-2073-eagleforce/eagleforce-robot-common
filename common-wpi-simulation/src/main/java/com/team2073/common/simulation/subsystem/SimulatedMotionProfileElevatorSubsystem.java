@@ -4,14 +4,14 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 import com.team2073.common.controlloop.MotionProfileControlloop;
 import com.team2073.common.motionprofiling.SCurveProfileGenerator;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
  * @author pbriggs
  */
-public class SimulatedMotionProfileElevatorSubsystem implements PeriodicAware {
+public class SimulatedMotionProfileElevatorSubsystem implements PeriodicRunnable {
     double maxVelocity = 6;
     double maxAcceleration = 20;
     double averageAcceleration = 15;

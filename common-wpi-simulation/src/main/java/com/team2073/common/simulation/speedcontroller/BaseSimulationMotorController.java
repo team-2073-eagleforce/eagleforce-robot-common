@@ -5,14 +5,14 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.datarecorder.model.DataPointIgnore;
 import com.team2073.common.datarecorder.model.LifecycleAwareRecordable;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.simulation.model.SimulationMechanism;
 import com.team2073.common.util.EnumUtil;
 import com.team2073.common.util.Throw;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class BaseSimulationMotorController implements SimulationMotorController, LifecycleAwareRecordable, PeriodicAware {
+public abstract class BaseSimulationMotorController implements SimulationMotorController, LifecycleAwareRecordable, PeriodicRunnable {
 
     @DataPointIgnore
     public static final double VOLTAGE = 12;

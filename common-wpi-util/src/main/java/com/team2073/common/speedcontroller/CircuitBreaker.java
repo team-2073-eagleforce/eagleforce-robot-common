@@ -1,11 +1,15 @@
 package com.team2073.common.speedcontroller;
 
+import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.team2073.common.ctx.RobotContext;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
+
+import static com.team2073.common.util.ClassUtil.*;
 
 // TODO: This should be a wrapper around a BaseMotorController. See LogWrappingCommand for example
-public class CircuitBreaker implements PeriodicAware {
+public class CircuitBreaker implements PeriodicRunnable {
+
+	private String name;
 	private double minimumVoltageToMove;
 	private double minimumVoltageToMoveNegatively;
 	private double maxAllowableCurrent;
@@ -33,7 +37,7 @@ public class CircuitBreaker implements PeriodicAware {
 		this.maxAllowableCurrent = maxAllowableAmperage;
 		this.allowableTimeAtStall = allowableTimeAtStallInMillis;
 		this.talon = talon;
-		RobotContext.getInstance().getPeriodicRunner().register(this);
+		autoRegisterWithPeriodicRunner(setAndGetName(talon));
 	}
 
 	/**
@@ -51,7 +55,7 @@ public class CircuitBreaker implements PeriodicAware {
 		this.maxAllowableCurrent = maxAllowableAmperage;
 		this.allowableTimeAtStall = allowableTimeAtStallInMillis;
 		this.talon = talon;
-		RobotContext.getInstance().getPeriodicRunner().register(this);
+		autoRegisterWithPeriodicRunner(setAndGetName(talon));
 	}
 
 	/**
@@ -71,7 +75,7 @@ public class CircuitBreaker implements PeriodicAware {
 		this.minTravel = minTravel;
 		this.maxTravel = maxTravel;
 		this.talon = talon;
-		RobotContext.getInstance().getPeriodicRunner().register(this);
+		autoRegisterWithPeriodicRunner(setAndGetName(talon));
 	}
 
 	/**
@@ -93,7 +97,7 @@ public class CircuitBreaker implements PeriodicAware {
 		this.minTravel = minTravel;
 		this.maxTravel = maxTravel;
 		this.talon = talon;
-		RobotContext.getInstance().getPeriodicRunner().register(this);
+		autoRegisterWithPeriodicRunner(setAndGetName(talon));
 	}
 
 	@Override
@@ -140,6 +144,15 @@ public class CircuitBreaker implements PeriodicAware {
 			}
 
 		}
+	}
+
+	private void setName(IMotorController motor) {
+		name = simpleName(this) + "[Motor:" + motor.getBaseID() + "]";
+	}
+
+	private String setAndGetName(IMotorController motor) {
+		setName(motor);
+		return name;
 	}
 
 

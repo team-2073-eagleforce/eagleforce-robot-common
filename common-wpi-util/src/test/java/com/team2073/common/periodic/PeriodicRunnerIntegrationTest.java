@@ -26,12 +26,12 @@ class PeriodicRunnerIntegrationTest {
     }
 
     /**
-     * Register a basic {@link PeriodicAware} and verify it was called as many times as the {@link PeriodicRunner} says it looped.
+     * Register a basic {@link PeriodicRunnable} and verify it was called as many times as the {@link PeriodicRunner} says it looped.
      */
     @Test
     public void periodicRunner_WHEN_PeriodicAwareRegistered_SHOULD_InvokeRegisteredPeriodicAware() {
         PeriodicRunner runner = new PeriodicRunner();
-        IterationAwarePeriodicAwareImpl periodic1 = new IterationAwarePeriodicAwareImpl();
+        IterationAwarePeriodicRunnableImpl periodic1 = new IterationAwarePeriodicRunnableImpl();
         runner.register(periodic1);
 
         SimulationEnvironmentRunner.create()
@@ -46,9 +46,9 @@ class PeriodicRunnerIntegrationTest {
     @Test
     public void periodicRunner_WHEN_PeriodicAwareRegistered_SHOULD_CalculateMathCorrectly() {
         PeriodicRunner runner = new PeriodicRunner();
-        DurationRecordingPeriodicAware periodic1 = new DurationRecordingPeriodicAware(1);
-        DurationRecordingPeriodicAware periodic2 = new DurationRecordingPeriodicAware(7);
-        DurationRecordingPeriodicAware periodic3 = new DurationRecordingPeriodicAware(7);
+        DurationRecordingPeriodicRunnable periodic1 = new DurationRecordingPeriodicRunnable(1);
+        DurationRecordingPeriodicRunnable periodic2 = new DurationRecordingPeriodicRunnable(7);
+        DurationRecordingPeriodicRunnable periodic3 = new DurationRecordingPeriodicRunnable(7);
         runner.register(periodic1);
         runner.register(periodic2);
         runner.register(periodic3);
@@ -71,7 +71,7 @@ class PeriodicRunnerIntegrationTest {
                     double expectedAvg = (double) instanceTotal / instanceCount;
                     assertThat(loopHistory.getAverage()).as(errMsg).isEqualTo(expectedAvg);
 
-                    errMsg = "DurationRecordingPeriodicAware durations do not correlate to actual readings.";
+                    errMsg = "DurationRecordingPeriodicRunnable durations do not correlate to actual readings.";
                     long recorder1Total = periodic1.totalDelay();
                     long recorder2Total = periodic2.totalDelay();
                     long recorder3Total = periodic3.totalDelay();
@@ -86,14 +86,14 @@ class PeriodicRunnerIntegrationTest {
     @Test
     public void periodicRunner_WHEN_PeriodicAwareRegisteredAsAsync_SHOULD_RunInSeparateThreadAtSpecifiedDuration() {
         PeriodicRunner runner = new PeriodicRunner();
-        TotalDurationAwarePeriodicAware periodic1 = new TotalDurationAwarePeriodicAware(5);
-        TotalDurationAwarePeriodicAware periodic2 = new TotalDurationAwarePeriodicAware(10);
-        TotalDurationAwarePeriodicAware periodic3 = new TotalDurationAwarePeriodicAware(200);
+        TotalDurationAwarePeriodicRunnable periodic1 = new TotalDurationAwarePeriodicRunnable(5);
+        TotalDurationAwarePeriodicRunnable periodic2 = new TotalDurationAwarePeriodicRunnable(10);
+        TotalDurationAwarePeriodicRunnable periodic3 = new TotalDurationAwarePeriodicRunnable(200);
         runner.registerAsync(periodic1, periodic1.period);
         runner.registerAsync(periodic2, periodic2.period);
         runner.registerAsync(periodic3,  periodic3.period);
 
-        runner.register(new IterationAwarePeriodicAwareImpl(), "Just here to make sure the non-async loop has something to loop over :) ");
+        runner.register(new IterationAwarePeriodicRunnableImpl(), "Just here to make sure the non-async loop has something to loop over :) ");
 
         SimulationEnvironmentRunner.create()
                 .withPeriodicRunner(runner)
@@ -103,11 +103,11 @@ class PeriodicRunnerIntegrationTest {
 
                     assertEnvironmentRan(env);
                     assertPeriodicRunnerRan(runner);
-                    assertDurationAwareInstanceCalledAtLeastOnce(periodic1);
-                    assertDurationAwareInstanceCalledAtLeastOnce(periodic2);
-                    assertDurationAwareInstanceCalledAtLeastOnce(periodic3);
+                    PeriodicRunnerIntegrationTestHelper.assertDurationAwareInstanceCalledAtLeastOnce(periodic1);
+                    PeriodicRunnerIntegrationTestHelper.assertDurationAwareInstanceCalledAtLeastOnce(periodic2);
+                    PeriodicRunnerIntegrationTestHelper.assertDurationAwareInstanceCalledAtLeastOnce(periodic3);
 
-                    errMsg = "Expected PeriodicAware component to get called about once every [%s] millis but it did " +
+                    errMsg = "Expected PeriodicRunnable component to get called about once every [%s] millis but it did " +
                             "not. Verify the async loop is functioning in " + PeriodicRunner.class.getSimpleName() + ".";
                     assertThat(periodic1.avgCycle()).as(errMsg, periodic1.period).isCloseTo(periodic1.period, withinPercentage(1L));
                     assertThat(periodic2.avgCycle()).as(errMsg, periodic2.period).isCloseTo(periodic2.period, withinPercentage(1L));

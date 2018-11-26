@@ -27,29 +27,48 @@ public class PeriodicRunnerIntegrationTestHelper {
         assertThat(fullLoopTotal).as(errMsg).isGreaterThan(0);
     }
 
-    public static void assertPeriodicAwareInstanceCalledAtLeastOnce(IterationAwarePeriodicAware... periodicAware) {
+    public static void assertPeriodicAwareInstanceCalledAtLeastOnce(IterationAwarePeriodicRunnable... periodicAware) {
         String errMsg = "[%s] was never called. Check " + PeriodicRunner.class.getSimpleName() + ".";
-        for (IterationAwarePeriodicAware periodic : periodicAware) {
+        for (IterationAwarePeriodicRunnable periodic : periodicAware) {
             String className = periodic.getClass().getSimpleName();
             int observedIterations = periodic.getTotalIterations();
             assertThat(observedIterations).as(errMsg, className).isGreaterThan(0);
         }
     }
 
-    public static void assertDurationAwareInstanceCalledAtLeastOnce(DurationAwarePeriodicAware... periodicAware) {
+    public static void assertPeriodicAwareInstanceCalledAtLeastOnce(IterationAwareAsyncPeriodicRunnable... periodicAware) {
         String errMsg = "[%s] was never called. Check " + PeriodicRunner.class.getSimpleName() + ".";
-        for (DurationAwarePeriodicAware periodic : periodicAware) {
+        for (IterationAwareAsyncPeriodicRunnable periodic : periodicAware) {
             String className = periodic.getClass().getSimpleName();
-            assertPeriodicAwareInstanceCalledAtLeastOnce((IterationAwarePeriodicAware) periodic);
+            int observedIterations = periodic.getTotalIterations();
+            assertThat(observedIterations).as(errMsg, className).isGreaterThan(0);
+        }
+    }
+
+    public static void assertDurationAwareInstanceCalledAtLeastOnce(DurationAwarePeriodicRunnable... periodicAware) {
+        String errMsg = "[%s] was never called. Check " + PeriodicRunner.class.getSimpleName() + ".";
+        for (DurationAwarePeriodicRunnable periodic : periodicAware) {
+            String className = periodic.getClass().getSimpleName();
+            assertPeriodicAwareInstanceCalledAtLeastOnce(periodic);
             long totalDelay = periodic.totalDelay();
             assertThat(totalDelay).as(errMsg, className).isGreaterThan(0);
         }
     }
 
-    public static void assertNonAsyncPeriodicAwareInstanceCalledCorrectNumberOfTimes(SimulationEnvironment env, IterationAwarePeriodicAware... periodicAware) {
+    public static void assertDurationAwareInstanceCalledAtLeastOnce(DurationAwareAsyncPeriodicRunnable... periodicAware) {
+        String errMsg = "[%s] was never called. Check " + PeriodicRunner.class.getSimpleName() + ".";
+        for (DurationAwareAsyncPeriodicRunnable periodic : periodicAware) {
+            String className = periodic.getClass().getSimpleName();
+            assertPeriodicAwareInstanceCalledAtLeastOnce(periodic);
+            long totalDelay = periodic.totalDelay();
+            assertThat(totalDelay).as(errMsg, className).isGreaterThan(0);
+        }
+    }
+
+    public static void assertNonAsyncPeriodicAwareInstanceCalledCorrectNumberOfTimes(SimulationEnvironment env, IterationAwarePeriodicRunnable... periodicAware) {
         String errMsg = "SimplePeriodicAware iterations do not correlate to actual iterations.";
         int envIterations = env.getCurrRobotPeriodic();
-        for (IterationAwarePeriodicAware periodic : periodicAware) {
+        for (IterationAwarePeriodicRunnable periodic : periodicAware) {
             int observedIterations = periodic.getTotalIterations();
             assertThat(envIterations).as(errMsg).isEqualTo(observedIterations);
         }
@@ -60,15 +79,23 @@ public class PeriodicRunnerIntegrationTestHelper {
     // Classes
     // ============================================================
 
-    interface IterationAwarePeriodicAware extends PeriodicAware {
+    interface IterationAwarePeriodicRunnable extends PeriodicRunnable {
         int getTotalIterations();
     }
 
-    interface DurationAwarePeriodicAware extends IterationAwarePeriodicAware {
+    interface DurationAwarePeriodicRunnable extends IterationAwarePeriodicRunnable {
         long totalDelay();
     }
 
-    static class IterationAwarePeriodicAwareImpl implements IterationAwarePeriodicAware {
+    interface IterationAwareAsyncPeriodicRunnable extends AsyncPeriodicRunnable {
+        int getTotalIterations();
+    }
+
+    interface DurationAwareAsyncPeriodicRunnable extends IterationAwareAsyncPeriodicRunnable {
+        long totalDelay();
+    }
+
+    static class IterationAwarePeriodicRunnableImpl implements IterationAwarePeriodicRunnable {
         private int periodicIterations = 0;
 
         @Override
@@ -87,13 +114,32 @@ public class PeriodicRunnerIntegrationTestHelper {
         }
     }
 
-    static class DurationRecordingPeriodicAware extends IterationAwarePeriodicAwareImpl implements DurationAwarePeriodicAware {
+    static class IterationAwareAsyncPeriodicRunnableImpl implements IterationAwareAsyncPeriodicRunnable {
+        private int periodicIterations = 0;
+
+        @Override
+        public void onPeriodicAsync() {
+            periodicIterations++;
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getTotalIterations() {
+            return periodicIterations;
+        }
+    }
+
+    static class DurationRecordingPeriodicRunnable extends IterationAwarePeriodicRunnableImpl implements DurationAwarePeriodicRunnable {
 
         private int delayMillis;
         private int totalElapsed;
         private Timer timer = new Timer();
 
-        public DurationRecordingPeriodicAware(int delayMillis) {
+        public DurationRecordingPeriodicRunnable(int delayMillis) {
             this.delayMillis = delayMillis;
         }
 
@@ -109,19 +155,19 @@ public class PeriodicRunnerIntegrationTestHelper {
         }
     }
 
-    static class TotalDurationAwarePeriodicAware extends IterationAwarePeriodicAwareImpl implements DurationAwarePeriodicAware {
+    static class TotalDurationAwarePeriodicRunnable extends IterationAwareAsyncPeriodicRunnableImpl implements DurationAwareAsyncPeriodicRunnable {
 
         final int period;
         long initialPeriodicTimestamp;
         long lastPeriodicTimestamp;
 
-        public TotalDurationAwarePeriodicAware(int period) {
+        public TotalDurationAwarePeriodicRunnable(int period) {
             this.period = period;
         }
 
         @Override
-        public void onPeriodic() {
-            super.onPeriodic();
+        public void onPeriodicAsync() {
+            super.onPeriodicAsync();
             long curr = System.currentTimeMillis();
             if (initialPeriodicTimestamp == 0) {
                 initialPeriodicTimestamp = curr;

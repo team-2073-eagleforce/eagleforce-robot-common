@@ -2,13 +2,13 @@ package com.team2073.common.simulation.env;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorController;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.simulation.model.SimulationCycleComponent;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class SubsystemTestFixtures {
 
-	public static class ConstantOutputtingSubsystem implements PeriodicAware {
+	public static class ConstantOutputtingSubsystem implements PeriodicRunnable {
 		private IMotorController talon;
 
 		public ConstantOutputtingSubsystem(IMotorController talon) {
@@ -36,7 +36,7 @@ public class SubsystemTestFixtures {
 	}
 
 
-	public static class BasicPeriodicComponent implements PeriodicAware {
+	public static class BasicPeriodicComponent implements PeriodicRunnable {
 		int cycles = 0;
 
 
@@ -51,7 +51,7 @@ public class SubsystemTestFixtures {
 	}
 
 
-	public static class SolenoidSubsystem implements PeriodicAware {
+	public static class SolenoidSubsystem implements PeriodicRunnable {
 		Solenoid solenoid;
 
 		public SolenoidSubsystem(Solenoid solenoid) {

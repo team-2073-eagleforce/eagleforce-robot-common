@@ -17,7 +17,7 @@ import com.team2073.common.datarecorder.output.DataRecordOutputHandler;
 import com.team2073.common.datarecorder.output.DataRecordOutputHandlerConsoleImpl;
 import com.team2073.common.datarecorder.output.DataRecordOutputHandlerCsvImpl;
 import com.team2073.common.datarecorder.output.DataRecordOutputHandlerSmartDashboardImpl;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.util.ExceptionUtil;
 import com.team2073.common.util.ReflectionUtil;
@@ -266,8 +266,8 @@ public class DataRecorder {
     // Periodic Runner methods
     // ============================================================
 
-    private final PeriodicAware periodicRecord = () -> periodicRunnerRecord();
-    private final PeriodicAware periodicFlush = () -> periodicRunnerFlush();
+    private final AsyncPeriodicRunnable periodicRecord = () -> periodicRunnerRecord();
+    private final AsyncPeriodicRunnable periodicFlush = () -> periodicRunnerFlush();
 
     /** See {@link #registerWithPeriodicRunner(PeriodicRunner, long)} */
     public void registerWithPeriodicRunner() {
@@ -287,7 +287,7 @@ public class DataRecorder {
     /** TODO */
     public void registerWithPeriodicRunner(PeriodicRunner periodicRunner, long flushInterval) {
         if (state.recording.isPeriodicRecordingActive()) {
-            log.info("Ignoring call to activate periodic recording, it is already active.", flushInterval);
+            log.info("Ignoring call to activate periodic recording with interval of [{}], it is already active.", flushInterval);
             return;
         }
 
