@@ -105,7 +105,9 @@ public class TrapezoidalProfileManager {
 	 */
 	public double newOutput() {
 		controller.update(configuration.getInterval());
-		if (profile.isFinished()) {
+		if (!profile.isFinished()) {
+			output = controller.getOutput();
+		} else {
 			if (holdingPID != null) {
 				holdingPID.updateSetPoint(setpoint);
 				try {
@@ -123,8 +125,6 @@ public class TrapezoidalProfileManager {
 			} else {
 				output = controller.getOutput();
 			}
-		} else {
-			output = controller.getOutput();
 		}
 		return output;
 	}

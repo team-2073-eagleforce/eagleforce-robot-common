@@ -53,7 +53,6 @@ public class MotionProfileControlloop {
 		output += kv * currentPoint.getVelocity();
 		output += ka * currentPoint.getAcceleration();
 
-		lastError = error;
 
 		if (Math.abs(output) >= maxOutput) {
 			if (output > 0) {
@@ -62,6 +61,8 @@ public class MotionProfileControlloop {
 				output = -maxOutput;
 			}
 		}
+
+		lastError = error;
 	}
 
 	public void dataPointCallable(Callable<ProfileTrajectoryPoint> desiredPoint) {

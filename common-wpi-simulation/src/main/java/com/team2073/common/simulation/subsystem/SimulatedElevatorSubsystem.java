@@ -20,7 +20,6 @@ public class SimulatedElevatorSubsystem implements PeriodicAware {
 
     private boolean started;
     private double ticsPerInch = 1350;
-    private double setpoint;
 
     //		UNITS FOR P are in percentages per inch
     private PidfControlLoop pid = new PidfControlLoop(.023, 0, .02, 0, 1);

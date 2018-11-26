@@ -4,41 +4,41 @@ import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.*;
 
 public class TalonUtil {
-	private final static int kTimeoutMs = 100;
+	private final static int TIMEOUT_MS = 100;
 
 	private static class Configuration {
 		private NeutralMode NEUTRAL_MODE = NeutralMode.Coast;
 		// This is factory default.
 		private double NEUTRAL_DEADBAND = 0.04;
 
-		private boolean ENABLE_CURRENT_LIMIT = false;
-		private boolean ENABLE_SOFT_LIMIT = false;
-		private boolean ENABLE_LIMIT_SWITCH = false;
-		private int FORWARD_SOFT_LIMIT = 0;
-		private int REVERSE_SOFT_LIMIT = 0;
+		private boolean enableCurrentLimit = false;
+		private boolean enableSoftLimit = false;
+		private boolean enableLimitSwitch = false;
+		private int forwardSoftLimit = 0;
+		private int reverseSoftLimit = 0;
 
-		private boolean INVERTED = false;
-		private boolean SENSOR_PHASE = false;
+		private boolean inverted = false;
+		private boolean sensorPhase = false;
 
-		private int CONTROL_FRAME_PERIOD_MS = 5;
-		private int MOTION_CONTROL_FRAME_PERIOD_MS = 100;
-		private int GENERAL_STATUS_FRAME_RATE_MS = 5;
-		private int FEEDBACK_STATUS_FRAME_RATE_MS = 100;
-		private int QUAD_ENCODER_STATUS_FRAME_RATE_MS = 100;
-		private int ANALOG_TEMP_VBAT_STATUS_FRAME_RATE_MS = 100;
-		private int PULSE_WIDTH_STATUS_FRAME_RATE_MS = 100;
-		private int BASE_PIDF_STATUS_FRAME_RATE_MS = 100;
+		private int controlFramePeriodMs = 5;
+		private int motionControlFramePeriodMs = 100;
+		private int generalStatusFrameRateMs = 5;
+		private int feedbackStatusFrameRateMs = 100;
+		private int quadEncoderStatusFrameRateMs = 100;
+		private int analogTempVbatStatusFrameRateMs = 100;
+		private int pulseWidthStatusFrameRateMs = 100;
+		private int basePidfStatusFrameRateMs = 100;
 
-		private VelocityMeasPeriod VELOCITY_MEASUREMENT_PERIOD = VelocityMeasPeriod.Period_100Ms;
-		private int VELOCITY_MEASUREMENT_ROLLING_AVERAGE_WINDOW = 64;
+		private VelocityMeasPeriod velocityMeasurementPeriod = VelocityMeasPeriod.Period_100Ms;
+		private int velocityMeasurementRollingAverageWindow = 64;
 
-		private double OPEN_LOOP_RAMP_RATE = 0.0;
-		private double CLOSED_LOOP_RAMP_RATE = 0.0;
+		private double openLoopRampRate = 0.0;
+		private double closedLoopRampRate = 0.0;
 	}
 
-	private static final Configuration kDefaultConfiguration = new Configuration();
-	private static final Configuration kSlaveConfiguration = new Configuration();
-	private static final Configuration kSensorConfiguration = new Configuration();
+	private static final Configuration DEFAULT_CONFIGURATION = new Configuration();
+	private static final Configuration SLAVE_CONFIGURATION = new Configuration();
+	private static final Configuration SENSOR_CONFIGURATION = new Configuration();
 
 	/**
 	 * Should Match how the controller is being used, default is factory default settings and is the base configuration.
@@ -52,107 +52,96 @@ public class TalonUtil {
 	static {
 		// This control frame value seems to need to be something reasonable to avoid the Talon's
 		// LEDs behaving erratically.  Potentially try to increase as much as possible.
-		kSlaveConfiguration.CONTROL_FRAME_PERIOD_MS = 100;
-		kSlaveConfiguration.MOTION_CONTROL_FRAME_PERIOD_MS = 1000;
-		kSlaveConfiguration.GENERAL_STATUS_FRAME_RATE_MS = 1000;
-		kSlaveConfiguration.FEEDBACK_STATUS_FRAME_RATE_MS = 1000;
-		kSlaveConfiguration.QUAD_ENCODER_STATUS_FRAME_RATE_MS = 1000;
-		kSlaveConfiguration.ANALOG_TEMP_VBAT_STATUS_FRAME_RATE_MS = 1000;
-		kSlaveConfiguration.PULSE_WIDTH_STATUS_FRAME_RATE_MS = 1000;
+		SLAVE_CONFIGURATION.controlFramePeriodMs = 100;
+		SLAVE_CONFIGURATION.motionControlFramePeriodMs = 1000;
+		SLAVE_CONFIGURATION.generalStatusFrameRateMs = 1000;
+		SLAVE_CONFIGURATION.feedbackStatusFrameRateMs = 1000;
+		SLAVE_CONFIGURATION.quadEncoderStatusFrameRateMs = 1000;
+		SLAVE_CONFIGURATION.analogTempVbatStatusFrameRateMs = 1000;
+		SLAVE_CONFIGURATION.pulseWidthStatusFrameRateMs = 1000;
 
 
 
-		kSensorConfiguration.QUAD_ENCODER_STATUS_FRAME_RATE_MS = 10;
-		kSensorConfiguration.FEEDBACK_STATUS_FRAME_RATE_MS = 10;
+		SENSOR_CONFIGURATION.quadEncoderStatusFrameRateMs = 10;
+		SENSOR_CONFIGURATION.feedbackStatusFrameRateMs = 10;
 	}
 
 	/**
 	 * Resets talon to default settings and adjusts settings from there based on the ConfigurationType
-	 * @return the talon
 	 */
 	public static void resetTalon(IMotorControllerEnhanced talon, ConfigurationType configType) {
 		Configuration config;
 		switch (configType) {
 			case SENSOR:
-				config = kSensorConfiguration;
+				config = SENSOR_CONFIGURATION;
 				break;
 			case SLAVE:
-				config = kSlaveConfiguration;
+				config = SLAVE_CONFIGURATION;
 				break;
 			case DEFAULT:
-				config = kDefaultConfiguration;
+				config = DEFAULT_CONFIGURATION;
 				break;
 			default:
-				config = kDefaultConfiguration;
+				config = DEFAULT_CONFIGURATION;
 		}
 		talon.set(ControlMode.PercentOutput, 0.0);
 
-		talon.changeMotionControlFramePeriod(config.MOTION_CONTROL_FRAME_PERIOD_MS);
-		talon.clearMotionProfileHasUnderrun(kTimeoutMs);
+		talon.changeMotionControlFramePeriod(config.motionControlFramePeriodMs);
+		talon.clearMotionProfileHasUnderrun(TIMEOUT_MS);
 		talon.clearMotionProfileTrajectories();
 
-		talon.clearStickyFaults(kTimeoutMs);
+		talon.clearStickyFaults(TIMEOUT_MS);
 
-		talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
-				LimitSwitchNormal.NormallyOpen, kTimeoutMs);
-		talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
-				LimitSwitchNormal.NormallyOpen, kTimeoutMs);
-		talon.overrideLimitSwitchesEnable(config.ENABLE_LIMIT_SWITCH);
+		talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, TIMEOUT_MS);
+		talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, TIMEOUT_MS);
+		talon.overrideLimitSwitchesEnable(config.enableLimitSwitch);
 
 		// Turn off re-zeroing by default.
-		talon.configSetParameter(
-				ParamEnum.eClearPositionOnLimitF, 0, 0, 0, kTimeoutMs);
-		talon.configSetParameter(
-				ParamEnum.eClearPositionOnLimitR, 0, 0, 0, kTimeoutMs);
+		talon.configSetParameter(ParamEnum.eClearPositionOnLimitF, 0, 0, 0, TIMEOUT_MS);
+		talon.configSetParameter(ParamEnum.eClearPositionOnLimitR, 0, 0, 0, TIMEOUT_MS);
 
-		talon.configNominalOutputForward(0, kTimeoutMs);
-		talon.configNominalOutputReverse(0, kTimeoutMs);
-		talon.configNeutralDeadband(config.NEUTRAL_DEADBAND, kTimeoutMs);
+		talon.configNominalOutputForward(0, TIMEOUT_MS);
+		talon.configNominalOutputReverse(0, TIMEOUT_MS);
+		talon.configNeutralDeadband(config.NEUTRAL_DEADBAND, TIMEOUT_MS);
 
-		talon.configPeakOutputForward(1.0, kTimeoutMs);
-		talon.configPeakOutputReverse(-1.0, kTimeoutMs);
+		talon.configPeakOutputForward(1.0, TIMEOUT_MS);
+		talon.configPeakOutputReverse(-1.0, TIMEOUT_MS);
 
 		talon.setNeutralMode(config.NEUTRAL_MODE);
 
-		talon.configForwardSoftLimitThreshold(config.FORWARD_SOFT_LIMIT, kTimeoutMs);
-		talon.configForwardSoftLimitEnable(config.ENABLE_SOFT_LIMIT, kTimeoutMs);
+		talon.configForwardSoftLimitThreshold(config.forwardSoftLimit, TIMEOUT_MS);
+		talon.configForwardSoftLimitEnable(config.enableSoftLimit, TIMEOUT_MS);
 
-		talon.configReverseSoftLimitThreshold(config.REVERSE_SOFT_LIMIT, kTimeoutMs);
-		talon.configReverseSoftLimitEnable(config.ENABLE_SOFT_LIMIT, kTimeoutMs);
-		talon.overrideSoftLimitsEnable(config.ENABLE_SOFT_LIMIT);
+		talon.configReverseSoftLimitThreshold(config.reverseSoftLimit, TIMEOUT_MS);
+		talon.configReverseSoftLimitEnable(config.enableSoftLimit, TIMEOUT_MS);
+		talon.overrideSoftLimitsEnable(config.enableSoftLimit);
 
-		talon.setInverted(config.INVERTED);
-		talon.setSensorPhase(config.SENSOR_PHASE);
+		talon.setInverted(config.inverted);
+		talon.setSensorPhase(config.sensorPhase);
 
 		talon.selectProfileSlot(0, 0);
 
-		talon.configVelocityMeasurementPeriod(config.VELOCITY_MEASUREMENT_PERIOD, kTimeoutMs);
-		talon.configVelocityMeasurementWindow(config.VELOCITY_MEASUREMENT_ROLLING_AVERAGE_WINDOW,
-				kTimeoutMs);
+		talon.configVelocityMeasurementPeriod(config.velocityMeasurementPeriod, TIMEOUT_MS);
+		talon.configVelocityMeasurementWindow(config.velocityMeasurementRollingAverageWindow, TIMEOUT_MS);
 
-		talon.configOpenloopRamp(config.OPEN_LOOP_RAMP_RATE, kTimeoutMs);
-		talon.configClosedloopRamp(config.CLOSED_LOOP_RAMP_RATE, kTimeoutMs);
+		talon.configOpenloopRamp(config.openLoopRampRate, TIMEOUT_MS);
+		talon.configClosedloopRamp(config.closedLoopRampRate, TIMEOUT_MS);
 
-		talon.configVoltageCompSaturation(0.0, kTimeoutMs);
-		talon.configVoltageMeasurementFilter(32, kTimeoutMs);
+		talon.configVoltageCompSaturation(0.0, TIMEOUT_MS);
+		talon.configVoltageMeasurementFilter(32, TIMEOUT_MS);
 		talon.enableVoltageCompensation(false);
 
-		talon.enableCurrentLimit(config.ENABLE_CURRENT_LIMIT);
+		talon.enableCurrentLimit(config.enableCurrentLimit);
 
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General,
-				config.GENERAL_STATUS_FRAME_RATE_MS, kTimeoutMs);
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0,
-				config.FEEDBACK_STATUS_FRAME_RATE_MS, kTimeoutMs);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, config.generalStatusFrameRateMs, TIMEOUT_MS);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, config.feedbackStatusFrameRateMs, TIMEOUT_MS);
 
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature,
-				config.QUAD_ENCODER_STATUS_FRAME_RATE_MS, kTimeoutMs);
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat,
-				config.ANALOG_TEMP_VBAT_STATUS_FRAME_RATE_MS, kTimeoutMs);
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth,
-				config.PULSE_WIDTH_STATUS_FRAME_RATE_MS, kTimeoutMs);
-		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, config.BASE_PIDF_STATUS_FRAME_RATE_MS, kTimeoutMs);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, config.quadEncoderStatusFrameRateMs, TIMEOUT_MS);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, config.analogTempVbatStatusFrameRateMs, TIMEOUT_MS);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, config.pulseWidthStatusFrameRateMs, TIMEOUT_MS);
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, config.basePidfStatusFrameRateMs, TIMEOUT_MS);
 
-		talon.setControlFramePeriod(ControlFrame.Control_3_General, config.CONTROL_FRAME_PERIOD_MS);
+		talon.setControlFramePeriod(ControlFrame.Control_3_General, config.controlFramePeriodMs);
 
 	}
 
@@ -164,72 +153,67 @@ public class TalonUtil {
 		Configuration config;
 		switch (configType) {
 			case SENSOR:
-				config = kSensorConfiguration;
+				config = SENSOR_CONFIGURATION;
 				break;
 			case SLAVE:
-				config = kSlaveConfiguration;
+				config = SLAVE_CONFIGURATION;
 				break;
 			case DEFAULT:
-				config = kDefaultConfiguration;
+				config = DEFAULT_CONFIGURATION;
 				break;
 			default:
-				config = kDefaultConfiguration;
+				config = DEFAULT_CONFIGURATION;
 		}
 		victor.set(ControlMode.PercentOutput, 0.0);
 
-		victor.changeMotionControlFramePeriod(config.MOTION_CONTROL_FRAME_PERIOD_MS);
-		victor.clearMotionProfileHasUnderrun(kTimeoutMs);
+		victor.changeMotionControlFramePeriod(config.motionControlFramePeriodMs);
+		victor.clearMotionProfileHasUnderrun(TIMEOUT_MS);
 		victor.clearMotionProfileTrajectories();
 
-		victor.clearStickyFaults(kTimeoutMs);
+		victor.clearStickyFaults(TIMEOUT_MS);
 
-		victor.overrideLimitSwitchesEnable(config.ENABLE_LIMIT_SWITCH);
+		victor.overrideLimitSwitchesEnable(config.enableLimitSwitch);
 
 		// Turn off re-zeroing by default.
-		victor.configSetParameter(
-				ParamEnum.eClearPositionOnLimitF, 0, 0, 0, kTimeoutMs);
-		victor.configSetParameter(
-				ParamEnum.eClearPositionOnLimitR, 0, 0, 0, kTimeoutMs);
+		victor.configSetParameter(ParamEnum.eClearPositionOnLimitF, 0, 0, 0, TIMEOUT_MS);
+		victor.configSetParameter(ParamEnum.eClearPositionOnLimitR, 0, 0, 0, TIMEOUT_MS);
 
-		victor.configNominalOutputForward(0, kTimeoutMs);
-		victor.configNominalOutputReverse(0, kTimeoutMs);
-		victor.configNeutralDeadband(config.NEUTRAL_DEADBAND, kTimeoutMs);
+		victor.configNominalOutputForward(0, TIMEOUT_MS);
+		victor.configNominalOutputReverse(0, TIMEOUT_MS);
+		victor.configNeutralDeadband(config.NEUTRAL_DEADBAND, TIMEOUT_MS);
 
-		victor.configPeakOutputForward(1.0, kTimeoutMs);
-		victor.configPeakOutputReverse(-1.0, kTimeoutMs);
+		victor.configPeakOutputForward(1.0, TIMEOUT_MS);
+		victor.configPeakOutputReverse(-1.0, TIMEOUT_MS);
 
 		victor.setNeutralMode(config.NEUTRAL_MODE);
 
-		victor.configForwardSoftLimitThreshold(config.FORWARD_SOFT_LIMIT, kTimeoutMs);
-		victor.configForwardSoftLimitEnable(config.ENABLE_SOFT_LIMIT, kTimeoutMs);
+		victor.configForwardSoftLimitThreshold(config.forwardSoftLimit, TIMEOUT_MS);
+		victor.configForwardSoftLimitEnable(config.enableSoftLimit, TIMEOUT_MS);
 
-		victor.configReverseSoftLimitThreshold(config.REVERSE_SOFT_LIMIT, kTimeoutMs);
-		victor.configReverseSoftLimitEnable(config.ENABLE_SOFT_LIMIT, kTimeoutMs);
-		victor.overrideSoftLimitsEnable(config.ENABLE_SOFT_LIMIT);
+		victor.configReverseSoftLimitThreshold(config.reverseSoftLimit, TIMEOUT_MS);
+		victor.configReverseSoftLimitEnable(config.enableSoftLimit, TIMEOUT_MS);
+		victor.overrideSoftLimitsEnable(config.enableSoftLimit);
 
-		victor.setInverted(config.INVERTED);
-		victor.setSensorPhase(config.SENSOR_PHASE);
+		victor.setInverted(config.inverted);
+		victor.setSensorPhase(config.sensorPhase);
 
 		victor.selectProfileSlot(0, 0);
 
 
-		victor.configOpenloopRamp(config.OPEN_LOOP_RAMP_RATE, kTimeoutMs);
-		victor.configClosedloopRamp(config.CLOSED_LOOP_RAMP_RATE, kTimeoutMs);
+		victor.configOpenloopRamp(config.openLoopRampRate, TIMEOUT_MS);
+		victor.configClosedloopRamp(config.closedLoopRampRate, TIMEOUT_MS);
 
-		victor.configVoltageCompSaturation(0.0, kTimeoutMs);
-		victor.configVoltageMeasurementFilter(32, kTimeoutMs);
+		victor.configVoltageCompSaturation(0.0, TIMEOUT_MS);
+		victor.configVoltageMeasurementFilter(32, TIMEOUT_MS);
 		victor.enableVoltageCompensation(false);
 
-		victor.setStatusFramePeriod(StatusFrame.Status_1_General,
-				config.GENERAL_STATUS_FRAME_RATE_MS, kTimeoutMs);
-		victor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0,
-				config.FEEDBACK_STATUS_FRAME_RATE_MS, kTimeoutMs);
+		victor.setStatusFramePeriod(StatusFrame.Status_1_General, config.generalStatusFrameRateMs, TIMEOUT_MS);
+		victor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, config.feedbackStatusFrameRateMs, TIMEOUT_MS);
 
-		victor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat,
-				config.ANALOG_TEMP_VBAT_STATUS_FRAME_RATE_MS, kTimeoutMs);
-		victor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, config.BASE_PIDF_STATUS_FRAME_RATE_MS, kTimeoutMs);
+		victor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, config.analogTempVbatStatusFrameRateMs, TIMEOUT_MS);
+		victor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, config.basePidfStatusFrameRateMs, TIMEOUT_MS);
 
-		victor.setControlFramePeriod(ControlFrame.Control_3_General, config.CONTROL_FRAME_PERIOD_MS);
+		victor.setControlFramePeriod(ControlFrame.Control_3_General, config.controlFramePeriodMs);
 
 	}
 }
