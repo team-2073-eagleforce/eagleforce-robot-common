@@ -7,4 +7,6 @@ interface Condition {
     fun isInCondition(condition: Condition): Boolean
 
     fun <T> getConditionValue(): T
+
+    override fun toString(): String
 }

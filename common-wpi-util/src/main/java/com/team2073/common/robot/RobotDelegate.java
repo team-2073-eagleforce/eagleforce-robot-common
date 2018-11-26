@@ -1,5 +1,10 @@
 package com.team2073.common.robot;
 
+import com.team2073.common.datarecorder.DataRecorder;
+import com.team2073.common.event.RobotEventPublisher;
+import com.team2073.common.periodic.OccasionalLoggingRunner;
+import com.team2073.common.periodic.PeriodicRunner;
+import com.team2073.common.periodic.SmartDashboardAwareRunner;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -11,37 +16,71 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public interface RobotDelegate {
 
-	/** @see IterativeRobot#robotInit() */
-	void robotInit();
+	/** See {@link IterativeRobot#robotInit()} */
+	default void robotInit() {
+	}
 
-	/** @see IterativeRobot#disabledInit() */
-	void disabledInit();
+	/** See {@link IterativeRobot#disabledInit()} */
+	default void disabledInit() {
+	}
 
-	/** @see IterativeRobot#autonomousInit() */
-	void autonomousInit();
+	/** See {@link IterativeRobot#autonomousInit()} */
+	default void autonomousInit() {
+	}
 
-	/** @see IterativeRobot#teleopInit() */
-	void teleopInit();
+	/** See {@link IterativeRobot#teleopInit()} */
+	default void teleopInit() {
+	}
 
-	/** @see IterativeRobot#testInit() */
-	void testInit();
+	/** See {@link IterativeRobot#testInit()} */
+	default void testInit() {
+	}
 
-	/** @see IterativeRobot#robotPeriodic() */
-	void robotPeriodic();
+	/** See {@link IterativeRobot#robotPeriodic()} */
+	default void robotPeriodic() {
+	}
 
-	/** @see IterativeRobot#disabledPeriodic() */
-	void disabledPeriodic();
+	/** See {@link IterativeRobot#disabledPeriodic()} */
+	default void disabledPeriodic() {
+	}
 
-	/** @see IterativeRobot#autonomousPeriodic() */
-	void autonomousPeriodic();
+	/** See {@link IterativeRobot#autonomousPeriodic()} */
+	default void autonomousPeriodic() {
+	}
 
-	/** @see IterativeRobot#teleopPeriodic() */
-	void teleopPeriodic();
+	/** See {@link IterativeRobot#teleopPeriodic()} */
+	default void teleopPeriodic() {
+	}
 
-	/** @see IterativeRobot#testPeriodic() */
-	void testPeriodic();
+	/** See {@link IterativeRobot#testPeriodic()} */
+	default void testPeriodic() {
+	}
 
-	/** @see IterativeRobot#free() */
-	void free();
+	/** See {@link IterativeRobot#free()} */
+	default void free() {
+	}
 
+	default PeriodicRunner createPeriodicRunner() {
+		return null;
+	}
+
+	default SmartDashboardAwareRunner createSmartDashboardRunner() {
+		return null;
+	}
+
+	default OccasionalLoggingRunner createLoggingRunner() {
+		return null;
+	}
+
+	default RobotEventPublisher createEventPublisher() {
+		return null;
+	}
+
+	default DataRecorder createDataRecorder() {
+		return null;
+	}
+
+	default void registerPeriodicInstance(PeriodicRunner periodicRunner) {
+
+	}
 }

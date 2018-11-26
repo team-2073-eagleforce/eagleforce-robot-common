@@ -43,7 +43,7 @@ public class SimulationConstants {
             public static final double STALL_CURRENT = 134;
             public static final double MOTOR_KT = STALL_TORQUE / STALL_CURRENT;
             public static final double RESISTANCE = 12 / STALL_CURRENT;
-            public static final double MOTOR_KV = ((FREE_SPEED_RPM / 60) * Math.PI * 2)
+            public static final double MOTOR_KV = ((FREE_SPEED_RPM / 60) * 360)
                     / (12 - RESISTANCE * FREE_CURRENT);
         }
 
@@ -55,7 +55,7 @@ public class SimulationConstants {
             public static final double STALL_CURRENT = 53;
             public static final double MOTOR_KT = STALL_TORQUE / STALL_CURRENT;
             public static final double RESISTANCE = 12 / STALL_CURRENT;
-            public static final double MOTOR_KV = ((FREE_SPEED_RPM / 60) * Math.PI * 2)
+            public static final double MOTOR_KV = ((FREE_SPEED_RPM / 60) * 360)
                     / (12 - RESISTANCE * FREE_CURRENT);
         }
 
@@ -67,7 +67,7 @@ public class SimulationConstants {
             public static final double STALL_CURRENT = 131;
             public static final double MOTOR_KT = STALL_TORQUE / STALL_CURRENT;
             public static final double RESISTANCE = 12 / STALL_CURRENT;
-            public static final double MOTOR_KV = ((FREE_SPEED_RPM / 60) * Math.PI * 2)
+            public static final double MOTOR_KV = ((FREE_SPEED_RPM / 60) * 360)
                     / (12 - RESISTANCE * FREE_CURRENT);
         }
 
@@ -79,7 +79,7 @@ public class SimulationConstants {
             public static final double STALL_CURRENT = 89;
             public static final double MOTOR_KT = STALL_TORQUE / STALL_CURRENT;
             public static final double RESISTANCE = 12 / STALL_CURRENT;
-            public static final double MOTOR_KV = ((FREE_SPEED_RPM / 60) * Math.PI * 2)
+            public static final double MOTOR_KV = ((FREE_SPEED_RPM / 60) * 360)
                     / (12 - RESISTANCE * FREE_CURRENT);
         }
 

@@ -1,5 +1,8 @@
 package com.team2073.common.simulation.model;
 
+import com.team2073.common.ctx.RobotContext;
+import com.team2073.common.datarecorder.model.DataPointIgnore;
+import com.team2073.common.datarecorder.model.LifecycleAwareRecordable;
 import com.team2073.common.simulation.SimulationConstants.MotorType;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
@@ -7,7 +10,7 @@ import com.team2073.common.simulation.env.SimulationEnvironment;
  *
  * @author Jason Stanley
  */
-public abstract class AbstractSimulationMechanism implements SimulationMechanism {
+public abstract class AbstractSimulationMechanism implements SimulationMechanism, LifecycleAwareRecordable {
 
 	protected Runnable whenSolenoidActive = () -> {};
 	protected boolean isSolenoidExtended;
@@ -16,11 +19,16 @@ public abstract class AbstractSimulationMechanism implements SimulationMechanism
 	protected double velocity = 0;
 	protected double acceleration = 0;
 
-	protected double gearRatio;
-	protected double massOnSystem;
-	protected double velocityConstant;
-	protected double torqueConstant;
-	protected double motorResistance;
+	@DataPointIgnore
+	protected final double gearRatio;
+	@DataPointIgnore
+	protected final double massOnSystem;
+	@DataPointIgnore
+	protected final double velocityConstant;
+	@DataPointIgnore
+	protected final double torqueConstant;
+	@DataPointIgnore
+	protected final double motorResistance;
 	protected double currentVoltage = 0;
 
 	/**
@@ -36,11 +44,11 @@ public abstract class AbstractSimulationMechanism implements SimulationMechanism
 		this.massOnSystem = massOnSystem;
 
 		velocityConstant = motor.velocityConstant;
-		torqueConstant = motor.torqueConstant;
 		motorResistance = motor.motorResistance;
 
 //		doubles the stall torque to make "super motor" based on motor count
-		torqueConstant = torqueConstant * 2 * motorCount;
+		torqueConstant = motor.torqueConstant * 2 * motorCount;
+		RobotContext.getInstance().getDataRecorder().registerRecordable(this);
 	}
 
 	@Override

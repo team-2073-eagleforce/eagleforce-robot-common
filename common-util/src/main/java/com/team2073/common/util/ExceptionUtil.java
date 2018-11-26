@@ -151,10 +151,4 @@ public abstract class ExceptionUtil {
 		}
 	}
 
-    // Other methods
-    // ============================================================
-    public static void illegalState(String msg) {
-        throw new IllegalStateException(msg);
-    }
-
 }

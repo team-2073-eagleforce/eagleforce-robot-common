@@ -5,6 +5,7 @@ import java.util.List;
 
 // TODO: change this to an interface and then implement it in unit test (and robot projects)
 public class ApplicationContext {
+
 	private List<String> activeProfiles = new ArrayList<>();
 
 	public ApplicationContext() {

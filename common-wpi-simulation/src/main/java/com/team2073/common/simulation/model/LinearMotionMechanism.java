@@ -3,7 +3,7 @@ package com.team2073.common.simulation.model;
 import com.team2073.common.simulation.SimulationConstants.MotorType;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
-import static com.team2073.common.util.ConversionUtil.msToSeconds;
+import static com.team2073.common.util.ConversionUtil.*;
 
 /**
  * For Systems like elevators =)
@@ -28,8 +28,8 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 	public void cycle(SimulationEnvironment env) {
 		super.cycle(env);
 
-		calculatePosition(env.getIntervalMs());
-		calculateVelocity(env.getIntervalMs());
+		setPosition(calculatePosition(env.getIntervalMs()));
+		setVelocity(calculateVelocity(env.getIntervalMs()));
 	}
 
 	/**

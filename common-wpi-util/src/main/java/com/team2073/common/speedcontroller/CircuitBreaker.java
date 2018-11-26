@@ -1,8 +1,8 @@
 package com.team2073.common.speedcontroller;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.PeriodicAware;
-import com.team2073.common.periodic.PeriodicRunner;
 
 // TODO: This should be a wrapper around a BaseMotorController. See LogWrappingCommand for example
 public class CircuitBreaker implements PeriodicAware {
@@ -18,6 +18,8 @@ public class CircuitBreaker implements PeriodicAware {
 	private long startingStallTime;
 
 
+	// TODO: have constructors call each other instead of repeating everything. See Zeroer or PositionalMechanismController for examples
+
 	/**
 	 * Used for basic open loop control systems where gravity is negligible.
 	 *
@@ -31,7 +33,7 @@ public class CircuitBreaker implements PeriodicAware {
 		this.maxAllowableCurrent = maxAllowableAmperage;
 		this.allowableTimeAtStall = allowableTimeAtStallInMillis;
 		this.talon = talon;
-		PeriodicRunner.registerInstance(this);
+		RobotContext.getInstance().getPeriodicRunner().register(this);
 	}
 
 	/**
@@ -49,7 +51,7 @@ public class CircuitBreaker implements PeriodicAware {
 		this.maxAllowableCurrent = maxAllowableAmperage;
 		this.allowableTimeAtStall = allowableTimeAtStallInMillis;
 		this.talon = talon;
-		PeriodicRunner.registerInstance(this);
+		RobotContext.getInstance().getPeriodicRunner().register(this);
 	}
 
 	/**
@@ -69,7 +71,7 @@ public class CircuitBreaker implements PeriodicAware {
 		this.minTravel = minTravel;
 		this.maxTravel = maxTravel;
 		this.talon = talon;
-		PeriodicRunner.registerInstance(this);
+		RobotContext.getInstance().getPeriodicRunner().register(this);
 	}
 
 	/**
@@ -91,7 +93,7 @@ public class CircuitBreaker implements PeriodicAware {
 		this.minTravel = minTravel;
 		this.maxTravel = maxTravel;
 		this.talon = talon;
-		PeriodicRunner.registerInstance(this);
+		RobotContext.getInstance().getPeriodicRunner().register(this);
 	}
 
 	@Override

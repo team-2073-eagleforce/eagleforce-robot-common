@@ -14,6 +14,11 @@ public abstract class BaseHoldingStrategy implements HoldingStrategy {
 			+ "Either set the hold position first or use the constructor accepting an initial position.";
 
 	private boolean initialized = false;
+
+	/**
+	 * Initialized to -1 so we can see in debugging that it has not been set yet. There is no risk of accidentally
+	 * returning -1 (which would cause a mechanism to try to hold at -1) because we check if initialized in the getter.
+	 */
 	private double holdPosition = -1;
 
 	public BaseHoldingStrategy() {
@@ -27,7 +32,8 @@ public abstract class BaseHoldingStrategy implements HoldingStrategy {
 
 	@Override
 	public double getHoldPosition() {
-		// Prevent trying to hold at an incorrect position
+		// Prevent trying to hold at an incorrect position and potentially breaking
+		// a mechanism (trying to hold at a place it cannot get to)
 		if(!initialized)
 			throw new IllegalStateException(MSG);
 		

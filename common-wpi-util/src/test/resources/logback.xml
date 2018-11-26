@@ -24,6 +24,7 @@
 	<!--<logger name="com.team2073.common.config" level="TRACE" />-->
 	<!--<logger name="com.team2073.common.controller" level="TRACE" />-->
 	<!--<logger name="com.team2073.common.controlloop" level="TRACE" />-->
+	<!--<logger name="com.team2073.common.datarecorder" level="TRACE" />-->
 	<!--<logger name="com.team2073.common.dev" level="TRACE" />-->
 	<!--<logger name="com.team2073.common.drive" level="TRACE" />-->
 	<!--<logger name="com.team2073.common.event" level="TRACE" />-->

@@ -1,7 +1,7 @@
 package com.team2073.common.position.hold;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
+import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.position.converter.NoOpPositionConverter;
 import com.team2073.common.position.converter.PositionConverter;
@@ -20,23 +20,23 @@ public class PIDHoldingStrategy extends MotorAwareHoldingStrategy {
 	private final PositionConverter converter;
 	
 	/** @see PIDHoldingStrategy */
-	public PIDHoldingStrategy(Collection<BaseMotorController> motorControllers) {
+	public PIDHoldingStrategy(Collection<IMotorController> motorControllers) {
 		this(new NoOpPositionConverter(), motorControllers);
 	}
 
 	/** @see PIDHoldingStrategy */
-	public PIDHoldingStrategy(PositionConverter converter, Collection<BaseMotorController> motorControllers) {
+	public PIDHoldingStrategy(PositionConverter converter, Collection<IMotorController> motorControllers) {
 		super(motorControllers);
 		this.converter = validateConverter(converter);
 	}
 
 	/** @see PIDHoldingStrategy */
-	public PIDHoldingStrategy(double initialHoldPosition, Collection<BaseMotorController> motorControllers) {
+	public PIDHoldingStrategy(double initialHoldPosition, Collection<IMotorController> motorControllers) {
 		this(new NoOpPositionConverter(), initialHoldPosition, motorControllers);
 	}
 
 	/** @see PIDHoldingStrategy */
-	public PIDHoldingStrategy(PositionConverter converter, double initialHoldPosition, Collection<BaseMotorController> motorControllers) {
+	public PIDHoldingStrategy(PositionConverter converter, double initialHoldPosition, Collection<IMotorController> motorControllers) {
 		super(initialHoldPosition, motorControllers);
 		this.converter = validateConverter(converter);
 	}

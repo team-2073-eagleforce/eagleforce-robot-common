@@ -2,10 +2,14 @@ buildscript {
     ext.kotlin_version = '1.2.51'
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath ("org.junit.platform:junit-platform-gradle-plugin:1.1.0")
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2'
+////        classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.6'
+//        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.15'
     }
 }
 
@@ -15,10 +19,13 @@ plugins {
     id "idea"
     id "jaci.openrio.gradle.GradleRIO" version "2018.03.06"
     id "maven-publish"
+//    id 'org.asciidoctor.convert' version '1.5.8.1'
 }
 
+apply plugin: 'org.asciidoctor.convert'
+
 group 'com.team2073'
-version '0.2.0-FINAL'
+version commonVersion
 
 repositories {
     mavenCentral()
@@ -39,7 +46,7 @@ publishing {
 //            Defined by 'group' and 'version' above
 //            groupId 'com.team2073'
 //            artifactId 'eagleforce-robot-common'
-//            version '0.2.0-FINAL'
+//            version commonVersion
 
             artifact sourceJar {
                 classifier "sources"
@@ -82,10 +89,21 @@ publishToMavenLocal {
 //    dependsOn project(":common-util").tasks.publishToMavenLocal
 //}
 
+//asciidoctorj {
+//    version = '1.5.5'
+//}
+//
+//asciidoctor {
+////    backends 'html5', 'pdf', 'epub3', 'docbook'
+//    backends 'html5', 'pdf' //, 'docbook'
+//    attributes 'source-highlighter': 'prettify'
+////    backends 'pdf'
+//
+//}
 subprojects {
 
     group 'com.team2073'
-    version '0.2.0-FINAL'
+    version commonVersion
     sourceCompatibility = 1.8
 // Project name defined in settings.gradle > rootProject.name
 
@@ -96,14 +114,16 @@ subprojects {
 
     dependencies {
         // TODO: Apply to all projects except util
-//        compile group: 'com.team2073', name: 'common-util', version: '0.2.0-FINAL'
+//        compile group: 'com.team2073', name: 'common-util', version: commonVersion
         compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
         compile group: 'org.mockito', name: 'mockito-core', version: '2.15.0'
         compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
+        testCompile('org.jetbrains:annotations:13.0') // trying to fix *_test.iml files from changing lines around
         testCompile("org.assertj:assertj-core:3.9.1")
+        testCompile("org.mockito:mockito-junit-jupiter:2.17.0")
         testCompile("org.junit.jupiter:junit-jupiter-api:5.2.0")
-        testRuntime("org.junit.jupiter:junit-jupiter-engine:5.2.0")
+        testCompile("org.junit.jupiter:junit-jupiter-engine:5.2.0")
     }
 
     task wrapper(type: Wrapper) {
@@ -120,7 +140,7 @@ subprojects {
 //            Defined by 'group' and 'version' above
 //            groupId 'com.team2073'
 //            artifactId 'eagleforce-robot-common'
-//            version '0.2.0-FINAL'
+//            version commonVersion
 
                 artifact sourceJar {
                     classifier "sources"

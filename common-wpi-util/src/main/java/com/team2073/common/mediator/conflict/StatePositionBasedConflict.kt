@@ -33,7 +33,7 @@ class StatePositionBasedConflict<O : Condition, C : Condition, Z : ColleagueSubs
         return resolutionCondition
     }
 
-    override fun isConflicting(conflict: Conflict<C, O, Z>, request: Request<O, Z>, currentCondition: Condition): Boolean {
+    override fun isConflicting(conflict: Conflict<C, O, Z>, request: Request<C, Z>, currentCondition: Condition): Boolean {
 
         var conflictCase = false
         var originCase = false

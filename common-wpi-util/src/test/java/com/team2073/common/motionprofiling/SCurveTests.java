@@ -35,12 +35,12 @@ public class SCurveTests {
 		ProfileTrajectoryPoint point;
 		SCurveProfileGenerator profile = new SCurveProfileGenerator(
 				goalPosition, maxVelcoity, maxAcceleration, averageAcceleration);
-		MotionProfileControlloop mpc = new MotionProfileControlloop(.05, .01, .1666 , .005, .01, 1);
+		MotionProfileControlloop mpc = new MotionProfileControlloop(.05, .01, .1666 , .005, 1);
 
 		mpc.dataPointCallable(() -> profile.nextPoint(.01));
 		mpc.updatePosition(() -> profile.currentPosition());
 
-		mpc.start();
+		mpc.update(.01);
 		ThreadUtil.sleep(500);
 		assertThat(mpc.getOutput()).isNotZero();
 	}
