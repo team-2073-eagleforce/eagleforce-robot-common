@@ -1,5 +1,6 @@
 package com.team2073.common.mediator;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.mediator.Tracker.Tracker;
 import com.team2073.common.mediator.condition.Condition;
@@ -165,8 +166,13 @@ public class Mediator implements PeriodicRunnable {
      * @return a {@link Request} that resolves the {@link Conflict}
      */
     public Request createConflictRequest(Conflict conflict) {
-        return new Request(conflict.getConflictingSubsystem(),
+        return new Request<Condition, ColleagueSubsystem>(conflict.getConflictingSubsystem(),
                 conflict.getResolution(conflict.getConflictingCondition(),
                         subsystemMap.get(conflict.getConflictingSubsystem())));
+    }
+
+    @VisibleForTesting
+    Deque<Deque<Request>> getExecuteList(){
+        return executeList;
     }
 }
