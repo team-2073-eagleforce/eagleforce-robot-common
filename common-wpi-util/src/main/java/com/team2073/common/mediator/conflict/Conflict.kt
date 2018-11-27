@@ -4,13 +4,13 @@ import com.team2073.common.mediator.condition.Condition
 import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 
-abstract class Conflict<O : Condition, C : Condition, Z : ColleagueSubsystem>(var originSubsystem: Class<Z>,
-                                                                              var originCondition: O,
-                                                                              var conflictingSubsystem: Class<Z>,
-                                                                              var conflictingCondition: C) {
-    abstract fun invert(): Conflict<C, O, Z>
+abstract class Conflict<OS: ColleagueSubsystem, OC : Condition, CC : Condition, CS : ColleagueSubsystem>(var originSubsystem: Class<OS>,
+                                                                              var originCondition: OC,
+                                                                              var conflictingSubsystem: Class<CS>,
+                                                                              var conflictingCondition: CC) {
+    abstract fun invert(): Conflict<OS, OC, CC, CS>
 
-    abstract fun isConflicting(conflict: Conflict<C, O, Z>, request: Request<C, Z>, currentCondition: Condition): Boolean
+    abstract fun isConflicting(conflict: Conflict<OS, CC, OC, OS>, request: Request<CC, OS>, currentCondition: Condition): Boolean
 
     abstract fun getResolution(currentCondition: Condition, subsystem: ColleagueSubsystem): Condition
 

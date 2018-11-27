@@ -6,11 +6,11 @@ import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.PositionBasedSubsystem
 
-class PositionBasedConflict<O : Condition, C : Condition, Z : ColleagueSubsystem>(var originSubsystemP: Class<Z>,
-                                                                                  var originConditionP: O,
-                                                                                  var conflictingSubsystemP: Class<Z>,
-                                                                                  var conflictingConditionP: C) :
-        Conflict<O, C, Z>(originSubsystemP, originConditionP, conflictingSubsystemP, conflictingConditionP) {
+class PositionBasedConflict<OS : ColleagueSubsystem, OC : Condition,CS : ColleagueSubsystem, CC : Condition>(var originSubsystemP: Class<OS>,
+                                                                                                              var originConditionP: OC,
+                                                                                                             var conflictingSubsystemP: Class<CS>,
+                                                                                                              var conflictingConditionP: CC):
+        Conflict<OS, OC, CC, CS>(originSubsystemP, originConditionP, conflictingSubsystemP, conflictingConditionP) {
     override fun getResolution(currentCondition: Condition, subsystem: ColleagueSubsystem): Condition {
         var closestBound = (conflictingConditionP as PositionBasedCondition).findClosestBound(currentCondition)
         var safetyRange = (subsystem as PositionBasedSubsystem).getSafetyRange()
@@ -23,7 +23,7 @@ class PositionBasedConflict<O : Condition, C : Condition, Z : ColleagueSubsystem
             resolutionCondition = PositionBasedCondition(closestBound - safetyRange,
                     closestBound,
                     ((closestBound - safetyRange) + (closestBound)) / 2)
-        }else if(!islowerBound){
+        } else if (!islowerBound) {
             resolutionCondition = PositionBasedCondition(closestBound,
                     closestBound + safetyRange,
                     ((closestBound + safetyRange) + (closestBound)) / 2)
@@ -31,12 +31,12 @@ class PositionBasedConflict<O : Condition, C : Condition, Z : ColleagueSubsystem
         return resolutionCondition
     }
 
-    override fun isConflicting(conflict: Conflict<C, O, Z>, request: Request<C, Z>, currentCondition: Condition): Boolean {
+    override fun isConflicting(conflict: Conflict<OS, CC, OC, OS>, request: Request<CC, OS>, currentCondition: Condition): Boolean {
         return conflict.originCondition.isInCondition(request.condition) && currentCondition.isInCondition(conflict.conflictingCondition)
     }
 
-    override fun invert(): Conflict<C, O, Z> {
-        return PositionBasedConflict(conflictingSubsystemP, conflictingConditionP, originSubsystemP, originConditionP)
+    override fun invert(): Conflict<OS, OC, CC, CS> {
+        return PositionBasedConflict(originSubsystemP, originConditionP, conflictingSubsystemP, conflictingConditionP)
     }
 
 
