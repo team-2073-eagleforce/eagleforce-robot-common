@@ -1,8 +1,6 @@
 package com.team2073.common.simulation.env;
 
-import com.ctre.phoenix.motorcontrol.IMotorController;
 import com.team2073.common.CommonConstants.TestTags;
-import com.team2073.common.periodic.PeriodicAware;
 import com.team2073.common.simulation.SimulationConstants;
 import com.team2073.common.simulation.component.SimulationComponentFactory;
 import com.team2073.common.simulation.component.SimulationSolenoid;
@@ -20,9 +18,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.offset;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Tag(TestTags.INTEGRATION_TEST)
 class SimulationMechanismIntegrationTest extends BaseWpiTest {
@@ -49,8 +46,8 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 	@Test
 	void simulationEagleSPX_WHEN_set_SHOULD_MoveMechanism() {
 		ArmMechanism arm = new ArmMechanism(55, SimulationConstants.MotorType.MINI_CIM, 2, 15, 13);
-		IMotorController victor = new SimulationEagleSPX("ExampleTalon", arm);
-        robotContext.getPeriodicRunner().register((PeriodicAware) victor);
+		SimulationEagleSPX victor = new SimulationEagleSPX("ExampleTalon", arm);
+        robotContext.getPeriodicRunner().register(victor);
 		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(victor);
 		new SimulationEnvironmentRunner()
 				.withCycleComponent(arm)
