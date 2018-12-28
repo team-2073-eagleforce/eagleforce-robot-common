@@ -13,6 +13,7 @@ dependencies {
     compile wpilib()
     compile ctre()
     compile "com.team2073:common-util:${commonVersion}"
+    compile 'org.apache.commons:commons-configuration2:2.4'
     compile 'commons-io:commons-io:2.5'
     compile 'org.apache.commons:commons-math3:3.6.1'
     compile 'javax.validation:validation-api:2.0.0.Final'

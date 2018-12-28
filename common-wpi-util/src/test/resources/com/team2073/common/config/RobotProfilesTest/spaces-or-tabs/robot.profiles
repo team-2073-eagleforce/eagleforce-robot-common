@@ -1,0 +1,10 @@
+# Be careful editing this file in an IDE as it may convert tabs to spaces!
+# The pattern is:
+#<space>profile-1<space>,<tab>profile-2<tab>,<tab><space>profile-3<space><tab>
+#<space>profile-4<space>
+#<tab>profile-5<tab>
+#<tab><space>profile-6<space><tab>
+ profile-1 ,	profile-2	,	 profile-3 	
+ profile-4 
+ profile-5	
+  profile-6 	

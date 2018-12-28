@@ -9,6 +9,7 @@ import com.team2073.common.objective.AbstractSubsystemCoordinator;
 import com.team2073.common.periodic.OccasionalLoggingRunner;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.periodic.SmartDashboardAwareRunner;
+import com.team2073.common.proploader.PropertyLoader;
 import com.team2073.common.smartdashboard.adapter.DriverStationAdapter;
 import com.team2073.common.smartdashboard.adapter.DriverStationAdapterSimulationImpl;
 import com.team2073.common.smartdashboard.adapter.SmartDashboardAdapter;
@@ -59,6 +60,7 @@ public class RobotContext {
     private OccasionalLoggingRunner loggingRunner;
     private DataRecorder dataRecorder;
     private RobotEventPublisher eventPublisher;
+    private PropertyLoader propertyLoader;
     private SmartDashboardAwareRunner smartDashboardRunner;
     private AbstractSubsystemCoordinator subsystemCoordinator;
     private CommonProperties commonProps = new CommonProperties();
@@ -157,7 +159,19 @@ public class RobotContext {
         this.eventPublisher = eventPublisher;
         return this;
     }
-
+    
+    public PropertyLoader getPropertyLoader() {
+        if (propertyLoader == null)
+            propertyLoader = new PropertyLoader();
+    
+        return propertyLoader;
+    }
+    
+    public RobotContext setPropertyLoader(PropertyLoader propertyLoader) {
+        this.propertyLoader = propertyLoader;
+        return this;
+    }
+    
     public SmartDashboardAwareRunner getSmartDashboardRunner() {
         if (smartDashboardRunner == null)
             smartDashboardRunner = new SmartDashboardAwareRunner();
