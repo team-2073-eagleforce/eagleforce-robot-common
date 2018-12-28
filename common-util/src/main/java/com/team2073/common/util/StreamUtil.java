@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 /**
  * @author pbriggs
  */
-public class StreamUtil {
+public abstract class StreamUtil {
 
     /**
      * Allows running distinct on a specific property while still returning the root object (unlike
