@@ -158,9 +158,10 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 		logAllChecks();
 		logStartingConfig();
 		eventPublisher.setCurrentEvent(RobotStateEvent.PERIODIC);
+		// scheduler was at the end but I feel like it needs to be before we run all subsystems
+		scheduler.run();
 		ExceptionUtil.suppressVoid(robot::robotPeriodic, "robot::robotPeriodic");
 		periodicRunner.invokePeriodicInstances();
-		scheduler.run();
 	}
 
 	@Override

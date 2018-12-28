@@ -115,7 +115,10 @@ public class DataRecorder {
 
     // private until interval is actually configured
     private boolean registerRecordable(Object recordable, long period) {
-        RobotContext.getInstance().getCommonProps().setDataRecorderDefaultRecordInterval(10L);
+
+        // What the heck was I doing here?
+//        RobotContext.getInstance().getCommonProps().setDataRecorderDefaultRecordInterval(10L);
+
         if (recordable instanceof DataRecordOutputHandler) {
             // TODO: Check if it's annotated with @Recordable
             String recordableName = simpleName(recordable);
