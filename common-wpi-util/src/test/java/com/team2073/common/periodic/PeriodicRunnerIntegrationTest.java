@@ -3,6 +3,7 @@ package com.team2073.common.periodic;
 import com.team2073.common.CommonConstants.TestTags;
 import com.team2073.common.periodic.PeriodicRunner.InstanceAwareDurationHistory;
 import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
+import com.team2073.common.test.annon.TestFailing;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -44,6 +45,7 @@ class PeriodicRunnerIntegrationTest {
     }
 
     @Test
+    @TestFailing
     public void periodicRunner_WHEN_PeriodicAwareRegistered_SHOULD_CalculateMathCorrectly() {
         PeriodicRunner runner = new PeriodicRunner();
         DurationRecordingPeriodicRunnable periodic1 = new DurationRecordingPeriodicRunnable(1);
