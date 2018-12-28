@@ -1,6 +1,7 @@
 package com.team2073.common.config;
 
 import com.team2073.common.datarecorder.model.DataRecordTable.TimestampFormat;
+import com.team2073.common.proploader.model.PropertyContainer;
 
 import java.time.format.DateTimeFormatter;
 
