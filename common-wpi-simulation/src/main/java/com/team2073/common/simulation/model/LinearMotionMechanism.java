@@ -16,7 +16,7 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 
 	public LinearMotionMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double pullyRadius) {
 		super(gearRatio, motor, motorCount, massOnSystem);
-		this.pulleyRadius = pullyRadius;
+		this.pulleyRadius = inchesToMeters(pullyRadius);
 	}
 
 	@Override
@@ -37,12 +37,9 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 	 */
 	@Override
 	public double calculateAcceleration() {
-		acceleration = (-torqueConstant * gearRatio * gearRatio
-				/ (velocityConstant * motorResistance * pulleyRadius * pulleyRadius * massOnSystem)
-				* velocity
-				+ gearRatio * torqueConstant / (motorResistance * pulleyRadius * massOnSystem) * currentVoltage);
-
-		return acceleration;
+		acceleration = ((currentVoltage * torqueConstant * gearRatio * pulleyRadius) / (massOnSystem * motorResistance))
+				- (((inchesToMeters(velocity) * Math.pow(gearRatio, 2)) * pulleyRadius) / (velocityConstant * lbToKg(massOnSystem) * motorResistance));
+		return metersToInches(acceleration);
 	}
 
 	/**
