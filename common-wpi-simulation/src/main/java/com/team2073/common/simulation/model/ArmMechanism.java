@@ -17,9 +17,13 @@ public class ArmMechanism extends AbstractSimulationMechanism {
 	@DataPointIgnore
 	private final double lengthOfArm;
 
+	@DataPointIgnore
+	private final double moment;
+
 	public ArmMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double lengthOfArm) {
 		super(gearRatio, motor, motorCount, massOnSystem);
 		this.lengthOfArm = lengthOfArm;
+		moment = .5 * inchesToMeters(lengthOfArm) * inchesToMeters(lengthOfArm) * lbToKg(massOnSystem);
 	}
 
 	@Override
@@ -40,11 +44,9 @@ public class ArmMechanism extends AbstractSimulationMechanism {
 	 */
 	@Override
 	public double calculateAcceleration() {
-		acceleration = ((gearRatio * torqueConstant * currentVoltage)
-				- ((1 / velocityConstant) * torqueConstant * velocity * gearRatio * gearRatio))
-				/ (motorResistance * massOnSystem * Math.pow(lengthOfArm, 2));
-
-		return acceleration;
+		acceleration = ((currentVoltage * torqueConstant * gearRatio) / (moment * motorResistance))
+				- ((torqueConstant * Math.pow(gearRatio, 2) * degreesToRadians(velocity)) / (velocityConstant * moment * motorResistance));
+		return radiansToDegrees(acceleration);
 	}
 
 	/**
