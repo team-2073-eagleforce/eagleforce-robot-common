@@ -436,7 +436,7 @@ public class PositionalMechanismController<T extends Enum<T> & PositionContainer
 		 * @param position The <u><b>unconverted</b></u> height/angle to move to.
 		 */
 		public void moveToPosition(double position) {
-			int tics = converter.asTics(position);
+			double tics = converter.asTics(position);
 			trace("Moving to position [{}:{}].\t Current position: [{}].", io.info.getRequestedPosition(), tics, io.info.currentPosition());
 			doToMotors(motor -> motor.set(ControlMode.Position, tics));
 		}

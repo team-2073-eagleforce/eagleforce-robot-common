@@ -62,12 +62,14 @@ public class PositionalMechanismControllerIntegrationTestFixtures {
         private Queue<ElevatorGoal> goalList = new ArrayDeque<>();
         private StatusChecker statusChecker;
         private int wait = 0;
+        public final ElevatorGoal expectedFinalPosition;
 
         public ElevatorGoalSupplier(PositionalMechanismController<ElevatorGoal> mechanismController) {
             this.mechanismController = mechanismController;
             goalList.add(ElevatorGoal.MIDPOINT);
             goalList.add(ElevatorGoal.ZERO);
             goalList.add(ElevatorGoal.TOP);
+            expectedFinalPosition = ElevatorGoal.TOP;
             statusChecker = mechanismController.requestPosition(goalList.poll());
         }
 

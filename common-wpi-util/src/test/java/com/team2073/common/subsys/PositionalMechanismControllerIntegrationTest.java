@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author pbriggs
  */
@@ -34,8 +36,8 @@ class PositionalMechanismControllerIntegrationTest extends BaseWpiTest {
         DataRecorder dataRecorder = robotContext.getDataRecorder().registerCsvOutputHandler();
         dataRecorder.registerWithPeriodicRunner(periodicRunner);
 
-        LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.PRO, 2, 2, .855);
-        PidfControlLoop pid = new PidfControlLoop(.023, 0, .02, 0,  1);
+        LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.PRO, 2, 10, .855);
+        PidfControlLoop pid = new PidfControlLoop(.044, 0, 0.0, 0,  1);
         SimulationEagleSRX srx = new SimulationPidfEagleSRX("ExampleTalon", lmm, 1350, pid);
         PositionalMechanismController<ElevatorGoal> mechanismController = new PositionalMechanismController<ElevatorGoal>("Simulation Elevator", new ElevatorPositionConverter(), HoldType.PID , srx);
         ElevatorGoalSupplier goalSupplier = new ElevatorGoalSupplier(mechanismController);
@@ -45,11 +47,13 @@ class PositionalMechanismControllerIntegrationTest extends BaseWpiTest {
                 .withPeriodicComponent(() -> periodicRunner.invokePeriodicInstances())
                 .withPeriodicComponent(mechanismController)
                 .withPeriodicComponent(goalSupplier)
-                .withIterationCount(300)
+                .withIterationCount(1440)
                 .run(e -> {
                     ThreadUtil.sleep(1000);
                     dataRecorder.disable();
-//                    assertThat(lmm.position()).isCloseTo(goalPosition, offset(2.0));
+                    double lowerBound = goalSupplier.expectedFinalPosition.getPosition().lowerBound;
+                    double upperBound = goalSupplier.expectedFinalPosition.getPosition().upperBound;
+                    assertThat(lmm.position()).isBetween(lowerBound, upperBound);
                 });
     }
 
