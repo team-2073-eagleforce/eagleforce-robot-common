@@ -3,20 +3,21 @@ package com.team2073.common.simulation.subsystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
 import com.team2073.common.controlloop.MotionProfileControlloop;
-import com.team2073.common.motionprofiling.SCurveProfileGenerator;
+import com.team2073.common.motionprofiling.ProfileConfiguration;
+import com.team2073.common.motionprofiling.TrapezoidalProfileManager;
 import com.team2073.common.periodic.PeriodicRunnable;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
- * @author pbriggs
+ * @author Jason Stanley
  */
 public class SimulatedMotionProfileElevatorSubsystem implements PeriodicRunnable {
-    double maxVelocity = 6;
-    double maxAcceleration = 20;
-    double averageAcceleration = 15;
-    SCurveProfileGenerator profile;
-    MotionProfileControlloop mpc = new MotionProfileControlloop(.005, 0.0001, .0155, .012, 1);
+    private static final double MAX_VELOCITY = 14;
+    private static final double MAX_ACCELERATION = 10;
+    public static final double DT = .01;
+    private TrapezoidalProfileManager tpm;
+    private MotionProfileControlloop mpc = new MotionProfileControlloop(0.30, 0.0, 0.0684931507, .02, 1);
     private IMotorControllerEnhanced talon;
     private DigitalInput zeroSensor;
     private Solenoid brake;
@@ -28,17 +29,16 @@ public class SimulatedMotionProfileElevatorSubsystem implements PeriodicRunnable
         this.talon = talon;
         this.zeroSensor = zeroSensor;
         this.brake = brake;
+        tpm = new TrapezoidalProfileManager(mpc, new ProfileConfiguration(MAX_VELOCITY, MAX_ACCELERATION, DT), this::position);
+    }
 
-        mpc.dataPointCallable(() -> profile.nextPoint(.01));
-
-        mpc.updatePosition(() -> talon.getSelectedSensorPosition(0) / ticsPerInch);
+    private double position(){
+        return talon.getSelectedSensorPosition(0)/ticsPerInch;
     }
 
     public void set(double setpoint) {
         this.setpoint = setpoint;
-        profile = new SCurveProfileGenerator(
-                setpoint, maxVelocity, maxAcceleration, averageAcceleration);
-        started = false;
+        tpm.setPoint(setpoint);
     }
 
     @Override
@@ -47,13 +47,12 @@ public class SimulatedMotionProfileElevatorSubsystem implements PeriodicRunnable
             brake.set(false);
             started = true;
         }
-        mpc.update(.01);
-
+        tpm.newOutput();
         if (zeroSensor.get()) {
             brake.set(true);
             talon.set(ControlMode.PercentOutput, 0);
         } else {
-            talon.set(ControlMode.PercentOutput, mpc.getOutput());
+            talon.set(ControlMode.PercentOutput, tpm.getOutput());
         }
 
     }

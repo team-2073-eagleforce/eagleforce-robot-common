@@ -18,8 +18,9 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.offset;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag(TestTags.INTEGRATION_TEST)
 class SimulationMechanismIntegrationTest extends BaseWpiTest {
@@ -64,7 +65,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 		double goalPosition = 25;
 
 //		Creates mechanism that will be simulated. Specify gear Ratio, motor types, and other physical properties of the mechanism.
-		LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.PRO, 2, 20, .855);
+		LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.PRO, 2, 10, .855);
 
 //		Create each component for the subsystem, these will have additional parameters than their non Simulation counterparts
 //      due to information like where the physical sensor is, knowledge of the mechanism they are interacting with, etc.
@@ -96,7 +97,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 				.withCycleComponent(lmm)
 				.withPeriodicComponent(subsystem)
                 .withPeriodicRunner(robotContext.getPeriodicRunner())
-				.withIterationCount(300)
+				.withIterationCount(500)
 				.start();
 		
 		assertThat(lmm.position()).isCloseTo(goalPosition, offset(2.0));
@@ -107,7 +108,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 
 		double goalPosition = 25;
 
-		LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.PRO, 2, 20, .855);
+		LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.PRO, 2, 10, .855);
 
 		SimulationEagleSRX srx = new SimulationEagleSRX("ExampleTalon", lmm, 1350);
         robotContext.getPeriodicRunner().register(srx);
@@ -128,7 +129,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 				.withCycleComponent(lmm)
 				.withPeriodicComponent(subsystem)
                 .withPeriodicRunner(robotContext.getPeriodicRunner())
-				.withIterationCount(300)
+				.withIterationCount(500)
 				.start();
 		
 		assertThat(lmm.position()).isCloseTo(goalPosition, offset(5.0));
