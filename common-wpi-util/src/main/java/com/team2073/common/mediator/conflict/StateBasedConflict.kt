@@ -12,12 +12,17 @@ class StateBasedConflict<OS : ColleagueSubsystem, OC : Condition, CC : Condition
                                                                                                            var conflictingConditionS: CC,
                                                                                                            var resolveState: SubsystemStateCondition) :
         Conflict<OS, OC, CC, CS>(originSubsystemS, originConditionS, conflictingSubsystemS, conflictingConditionS) {
+
+    override fun isConditionConflicting(originCondition: Condition, conflictingCondition: Condition): Boolean {
+        return originCondition == originConditionS && conflictingCondition == conflictingConditionS
+    }
+
     override fun getResolution(currentCondition: Condition, subsystem: ColleagueSubsystem): Condition {
         return StateBasedCondition(resolveState)
     }
 
-    override fun isConflicting(conflict: Conflict<OS, CC, OC, OS>, request: Request<CC, OS>, currentCondition: Condition): Boolean {
-        return conflict.originCondition.isInCondition(request.condition) && currentCondition.isInCondition(conflict.conflictingCondition)
+    override fun isRequestConflicting(request: Request<CC, OS>, conflictingCondition: Condition): Boolean {
+        return originCondition.isInCondition(request.condition) && conflictingCondition.isInCondition(conflictingCondition)
     }
 
     override fun invert(): Conflict<OS, OC, CC, CS> {
