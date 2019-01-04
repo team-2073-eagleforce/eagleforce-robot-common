@@ -11,6 +11,10 @@ class PositionBasedConflict<OS : ColleagueSubsystem, OC : Condition,CS : Colleag
                                                                                                              var conflictingSubsystemP: Class<CS>,
                                                                                                               var conflictingConditionP: CC):
         Conflict<OS, OC, CC, CS>(originSubsystemP, originConditionP, conflictingSubsystemP, conflictingConditionP) {
+    override fun isConditionConflicting(originCondition: Condition, conflictingCondition: Condition): Boolean {
+        return originCondition == originConditionP && conflictingCondition == conflictingConditionP
+    }
+
     override fun getResolution(currentCondition: Condition, subsystem: ColleagueSubsystem): Condition {
         var closestBound = (conflictingConditionP as PositionBasedCondition).findClosestBound(currentCondition)
         var safetyRange = (subsystem as PositionBasedSubsystem).getSafetyRange()
@@ -21,18 +25,18 @@ class PositionBasedConflict<OS : ColleagueSubsystem, OC : Condition,CS : Colleag
             println("bound not upper/lower in condition")
         } else if (islowerBound) {
             resolutionCondition = PositionBasedCondition(closestBound - safetyRange,
-                    closestBound,
-                    ((closestBound - safetyRange) + (closestBound)) / 2)
+                    ((closestBound - safetyRange) + (closestBound)) / 2,
+                    closestBound)
         } else if (!islowerBound) {
             resolutionCondition = PositionBasedCondition(closestBound,
-                    closestBound + safetyRange,
-                    ((closestBound + safetyRange) + (closestBound)) / 2)
+                    ((closestBound + safetyRange) + (closestBound)) / 2,
+                    closestBound + safetyRange)
         }
         return resolutionCondition
     }
 
-    override fun isConflicting(conflict: Conflict<OS, CC, OC, OS>, request: Request<CC, OS>, currentCondition: Condition): Boolean {
-        return conflict.originCondition.isInCondition(request.condition) && currentCondition.isInCondition(conflict.conflictingCondition)
+    override fun isRequestConflicting(request: Request<CC, OS>, conflictingCondition: Condition): Boolean {
+        return originCondition.isInCondition(request.condition) && conflictingCondition.isInCondition(conflictingCondition)
     }
 
     override fun invert(): Conflict<OS, OC, CC, CS> {

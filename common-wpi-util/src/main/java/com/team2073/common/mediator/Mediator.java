@@ -14,11 +14,7 @@ import com.team2073.common.util.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Manages how {@link ColleagueSubsystem}s interact by checking for and resolving Conflicts between
@@ -70,6 +66,8 @@ public class Mediator implements PeriodicRunnable {
 
     }
 
+    private int periodicCalls = 0;
+
     /**
      * Call this method continuously. Iterates through the list of {@link Request}s and attempts to execute them,
      * first resolving their conflicts if any.
@@ -81,17 +79,23 @@ public class Mediator implements PeriodicRunnable {
         if (exeItr.hasNext()) {
             Deque<Request> requestList = exeItr.next();
             logger.trace("Iterating through requestList [{}]", requestList.toString());
-            Iterator<Request> itr = requestList.descendingIterator();
-            if (itr.hasNext()) {
-                Request request = itr.next();
-                //TODO point of interest
+            Request request = requestList.peekLast();
+            if (request != null) {
+                currentRequest = request;
                 logger.debug("RequestedCondition: [{}]... ActualPosition: [{}]", request.getCondition(), subsystemTracker.findSubsystemCondition(request.getSubsystem()));
-                logger.debug("Requested position is actual position: [{}]", request.getCondition().isInCondition(subsystemTracker.findSubsystemCondition(request.getSubsystem())));
+                logger.debug("Requested position is actual position: " + request.getCondition().isInCondition(subsystemTracker.findSubsystemCondition(request.getSubsystem())));
                 if (!request.getCondition().isInCondition(subsystemTracker.findSubsystemCondition(request.getSubsystem()))) {
-                    execute(request);
+                    periodicCalls += 1;
+                    if (periodicCalls > 15) {
+                        logger.debug("Removing request [{}]" + request.getName());
+                        periodicCalls = 0;
+                        requestList.removeLast();
+                    } else {
+                        execute(request);
+                    }
                 } else {
                     logger.debug("Finished request with [{}] in condition: [{}]", request.getSubsystem(), subsystemTracker.findSubsystemCondition(request.getSubsystem()));
-                    itr.remove();
+                    requestList.removeLast();
                 }
             } else {
                 exeItr.remove();
@@ -106,7 +110,7 @@ public class Mediator implements PeriodicRunnable {
      */
     public void execute(Request request) {
         Assert.assertNotNull(request, "request");
-        ArrayList<Conflict> conflicts = findConflicts(request);
+        ArrayList<Conflict> conflicts = findRequestConflicts(request);
         Deque<Request> requestList = new LinkedList<>();
 
         Condition condition = request.getCondition();
@@ -125,7 +129,6 @@ public class Mediator implements PeriodicRunnable {
                 requestList.add(listRequest);
                 logger.debug("Added request: [{}].", listRequest.getName());
                 executeList.addFirst(requestList);
-//                execute(listRequest);
             }
         }
 
@@ -139,7 +142,7 @@ public class Mediator implements PeriodicRunnable {
      * @return found conflicts in a list or just an empty list if there aren't any
      * <p>
      */
-    private ArrayList<Conflict> findConflicts(Request request) {
+    private ArrayList<Conflict> findRequestConflicts(Request request) {
         logger.debug("Finding conflicts for Request [{}]...", request.getName());
         Class subsystem = request.getSubsystem();
         ArrayList<Conflict> possibleConflicts = conflictMap.get(subsystem);
@@ -149,18 +152,17 @@ public class Mediator implements PeriodicRunnable {
             return conflicts;
         }
 
-        for (Conflict conflict : possibleConflicts) {
-            boolean isConflicting = conflict.isConflicting(conflict, request, subsystemTracker.findSubsystemCondition(conflict.getConflictingSubsystem()));
+        for (Conflict possibleConflict : possibleConflicts) {
+            boolean isConflicting = possibleConflict.isRequestConflicting(request, subsystemTracker.findSubsystemCondition(possibleConflict.getConflictingSubsystem()));
             if (isConflicting) {
-                logger.debug("Adding conflicting conflict: [{}].", conflict.getName());
-                conflicts.add(conflict);
+                logger.debug("Adding conflicting conflict: [{}].", possibleConflict.getName());
+                conflicts.add(possibleConflict);
             }
         }
 
         logger.debug("Finding conflicts for Request [{}] complete.", request.getName());
         return conflicts;
     }
-
 
     /**
      * @return a {@link Request} that resolves the {@link Conflict}
@@ -172,7 +174,14 @@ public class Mediator implements PeriodicRunnable {
     }
 
     @VisibleForTesting
-    Deque<Deque<Request>> getExecuteList(){
+    Deque<Deque<Request>> getExecuteList() {
         return executeList;
+    }
+
+    private Request currentRequest;
+
+    @VisibleForTesting
+    Request getCurrentRequest() {
+        return currentRequest;
     }
 }
