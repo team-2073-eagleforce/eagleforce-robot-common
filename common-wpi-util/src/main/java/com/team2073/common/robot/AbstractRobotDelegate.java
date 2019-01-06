@@ -1,9 +1,9 @@
 package com.team2073.common.robot;
 
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.hal.HALUtil;
 
 /**
  * A simple implementation of {@link RobotDelegate} that provides a no-op

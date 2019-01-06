@@ -97,11 +97,11 @@ public interface SimulationMotorController extends IMotorController {
 		return 0;
 	}
 
-	@Override
-	default double getOutputCurrent() {
-		throwUnsupported("getOutputCurrent");
-		return 0;
-	}
+//	@Override
+//	default double getOutputCurrent() {
+//		throwUnsupported("getOutputCurrent");
+//		return 0;
+//	}
 
 	@Override
 	default double getTemperature() {
@@ -451,6 +451,53 @@ public interface SimulationMotorController extends IMotorController {
 	@Override
 	default void valueUpdated() {
 		throwUnsupported("valueUpdated");
+	}
+	@Override
+	default void set(ControlMode Mode, double demand0, DemandType demand1Type, double demand1) {
+		throwUnsupported("set(ControlMode Mode, double demand0, DemandType demand1Type, double demand1)");
+
+	}
+
+	@Override
+	default ErrorCode configSelectedFeedbackCoefficient(double coefficient, int pidIdx, int timeoutMs) {
+		throwUnsupported("configSelectedFeedbackCoefficient");
+		return null;
+	}
+
+	@Override
+	default ErrorCode configClosedLoopPeakOutput(int slotIdx, double percentOut, int timeoutMs) {
+		throwUnsupported("configClosedLoopPeakOutput");
+		return null;
+	}
+
+	@Override
+	default ErrorCode configClosedLoopPeriod(int slotIdx, int loopTimeMs, int timeoutMs) {
+		throwUnsupported("configClosedLoopPeriod");
+		return null;
+	}
+
+	@Override
+	default ErrorCode configAuxPIDPolarity(boolean invert, int timeoutMs) {
+		throwUnsupported("configAuxPIDPolarity");
+		return null;
+	}
+
+	@Override
+	default double getClosedLoopTarget(int pidIdx) {
+		throwUnsupported("getClosedLoopTarget");
+		return 0;
+	}
+
+	@Override
+	default ErrorCode configMotionProfileTrajectoryPeriod(int baseTrajDurationMs, int timeoutMs) {
+		throwUnsupported("configMotionProfileTrajectoryPeriod");
+		return null;
+	}
+
+	@Override
+	default ControlMode getControlMode() {
+		throwUnsupported("getControlMode");
+		return null;
 	}
 
 }

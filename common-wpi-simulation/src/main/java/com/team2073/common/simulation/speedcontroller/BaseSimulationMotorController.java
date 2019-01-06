@@ -105,4 +105,8 @@ public abstract class BaseSimulationMotorController implements SimulationMotorCo
         return percent * VOLTAGE;
     }
 
+    public double getOutputCurrent() {
+        throwUnsupported("getOutputCurrent");
+        return 0;
+    }
 }

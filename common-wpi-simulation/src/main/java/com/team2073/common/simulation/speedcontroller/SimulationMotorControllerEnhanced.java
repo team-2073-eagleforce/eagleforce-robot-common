@@ -70,4 +70,10 @@ public interface SimulationMotorControllerEnhanced extends SimulationMotorContro
         throwUnsupported("enableCurrentLimit");
     }
 
+	@Override
+	default double getOutputCurrent() {
+		throwUnsupported("getOutputCurrent");
+		return 0;
+	}
+
 }

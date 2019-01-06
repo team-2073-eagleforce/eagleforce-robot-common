@@ -2,6 +2,7 @@ package com.team2073.common.simulation.env;
 
 import com.team2073.common.simulation.env.SubsystemTestFixtures.BasicCycleComponent;
 import com.team2073.common.simulation.env.SubsystemTestFixtures.BasicPeriodicComponent;
+import com.team2073.common.simulation.model.SimulationCycleComponent;
 import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,7 @@ class SimulationEnvironmentRunnerTest {
 		BasicCycleComponent cycle;
 		BasicPeriodicComponent periodic;
 		new SimulationEnvironmentRunner()
-				.withCycleComponent(cycle = new BasicCycleComponent()
+				.withCycleComponent((SimulationCycleComponent) (cycle = new BasicCycleComponent())
 				)
 				.withPeriodicComponent(periodic = new BasicPeriodicComponent())
 				.run(e -> {
