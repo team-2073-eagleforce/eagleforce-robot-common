@@ -8,8 +8,6 @@ buildscript {
         classpath ("org.junit.platform:junit-platform-gradle-plugin:1.1.0")
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2'
-////        classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.6'
-//        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.15'
     }
 }
 
@@ -17,7 +15,7 @@ plugins {
     id "java"
     id "eclipse"
     id "idea"
-    id "jaci.openrio.gradle.GradleRIO" version "2018.03.06"
+    id "edu.wpi.first.GradleRIO" version "2019.1.1"
     id "maven-publish"
 //    id 'org.asciidoctor.convert' version '1.5.8.1'
 }
@@ -30,10 +28,6 @@ version commonVersion
 repositories {
     mavenCentral()
     mavenLocal()
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
 }
 
 task sourceJar(type: Jar) {
@@ -127,7 +121,7 @@ subprojects {
     }
 
     task wrapper(type: Wrapper) {
-        gradleVersion = '4.4'
+        gradleVersion = '5.0'
     }
 
     task sourceJar(type: Jar) {

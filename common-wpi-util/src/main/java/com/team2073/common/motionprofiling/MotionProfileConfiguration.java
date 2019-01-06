@@ -1,11 +1,9 @@
 package com.team2073.common.motionprofiling;
 
-import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;
-
 public class MotionProfileConfiguration {
 	private double maxVel;
 	private double endDistance;
-	private TrajectoryDuration interval;
+	private int interval;
 	private double maxAcc;
 	private boolean isVelocityOnly;
 	private boolean isForwards;
@@ -51,14 +49,14 @@ public class MotionProfileConfiguration {
 		this.endDistance = endDistance;
 	}
 	
-	public TrajectoryDuration getInterval() {
+	public int getInterval() {
 		return interval;
 	}
-	
-	public void setInterval(TrajectoryDuration interval) {
+
+	public void setInterval(int interval) {
 		this.interval = interval;
 	}
-	
+
 	public double getMaxAcc() {
 		return maxAcc;
 	}
