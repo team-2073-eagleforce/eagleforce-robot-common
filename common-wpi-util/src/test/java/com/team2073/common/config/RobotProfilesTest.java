@@ -88,13 +88,27 @@ public class RobotProfilesTest extends BaseWpiTest {
     @Test
     @DisplayName("WHEN: Profile is set via environment variable - THEN: Profile is set properly (smoke test)")
     void profileFromEnvVar() throws IOException {
-    
+        
         System.setProperty(ADDITIONAL_PROFILES_ENVIRONMENT_VARIABLE, "profile-1");
         
         robotProfiles.initializeAndLockProfiles();
         
         Set<String> profileList = robotProfiles.getProfileList();
         assertThat(profileList).containsExactly("profile-1");
+    }
+    
+    @Test
+    @DisplayName("WHEN: Profile is set - THEN: isProfileActive returns true")
+    void isProfileActive() throws IOException {
+    
+        final String profile = "profile-1";
+        
+        robotProfiles.addProfiles(profile);
+    
+        robotProfiles.initializeAndLockProfiles();
+    
+        assertThat(robotProfiles.isProfileActive(profile)).isTrue();
+        assertThat(robotProfiles.isProfileActive("inactive-profile")).isFalse();
     }
     
     // Remove profile

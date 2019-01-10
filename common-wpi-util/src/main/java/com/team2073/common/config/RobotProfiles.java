@@ -3,6 +3,7 @@ package com.team2073.common.config;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.util.Ex;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,8 +76,8 @@ public class RobotProfiles {
     }
     
     private RobotProfiles addProfilesInternal(Collection<String> profileList, String profileSource) {
-        failIfInitializationComplete("addProfiles");
-        parseProfiles(profileList, "addProfiles(...)");
+        failIfInitializationComplete(profileSource);
+        parseProfiles(profileList, profileSource);
         return this;
     }
     
@@ -92,6 +93,10 @@ public class RobotProfiles {
         List<String> profilesToRemove = profileList.stream().map(profile -> "!" + profile).collect(Collectors.toList());
         parseProfiles(profilesToRemove, profileSource);
         return this;
+    }
+    
+    public boolean isProfileActive(String profile) {
+        return getProfileList().stream().anyMatch(it -> it.equals(profile));
     }
     
     public Set<String> getProfileList() {
@@ -125,46 +130,44 @@ public class RobotProfiles {
     }
     
     private void initializeProfilesFromFile() {
-        if (!robotProfilesFile.exists()) {
+        try {
+            if (!robotProfilesFile.exists())
+                FileUtils.touch(robotProfilesFile);
             
-            if (log.isDebugEnabled())
-                log.debug("No robot profiles file found at [{}]. This file can be used to set profiles dynamically per robot. See documentation for details.", robotProfilesFile.getAbsolutePath());
-            else
-                log.info("No robot profiles file found at [{}].", robotProfilesFile.getAbsolutePath());
-            
-        } else {
-            try {
-                List<String> profiles = new ArrayList<>();
-                List<String> lines = Files.readAllLines(robotProfilesFile.toPath());
-    
-                // Showing an example of what parsing might look like at each step
-                for (String line : lines) { // line: " profile-5, profile-6 # profile-7"
-    
-                    line = line.trim(); // line: "profile-5, profile-6 # profile-7"
-                    
-                    if (StringUtils.isBlank(line))
-                        continue;
-    
-                    if (line.startsWith("#"))
-                        continue;
-                    
-                    // Ignore anything after the comment
-                    line = line.split("#")[0].trim(); // line: "profile-5, profile-6"
-                    
-                    if (StringUtils.isBlank(line))
-                        continue;
-                    
-                    String[] split = line.split(","); // split: ["profile-5"," profile-6"]
-                    
-                    profiles.addAll(Arrays.asList(split));
-                }
+            List<String> profiles = new ArrayList<>();
+            List<String> lines = Files.readAllLines(robotProfilesFile.toPath());
+
+            // Showing an example of what parsing might look like at each step
+            for (String line : lines) {
+                // line: " profile-5, profile-6 # profile-7"
+
+                line = line.trim();
+                // line: "profile-5, profile-6 # profile-7"
                 
-                parseProfiles(profiles, ROBOT_PROFILES_FILE_SOURCE);
+                if (StringUtils.isBlank(line))
+                    continue;
+
+                if (line.startsWith("#"))
+                    continue;
                 
-            } catch (IOException e) {
-                log.warn("Exception parsing robot profiles files [{}]. Some profiles may not have been activated. " +
-                        "Current profiles: [{}].", robotProfilesFile.getAbsolutePath(), getProfileListToString());
+                // Ignore anything after the comment
+                line = line.split("#")[0].trim();
+                // line: "profile-5, profile-6"
+                
+                if (StringUtils.isBlank(line))
+                    continue;
+                
+                String[] split = line.split(",");
+                // split: ["profile-5"," profile-6"]
+                
+                profiles.addAll(Arrays.asList(split));
             }
+            
+            parseProfiles(profiles, ROBOT_PROFILES_FILE_SOURCE);
+            
+        } catch (IOException e) {
+            log.warn("Exception parsing robot profiles files [{}]. Some profiles may not have been activated. " +
+                    "Current profiles: [{}].", robotProfilesFile.getAbsolutePath(), getProfileListToString());
         }
     }
     
