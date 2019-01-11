@@ -34,16 +34,19 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="common-wpi-simulation_main" />
-    <orderEntry type="library" name="Gradle: com.team2073:common-wpi-simulation-stubs:0.4.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Gradle: com.team2073:common-wpi-util-test:0.4.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Gradle: com.team2073:common-wpi-util:0.4.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibj:wpilibj-java:2018.4.1" level="project" />
-    <orderEntry type="library" name="Gradle: edu.wpi.first.ntcore:ntcore-java:4.1.0" level="project" />
-    <orderEntry type="library" name="Gradle: edu.wpi.first.wpiutil:wpiutil-java:3.2.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.opencv:opencv-java:3.2.0" level="project" />
-    <orderEntry type="library" name="Gradle: edu.wpi.first.cscore:cscore-java:1.3.0" level="project" />
-    <orderEntry type="library" name="Gradle: openrio.mirror.third.ctre:CTRE-phoenix-java:5.2.2.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.team2073:common-util:0.4.0-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="common-wpi-simulation-stubs_main" />
+    <orderEntry type="module" module-name="common-wpi-util-test_main" />
+    <orderEntry type="module" module-name="common-wpi-util_main" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibj:wpilibj-java:2019.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.ntcore:ntcore-java:2019.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.wpiutil:wpiutil-java:2019.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.thirdparty.frc2019.opencv:opencv-java:3.4.4-4" level="project" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.cscore:cscore-java:2019.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.cameraserver:cameraserver-java:2019.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.hal:hal-java:2019.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.ctre.phoenix:api-java:5.12.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.ctre.phoenix:wpiapi-java:5.12.0" level="project" />
+    <orderEntry type="module" module-name="common-util_main" />
     <orderEntry type="library" name="Gradle: com.team2073:common-util-test:0.4.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: ch.qos.logback:logback-classic:1.2.3" level="project" />
     <orderEntry type="library" name="Gradle: org.mockito:mockito-junit-jupiter:2.17.0" level="project" />

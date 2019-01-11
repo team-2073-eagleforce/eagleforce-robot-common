@@ -1,7 +1,6 @@
 package com.team2073.common.ctremotionprofile;
 
 import com.ctre.phoenix.motion.TrajectoryPoint;
-import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;
 import com.team2073.common.motionprofiling.MotionProfileConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ public class MotionProfileGenerator {
 		// Store config in easy to access variables
 		final double maxVel = mpc.getMaxVel();
 		final double endDistance = mpc.getEndDistance();
-		final TrajectoryDuration interval = mpc.getInterval();
+		final int interval = mpc.getInterval();
 		final double maxAcc = mpc.getMaxAcc();
 		final boolean isVelocityOnly = mpc.isVelocityOnly();
 		final int intervalVal = mpc.getIntervalVal();
@@ -69,7 +68,7 @@ public class MotionProfileGenerator {
 
 	// Private helper methods
 	// ====================================================================================================
-	private static TrajectoryPoint initialTp(TrajectoryDuration interval) {
+	private static TrajectoryPoint initialTp(int interval) {
 		TrajectoryPoint tp = new TrajectoryPoint();
 		tp.timeDur = interval;
 		tp.position = 0;

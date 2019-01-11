@@ -8,7 +8,7 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 apply plugin: 'kotlin'
 
 dependencies {
-    compile "com.team2073:common-util:${commonVersion}"
+    compile project(":common-util")
     compile "com.google.inject:guice:4.1.0"
     compile "com.google.inject.extensions:guice-assistedinject:4.1.0"
     compile "com.google.inject.extensions:guice-throwingproviders:4.1.0"
