@@ -5,6 +5,7 @@ import com.team2073.common.event.RobotEventPublisher;
 import com.team2073.common.periodic.OccasionalLoggingRunner;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.periodic.SmartDashboardAwareRunner;
+import com.team2073.common.proploader.PropertyLoader;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -75,8 +76,12 @@ public interface RobotDelegate {
 	default RobotEventPublisher createEventPublisher() {
 		return null;
 	}
-
+	
 	default DataRecorder createDataRecorder() {
+		return null;
+	}
+	
+	default PropertyLoader createPropertyLoader() {
 		return null;
 	}
 

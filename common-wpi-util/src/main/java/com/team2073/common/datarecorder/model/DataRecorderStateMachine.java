@@ -113,8 +113,10 @@ public class DataRecorderStateMachine {
         }
 
         public void requestShutdown() {
+            // Don't log if we were never used
+            if (initialization.initializationPhase != NEW)
+                log.info("Requesting shutdown.");
             initialization.initializationPhase = SHUTTING_DOWN;
-            log.info("Requesting shutdown.");
         }
 
         public void setIntializationPhase(InitializationPhase phase) {

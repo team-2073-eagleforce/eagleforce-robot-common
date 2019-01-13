@@ -9,6 +9,7 @@ import com.team2073.common.periodic.OccasionalLoggingRunner;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.periodic.SmartDashboardAware;
 import com.team2073.common.periodic.SmartDashboardAwareRunner;
+import com.team2073.common.proploader.PropertyLoader;
 import com.team2073.common.smartdashboard.adapter.DriverStationAdapter;
 import com.team2073.common.util.ExceptionUtil;
 import com.team2073.common.util.LogUtil;
@@ -64,12 +65,13 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 
 	private RobotContext robotContext;
 
-	// Fields from AppContext
+	// Fields from RobotContext
 	private PeriodicRunner periodicRunner;
 	private OccasionalLoggingRunner loggingRunner;
 	private DataRecorder dataRecorder;
 	private RobotEventPublisher eventPublisher;
 	private SmartDashboardAwareRunner smartDashboardRunner;
+	private PropertyLoader propertyLoader;
 	private DriverStationAdapter driverStation;
 	private Scheduler scheduler;
 
@@ -100,7 +102,7 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 	}
 
 	private void initializeDelegator() {
-		log.info("Initializing Application Context...");
+		log.info("Initializing Robot Delegator Context...");
 
 		if ((periodicRunner = robot.createPeriodicRunner()) != null)
 			robotContext.setPeriodicRunner(periodicRunner);
@@ -113,12 +115,15 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 
 		if ((loggingRunner = robot.createLoggingRunner()) != null)
 			robotContext.setLoggingRunner(loggingRunner);
-
+		
 		if ((dataRecorder = robot.createDataRecorder()) != null)
 			robotContext.setDataRecorder(dataRecorder);
+		
+		if ((propertyLoader = robot.createPropertyLoader()) != null)
+			robotContext.setPropertyLoader(propertyLoader);
 
 		refreshFromAppContext();
-		log.info("Initializing Application Context complete.");
+		log.info("Initializing Robot Delegator complete.");
 	}
 
 	@Override
@@ -158,9 +163,10 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 		logAllChecks();
 		logStartingConfig();
 		eventPublisher.setCurrentEvent(RobotStateEvent.PERIODIC);
+		// scheduler was at the end but I feel like it needs to be before we run all subsystems
+		scheduler.run();
 		ExceptionUtil.suppressVoid(robot::robotPeriodic, "robot::robotPeriodic");
 		periodicRunner.invokePeriodicInstances();
-		scheduler.run();
 	}
 
 	@Override

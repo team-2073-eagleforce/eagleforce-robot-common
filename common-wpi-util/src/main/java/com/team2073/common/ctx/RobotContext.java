@@ -1,22 +1,28 @@
 package com.team2073.common.ctx;
 
 import com.team2073.common.config.CommonProperties;
+import com.team2073.common.config.RobotDirectory;
+import com.team2073.common.config.RobotProfiles;
 import com.team2073.common.datarecorder.DataRecorder;
 import com.team2073.common.event.RobotEventPublisher;
 import com.team2073.common.objective.AbstractSubsystemCoordinator;
 import com.team2073.common.periodic.OccasionalLoggingRunner;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.periodic.SmartDashboardAwareRunner;
+import com.team2073.common.proploader.PropertyLoader;
 import com.team2073.common.smartdashboard.adapter.DriverStationAdapter;
 import com.team2073.common.smartdashboard.adapter.DriverStationAdapterSimulationImpl;
 import com.team2073.common.smartdashboard.adapter.SmartDashboardAdapter;
 import com.team2073.common.smartdashboard.adapter.SmartDashboardAdapterSimulationImpl;
+import com.team2073.common.util.Ex;
 import com.team2073.common.util.Throw;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.LocalDateTime;
 
 /**
  * Use this class to get instances normally retrieved through static methods
@@ -49,13 +55,17 @@ public class RobotContext {
     private SmartDashboardAdapter smartDashboard;
 
     // Custom instances
+    private LocalDateTime bootTimestamp = LocalDateTime.now();
     private PeriodicRunner periodicRunner;
     private OccasionalLoggingRunner loggingRunner;
     private DataRecorder dataRecorder;
     private RobotEventPublisher eventPublisher;
+    private PropertyLoader propertyLoader;
     private SmartDashboardAwareRunner smartDashboardRunner;
     private AbstractSubsystemCoordinator subsystemCoordinator;
     private CommonProperties commonProps = new CommonProperties();
+    private RobotDirectory robotDir;
+    private RobotProfiles robotProfiles;
 
     public static RobotContext getInstance() {
         if (instance == null)
@@ -81,6 +91,10 @@ public class RobotContext {
         // TODO: Check if we are already registered. Currently, this is blocking implementations from customizing the registration
         dataRecorder.registerWithPeriodicRunner(periodicRunner);
         log.info("Registering Periodic instances complete.");
+    }
+
+    public LocalDateTime getBootTimestamp() {
+        return bootTimestamp;
     }
 
     public CommonProperties getCommonProps() {
@@ -145,7 +159,19 @@ public class RobotContext {
         this.eventPublisher = eventPublisher;
         return this;
     }
-
+    
+    public PropertyLoader getPropertyLoader() {
+        if (propertyLoader == null)
+            propertyLoader = new PropertyLoader();
+    
+        return propertyLoader;
+    }
+    
+    public RobotContext setPropertyLoader(PropertyLoader propertyLoader) {
+        this.propertyLoader = propertyLoader;
+        return this;
+    }
+    
     public SmartDashboardAwareRunner getSmartDashboardRunner() {
         if (smartDashboardRunner == null)
             smartDashboardRunner = new SmartDashboardAwareRunner();
@@ -192,5 +218,31 @@ public class RobotContext {
     public void setSmartDashboard(SmartDashboardAdapter smartDashboard) {
         this.smartDashboard = smartDashboard;
     }
+    
+    public RobotDirectory getRobotDirectory() {
+        if (robotDir == null)
+            robotDir = new RobotDirectory();
+        
+        return robotDir;
+    }
 
+    public RobotContext setRobotDirectory(RobotDirectory robotDir) {
+        this.robotDir = robotDir;
+        return this;
+    }
+    
+    public RobotProfiles getRobotProfiles() {
+        if (robotProfiles == null)
+            robotProfiles = new RobotProfiles();
+        
+        return robotProfiles;
+    }
+
+    public RobotContext setRobotProfiles(RobotProfiles robotProfiles) {
+        if (this.commonProps != null)
+            throw Ex.illegalState("Cannot set robotProfiles after they have already been set.");
+        
+        this.robotProfiles = robotProfiles;
+        return this;
+    }
 }

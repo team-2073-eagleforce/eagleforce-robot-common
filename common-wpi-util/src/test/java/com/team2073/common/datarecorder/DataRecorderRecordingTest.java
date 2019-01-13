@@ -22,7 +22,7 @@ public class DataRecorderRecordingTest extends BaseDataRecorderTest {
 
     @Test
     void autoRecording() {
-        cleanProps.setDataRecorderAutoFlushInterval(1000L);
+        cleanProps.setDataRecorderAutoFlushInterval(1000);
         cleanRecorder.registerRecordable(mockedRecordable);
         cleanRecorder.registerOutputHandler(mockedOutputHandler);
 

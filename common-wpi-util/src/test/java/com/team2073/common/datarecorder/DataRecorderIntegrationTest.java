@@ -116,7 +116,7 @@ class DataRecorderIntegrationTest extends BaseDataRecorderTest {
     @TestNotWrittenYet
     void periodicRunnerIntegrationTest() {
         // run from periodic runner
-        long flushInterval = 1000L;
+        int flushInterval = 1000;
         robotContext.getCommonProps().setDataRecorderAutoFlushInterval(flushInterval);
         DataRecorder recorder = getAndInitBasicRecorder();
         InMemoryDataRecordOutputHandler output = getAndInitBasicInMemOutputHandler();

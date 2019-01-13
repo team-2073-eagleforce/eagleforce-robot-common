@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 /**
  * @author pbriggs
  */
-public class EnumUtil {
+public abstract class EnumUtil {
 
     public static void throwUnknownValueException(Enum<?> value) {
         throwUnknownValueException(value, false);

@@ -25,11 +25,18 @@ Jason Stanley; Minh Nguyen; Gabe Bui; Preston Briggs <pbriggs28@gmail.com>;
 // == Classes
 :class-DataRecorder: DataRecorder
 
+// == Text
+:text-space: &nbsp;
+:symbol-checkmark: &#9989;
+:symbol-x: &#10060;
+:symbol-star: &#11088;
+:symbol-y: {symbol-checkmark}
+:symbol-w: {symbol-checkmark} {symbol-star}
 
 // Links
 
 // == Definitions
-:link-def-pojo: 
+:link-def-pojo: https://www.geeksforgeeks.org/pojo-vs-java-beans/
 
 
 == Overview
@@ -44,12 +51,19 @@ TODO
 
 
 == WPI Modules
-//==== Camera Parsing
-//==== Command Wrapping
-//==== Property Loader
-//==== Controllers/Joysticks
-//==== Control Loops
-//==== Robot Context
+//=== Camera Parsing
+//=== Command Wrapping
+//=== Controllers/Joysticks
+//=== Control Loops
+//=== Robot Context
+//=== Event Publishing
+//=== Mediator
+//=== Motion Profiling
+//=== Subsystem Coordinator
+//=== Periodic Runner and Friends
+//==== Periodic Runner
+//==== Occasional Logging Runner
+//==== Smartdashboard Runner
 === Data Recorder
 ==== Overview
 
@@ -550,22 +564,631 @@ TODO
 
 ==== Output Handlers
 
-TODO
-
 [IMPORTANT]
 ====
 This section is for advanced users
 ====
 
-//=== Event Publishing
-//==== Mediator
-//==== Motion Profiling
-//==== Subsystem Coordinator
-//==== Periodic Runner and Friends
-//===== Periodic Runner
-//===== Occasional Logging Runner
-//===== Smartdashboard Runner
+TODO
 
+=== Property Loader
+
+==== Overview
+
+The Property Loader module is used to parse properties from `.properties` files into Java objects.
+This allows you to quickly make changes in a properties file that your code can then use to behave differently.
+For instance you could extract your PID values to a `.properties` file and then use these property values in the code to set PID values.
+This would allow you to have different PID values for different robots running the same code
+(maybe your practice bot needs different PID values than your comp bot due to differences in mechanical resistance, etc.).
+Another example would be turning certain logging or performance monitoring off when in a competition to free up resources/CPU.
+
+In the next section we'll take a look at how this would look.
+
+==== Quick Start
+
+===== 1) Create a Property Container Class
+
+Create a class that represents the properties you want to extract:
+
+[source,java]
+----
+public class ApplicationProperties {
+    private double elevatorP = 0.8;
+    private double elevatorI = 0.0006;
+    private double elevatorD = 10;
+
+    // getters and setters omitted for brevity
+
+    public double getElevatorP() {
+        return elevatorP;
+    }
+
+    public double getElevatorI() {
+        return elevatorI;
+    }
+
+    public double getElevatorD() {
+        return elevatorD;
+    }
+}
+----
+
+TIP: It is recommended to set default values at the field level
+
+===== 2) Create a Properties File
+
+Create a properties file matching the name format of the class and place it in the `~/robot/conf` directory on the RIO
+(see Property Containers section for more info on file name resolution).
+
+.~/robot/conf/Application.properties
+[source,properties]
+----
+p = 0.9
+i = 0.0005
+d = 10
+----
+
+===== 3) Register Property Containers, Load Properties, and Access Property Values
+
+Use the `PropertyLoader` to dynamically set values based on what is found in the properties file.
+
+[source,java]
+----
+PropertyLoader loader = RobotContext.getInstance().getPropertyLoader(); // <1>
+
+ApplicationProperties applicationProperties = loader.registerPropContainer(ApplicationProperties.class); // <2>
+
+loader.loadProperties(); // <3>
+
+TalonSRX talon = new TalonSRX(0);
+talon.config_kP(0, applicationProperties.getElevatorP(), 0); // <4>
+talon.config_kI(0, applicationProperties.getElevatorI(), 0); // <4>
+talon.config_kD(0, applicationProperties.getElevatorD(), 0); // <4>
+----
+<1> Get a `PropertyLoader` instance
+<2> Register your Property Container
+<3> Load the properties from the various properties files
+<4> Use the configured Property Container to dynamically set values or change application behavior in some way
+
+==== `.properties` Files
+
+Property files follow a format of `key = value` with each key/value pair on its own line.
+
+.Application.properties
+[source,properties]
+----
+controller.leftJoystickSensitivity = 0.8
+controller.rightJoystickSensitivity = 1.0
+
+elevator.talonPortMaster = 0
+elevator.talonPortSlave = 1
+----
+
+.Whitespace
+Any whitespace around the `value` will be trimmed.
+So the key/value pair `foo = Hello world!{text-space}{text-space}` would resolve to `"Hello world!"` and not `" Hello world! {text-space}"`.
+
+.Comments
+Anything after a `#` is a comment and will be ignored.
+
+.Application.properties
+[source,properties]
+----
+# This whole line is a comment
+controller.rightJoystickSensitivity = 1.0 # Only the end of this line is a comment
+----
+
+==== Property Containers
+
+===== Overview
+
+Property Containers are the simple {link-def-pojo}[POJO] classes that represent the properties you want to extract to a properties file.
+The `PropertyLoader` parses values from the properties files and sets values on your Property Container objects.
+This allows you to access your properties in a type-safe manner (`applicationProperties.getElevatorP()`)
+compared to accessing them in a non type-safe way (`System.getProperty("elevatorP");`).
+
+===== Restrictions
+
+Although Property Containers are {link-def-pojo}[POJOs], there are still a few rules that must be followed in order for the `PropertyLoader` to function properly.
+
+* Must not be an abstract class
+* Must not be an interface
+* Must not be a *non-static* inner class (use `static class` instead)
+[source,java]
+----
+// Not allowed
+public class Robot {
+    public class ApplicationProperties { }
+}
+
+// Allowed
+public class Robot {
+    public static class ApplicationProperties { }
+}
+----
+* Must be a public class
+* Must have a public no-args constructor
+[source,java]
+----
+public class ApplicationProperties {
+    // Not allowed
+    public ApplicationProperties(String foo) { }
+}
+----
+* Must contain only primitive (int, double, float, etc.), primitive wrapper (Integer, Double, Float, etc.), String, or enum field values
+** See next section for how to ignore fields
+
+[source,java]
+----
+public class ApplicationProperties {
+    private String foo = "default value";
+    private int bar = 42;
+
+    // Not allowed
+    private TalonSRX elevatorTalon;
+}
+----
+
+[NOTE]
+====
+One exception to this is that a Property Container can contain other Property Container classes, assuming they follow the rules above as well;
+See `Nested Property Containers` section for details
+====
+
+===== Ignoring Fields
+
+If there is a field you would like the `PropertyLoader` to ignore you can annotate it with `@PropertyContainerFieldIgnore`.
+This can be useful if you want to store non-primitive objects (such as a `TalonSRX`) in your Property Containers (normally the `PropertyLoader` will fail on such fields).
+[source,java]
+----
+public class ApplicationProperties {
+    private String foo = "default value";
+    private int bar = 42;
+
+    // This field will be ignored
+    @PropertyContainerFieldIgnore
+    private TalonSRX elevatorTalon;
+}
+----
+
+[NOTE]
+====
+Static and final fields will never be mapped so there is no need to ignore them
+====
+
+===== Property Container File Name Resolution
+
+When a Property Container is registered with the `PropertyLoader`, a file name is resolved.
+The properties for this Property Container class will only be loaded from it's own properties file.
+If a `@PropertyContainer` annotation with the `name` attribute populated is present on the Property Container class,
+then this name will be used.
+
+The example below would result in a file name of `Foo.properties`.
+
+[source,java]
+----
+@PropertyContainer(name = "Foo")
+public class ApplicationProperties {
+
+}
+----
+
+If no `@PropertyContainer` annotation is present, the class name will be used.
+Any trailing "Properties" in the Property Container's class name will be stripped out so that a class named `ApplicationProperties`
+does not result in a redundant file name of `ApplicationProperties.properties`.
+
+|=====
+|Class Name             |Resolved Property File Name
+|ApplicationProperties  |Application.properties
+|Application            |Application.properties
+|FooBar                 |FooBar.properties
+|=====
+
+[NOTE]
+====
+Additional files will be scanned if any robot profiles are active.
+See the `Profiles` portion of the `Property File Loading Priority` section for details.
+====
+
+===== Property Container Field Name Resolution
+
+When the `PropertyLoader` is reading properties from a file, it uses the field name as the property key.
+
+So a Property Container class of...
+
+[source,java]
+----
+public class ApplicationProperties {
+    private String fooBar;
+    private int baz;
+}
+----
+
+...would be expecting a properties file similar to...
+
+.~/robot/conf/Application.properties
+[source,properties]
+----
+fooBar = Hello world
+baz = 42
+----
+
+If custom property keys are required, the annotation `@PropertyContainerField` can be used to override this value:
+
+[source,java]
+----
+public class ApplicationProperties {
+    @PropertyContainerField(name = "bar")
+    private int foo;
+}
+----
+
+===== Nested Property Containers
+
+Property Containers can contain other Property Containers as fields to improve organization.
+For example, you could have a root `ApplicationProperties` which had a `ControllerProperties`, `ElevatorProperties`, `DrivetrainProperties`, etc.
+This way you don't have 100+ properties in one class.
+
+
+[source,java]
+----
+public class ApplicationProperties {
+    private ControllerProperties controller;
+    private ElevatorProperties elevator;
+    private DrivetrainProperties drivetrain;
+
+    // getters/setters omitted for brevity
+}
+----
+
+The `ApplicationProperties` Property Container above holds instances of the Property Containers below:
+
+[source,java]
+----
+public class ControllerProperties {
+    private double leftJoystickSensitivity;
+    private double rightJoystickSensitivity;
+
+    // getters/setters omitted for brevity
+}
+----
+
+[source,java]
+----
+public class ElevatorProperties {
+    private int talonPortMaster;
+    private int talonPortSlave;
+
+    // getters/setters omitted for brevity
+}
+----
+
+[source,java]
+----
+public class DrivetrainProperties {
+    private DrivetrainTalonPorts talonPorts;
+    @PropertyContainerField(name = "tuning")
+    private DrivetrainTuningProperties tuningProperties;
+
+    // getters/setters omitted for brevity
+}
+----
+
+The `DrivetrainProperties` Property Container above holds instances of the Property Containers below creating three levels deep of nested Property Containers:
+
+[source,java]
+----
+public class DrivetrainTalonPorts {
+    private int talonPortLeftMaster;
+    private int talonPortLeftSlave;
+    private int talonPortRightMaster;
+    private int talonPortRightSlave;
+
+    // getters/setters omitted for brevity
+}
+----
+
+[source,java]
+----
+public class DrivetrainTuningProperties {
+    private double autonMaxVelocityHighGear;
+    private double autonMaxVelocityLowGear;
+    private double autonMaxAcceleration;
+
+    // getters/setters omitted for brevity
+}
+----
+
+The property name that will be searched in the properties files will be resolved by chaining together the property names down the hierarchy.
+So for the example above, the properties file might look something similar to:
+
+.~/robot/conf/Application.properties
+[source,properties]
+----
+controller.leftJoystickSensitivity = 0.8
+controller.rightJoystickSensitivity = 1.0
+
+elevator.talonPortMaster = 0
+elevator.talonPortSlave = 1
+
+drivetrain.talonPorts.talonPortLeftMaster = 2
+drivetrain.talonPorts.talonPortLeftSlave = 3
+drivetrain.talonPorts.talonPortRightMaster = 4
+drivetrain.talonPorts.talonPortRightSlave = 5
+
+# Notice for DrivetrainTuningProperties the key "tuning" is used instead
+# of tuningProperties due to the @PropertyContainerField annotation
+drivetrain.tuning.autonMaxVelocityHighGear = 5600
+drivetrain.tuning.autonMaxVelocityLowGear = 3100
+drivetrain.tuning.autonMaxAcceleration = 15
+----
+
+===== Inherited Property Containers
+
+Property Containers fields will also be resolved by examining parent class fields.
+The `ChildProperties` example below would contain both the properties `foo` and `bar`.
+
+[source,java]
+----
+public class ParentProperties {
+    private Integer foo;
+}
+
+public class ChildProperties extends ParentProperties {
+    private Integer bar;
+}
+----
+
+==== Registering Property Containers
+
+===== Manual Registration
+
+To manually register each Property Container individually, use `PropertyLoader#registerPropContainer(Class propContainerClass)`.
+This will register the property container, construct an instance of the class, create the field to property key mappings,
+find all the files for the given Property Container, and return the Property Container instance.
+
+
+[NOTE]
+====
+Registering a class multiple times will not result in multiple Property Container classes being instantiated;
+If it is already registered, subsequent calls to `registerPropContainer(...)` will simply return the existing instance
+====
+
+====== Why can't I pass in an already instantiated instance of my Property Container?
+
+Great question, the reason is if you instantiated multiple instances of a Property Container in multiple places,
+updates to one of the instances would not be reflected in the other and your Property Containers would now contain different values.
+
+===== Auto Registration
+
+Instead of manually registering each Property Container instance you can rely on auto registration.
+Simply follow these steps:
+
+* Annotate *all* your Property Containers with `@PropertyContainer`
+* Call `PropertyLoader#autoRegisterAllPropContainers(...)` passing in the package that *all* the Property Containers reside in
+** Ex: `propLoader.autoRegisterAllPropContainers("com.team2073.robot.conf")`
+
+Note, it is ok for Property Containers to exist in subpackages of the package passed in.
+For example, maybe the Property Containers actually exist in the following packages:
+
+* `com.team2073.robot.conf.rio`
+* `com.team2073.robot.conf.robot`
+* `com.team2073.robot.conf.userprefs`
+
+[WARNING]
+====
+Once the `PropertyLoader` has been ran (`loadProperties()`), no more Property Containers can be registered
+====
+
+==== Retrieving Property Containers
+
+The recommended way to retrieve a Property Container is to call `PropertyLoader#registerPropContainer(Class propContainerClass)`.
+This way, if the Property Container was never registered it will be, so you are guaranteed to receive a a non null Property Container.
+
+An alternative is to call `PropertyLoader#getPropertyContainer(Class propContainerClass)`.
+This will return an `Optional<Object>` that will only contain a value if the Property Container was already registered.
+Use this method if you need to react differently if a Property Container was never registered.
+
+==== Loading Property Containers
+
+After all the Property Containers have been registered, you can load the properties.
+This will parse all the files and set the values on the Property Container instances that were registered using `registerPropContainer(Class propContainerClass)` or `autoRegisterAllPropContainers(String rootPackage)`.
+
+If you only require loading the properties one time and don't want to automatically pick up changes to `.properties` files
+then simply call `PropertyLoader#loadProperties()` in `robotInit()` after you have registered all Property Containers.
+
+[WARNING]
+====
+DO NOT CALL `loadProperties()` FROM ANY PERIODIC METHOD! This will result in severe delays in the robot causing
+erratic and dangerous behavior!
+====
+
+Since any file IO is time consuming (comparatively speaking), if properties are to be loaded repeatedly,
+this must be done on a separate thread than the main robot thread.
+It is *strongly* recommended to use the `AbstractRobotDelegator`.
+This will automatically run the `PropertyLoader` (reload the properties) on an async periodic loop every 5 seconds.
+
+The `PropertyLoader` registers itself with the `PeriodicRunner` automatically and the `AbstractRobotDelegator`
+runs the `PeriodicRunner` automatically so no additional steps are required.
+
+See the `Robot Delegator` section for details.
+
+==== Property File Loading Priority
+
+Property Containers are linked to a list of files to parse properties from.
+This list of files is parsed in a specific order to allow overriding properties on a per-robot basis or when a
+specific profile is active, all without ever changing any code.
+
+For example, by default you could set default PID values for a motor but on your practice bot you could override these values
+to adjust for differences in mechanical resistance.
+
+There are two things that impact the priority of properties files:
+
+. The location of the `.properties` file
+. The currently active profiles
+
+===== Location
+
+`.properties` files are searched for in two locations:
+
+. The classpath (in the source code) - Lower priority
+. Externally (in the user directory on the RIO) - Higher priority
+
+====== Classpath
+
+These `.properties` files are a lower priority than external files.
+
+They are the files on the classpath under the `/conf` directory.
+In a maven or gradle project, this would be at `src/main/resources/conf`.
+
+image::proploader/conf-dir-classpath.png[conf-dir-classpath]
+
+TIP: See the `Property Loader Configuration` section below for how to change this default path
+
+Con:: Making a change to these requires redeploying code to the RIO
+
+Pro:: Since these files exist in source code, changes to them will be included in your version control.
+
+Purpose:: These are not meant for quick changes or changes that only apply to one robot (mainbot vs practice bot).
+
+====== External
+
+These `.properties` files are a higher priority than classpath files.
+These `.properties` files are the highest priority.
+This means if a property exists in the file on the classpath and on the rio, the property on the rio will take precedence.
+
+They are the files on the rio's `~/robot/conf` directory.
+
+TIP: See the `Property Loader Configuration` section below for how to change this default path
+
+Pro:: Making a change to these does not require redeploying code to the RIO (it only requires a restart of the robot)
+
+Con:: Since these files only exist on the RIO and not in source code, changes to them will _not_ be included in your version control.
+
+[TIP]
+====
+If you use the `AbstractRobotDelegator` a restart is not even required as properties are automatically reloaded every 5 seconds.
+====
+
+Purpose:: These are meant for quick changes or changes that only apply to one robot (mainbot vs practice bot).
+
+===== Profiles
+
+The second thing that can affect the priority of properties loading are the currently active profiles.
+
+[TIP]
+====
+The `Robot Profiles` section covers how profiles are activated.
+====
+
+For each profile that is active, an additional file will be searched for in each location using the following pattern:
+
+`<Original Resolved File Name>-<Profile Name>.properties`
+
+So for example, if the profiles `foo` and `bar` were active and a Property Container originally resolved to a file name
+of `Application.properties` then the following files would be searched:
+
+* `Application.properties` (original)
+* `Application-foo.properties`
+* `Application-bar.properties`
+
+This can be used to keep robot-specific properties files in source code (under `src/main/resources`)
+rather than on the RIO (`~/robot/conf`), yet still only load specific files on specific robots.
+
+For example, create an `Application-mainbot.properties` and an `Application-practicebot.properties` in the
+`src/main/resources/conf` directory and then just activate the `mainbot` profile on the mainbot and vice versa.
+
+===== Property File Priority
+
+If the same property exists in multiple files, the following rules determine which file takes priority:
+
+* A profile-specific `.properties` file takes priority over a non-profile-specific `.properties` file, regardless of location
+** This means an `Application-mainbot.properties` file from the classpath takes priority over an `Application.properties`
+file in the external directory (even though external files normally takes priority over classpath files)
+* If two or more profiles are active and a priority tie occurs (same location), the last profile added takes priority
+
+.Example Scenario
+
+Let's take an example scenario where there are two profiles active, `profile-1` and `profile-2`.
+There are 6 possible files that properties could be loaded from:
+
+* Classpath: Application.properties
+* Classpath: Application-profile1.properties
+* Classpath: Application-profile2.properties
+* External: Application.properties
+* External: Application-profile1.properties
+* External: Application-profile2.properties
+
+We will assume each file contains a value for the property `foo`.
+The chart below shows 6 scenarios (columns) and which files exist (rows).
+The file with the {symbol-star} is the file that the `foo` property will be loaded from.
+
+* {symbol-y}: File exists
+* {symbol-x}: File does not exist
+* {symbol-star}: File with the highest priority in the current scenario (column)
+
+
+|====
+|                                           |Scenario A |Scenario B |Scenario C |Scenario D |Scenario E |Scenario F
+|Classpath: Application.properties	        |{symbol-w}	|{symbol-y}	|{symbol-y}	|{symbol-y}	|{symbol-y}	|{symbol-y}
+|Classpath: Application-profile1.properties	|{symbol-x}	|{symbol-x}	|{symbol-w}	|{symbol-y}	|{symbol-y}	|{symbol-y}
+|Classpath: Application-profile2.properties	|{symbol-x}	|{symbol-x}	|{symbol-x}	|{symbol-x}	|{symbol-w}	|{symbol-y}
+|External: Application.properties	        |{symbol-x}	|{symbol-w}	|{symbol-y}	|{symbol-y}	|{symbol-y}	|{symbol-y}
+|External: Application-profile1.properties	|{symbol-x}	|{symbol-x}	|{symbol-x}	|{symbol-w}	|{symbol-y}	|{symbol-y}
+|External: Application-profile2.properties	|{symbol-x}	|{symbol-x}	|{symbol-x}	|{symbol-x}	|{symbol-x}	|{symbol-w}
+|====
+
+==== Property Loader Configuration
+
+===== External Properties Directory
+
+To change the external directory (on the RIO) the `.properties` files are loaded from use
+`PropertyLoader#setExternalPropertiesDirPath(String propDir` or `PropertyLoader#setExternalPropertiesDir(File propDir)`.
+
+If the path starts with `~`, it will be resolved relative to the user directory.
+For example `~/foo/bar` might resolve to `/home/lvuser/foo/bar`.
+
+===== Classpath Properties Directory
+
+To change the classpath directory (source code directory) the `.properties` files are loaded from use
+`PropertyLoader#setSourceCodePropertiesDirPath(String propDir)`.
+
+=== Robot Profiles
+
+TODO
+
+Still need to document this section but here's a two second overview:
+
+==== Activate Profiles
+
+[source,java]
+----
+RobotContext.getInstance().getRobotProfiles().addProfiles("foo", "bar");
+----
+
+...or create a file at `~/conf/robot/robot.profiles`
+
+.~/conf/robot/robot.profiles
+[source,properties]
+----
+foo,bar
+----
+
+==== Check if Profile is Active
+
+[source,java]
+----
+if (RobotContext.getInstance().getRobotProfiles().isProfileActive("foo")) {
+    // do something
+}
+----
+
+==== Get Active Profiles
+
+[source,java]
+----
+Set<String> profileList = RobotContext.getInstance().getRobotProfiles().getProfileList();
+----
 
 == WPI Simulation Modules
 

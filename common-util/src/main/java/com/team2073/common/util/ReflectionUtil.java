@@ -4,6 +4,7 @@ import com.team2073.common.assertion.Assert;
 import org.apache.commons.lang3.ClassUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,5 +161,13 @@ public abstract class ReflectionUtil {
         }
 
         return null;
+    }
+    
+    public static boolean isNestedStaticClass(Class<?> clazz) {
+        return clazz.isMemberClass() && Modifier.isStatic(clazz.getModifiers());
+    }
+    
+    public static boolean isInnerClass(Class<?> clazz) {
+        return clazz.isMemberClass() && !Modifier.isStatic(clazz.getModifiers());
     }
 }
