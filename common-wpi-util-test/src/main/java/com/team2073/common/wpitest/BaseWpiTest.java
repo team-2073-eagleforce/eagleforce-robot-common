@@ -14,7 +14,7 @@ public class BaseWpiTest {
 
     @BeforeEach
     void baseWpiTestInit() {
-        robotContext = RobotContext.resetTestInstance();
+        robotContext = RobotContext.initSimulationInstance();
         assertThat(robotContext).isNotNull();
     }
 }

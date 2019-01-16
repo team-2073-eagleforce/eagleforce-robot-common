@@ -10,12 +10,11 @@ import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.periodic.SmartDashboardAware;
 import com.team2073.common.periodic.SmartDashboardAwareRunner;
 import com.team2073.common.proploader.PropertyLoader;
-import com.team2073.common.smartdashboard.adapter.DriverStationAdapter;
+import com.team2073.common.robot.adapter.DriverStationAdapter;
+import com.team2073.common.robot.adapter.SchedulerAdapter;
 import com.team2073.common.util.ExceptionUtil;
 import com.team2073.common.util.LogUtil;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +54,7 @@ import java.text.DecimalFormat;
  *
  * @author Preston Briggs
  */
-public abstract class AbstractRobotDelegator extends TimedRobot implements SmartDashboardAware {
+public class AbstractRobotDelegator implements RobotDelegate, SmartDashboardAware {
 	
 	private final RobotDelegate robot;
 	private Logger log = LoggerFactory.getLogger(getClass());
@@ -73,7 +72,7 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 	private SmartDashboardAwareRunner smartDashboardRunner;
 	private PropertyLoader propertyLoader;
 	private DriverStationAdapter driverStation;
-	private Scheduler scheduler;
+	private SchedulerAdapter scheduler;
 
 	public AbstractRobotDelegator(RobotDelegate robot) {
 		this.robot = robot;
@@ -282,6 +281,12 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 	private VoltageStatusMessage previousVoltageStatus = VoltageStatusMessage.SAFE_VOLTAGE;
 	
 	public void logUnsafeVoltages() {
+		
+		// TODO: 1/16/19 - Create RobotControllerAdapter and remove this if check
+		
+		if (RobotContext.instanceIsSimulationMode())
+			return;
+		
 		if(RobotController.isBrownedOut()) {
 			if(previousVoltageStatus != VoltageStatusMessage.ENTER_BROWNED_OUT) {
 				log.info("Brown out detected. Voltage: [{}]", formatter.format(RobotController.getBatteryVoltage()));

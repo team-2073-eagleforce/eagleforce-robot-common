@@ -10,19 +10,22 @@ import com.team2073.common.periodic.OccasionalLoggingRunner;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.periodic.SmartDashboardAwareRunner;
 import com.team2073.common.proploader.PropertyLoader;
-import com.team2073.common.smartdashboard.adapter.DriverStationAdapter;
-import com.team2073.common.smartdashboard.adapter.DriverStationAdapterSimulationImpl;
-import com.team2073.common.smartdashboard.adapter.SmartDashboardAdapter;
-import com.team2073.common.smartdashboard.adapter.SmartDashboardAdapterSimulationImpl;
+import com.team2073.common.robot.adapter.DriverStationAdapter;
+import com.team2073.common.robot.adapter.DriverStationAdapterSimulationImpl;
+import com.team2073.common.robot.adapter.SchedulerAdapter;
+import com.team2073.common.robot.adapter.SchedulerAdapterSimulationImpl;
+import com.team2073.common.robot.adapter.SmartDashboardAdapter;
+import com.team2073.common.robot.adapter.SmartDashboardAdapterSimulationImpl;
 import com.team2073.common.util.Ex;
 import com.team2073.common.util.Throw;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+
+import static com.team2073.common.util.ClassUtil.*;
 
 /**
  * Use this class to get instances normally retrieved through static methods
@@ -35,7 +38,6 @@ import java.time.LocalDateTime;
 public class RobotContext {
 
     // TODO
-    // -Create ScheduleAdapter
     // -Setup AbstractSubsystemCoordinator
     // -In getTestInstance() call .close() on instances to give them a chance to clean up threads/etc.
     // -Figure out the pattern to use for getting the adapters (currently there is no way to set them to test instances)
@@ -44,18 +46,64 @@ public class RobotContext {
     //      -We won't need these for non-wpi stuff (we don't have simulation implementations)
     // -Setup custom classloader to handle static reloading during unit tests:
     //      - http://ahlamnote.blogspot.com/2017/07/junit-test-for-singletonsstatic.html
-
-    private Logger log = LoggerFactory.getLogger(getClass());
-
+    
     private static RobotContext instance;
+    
+    public static boolean instanceExists() {
+        return instance != null;
+    }
+    
+    public static RobotContext getInstance() {
+        if (instance == null)
+            instance = new RobotContext();
+        return instance;
+    }
+    
+    /**
+     * Call this before every test. (Extending BaseWpiTest will do this for you).<br/>
+     * Do not call this more than once per test. This will initialize a brand new instance.
+     * Everywhere else should just call {@link #getInstance()} which will return a simulation
+     * version after this has been called.
+     * @return A simulation version of the {@link RobotContext}
+     */
+    public static RobotContext initSimulationInstance() {
+        if (instance != null && !instance.isSimulationMode()) {
+            throw Ex.illegalState("Non-simulation mode [{}] was used prior to initializing simulation instance! " +
+                    "Do not call getInstance() prior to calling initSimulationInstance()!"
+                    , simpleName(RobotContext.class));
+        }
+    
+        if (instance != null)
+            instance.close();
+        
+        // See TODO about custom classloader
+        instance = new RobotContext(true);
+        instance.setSmartDashboard(SmartDashboardAdapterSimulationImpl.getInstance());
+        instance.setDriverStation(DriverStationAdapterSimulationImpl.getInstance());
+        instance.setScheduler(SchedulerAdapterSimulationImpl.getInstance());
+        return instance;
+    }
+    
+    public static boolean instanceIsSimulationMode() {
+        if (!instanceExists())
+            return false;
+        else
+            return instance.isSimulationMode();
+    }
+    
+    private Logger log = LoggerFactory.getLogger(getClass());
+    
+    // State
+    private LocalDateTime bootTimestamp = LocalDateTime.now();
+    private final boolean simulationMode;
 
     // WPI instances
+    // If adding to these, be sure to set to simulation instance in resetTestInstance()
     private DriverStationAdapter driverStation;
-    private Scheduler scheduler;
+    private SchedulerAdapter scheduler;
     private SmartDashboardAdapter smartDashboard;
 
     // Custom instances
-    private LocalDateTime bootTimestamp = LocalDateTime.now();
     private PeriodicRunner periodicRunner;
     private OccasionalLoggingRunner loggingRunner;
     private DataRecorder dataRecorder;
@@ -63,27 +111,22 @@ public class RobotContext {
     private PropertyLoader propertyLoader;
     private SmartDashboardAwareRunner smartDashboardRunner;
     private AbstractSubsystemCoordinator subsystemCoordinator;
-    private CommonProperties commonProps = new CommonProperties();
+    private CommonProperties commonProps;
     private RobotDirectory robotDir;
     private RobotProfiles robotProfiles;
-
-    public static RobotContext getInstance() {
-        if (instance == null)
-            instance = new RobotContext();
-        return instance;
+    
+    public RobotContext() {
+        this(false);
     }
-
-    /** Call this inbetween tests if you need to change any of the implementations. */
-    public static RobotContext resetTestInstance() {
-        // See TODO about custom classloader
-        instance = new RobotContext();
-        instance.setSmartDashboard(SmartDashboardAdapterSimulationImpl.getInstance());
-        instance.setDriverStation(DriverStationAdapterSimulationImpl.getInstance());
+    
+    public RobotContext(boolean simulationMode) {
+        this.simulationMode = simulationMode;
+    }
+    
+    private void close() {
         instance.getDataRecorder().requestShutdown();
-        instance.setDataRecorder(new DataRecorder());
-        return instance;
     }
-
+    
     public void registerPeriodicInstances() {
         log.info("Registering Periodic instances...");
 //        smartDashboardRunner.registerSelf(periodicRunner);
@@ -96,7 +139,11 @@ public class RobotContext {
     public LocalDateTime getBootTimestamp() {
         return bootTimestamp;
     }
-
+    
+    public boolean isSimulationMode() {
+        return simulationMode;
+    }
+    
     public CommonProperties getCommonProps() {
         if (commonProps == null)
             commonProps = new CommonProperties();
@@ -196,14 +243,14 @@ public class RobotContext {
         return this;
     }
 
-    public Scheduler getScheduler() {
+    public SchedulerAdapter getScheduler() {
         if (scheduler == null)
-            scheduler = Scheduler.getInstance();
+            scheduler = SchedulerAdapter.getInstance();
 
         return scheduler;
     }
 
-    public RobotContext setScheduler(Scheduler scheduler) {
+    public RobotContext setScheduler(SchedulerAdapter scheduler) {
         this.scheduler = scheduler;
         return this;
     }
@@ -239,7 +286,7 @@ public class RobotContext {
     }
 
     public RobotContext setRobotProfiles(RobotProfiles robotProfiles) {
-        if (this.commonProps != null)
+        if (this.robotProfiles != null)
             throw Ex.illegalState("Cannot set robotProfiles after they have already been set.");
         
         this.robotProfiles = robotProfiles;

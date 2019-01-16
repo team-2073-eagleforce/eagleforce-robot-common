@@ -6,13 +6,13 @@ import com.team2073.common.assertion.Assert;
 import com.team2073.common.config.CommonProperties;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.exception.NotYetImplementedException;
+import com.team2073.common.robot.adapter.SmartDashboardAdapter;
 import com.team2073.common.util.ExceptionUtil;
 import com.team2073.common.util.Throw;
 import com.team2073.common.util.Timer;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -328,24 +328,25 @@ public class PeriodicRunner implements SmartDashboardAware {
 	
 	@Override
 	public void updateSmartDashboard() {
-		SmartDashboard.putNumber("periodic.overall.total", fullLoopHistory.getTotal());
+		SmartDashboardAdapter smartDashboard = RobotContext.getInstance().getSmartDashboard();
+		smartDashboard.putNumber("periodic.overall.total", fullLoopHistory.getTotal());
 		
-		SmartDashboard.putNumber("periodic.curr.count", fullLoopHistory.getCount());
-		SmartDashboard.putNumber("periodic.curr.total", fullLoopHistory.getTotal());
-		SmartDashboard.putNumber("periodic.curr.avg", fullLoopHistory.getAverage());
+		smartDashboard.putNumber("periodic.curr.count", fullLoopHistory.getCount());
+		smartDashboard.putNumber("periodic.curr.total", fullLoopHistory.getTotal());
+		smartDashboard.putNumber("periodic.curr.avg", fullLoopHistory.getAverage());
 		if(fullLoopHistory.getLongestInstance() != null) {
-			SmartDashboard.putNumber("periodic.curr.longest-instance.longest", fullLoopHistory.getLongest());
-			SmartDashboard.putString("periodic.curr.longest-instance.name", fullLoopHistory.getLongestInstance().getName());
-			SmartDashboard.putNumber("periodic.curr.longest-instance.avg", fullLoopHistory.getLongestInstance().getAverage());
+			smartDashboard.putNumber("periodic.curr.longest-instance.longest", fullLoopHistory.getLongest());
+			smartDashboard.putString("periodic.curr.longest-instance.name", fullLoopHistory.getLongestInstance().getName());
+			smartDashboard.putNumber("periodic.curr.longest-instance.avg", fullLoopHistory.getLongestInstance().getAverage());
 		}
 
-		SmartDashboard.putNumber("periodic.history.count", instanceLoopHistory.getCount());
-		SmartDashboard.putNumber("periodic.history.total", instanceLoopHistory.getTotal());
-		SmartDashboard.putNumber("periodic.history.avg", instanceLoopHistory.getAverage());
+		smartDashboard.putNumber("periodic.history.count", instanceLoopHistory.getCount());
+		smartDashboard.putNumber("periodic.history.total", instanceLoopHistory.getTotal());
+		smartDashboard.putNumber("periodic.history.avg", instanceLoopHistory.getAverage());
 		if(instanceLoopHistory.getLongestInstance() != null) {
-			SmartDashboard.putNumber("periodic.history.longest-instance.longest", instanceLoopHistory.getLongest());
-			SmartDashboard.putString("periodic.history.longest-instance.name", instanceLoopHistory.getLongestInstance().getName());
-			SmartDashboard.putNumber("periodic.history.longest-instance.avg", instanceLoopHistory.getLongestInstance().getAverage());
+			smartDashboard.putNumber("periodic.history.longest-instance.longest", instanceLoopHistory.getLongest());
+			smartDashboard.putString("periodic.history.longest-instance.name", instanceLoopHistory.getLongestInstance().getName());
+			smartDashboard.putNumber("periodic.history.longest-instance.avg", instanceLoopHistory.getLongestInstance().getAverage());
 		}
 	}
 

@@ -37,7 +37,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 				.withPeriodicComponent(subsystem)
 				.withPeriodicRunner(robotContext.getPeriodicRunner())
 				.withIterationCount(50)
-				.run(e -> {
+				.start(e -> {
 					assertTrue(lmm.velocity() > 0);
 				});
 
@@ -54,7 +54,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 				.withPeriodicComponent(subsystem)
 				.withPeriodicRunner(robotContext.getPeriodicRunner())
 				.withIterationCount(50)
-				.run(e -> assertTrue(arm.velocity() > 0));
+				.start(e -> assertTrue(arm.velocity() > 0));
 
 	}
 
@@ -96,7 +96,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 				.withPeriodicComponent(subsystem)
                 .withPeriodicRunner(robotContext.getPeriodicRunner())
 				.withIterationCount(300)
-				.run(e -> {
+				.start(e -> {
 					assertThat(lmm.position()).isCloseTo(goalPosition, offset(2.0));
 				});
 
@@ -129,7 +129,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 				.withPeriodicComponent(subsystem)
                 .withPeriodicRunner(robotContext.getPeriodicRunner())
 				.withIterationCount(300)
-				.run(e -> {
+				.start(e -> {
 					assertThat(lmm.position()).isCloseTo(goalPosition, offset(5.0));
 				});
 
@@ -144,7 +144,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 				.withCycleComponent(arm)
 				.withPeriodicComponent(subsystem)
 				.withIterationCount(5)
-				.run(e -> assertTrue(arm.isSolenoidExtended()));
+				.start(e -> assertTrue(arm.isSolenoidExtended()));
 	}
 
 

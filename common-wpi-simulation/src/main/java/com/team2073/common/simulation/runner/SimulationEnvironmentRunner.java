@@ -2,13 +2,18 @@ package com.team2073.common.simulation.runner;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.team2073.common.assertion.Assert;
+import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.periodic.PeriodicRunner;
+import com.team2073.common.robot.RobotDelegate;
+import com.team2073.common.robot.adapter.RobotAdapter;
+import com.team2073.common.robot.adapter.RobotAdapterSimulationImpl;
 import com.team2073.common.simulation.env.SimulationCycleEnvironment;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 import com.team2073.common.simulation.function.ExitSimulationDecider;
 import com.team2073.common.simulation.function.OnSimulationCompleteHandler;
 import com.team2073.common.simulation.model.SimulationCycleComponent;
+import com.team2073.common.util.Ex;
 import com.team2073.common.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +28,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static com.team2073.common.util.ClassUtil.*;
+
 /**
- * @author pbriggs
+ * @author Preston Briggs
  */
 public class SimulationEnvironmentRunner {
 
@@ -45,49 +52,69 @@ public class SimulationEnvironmentRunner {
             .newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(CYCLE_THREAD_NAME).build());
     private final SimulationCycleEnvironment cycleEnv = new SimulationCycleEnvironment();
     private final EnvironmentCycleTask cycleTask = new EnvironmentCycleTask(simEnv);
-    private final List<SimulationCycleComponent> cycleComponentList = new ArrayList<>();
     private Throwable cycleException;
     private Throwable periodicException;
 
     // Periodic members
     private final ExecutorService periodicThreadRunner = Executors
             .newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat(PERIODIC_THREAD_NAME).build());
-    private final List<PeriodicRunnable> periodicList = new ArrayList<>();
+    private List<PeriodicRunnable> periodicList = new ArrayList<>();
     private final RobotPeriodicTask periodicTask = new RobotPeriodicTask();
     private ScheduledFuture<?> periodicTaskResult;
-
+    
     // Configurable members
-    private SimulationRobotRunner robotRunner = new SimulationRobotRunner();
+    private SimulationRobotRunner robotRunner;
+    private RobotAdapter robotAdapter;
+    private RobotDelegate robotDelegate;
     private ExitSimulationDecider exitDecider;
     private int iterationCount = 90;
-
+    
     // Main run method
-    public void run(OnSimulationCompleteHandler onComplete) {
+    public SimulationEnvironment start() {
+        return start(null);
+    }
+
+    /** @deprecated Use {@link #start()} instead and use the returned {@link SimulationEnvironment}  */
+    @Deprecated
+    public SimulationEnvironment start(OnSimulationCompleteHandler onComplete) {
 
         if (ran)
             throw new IllegalStateException("Cannot run simulation runner more than once.");
         ran = true;
-
+    
+        if (!RobotContext.instanceIsSimulationMode())
+            throw Ex.illegalState("Must set RobotContext to simulation mode prior to running simulation environment. "
+                    + "Use RobotContext.initSimulationInstance().");
+    
+    
         // Initialization
         log.debug("SimRunner: Initializing simulation environment...");
 
-
         log.debug("SimRunner: Iteration count: [{}].", iterationCount);
         exitDecider = new RobotPeriodicIterationCountExitDecider(iterationCount);
-
-
-        cycleComponentList.forEach(e -> {
-            cycleEnv.registerCycleComponent(e);
-            log.debug("SimRunner: Registered cycle component [{}].", e.getClass().getSimpleName());
-        });
-
-
-        periodicList.add(robotRunner);
-        log.debug("SimRunner: Registered RobotRunner [{}].", robotRunner.getClass().getSimpleName());
-
-
+    
+        if (robotDelegate == null)
+            robotDelegate = new NoOpRobotDelegate();
+    
+        if (robotAdapter == null)
+            robotAdapter = new RobotAdapterSimulationImpl(robotDelegate);
+    
+        if (robotRunner == null)
+            robotRunner = new SimulationRobotRunner(robotAdapter);
+    
+        for (PeriodicRunnable periodicRunnable : periodicList) {
+            // We wait until here to add directly to periodic runner in case they call withPeriodicRunner(...)
+            // after they have called withPeriodicComponent(...) which would add instances to two diff periodic runners
+            RobotContext.getInstance().getPeriodicRunner().register(periodicRunnable);
+        }
+    
+        // Set to null so we fail if we try to use this after here (should periodic runner instead)
+        periodicList = null;
+    
         log.debug("SimRunner: Initializing simulation environment finished.");
-
+        // End Initialization
+        
+    
         // Start threads
         log.debug("SimRunner: Starting simulation cycle thread [{}]...", CYCLE_THREAD_NAME);
         periodicTaskResult = cycleThreadRunner.scheduleAtFixedRate(cycleTask, 0, 1, TimeUnit.MILLISECONDS);
@@ -125,12 +152,15 @@ public class SimulationEnvironmentRunner {
 
             throw new SimulationInternalException(ex);
         } else {
-            // Provide an opportunity to run assertions
-            log.debug("SimRunner: Calling onComplete callback...");
-            onComplete.onComplete(simEnv);
-            log.debug("SimRunner: Calling onComplete callback finished.");
+            if (onComplete != null) {
+                // Provide an opportunity to run assertions
+                log.debug("SimRunner: Calling onComplete callback...");
+                onComplete.onComplete(simEnv);
+                log.debug("SimRunner: Calling onComplete callback finished.");
+            }
         }
-
+    
+        return simEnv;
     }
 
     // Public configuration methods
@@ -138,27 +168,45 @@ public class SimulationEnvironmentRunner {
     public SimulationEnvironmentRunner withCycleComponent(SimulationCycleComponent... cycleComponent) {
         for (SimulationCycleComponent component : cycleComponent) {
             Assert.assertNotNull(component, "component");
-            cycleComponentList.add(component);
+            cycleEnv.registerCycleComponent(component);
+            log.debug("SimRunner: Registered cycle component [{}].", component.getClass().getSimpleName());
         }
         return this;
     }
 
-    public SimulationEnvironmentRunner withRobotRunner(SimulationRobotRunner robotRunner) {
-        Assert.assertNotNull(robotRunner, "robotRunner");
-        this.robotRunner = robotRunner;
-        return this;
-    }
-
     public SimulationEnvironmentRunner withPeriodicRunner(PeriodicRunner periodicRunner) {
-        return withPeriodicComponent(() -> periodicRunner.invokePeriodicInstances());
+        RobotContext.getInstance().setPeriodicRunner(periodicRunner);
+        return this;
     }
 
     public SimulationEnvironmentRunner withPeriodicComponent(PeriodicRunnable... periodicAware) {
         Assert.assertNotNull(periodicAware, "periodicAware");
         for (PeriodicRunnable periodic : periodicAware) {
             Assert.assertNotNull(periodic, "periodic");
+            // Don't add directly to periodic runner here in case they call withPeriodicRunner(...) after this method
             periodicList.add(periodic);
         }
+        return this;
+    }
+    
+    public SimulationEnvironmentRunner withSimulationRobotRunner(SimulationRobotRunner robotRunner) {
+        Assert.assertNotNull(robotRunner, "robotRunner");
+        this.robotRunner = robotRunner;
+        log.debug("SimRunner: Registered SimulationRobotRunner [{}].", simpleName(robotRunner));
+        return this;
+    }
+    
+    public SimulationEnvironmentRunner withRobotAdapter(RobotAdapter robotAdapter) {
+        Assert.assertNotNull(robotAdapter, "robotAdapter");
+        this.robotAdapter = robotAdapter;
+        log.debug("SimRunner: Registered RobotAdapter [{}].", simpleName(robotAdapter));
+        return this;
+    }
+    
+    public SimulationEnvironmentRunner withRobotDelegate(RobotDelegate robotDelegate) {
+        Assert.assertNotNull(robotDelegate, "robotDelegate");
+        this.robotDelegate = robotDelegate;
+        log.debug("SimRunner: Registered RobotDelegate [{}].", simpleName(robotDelegate));
         return this;
     }
 
@@ -224,12 +272,15 @@ public class SimulationEnvironmentRunner {
         @Override
         public void run() {
 
-            // Block until run() method has a chance to call kill()
+            // Skip until run() method has a chance to call kill()
+            // TODO: synchronize cycleExceptionOccurred()?
             if (cycleExceptionOccurred()) {
                 log.trace("CycleTask: Exception has occurred. Ignoring this cycle invocation...");
                 return;
             }
-
+    
+            // Skip until run() method has a chance to call kill()
+            // TODO: synchronize isExitRequested()?
             if (simEnv.isExitRequested()) {
                 log.trace("CycleTask: Exit has been requested. Ignoring this cycle invocation...");
                 return;
@@ -294,14 +345,12 @@ public class SimulationEnvironmentRunner {
                 log.debug("PeriodicTask: Running periodic iteration [{}].", currRobotPeriodic);
             else
                 log.trace("PeriodicTask: Running periodic iteration [{}].", currRobotPeriodic);
-
-            for (PeriodicRunnable instance : periodicList) {
-                try {
-                    instance.onPeriodic();
-                } catch (Throwable ex) {
-                    exitOnPeriodicException(ex);
-                    return;
-                }
+    
+            try {
+                robotRunner.onPeriodic();
+            } catch (Throwable ex) {
+                exitOnPeriodicException(ex);
+                return;
             }
 
             log.trace("PeriodicTask: Finished running periodic iteration [{}].", currRobotPeriodic);
@@ -321,4 +370,7 @@ public class SimulationEnvironmentRunner {
             return simEnv.getCurrCycle() >= iterationCount * simEnv.getRobotInterval() - 1;
         }
     }
+    
+    private static class NoOpRobotDelegate implements RobotDelegate {}
+    
 }

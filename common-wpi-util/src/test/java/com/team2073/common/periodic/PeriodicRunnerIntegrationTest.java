@@ -37,7 +37,7 @@ class PeriodicRunnerIntegrationTest {
 
         SimulationEnvironmentRunner.create()
                 .withPeriodicRunner(runner)
-                .run(env -> {
+                .start(env -> {
                     assertEnvironmentRan(env);
                     assertPeriodicAwareInstanceCalledAtLeastOnce(periodic1);
                     assertNonAsyncPeriodicAwareInstanceCalledCorrectNumberOfTimes(env, periodic1);
@@ -57,7 +57,7 @@ class PeriodicRunnerIntegrationTest {
 
         SimulationEnvironmentRunner.create()
                 .withPeriodicRunner(runner)
-                .run(env -> {
+                .start(env -> {
                     String errMsg;
                     assertEnvironmentRan(env);
                     assertPeriodicRunnerRan(runner);
@@ -100,7 +100,7 @@ class PeriodicRunnerIntegrationTest {
         SimulationEnvironmentRunner.create()
                 .withPeriodicRunner(runner)
                 .withIterationCount(400)
-                .run(env -> {
+                .start(env -> {
                     String errMsg;
 
                     assertEnvironmentRan(env);

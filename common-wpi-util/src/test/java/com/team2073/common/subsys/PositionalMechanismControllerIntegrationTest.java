@@ -42,11 +42,10 @@ class PositionalMechanismControllerIntegrationTest extends BaseWpiTest {
 
         SimulationEnvironmentRunner.create()
                 .withCycleComponent(lmm)
-                .withPeriodicComponent(() -> periodicRunner.invokePeriodicInstances())
                 .withPeriodicComponent(mechanismController)
                 .withPeriodicComponent(goalSupplier)
                 .withIterationCount(300)
-                .run(e -> {
+                .start(e -> {
                     ThreadUtil.sleep(1000);
                     dataRecorder.disable();
 //                    assertThat(lmm.position()).isCloseTo(goalPosition, offset(2.0));
@@ -68,11 +67,10 @@ class PositionalMechanismControllerIntegrationTest extends BaseWpiTest {
 
         SimulationEnvironmentRunner.create()
                 .withCycleComponent(lmm)
-                .withPeriodicComponent(() -> periodicRunner.invokePeriodicInstances())
                 .withPeriodicComponent(mechanismController)
                 .withPeriodicComponent(goalSupplier)
                 .withIterationCount(300)
-                .run(e -> {
+                .start(e -> {
                     ThreadUtil.sleep(1000);
                     dataRecorder.disable();
 //                    assertThat(lmm.position()).isCloseTo(goalPosition, offset(2.0));

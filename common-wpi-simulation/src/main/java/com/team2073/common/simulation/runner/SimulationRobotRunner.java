@@ -2,7 +2,9 @@ package com.team2073.common.simulation.runner;
 
 import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.robot.DetailedRobotState.RobotMode;
-import com.team2073.common.simulation.env.SimulationRobot;
+import com.team2073.common.robot.RobotDelegate;
+import com.team2073.common.robot.adapter.RobotAdapter;
+import com.team2073.common.robot.adapter.RobotAdapterSimulationImpl;
 import com.team2073.common.util.EnumUtil;
 
 /**
@@ -10,7 +12,7 @@ import com.team2073.common.util.EnumUtil;
  */
 public class SimulationRobotRunner implements PeriodicRunnable {
 
-    private SimulationRobot robot = new SimulationRobot();
+    private final RobotAdapter robot;
 
     private boolean initialized = false;
 
@@ -19,7 +21,15 @@ public class SimulationRobotRunner implements PeriodicRunnable {
 
     private RobotMode robotMode = RobotMode.TELEOP;
     private boolean robotEnabled = true;
-
+    
+    public SimulationRobotRunner(RobotDelegate robotDelegate) {
+        this(new RobotAdapterSimulationImpl(robotDelegate));
+    }
+    
+    public SimulationRobotRunner(RobotAdapter robot) {
+        this.robot = robot;
+    }
+    
     @Override
     public void onPeriodic() {
         if (!initialized) {
