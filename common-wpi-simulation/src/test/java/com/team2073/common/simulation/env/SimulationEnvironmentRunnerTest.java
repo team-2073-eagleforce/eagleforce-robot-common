@@ -17,15 +17,15 @@ class SimulationEnvironmentRunnerTest extends BaseWpiTest {
 	void testBasicRun() {
 		BasicCycleComponent cycle;
 		BasicPeriodicComponent periodic;
-		new SimulationEnvironmentRunner()
+		SimulationEnvironment env = SimulationEnvironmentRunner.create()
 				.withCycleComponent(cycle = new BasicCycleComponent())
 				.withPeriodicComponent(periodic = new BasicPeriodicComponent())
-				.start(e -> {
-					assertEquals(cycle.getCycles(), e.getCurrCycle(),
-							"Expected cycle iterations did not match actual.");
-					assertEquals(periodic.getCycles(), e.getCurrRobotPeriodic(),
-							"Expected periodic iterations did not match actual.");
-				});
+				.start();
+		
+		assertEquals(cycle.getCycles(), env.getCurrCycle(),
+				"Expected cycle iterations did not match actual.");
+		assertEquals(periodic.getCycles(), env.getCurrRobotPeriodic(),
+				"Expected periodic iterations did not match actual.");
 	}
 
 

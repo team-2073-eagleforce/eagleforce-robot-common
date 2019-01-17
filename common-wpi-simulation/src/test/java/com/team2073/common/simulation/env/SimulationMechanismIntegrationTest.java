@@ -32,15 +32,14 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
         robotContext.getPeriodicRunner().register(talon);
 		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(talon);
 
-		new SimulationEnvironmentRunner()
+		SimulationEnvironment env = SimulationEnvironmentRunner.create()
 				.withCycleComponent(lmm)
 				.withPeriodicComponent(subsystem)
 				.withPeriodicRunner(robotContext.getPeriodicRunner())
 				.withIterationCount(50)
-				.start(e -> {
-					assertTrue(lmm.velocity() > 0);
-				});
-
+				.start();
+		
+		assertTrue(lmm.velocity() > 0);
 	}
 
 	@Test
@@ -49,12 +48,14 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 		SimulationEagleSPX victor = new SimulationEagleSPX("ExampleTalon", arm);
         robotContext.getPeriodicRunner().register(victor);
 		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(victor);
-		new SimulationEnvironmentRunner()
+		SimulationEnvironment env = SimulationEnvironmentRunner.create()
 				.withCycleComponent(arm)
 				.withPeriodicComponent(subsystem)
 				.withPeriodicRunner(robotContext.getPeriodicRunner())
 				.withIterationCount(50)
-				.start(e -> assertTrue(arm.velocity() > 0));
+				.start();
+		
+		assertTrue(arm.velocity() > 0);
 
 	}
 
@@ -91,15 +92,14 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 //		This is the big fancy SimulationEnvironment Runner, it will handle running the "Real World" cycle, and the software periodic loops,
 //      just pass in your mechanism, subsystem, and tell how long you want it to run for before executing the methods in the run method.
 //      (That is where you should place your assertions.)
-		new SimulationEnvironmentRunner()
+		SimulationEnvironment env = SimulationEnvironmentRunner.create()
 				.withCycleComponent(lmm)
 				.withPeriodicComponent(subsystem)
                 .withPeriodicRunner(robotContext.getPeriodicRunner())
 				.withIterationCount(300)
-				.start(e -> {
-					assertThat(lmm.position()).isCloseTo(goalPosition, offset(2.0));
-				});
-
+				.start();
+		
+		assertThat(lmm.position()).isCloseTo(goalPosition, offset(2.0));
 	}
 
 	@Test
@@ -123,28 +123,29 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 		});
 
 		subsystem.set(goalPosition);
-
-		new SimulationEnvironmentRunner()
+		
+		SimulationEnvironment env = SimulationEnvironmentRunner.create()
 				.withCycleComponent(lmm)
 				.withPeriodicComponent(subsystem)
                 .withPeriodicRunner(robotContext.getPeriodicRunner())
 				.withIterationCount(300)
-				.start(e -> {
-					assertThat(lmm.position()).isCloseTo(goalPosition, offset(5.0));
-				});
-
+				.start();
+		
+		assertThat(lmm.position()).isCloseTo(goalPosition, offset(5.0));
 	}
 
 	@Test
 	void simulationSolenoid_WHEN_set_SHOULD_MoveMechanism() {
 		ArmMechanism arm = new ArmMechanism(55, SimulationConstants.MotorType.MINI_CIM, 2, 15, 13);
 		SolenoidSubsystem subsystem = new SolenoidSubsystem(SimulationComponentFactory.createSimulationSolenoid(arm));
-
-		new SimulationEnvironmentRunner()
+		
+		SimulationEnvironment env = SimulationEnvironmentRunner.create()
 				.withCycleComponent(arm)
 				.withPeriodicComponent(subsystem)
 				.withIterationCount(5)
-				.start(e -> assertTrue(arm.isSolenoidExtended()));
+				.start();
+		
+		assertTrue(arm.isSolenoidExtended());
 	}
 
 

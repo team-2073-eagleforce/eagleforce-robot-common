@@ -4,6 +4,7 @@ import com.team2073.common.controlloop.PidfControlLoop;
 import com.team2073.common.datarecorder.DataRecorder;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.simulation.SimulationConstants;
+import com.team2073.common.simulation.env.SimulationEnvironment;
 import com.team2073.common.simulation.model.ArmMechanism;
 import com.team2073.common.simulation.model.LinearMotionMechanism;
 import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
@@ -37,17 +38,17 @@ class PositionalMechanismControllerIntegrationTest extends BaseWpiTest {
         SimulationEagleSRX srx = new SimulationPidfEagleSRX("ExampleTalon", lmm, 1350, pid);
         PositionalMechanismController<ElevatorGoal> mechanismController = new PositionalMechanismController<ElevatorGoal>("Simulation Elevator", new ElevatorPositionConverter(), HoldType.PID , srx);
         ElevatorGoalSupplier goalSupplier = new ElevatorGoalSupplier(mechanismController);
-
-        SimulationEnvironmentRunner.create()
+    
+        SimulationEnvironment env = SimulationEnvironmentRunner.create()
                 .withCycleComponent(lmm)
                 .withPeriodicComponent(mechanismController)
                 .withPeriodicComponent(goalSupplier)
                 .withIterationCount(300)
-                .start(e -> {
-                    ThreadUtil.sleep(1000);
-                    dataRecorder.disable();
+                .start();
+        
+        ThreadUtil.sleep(1000);
+        dataRecorder.disable();
 //                    assertThat(lmm.position()).isCloseTo(goalPosition, offset(2.0));
-                });
     }
 
     @Test
@@ -61,17 +62,17 @@ class PositionalMechanismControllerIntegrationTest extends BaseWpiTest {
         SimulationEagleSRX srx = new SimulationPidfEagleSRX("ExampleTalon", lmm, 1350, pid);
         PositionalMechanismController<ElevatorGoal> mechanismController = new PositionalMechanismController<ElevatorGoal>("Simulation Elevator", new ElevatorPositionConverter(), HoldType.PID, srx);
         ElevatorGoalSupplier goalSupplier = new ElevatorGoalSupplier(mechanismController);
-
-        SimulationEnvironmentRunner.create()
+    
+        SimulationEnvironment env = SimulationEnvironmentRunner.create()
                 .withCycleComponent(lmm)
                 .withPeriodicComponent(mechanismController)
                 .withPeriodicComponent(goalSupplier)
                 .withIterationCount(300)
-                .start(e -> {
-                    ThreadUtil.sleep(1000);
-                    dataRecorder.disable();
+                .start();
+        
+        ThreadUtil.sleep(1000);
+        dataRecorder.disable();
 //                    assertThat(lmm.position()).isCloseTo(goalPosition, offset(2.0));
-                });
     }
 
 }

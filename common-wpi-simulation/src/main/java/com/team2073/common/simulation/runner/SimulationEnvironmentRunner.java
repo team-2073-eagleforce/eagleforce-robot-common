@@ -11,7 +11,6 @@ import com.team2073.common.robot.adapter.RobotAdapterSimulationImpl;
 import com.team2073.common.simulation.env.SimulationCycleEnvironment;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 import com.team2073.common.simulation.function.ExitSimulationDecider;
-import com.team2073.common.simulation.function.OnSimulationCompleteHandler;
 import com.team2073.common.simulation.model.SimulationCycleComponent;
 import com.team2073.common.util.Ex;
 import com.team2073.common.util.ThreadUtil;
@@ -72,12 +71,6 @@ public class SimulationEnvironmentRunner {
     
     // Main run method
     public SimulationEnvironment start() {
-        return start(null);
-    }
-
-    /** @deprecated Use {@link #start()} instead and use the returned {@link SimulationEnvironment}  */
-    @Deprecated
-    public SimulationEnvironment start(OnSimulationCompleteHandler onComplete) {
 
         if (ran)
             throw new IllegalStateException("Cannot run simulation runner more than once.");
@@ -152,13 +145,6 @@ public class SimulationEnvironmentRunner {
             log.warn("SimRunner: Not running assertions... Exiting...");
 
             throw new SimulationInternalException(ex);
-        } else {
-            if (onComplete != null) {
-                // Provide an opportunity to run assertions
-                log.debug("SimRunner: Calling onComplete callback...");
-                onComplete.onComplete(simEnv);
-                log.debug("SimRunner: Calling onComplete callback finished.");
-            }
         }
     
         return simEnv;
