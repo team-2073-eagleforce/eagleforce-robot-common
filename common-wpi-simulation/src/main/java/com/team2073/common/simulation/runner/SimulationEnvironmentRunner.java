@@ -43,7 +43,8 @@ public class SimulationEnvironmentRunner {
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
-
+    
+    private final RobotContext robotContext = RobotContext.getInstance();
     private final SimulationEnvironment simEnv = new SimulationEnvironment();
     private boolean ran;
 
@@ -105,7 +106,7 @@ public class SimulationEnvironmentRunner {
         for (PeriodicRunnable periodicRunnable : periodicList) {
             // We wait until here to add directly to periodic runner in case they call withPeriodicRunner(...)
             // after they have called withPeriodicComponent(...) which would add instances to two diff periodic runners
-            RobotContext.getInstance().getPeriodicRunner().register(periodicRunnable);
+            robotContext.getPeriodicRunner().register(periodicRunnable);
         }
     
         // Set to null so we fail if we try to use this after here (should periodic runner instead)
@@ -175,7 +176,7 @@ public class SimulationEnvironmentRunner {
     }
 
     public SimulationEnvironmentRunner withPeriodicRunner(PeriodicRunner periodicRunner) {
-        RobotContext.getInstance().setPeriodicRunner(periodicRunner);
+        robotContext.setPeriodicRunner(periodicRunner);
         return this;
     }
 

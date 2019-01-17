@@ -18,18 +18,22 @@ public abstract class BaseSimulationMotorController implements SimulationMotorCo
     public static final double VOLTAGE = 12;
     
     private Logger log = LoggerFactory.getLogger(getClass());
+    private final RobotContext robotContext = RobotContext.getInstance();
 
-    @DataPointIgnore protected String name;
+    @DataPointIgnore
+    protected String name;
     protected SimulationMechanism mechanism;
-    @DataPointIgnore protected double maxVoltageForward = VOLTAGE;
-    @DataPointIgnore protected double maxVoltageReverse = -VOLTAGE;
+    @DataPointIgnore
+    protected double maxVoltageForward = VOLTAGE;
+    @DataPointIgnore
+    protected double maxVoltageReverse = -VOLTAGE;
     private double outputVoltage;
 
     public BaseSimulationMotorController(String name, SimulationMechanism mechanism){
         this.mechanism = mechanism;
         this.name = name;
-        RobotContext.getInstance().getPeriodicRunner().register(this);
-        RobotContext.getInstance().getDataRecorder().registerRecordable(this);
+        robotContext.getPeriodicRunner().register(this);
+        robotContext.getDataRecorder().registerRecordable(this);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.team2073.common.proploader;
 
-import com.team2073.common.wpitest.BaseWpiTest;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,7 @@ import static org.assertj.core.api.Assertions.*;
 /**
  * @author Preston Briggs
  */
-public class PropertyLoaderConfigurationTest extends BaseWpiTest {
+public class PropertyLoaderConfigurationTest extends PropertyLoaderBaseTest {
     
     @Test
     @DisplayName("WHEN: Setting external conf dir with a prefix of '~' - THEN: '~' is replaced with user dir")

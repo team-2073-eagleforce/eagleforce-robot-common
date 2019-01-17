@@ -29,7 +29,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 		LinearMotionMechanism lmm = new LinearMotionMechanism(25., SimulationConstants.MotorType.CIM, 2, 30, .855);
 
 		SimulationEagleSRX talon = new SimulationEagleSRX("ExampleTalon", lmm, 4096);
-        robotContext.getPeriodicRunner().register( talon);
+        robotContext.getPeriodicRunner().register(talon);
 		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(talon);
 
 		new SimulationEnvironmentRunner()

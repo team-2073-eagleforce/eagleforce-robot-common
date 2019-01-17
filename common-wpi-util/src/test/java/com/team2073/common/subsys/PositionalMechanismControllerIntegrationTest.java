@@ -1,7 +1,6 @@
 package com.team2073.common.subsys;
 
 import com.team2073.common.controlloop.PidfControlLoop;
-import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.datarecorder.DataRecorder;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.simulation.SimulationConstants;
@@ -29,7 +28,6 @@ class PositionalMechanismControllerIntegrationTest extends BaseWpiTest {
 
     @Test
     public void simpleTestLinearMechanism() {
-        RobotContext robotContext = RobotContext.getInstance();
         PeriodicRunner periodicRunner = robotContext.getPeriodicRunner();
         DataRecorder dataRecorder = robotContext.getDataRecorder().registerCsvOutputHandler();
         dataRecorder.registerWithPeriodicRunner(periodicRunner);
@@ -54,7 +52,6 @@ class PositionalMechanismControllerIntegrationTest extends BaseWpiTest {
 
     @Test
     public void simpleTestArmMechanism() {
-        RobotContext robotContext = RobotContext.getInstance();
         PeriodicRunner periodicRunner = robotContext.getPeriodicRunner();
         DataRecorder dataRecorder = robotContext.getDataRecorder().registerCsvOutputHandler();
         dataRecorder.registerWithPeriodicRunner(periodicRunner);

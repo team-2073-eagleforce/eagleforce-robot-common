@@ -4,6 +4,7 @@ import com.team2073.common.CommonConstants.TestTags;
 import com.team2073.common.periodic.PeriodicRunner.InstanceAwareDurationHistory;
 import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
 import com.team2073.common.test.annon.TestFailing;
+import com.team2073.common.wpitest.BaseWpiTest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -16,7 +17,7 @@ import static org.assertj.core.api.Assertions.*;
  * @author pbriggs
  */
 @Tag(TestTags.INTEGRATION_TEST)
-class PeriodicRunnerIntegrationTest {
+class PeriodicRunnerIntegrationTest extends BaseWpiTest {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 

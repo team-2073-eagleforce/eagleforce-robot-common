@@ -94,6 +94,8 @@ public class PeriodicRunner implements SmartDashboardAware {
     public static final long DEFAULT_SYNC_PERIOD = 20;
 
 	private static final Logger logger = LoggerFactory.getLogger(PeriodicRunner.class);
+	
+	private final RobotContext robotContext = RobotContext.getInstance();
 
 	private final Map<PeriodicRunnable, PeriodicInstance> instanceMap = new HashMap<>();
 	private final Map<AsyncPeriodicRunnable, AsyncPeriodicInstance> asyncInstanceMap = new HashMap<>();
@@ -142,7 +144,7 @@ public class PeriodicRunner implements SmartDashboardAware {
 	 * There is a convenience method to handle this: {@link PeriodicRunnable#autoRegisterWithPeriodicRunner()}.
 	 */
 	public void autoRegister(PeriodicRunnable instance, String name) {
-		if (RobotContext.getInstance().getCommonProps().getPeriodicRunnerAutoRegister())
+		if (robotContext.getCommonProps().getPeriodicRunnerAutoRegister())
 			register(instance, name);
 		else
 			logger.debug("Periodic Runner Auto Register is disabled. Ignoring registering [{}].", simpleNameSafe(instance));
@@ -193,7 +195,7 @@ public class PeriodicRunner implements SmartDashboardAware {
 
 	/** See {@link #autoRegister(PeriodicRunnable, String)} */
 	public void autoRegisterAsync(AsyncPeriodicRunnable instance, String name, long period) {
-		if (RobotContext.getInstance().getCommonProps().getPeriodicRunnerAutoRegister())
+		if (robotContext.getCommonProps().getPeriodicRunnerAutoRegister())
 			registerAsync(instance, name);
 		else
 			logger.debug("Periodic Runner Auto Register is disabled. Ignoring registering [{}].", simpleNameSafe(instance));
@@ -328,7 +330,7 @@ public class PeriodicRunner implements SmartDashboardAware {
 	
 	@Override
 	public void updateSmartDashboard() {
-		SmartDashboardAdapter smartDashboard = RobotContext.getInstance().getSmartDashboard();
+		SmartDashboardAdapter smartDashboard = robotContext.getSmartDashboard();
 		smartDashboard.putNumber("periodic.overall.total", fullLoopHistory.getTotal());
 		
 		smartDashboard.putNumber("periodic.curr.count", fullLoopHistory.getCount());

@@ -53,8 +53,9 @@ import static com.team2073.common.util.ThreadUtil.*;
  * @author pbriggs
  */
 public class DataRecorder {
-
+    
     // Misc/helpers
+    private final RobotContext robotContext = RobotContext.getInstance();
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final DataRecorderHelper mapper = new DataRecorderHelper();
     private DataRecorderStateMachine state = new DataRecorderStateMachine();
@@ -117,7 +118,7 @@ public class DataRecorder {
     private boolean registerRecordable(Object recordable, long period) {
 
         // What the heck was I doing here?
-//        RobotContext.getInstance().getCommonProps().setDataRecorderDefaultRecordInterval(10L);
+//        robotContext.getCommonProps().setDataRecorderDefaultRecordInterval(10L);
 
         if (recordable instanceof DataRecordOutputHandler) {
             // TODO: Check if it's annotated with @Recordable
@@ -279,7 +280,7 @@ public class DataRecorder {
 
     /** See {@link #registerWithPeriodicRunner(PeriodicRunner, long)} */
     public void registerWithPeriodicRunner(long flushInterval) {
-        registerWithPeriodicRunner(RobotContext.getInstance().getPeriodicRunner(), flushInterval);
+        registerWithPeriodicRunner(robotContext.getPeriodicRunner(), flushInterval);
     }
 
     /** See {@link #registerWithPeriodicRunner(PeriodicRunner, long)} */
@@ -555,7 +556,7 @@ public class DataRecorder {
     }
 
     private CommonProperties getCommonProps() {
-        return RobotContext.getInstance().getCommonProps();
+        return robotContext.getCommonProps();
     }
 
     // Testing methods

@@ -20,12 +20,11 @@ import com.team2073.common.util.Ex;
 import com.team2073.common.util.Throw;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
-
-import static com.team2073.common.util.ClassUtil.*;
 
 /**
  * Use this class to get instances normally retrieved through static methods
@@ -48,29 +47,44 @@ public class RobotContext {
     //      - http://ahlamnote.blogspot.com/2017/07/junit-test-for-singletonsstatic.html
     
     private static RobotContext instance;
+    private static String lastInstantiationStackTrace;
     
     public static boolean instanceExists() {
         return instance != null;
     }
     
     public static RobotContext getInstance() {
-        if (instance == null)
+        if (instance == null) {
+            lastInstantiationStackTrace = ExceptionUtils.getStackTrace(new Throwable());
             instance = new RobotContext();
+        }
         return instance;
     }
     
     /**
-     * Call this before every test. (Extending BaseWpiTest will do this for you).<br/>
+     * Call this before every test (In your {@literal @}BeforeEach mehtod). (Extending BaseWpiTest will do this for you).<br/>
      * Do not call this more than once per test. This will initialize a brand new instance.
      * Everywhere else should just call {@link #getInstance()} which will return a simulation
      * version after this has been called.
+     *
      * @return A simulation version of the {@link RobotContext}
      */
     public static RobotContext initSimulationInstance() {
         if (instance != null && !instance.isSimulationMode()) {
-            throw Ex.illegalState("Non-simulation mode [{}] was used prior to initializing simulation instance! " +
-                    "Do not call getInstance() prior to calling initSimulationInstance()!"
-                    , simpleName(RobotContext.class));
+            throw Ex.illegalState("Non-simulation mode RobotContext was used prior to initializing simulation instance! " +
+                    "Do not call getInstance() prior to calling initSimulationInstance()! Extending the class 'BaseWpiTest' " +
+                    "will handle this for you." +
+                    "\n\n\n" +
+                    "============================ RESPONSIBLE STACKTRACE ============================" +
+                    "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv" +
+                    "\n\n" +
+                    "\n\n" +
+                    lastInstantiationStackTrace +
+                    "\n\n" +
+                    "\n\n" +
+                    "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" +
+                    "============================ RESPONSIBLE STACKTRACE ============================" +
+                    "");
         }
     
         if (instance != null)
@@ -81,7 +95,22 @@ public class RobotContext {
         instance.setSmartDashboard(SmartDashboardAdapterSimulationImpl.getInstance());
         instance.setDriverStation(DriverStationAdapterSimulationImpl.getInstance());
         instance.setScheduler(SchedulerAdapterSimulationImpl.getInstance());
+        
         return instance;
+    }
+    
+    /**
+     * Call this at the end of every test (in your {@literal @}AfterEach method).
+     *
+     * @return
+     */
+    public static void shutdownSimulationInstance() {
+        if (instance == null) {
+            // This is just to inform you you did something wrong.
+            // If there is a valid use case, we can remove this throw
+            throw Ex.illegalState("Cannot call shutdownSimulationInstance() without first calling initSimulationInstance().");
+        }
+        instance = null;
     }
     
     public static boolean instanceIsSimulationMode() {
@@ -115,11 +144,11 @@ public class RobotContext {
     private RobotDirectory robotDir;
     private RobotProfiles robotProfiles;
     
-    public RobotContext() {
+    private RobotContext() {
         this(false);
     }
     
-    public RobotContext(boolean simulationMode) {
+    private RobotContext(boolean simulationMode) {
         this.simulationMode = simulationMode;
     }
     

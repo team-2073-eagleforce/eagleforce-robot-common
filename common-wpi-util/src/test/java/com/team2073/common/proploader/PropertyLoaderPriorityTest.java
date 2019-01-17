@@ -2,7 +2,6 @@ package com.team2073.common.proploader;
 
 import com.team2073.common.util.FileUtil;
 import com.team2073.common.util.JvmUtil;
-import com.team2073.common.wpitest.BaseWpiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +13,7 @@ import static org.assertj.core.api.Assertions.*;
 /**
  * @author Preston Briggs
  */
-public class PropertyLoaderPriorityTest extends BaseWpiTest {
+public class PropertyLoaderPriorityTest extends PropertyLoaderBaseTest {
 
 
     // NOTES:

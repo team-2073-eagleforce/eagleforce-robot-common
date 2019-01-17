@@ -25,6 +25,7 @@ public class EagleSRX extends TalonSRX implements AsyncPeriodicRunnable, SmartDa
     // TODO: Change case to EagleSrx (same with EagleSPX)
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final RobotContext robotContext = RobotContext.getInstance();
     private String name;
     private boolean isTestingEnabled = false;
     private double safePercentage = .5;
@@ -87,7 +88,7 @@ public class EagleSRX extends TalonSRX implements AsyncPeriodicRunnable, SmartDa
                     }
                 });
         autoRegisterWithPeriodicRunner(simpleName(this) + "[" + deviceNumber + "]");
-        RobotContext.getInstance().getSmartDashboardRunner().registerInstance(this);
+        robotContext.getSmartDashboardRunner().registerInstance(this);
 
         logger.info("[{}] Talon has been initialized on port [{}].", name, deviceNumber);
     }
