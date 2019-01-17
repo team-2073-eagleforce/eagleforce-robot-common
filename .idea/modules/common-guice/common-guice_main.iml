@@ -33,7 +33,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: com.team2073:common-util:0.4.0-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="common-util_main" />
     <orderEntry type="library" name="Gradle: com.google.inject.extensions:guice-assistedinject:4.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.inject.extensions:guice-throwingproviders:4.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.mycila.guice.extensions:mycila-guice-jsr250:4.0.rc1" level="project" />

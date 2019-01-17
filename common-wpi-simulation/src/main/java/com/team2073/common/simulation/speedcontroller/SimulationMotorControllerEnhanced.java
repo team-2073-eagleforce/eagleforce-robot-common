@@ -1,7 +1,13 @@
 package com.team2073.common.simulation.speedcontroller;
 
 import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.SensorCollection;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 
 public interface SimulationMotorControllerEnhanced extends SimulationMotorController, IMotorControllerEnhanced {
 
@@ -21,6 +27,12 @@ public interface SimulationMotorControllerEnhanced extends SimulationMotorContro
     default int getStatusFramePeriod(StatusFrameEnhanced frame, int timeoutMs) {
         throwUnsupported("getStatusFramePeriod");
         return 0;
+    }
+    
+    @Override
+    default SensorCollection getSensorCollection() {
+        throwUnsupported("SensorCollection");
+        return null;
     }
 
     @Override
@@ -69,5 +81,11 @@ public interface SimulationMotorControllerEnhanced extends SimulationMotorContro
     default void enableCurrentLimit(boolean enable) {
         throwUnsupported("enableCurrentLimit");
     }
+
+	@Override
+	default double getOutputCurrent() {
+		throwUnsupported("getOutputCurrent");
+		return 0;
+	}
 
 }
