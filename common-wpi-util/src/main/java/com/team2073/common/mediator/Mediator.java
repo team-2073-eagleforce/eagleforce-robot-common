@@ -111,7 +111,7 @@ public class Mediator implements PeriodicRunnable {
     public void execute(Request request) {
         Assert.assertNotNull(request, "request");
         ArrayList<Conflict> conflicts = findRequestConflicts(request);
-        Deque<Request> requestList = new LinkedList<>();
+        Deque<Request> requestList = executeList.peekFirst();
 
         Condition condition = request.getCondition();
         Class subsystem = request.getSubsystem();
@@ -128,7 +128,6 @@ public class Mediator implements PeriodicRunnable {
                 Request listRequest = createConflictRequest(conflict);
                 requestList.add(listRequest);
                 logger.debug("Added request: [{}].", listRequest.getName());
-                executeList.addFirst(requestList);
             }
         }
 

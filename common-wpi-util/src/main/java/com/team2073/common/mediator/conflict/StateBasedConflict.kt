@@ -22,7 +22,7 @@ class StateBasedConflict<OS : ColleagueSubsystem, OC : Condition, CC : Condition
     }
 
     override fun isRequestConflicting(request: Request<CC, OS>, conflictingCondition: Condition): Boolean {
-        return originCondition.isInCondition(request.condition) && conflictingCondition.isInCondition(conflictingCondition)
+        return originCondition.isInCondition(request.condition) && conflictingCondition.isInCondition(conflictingConditionS)
     }
 
     override fun invert(): Conflict<OS, OC, CC, CS> {

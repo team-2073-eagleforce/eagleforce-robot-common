@@ -41,7 +41,7 @@ class StatePositionBasedConflict<OS : ColleagueSubsystem, OC : Condition, CS : C
         var conflictCase = false
         var originCase = false
 
-        if (conflictingCondition.isInCondition(conflictingCondition)) {
+        if (conflictingCondition.isInCondition(conflictingConditionPS)) {
             conflictCase = true
         }
         if (originCondition.isInCondition(request.condition)) {
