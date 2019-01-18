@@ -2,8 +2,8 @@ package com.team2073.common.mediator.subsys
 
 import com.team2073.common.periodic.PeriodicRunnable
 
-interface ColleagueSubsystem : PeriodicRunnable {
+interface ColleagueSubsystem<T> : PeriodicRunnable {
 
-    fun<T> set(place: T)
+    fun set(place: T)
 
 }

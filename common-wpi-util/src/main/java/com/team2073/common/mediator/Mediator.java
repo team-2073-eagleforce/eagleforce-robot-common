@@ -33,13 +33,13 @@ import java.util.*;
  * </ul>
  */
 public class Mediator implements PeriodicRunnable {
-    private Map<Class, ColleagueSubsystem> subsystemMap;
-    private Map<Class, ArrayList<Conflict>> conflictMap;
+    private Map<Class<? extends ColleagueSubsystem>, ColleagueSubsystem> subsystemMap;
+    private Map<Class<? extends ColleagueSubsystem>, ArrayList<Conflict>> conflictMap;
     private Tracker subsystemTracker;
     private Deque<Deque<Request>> executeList = new LinkedList<>();
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public void init(Map<Class, ColleagueSubsystem> subsystemMap, Map<Class, ArrayList<Conflict>> conflictMap, Tracker subsystemTracker) {
+    public void init(Map<Class<? extends ColleagueSubsystem>, ColleagueSubsystem> subsystemMap, Map<Class<? extends ColleagueSubsystem>, ArrayList<Conflict>> conflictMap, Tracker subsystemTracker) {
         Assert.assertNotNull(subsystemMap, "subsystemMap");
         Assert.assertNotNull(conflictMap, "conflictMap");
         Assert.assertNotNull(subsystemTracker, "subsystemTracker");
@@ -167,7 +167,7 @@ public class Mediator implements PeriodicRunnable {
      * @return a {@link Request} that resolves the {@link Conflict}
      */
     public Request createConflictRequest(Conflict conflict) {
-        return new Request<Condition, ColleagueSubsystem>(conflict.getConflictingSubsystem(),
+        return new Request<>(conflict.getConflictingSubsystem(),
                 conflict.getResolution(conflict.getConflictingCondition(),
                         subsystemMap.get(conflict.getConflictingSubsystem())));
     }
