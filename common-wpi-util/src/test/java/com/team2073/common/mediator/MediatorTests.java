@@ -14,6 +14,7 @@ import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.ColleagueSubsystem;
 import com.team2073.common.mediator.subsys.SubsystemStateCondition;
 import com.team2073.common.position.Position;
+import com.team2073.common.test.annon.TestNotWrittenYet;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,7 +54,7 @@ class MediatorTests {
         stateConflicts.add(new StatePositionBasedConflict<>(StateSubsystem.class,
                 new StateBasedCondition(State.OPEN),
                 PositionSubsystem.class,
-                new PositionBasedCondition(85, 85, 90)));
+                new PositionBasedCondition(85, 90, 95)));
 
         conflictMap.put(PositionSubsystem.class, positionConflicts);
         conflictMap.put(MediatorTestFixtures.StateSubsystem.class, stateConflicts);
@@ -161,7 +162,7 @@ class MediatorTests {
         Request stateRequest = new Request<>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
 
         testMediator.add(stateRequest);
-        testMediator.onPeriodic();
+        callPeriodic(testMediator, 2);
         assertThat(stateSubsystem.updateTracker()).isEqualTo(State.OPEN);
         testMediator.add(positionRequest);
 
@@ -189,6 +190,7 @@ class MediatorTests {
     }
 
     //TODO finish filling out
+    @TestNotWrittenYet
     @Test
     public void mediator_WHEN_FinishedWithLargeRequestList_SHOULD_ProperlyReset() {
 //        TestMediator testMediator = new TestMediator();

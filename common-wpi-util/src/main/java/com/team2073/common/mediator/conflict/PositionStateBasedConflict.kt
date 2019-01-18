@@ -22,7 +22,7 @@ class PositionStateBasedConflict<OS : ColleagueSubsystem, OC : Condition, CS : C
     }
 
     override fun isRequestConflicting(request: Request<CC, OS>, conflictingCondition: Condition): Boolean {
-        return conflictingCondition.isInCondition(conflictingCondition)
+        return conflictingCondition.isInCondition(conflictingConditionPS)
                 && originCondition.isInCondition(request.condition)
     }
 

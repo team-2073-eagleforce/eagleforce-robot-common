@@ -36,7 +36,7 @@ class PositionBasedConflict<OS : ColleagueSubsystem, OC : Condition,CS : Colleag
     }
 
     override fun isRequestConflicting(request: Request<CC, OS>, conflictingCondition: Condition): Boolean {
-        return originCondition.isInCondition(request.condition) && conflictingCondition.isInCondition(conflictingCondition)
+        return originCondition.isInCondition(request.condition) && conflictingCondition.isInCondition(conflictingConditionP)
     }
 
     override fun invert(): Conflict<OS, OC, CC, CS> {
