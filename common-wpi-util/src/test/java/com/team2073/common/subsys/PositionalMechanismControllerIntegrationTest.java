@@ -7,7 +7,7 @@ import com.team2073.common.simulation.SimulationConstants;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 import com.team2073.common.simulation.model.ArmMechanism;
 import com.team2073.common.simulation.model.LinearMotionMechanism;
-import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
+import com.team2073.common.simulation.runner.SimulationRobotApplication;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSRX;
 import com.team2073.common.simulation.speedcontroller.SimulationPidfEagleSRX;
 import com.team2073.common.subsys.PositionalMechanismController.HoldType;
@@ -39,7 +39,7 @@ class PositionalMechanismControllerIntegrationTest extends BaseWpiTest {
         PositionalMechanismController<ElevatorGoal> mechanismController = new PositionalMechanismController<ElevatorGoal>("Simulation Elevator", new ElevatorPositionConverter(), HoldType.PID , srx);
         ElevatorGoalSupplier goalSupplier = new ElevatorGoalSupplier(mechanismController);
     
-        SimulationEnvironment env = SimulationEnvironmentRunner.create()
+        SimulationEnvironment env = SimulationRobotApplication.create()
                 .withCycleComponent(lmm)
                 .withPeriodicComponent(mechanismController)
                 .withPeriodicComponent(goalSupplier)
@@ -63,7 +63,7 @@ class PositionalMechanismControllerIntegrationTest extends BaseWpiTest {
         PositionalMechanismController<ElevatorGoal> mechanismController = new PositionalMechanismController<ElevatorGoal>("Simulation Elevator", new ElevatorPositionConverter(), HoldType.PID, srx);
         ElevatorGoalSupplier goalSupplier = new ElevatorGoalSupplier(mechanismController);
     
-        SimulationEnvironment env = SimulationEnvironmentRunner.create()
+        SimulationEnvironment env = SimulationRobotApplication.create()
                 .withCycleComponent(lmm)
                 .withPeriodicComponent(mechanismController)
                 .withPeriodicComponent(goalSupplier)

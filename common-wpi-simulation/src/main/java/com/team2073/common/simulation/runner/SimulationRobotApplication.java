@@ -5,6 +5,7 @@ import com.team2073.common.assertion.Assert;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.periodic.PeriodicRunner;
+import com.team2073.common.robot.RobotApplication;
 import com.team2073.common.robot.RobotDelegate;
 import com.team2073.common.robot.adapter.RobotAdapter;
 import com.team2073.common.robot.adapter.RobotAdapterSimulationImpl;
@@ -30,15 +31,18 @@ import java.util.concurrent.TimeUnit;
 import static com.team2073.common.util.ClassUtil.*;
 
 /**
+ * The simulation equivalent of {@link RobotApplication}. Use this to run unit tests.
+ * TODO: add javadocs
+ *
  * @author Preston Briggs
  */
-public class SimulationEnvironmentRunner {
+public class SimulationRobotApplication {
 
     private static final String CYCLE_THREAD_NAME = "cycle-runner";
     private static final String PERIODIC_THREAD_NAME = "periodic-runner";
 
-    public static SimulationEnvironmentRunner create() {
-        return new SimulationEnvironmentRunner();
+    public static SimulationRobotApplication create() {
+        return new SimulationRobotApplication();
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -152,7 +156,7 @@ public class SimulationEnvironmentRunner {
 
     // Public configuration methods
     // TODO: Extract to a configuration object?
-    public SimulationEnvironmentRunner withCycleComponent(SimulationCycleComponent... cycleComponent) {
+    public SimulationRobotApplication withCycleComponent(SimulationCycleComponent... cycleComponent) {
         for (SimulationCycleComponent component : cycleComponent) {
             Assert.assertNotNull(component, "component");
             cycleEnv.registerCycleComponent(component);
@@ -161,43 +165,43 @@ public class SimulationEnvironmentRunner {
         return this;
     }
 
-    public SimulationEnvironmentRunner withPeriodicRunner(PeriodicRunner periodicRunner) {
+    public SimulationRobotApplication withPeriodicRunner(PeriodicRunner periodicRunner) {
         robotContext.setPeriodicRunner(periodicRunner);
         return this;
     }
 
-    public SimulationEnvironmentRunner withPeriodicComponent(PeriodicRunnable... periodicAware) {
+    public SimulationRobotApplication withPeriodicComponent(PeriodicRunnable... periodicAware) {
         Assert.assertNotNull(periodicAware, "periodicAware");
         for (PeriodicRunnable periodic : periodicAware) {
             Assert.assertNotNull(periodic, "periodic");
-            // Don't add directly to periodic runner here in case they call withPeriodicRunner(...) after this method
+            // Don't add directly to periodic runner here in case they call withPeriodicRunner(...) AFTER this method
             periodicList.add(periodic);
         }
         return this;
     }
     
-    public SimulationEnvironmentRunner withSimulationRobotRunner(SimulationRobotRunner robotRunner) {
+    public SimulationRobotApplication withSimulationRobotRunner(SimulationRobotRunner robotRunner) {
         Assert.assertNotNull(robotRunner, "robotRunner");
         this.robotRunner = robotRunner;
         log.debug("SimRunner: Registered SimulationRobotRunner [{}].", simpleName(robotRunner));
         return this;
     }
     
-    public SimulationEnvironmentRunner withRobotAdapter(RobotAdapter robotAdapter) {
+    public SimulationRobotApplication withRobotAdapter(RobotAdapter robotAdapter) {
         Assert.assertNotNull(robotAdapter, "robotAdapter");
         this.robotAdapter = robotAdapter;
         log.debug("SimRunner: Registered RobotAdapter [{}].", simpleName(robotAdapter));
         return this;
     }
     
-    public SimulationEnvironmentRunner withRobotDelegate(RobotDelegate robotDelegate) {
+    public SimulationRobotApplication withRobotDelegate(RobotDelegate robotDelegate) {
         Assert.assertNotNull(robotDelegate, "robotDelegate");
         this.robotDelegate = robotDelegate;
         log.debug("SimRunner: Registered RobotDelegate [{}].", simpleName(robotDelegate));
         return this;
     }
 
-    public SimulationEnvironmentRunner withIterationCount(int iterationCount) {
+    public SimulationRobotApplication withIterationCount(int iterationCount) {
         this.iterationCount = iterationCount;
         return this;
     }

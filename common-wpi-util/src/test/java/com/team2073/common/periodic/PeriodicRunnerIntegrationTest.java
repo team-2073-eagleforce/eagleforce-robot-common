@@ -3,7 +3,7 @@ package com.team2073.common.periodic;
 import com.team2073.common.CommonConstants.TestTags;
 import com.team2073.common.periodic.PeriodicRunner.InstanceAwareDurationHistory;
 import com.team2073.common.simulation.env.SimulationEnvironment;
-import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
+import com.team2073.common.simulation.runner.SimulationRobotApplication;
 import com.team2073.common.test.annon.TestFailing;
 import com.team2073.common.wpitest.BaseWpiTest;
 import org.junit.jupiter.api.Tag;
@@ -37,7 +37,7 @@ class PeriodicRunnerIntegrationTest extends BaseWpiTest {
         IterationAwarePeriodicRunnableImpl periodic1 = new IterationAwarePeriodicRunnableImpl();
         runner.register(periodic1);
     
-        SimulationEnvironment env = SimulationEnvironmentRunner.create()
+        SimulationEnvironment env = SimulationRobotApplication.create()
                 .withPeriodicRunner(runner)
                 .start();
         
@@ -57,7 +57,7 @@ class PeriodicRunnerIntegrationTest extends BaseWpiTest {
         runner.register(periodic2);
         runner.register(periodic3);
     
-        SimulationEnvironment env = SimulationEnvironmentRunner.create()
+        SimulationEnvironment env = SimulationRobotApplication.create()
                 .withPeriodicRunner(runner)
                 .start();
         
@@ -100,7 +100,7 @@ class PeriodicRunnerIntegrationTest extends BaseWpiTest {
 
         runner.register(new IterationAwarePeriodicRunnableImpl(), "Just here to make sure the non-async loop has something to loop over :) ");
     
-        SimulationEnvironment env = SimulationEnvironmentRunner.create()
+        SimulationEnvironment env = SimulationRobotApplication.create()
                 .withPeriodicRunner(runner)
                 .withIterationCount(400)
                 .start();

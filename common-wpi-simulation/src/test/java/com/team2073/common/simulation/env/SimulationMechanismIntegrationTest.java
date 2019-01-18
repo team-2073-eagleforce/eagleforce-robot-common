@@ -8,7 +8,7 @@ import com.team2073.common.simulation.env.SubsystemTestFixtures.ConstantOutputti
 import com.team2073.common.simulation.env.SubsystemTestFixtures.SolenoidSubsystem;
 import com.team2073.common.simulation.model.ArmMechanism;
 import com.team2073.common.simulation.model.LinearMotionMechanism;
-import com.team2073.common.simulation.runner.SimulationEnvironmentRunner;
+import com.team2073.common.simulation.runner.SimulationRobotApplication;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSPX;
 import com.team2073.common.simulation.speedcontroller.SimulationEagleSRX;
 import com.team2073.common.simulation.subsystem.SimulatedElevatorSubsystem;
@@ -32,7 +32,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
         robotContext.getPeriodicRunner().register(talon);
 		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(talon);
 
-		SimulationEnvironment env = SimulationEnvironmentRunner.create()
+		SimulationEnvironment env = SimulationRobotApplication.create()
 				.withCycleComponent(lmm)
 				.withPeriodicComponent(subsystem)
 				.withPeriodicRunner(robotContext.getPeriodicRunner())
@@ -48,7 +48,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 		SimulationEagleSPX victor = new SimulationEagleSPX("ExampleTalon", arm);
         robotContext.getPeriodicRunner().register(victor);
 		ConstantOutputtingSubsystem subsystem = new ConstantOutputtingSubsystem(victor);
-		SimulationEnvironment env = SimulationEnvironmentRunner.create()
+		SimulationEnvironment env = SimulationRobotApplication.create()
 				.withCycleComponent(arm)
 				.withPeriodicComponent(subsystem)
 				.withPeriodicRunner(robotContext.getPeriodicRunner())
@@ -92,7 +92,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 //		This is the big fancy SimulationEnvironment Runner, it will handle running the "Real World" cycle, and the software periodic loops,
 //      just pass in your mechanism, subsystem, and tell how long you want it to run for before executing the methods in the run method.
 //      (That is where you should place your assertions.)
-		SimulationEnvironment env = SimulationEnvironmentRunner.create()
+		SimulationEnvironment env = SimulationRobotApplication.create()
 				.withCycleComponent(lmm)
 				.withPeriodicComponent(subsystem)
                 .withPeriodicRunner(robotContext.getPeriodicRunner())
@@ -124,7 +124,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 
 		subsystem.set(goalPosition);
 		
-		SimulationEnvironment env = SimulationEnvironmentRunner.create()
+		SimulationEnvironment env = SimulationRobotApplication.create()
 				.withCycleComponent(lmm)
 				.withPeriodicComponent(subsystem)
                 .withPeriodicRunner(robotContext.getPeriodicRunner())
@@ -139,7 +139,7 @@ class SimulationMechanismIntegrationTest extends BaseWpiTest {
 		ArmMechanism arm = new ArmMechanism(55, SimulationConstants.MotorType.MINI_CIM, 2, 15, 13);
 		SolenoidSubsystem subsystem = new SolenoidSubsystem(SimulationComponentFactory.createSimulationSolenoid(arm));
 		
-		SimulationEnvironment env = SimulationEnvironmentRunner.create()
+		SimulationEnvironment env = SimulationRobotApplication.create()
 				.withCycleComponent(arm)
 				.withPeriodicComponent(subsystem)
 				.withIterationCount(5)

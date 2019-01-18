@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 /**
  * @author Preston Briggs
  */
-public class RobotRunner {
+public class RobotApplication {
     
     public static <T extends RobotDelegate> void start(Supplier<T> robotDelegate) {
         start(robotDelegate.get());
@@ -17,9 +17,5 @@ public class RobotRunner {
     public static void start(RobotDelegate robotDelegate) {
         RobotAdapterDefaultImpl robotAdapter = RobotAdapterDefaultImpl.getInstance(robotDelegate);
         RobotBase.startRobot(() -> robotAdapter);
-    }
-    
-    public static void startSimulation(RobotDelegate robotDelegate) {
-    
     }
 }
