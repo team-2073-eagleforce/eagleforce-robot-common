@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 
 /**
+ * <h1>WRANING: These javadocs are no longer valid ~1/18/2019 (COMMON-103)</h1>
  * Extend this class and simply pass in an implementation of
  * {@link RobotDelegate} to the super constructor (use
  * {@link AbstractRobotDelegate} for simplicity). Then just define the new
@@ -39,7 +40,7 @@ import java.text.DecimalFormat;
  * </pre>
  * And then extend this class and pass in your RobotDelegate implementation:
  * <pre>
- * public class RobotDelegatorPowerUpImpl extends AbstractRobotDelegator {
+ * public class RobotDelegatorPowerUpImpl extends RobotRunner {
  *
  * 	public RobotDelegatorPowerUpImpl() {
  * 		super(new RobotDelegatePowerUpImpl());
@@ -54,7 +55,7 @@ import java.text.DecimalFormat;
  *
  * @author Preston Briggs
  */
-public class AbstractRobotDelegator implements RobotDelegate, SmartDashboardAware {
+public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 	
 	private final RobotDelegate robot;
 	private Logger log = LoggerFactory.getLogger(getClass());
@@ -74,7 +75,7 @@ public class AbstractRobotDelegator implements RobotDelegate, SmartDashboardAwar
 	private DriverStationAdapter driverStation;
 	private SchedulerAdapter scheduler;
 
-	public AbstractRobotDelegator(RobotDelegate robot) {
+	public RobotRunner(RobotDelegate robot) {
 		this.robot = robot;
 	}
 

@@ -9,7 +9,7 @@ import com.team2073.common.proploader.model.PropertyContainer;
 import com.team2073.common.proploader.model.PropertyContainerWrapper;
 import com.team2073.common.proploader.model.PropertyFileAccessor;
 import com.team2073.common.proploader.model.PropertyMapping;
-import com.team2073.common.robot.AbstractRobotDelegator;
+import com.team2073.common.robot.RobotRunner;
 import com.team2073.common.util.Ex;
 import com.team2073.common.util.FileUtil;
 import org.apache.commons.io.FileUtils;
@@ -240,7 +240,7 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
      *
      * <p>Since any file IO is time consuming (comparatively speaking), if properties are to be loaded repeatedly,
      * this must be done on a separate thread than the main robot thread. It is strongly recommended to use the
-     * {@link AbstractRobotDelegator}. This will automatically run the {@link PropertyLoader} (reload the properties)
+     * {@link RobotRunner}. This will automatically run the {@link PropertyLoader} (reload the properties)
      * on an async periodic loop every 5 seconds.</p>
      *
      */

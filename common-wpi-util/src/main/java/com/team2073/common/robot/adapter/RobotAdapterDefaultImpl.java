@@ -1,7 +1,7 @@
 package com.team2073.common.robot.adapter;
 
-import com.team2073.common.robot.AbstractRobotDelegator;
 import com.team2073.common.robot.RobotDelegate;
+import com.team2073.common.robot.RobotRunner;
 import com.team2073.common.util.Ex;
 import edu.wpi.first.wpilibj.TimedRobot;
 
@@ -16,7 +16,7 @@ public class RobotAdapterDefaultImpl extends TimedRobot implements RobotAdapter 
         if (instance == null) {
             instance = new RobotAdapterDefaultImpl(robot);
         } else {
-            if (instance.getRobotDelegator() != robot) {
+            if (instance.getRobotRunner() != robot) {
                 throw Ex.illegalArg("Cannot call getInstance(RobotDelegate robot) with different RobotDelegate instances.");
             }
         }
@@ -24,15 +24,15 @@ public class RobotAdapterDefaultImpl extends TimedRobot implements RobotAdapter 
         return instance;
     }
     
-    private final AbstractRobotDelegator robotDelegator;
+    private final RobotRunner robotDelegator;
     
     private RobotAdapterDefaultImpl(RobotDelegate robot) {
-        this.robotDelegator = new AbstractRobotDelegator(robot);
+        this.robotDelegator = new RobotRunner(robot);
     }
     
     private RobotAdapterDefaultImpl(RobotDelegate robot, double period) {
         super(period);
-        this.robotDelegator = new AbstractRobotDelegator(robot);
+        this.robotDelegator = new RobotRunner(robot);
     }
     
     @Override
@@ -91,7 +91,7 @@ public class RobotAdapterDefaultImpl extends TimedRobot implements RobotAdapter 
     }
     
     @Override
-    public AbstractRobotDelegator getRobotDelegator() {
+    public RobotRunner getRobotRunner() {
         return robotDelegator;
     }
 }

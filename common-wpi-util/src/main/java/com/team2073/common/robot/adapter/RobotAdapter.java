@@ -1,6 +1,6 @@
 package com.team2073.common.robot.adapter;
 
-import com.team2073.common.robot.AbstractRobotDelegator;
+import com.team2073.common.robot.RobotRunner;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -52,5 +52,5 @@ public interface RobotAdapter {
     default void free() {
     }
     
-    AbstractRobotDelegator getRobotDelegator();
+    RobotRunner getRobotRunner();
 }

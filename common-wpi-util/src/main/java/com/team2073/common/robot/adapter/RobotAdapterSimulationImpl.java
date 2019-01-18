@@ -1,83 +1,83 @@
 package com.team2073.common.robot.adapter;
 
-import com.team2073.common.robot.AbstractRobotDelegator;
 import com.team2073.common.robot.RobotDelegate;
+import com.team2073.common.robot.RobotRunner;
 
 /**
  * @author Preston Briggs
  */
 public class RobotAdapterSimulationImpl implements RobotAdapter {
     
-    private final AbstractRobotDelegator robotDelegator;
+    private final RobotRunner robotRunner;
     
     public RobotAdapterSimulationImpl(RobotDelegate robot) {
-        this.robotDelegator = new AbstractRobotDelegator(robot);
+        this.robotRunner = new RobotRunner(robot);
     }
     
     public RobotAdapterSimulationImpl(RobotDelegate robot, double period) {
         // TODO: Use period properly
 //        super(period);
-        this.robotDelegator = new AbstractRobotDelegator(robot);
+        this.robotRunner = new RobotRunner(robot);
     }
     
     @Override
     public void robotInit() {
-        robotDelegator.robotInit();
+        robotRunner.robotInit();
     }
     
     @Override
     public void disabledInit() {
-        robotDelegator.disabledInit();
+        robotRunner.disabledInit();
     }
     
     @Override
     public void autonomousInit() {
-        robotDelegator.autonomousInit();
+        robotRunner.autonomousInit();
     }
     
     @Override
     public void teleopInit() {
-        robotDelegator.teleopInit();
+        robotRunner.teleopInit();
     }
     
     @Override
     public void testInit() {
-        robotDelegator.testInit();
+        robotRunner.testInit();
     }
     
     @Override
     public void robotPeriodic() {
-        robotDelegator.robotPeriodic();
+        robotRunner.robotPeriodic();
     }
     
     @Override
     public void disabledPeriodic() {
-        robotDelegator.disabledPeriodic();
+        robotRunner.disabledPeriodic();
     }
     
     @Override
     public void autonomousPeriodic() {
-        robotDelegator.autonomousPeriodic();
+        robotRunner.autonomousPeriodic();
     }
     
     @Override
     public void teleopPeriodic() {
-        robotDelegator.teleopPeriodic();
+        robotRunner.teleopPeriodic();
     }
     
     @Override
     public void testPeriodic() {
-        robotDelegator.testPeriodic();
+        robotRunner.testPeriodic();
     }
     
     @Override
     public void free() {
-        robotDelegator.free();
+        robotRunner.free();
     }
     
     @Override
-    public AbstractRobotDelegator getRobotDelegator() {
-        return robotDelegator;
+    public RobotRunner getRobotRunner() {
+        return robotRunner;
     }
     
 }
