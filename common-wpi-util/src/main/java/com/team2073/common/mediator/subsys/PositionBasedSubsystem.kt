@@ -1,8 +1,6 @@
 package com.team2073.common.mediator.subsys
 
-abstract class PositionBasedSubsystem : ColleagueSubsystem {
+interface PositionBasedSubsystem: ColleagueSubsystem<Double> {
 
-    abstract override fun <Double> set(place: Double)
-
-    abstract fun getSafetyRange(): Double
+    fun getSafetyRange(): Double
 }

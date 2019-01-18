@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class MediatorTestFixtures {
 
-    static class PositionSubsystem extends PositionBasedSubsystem implements PositionBasedTrackee {
+    static class PositionSubsystem implements PositionBasedSubsystem, PositionBasedTrackee {
 
         PositionSubsystem() {
 //            tracker.registerTrackee(this);
@@ -26,7 +26,7 @@ public class MediatorTestFixtures {
         private Double currentPosition = 0d;
 
         @Override
-        public <Double> void set(Double place) {
+        public void set(Double place) {
             currentPosition = (java.lang.Double) place;
         }
 
@@ -48,12 +48,12 @@ public class MediatorTestFixtures {
 
     }
 
-    static class DeadPositionSubsystem extends PositionBasedSubsystem implements PositionBasedTrackee {
+    static class DeadPositionSubsystem implements PositionBasedSubsystem, PositionBasedTrackee {
 
         //empty class
 
         @Override
-        public <Double> void set(Double place) {
+        public void set(Double place) {
         }
 
         @Override
@@ -79,7 +79,7 @@ public class MediatorTestFixtures {
         CLOSE
     }
 
-    static class StateSubsystem extends StateBasedSubsystem implements StateBasedTrackee {
+    static class StateSubsystem implements StateBasedSubsystem, StateBasedTrackee {
 
         StateSubsystem() {
 //            tracker.registerTrackee(this);
@@ -88,7 +88,7 @@ public class MediatorTestFixtures {
         private State currentState;
 
         @Override
-        public <SubsystemStateCondition> void set(SubsystemStateCondition place) {
+        public void set(SubsystemStateCondition place) {
             currentState = (State) place;
         }
 
