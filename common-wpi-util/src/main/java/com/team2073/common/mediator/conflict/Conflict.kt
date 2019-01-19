@@ -4,20 +4,20 @@ import com.team2073.common.mediator.condition.Condition
 import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 
-abstract class Conflict<OT, OS : ColleagueSubsystem<OT>, OC : Condition, CT, CC : Condition, CS : ColleagueSubsystem<CT>>(
-        var originSubsystem: Class<OS>,
-        var originCondition: OC,
-        var conflictingSubsystem: Class<CS>,
-        var conflictingCondition: CC) {
+abstract class Conflict<OT, CT>(
+        var originSubsystem: Class<ColleagueSubsystem<OT>>,
+        var originCondition: Condition<OT>,
+        var conflictingSubsystem: Class<ColleagueSubsystem<CT>>,
+        var conflictingCondition: Condition<CT>) {
 
-    abstract fun invert(): Conflict<OT, OS, OC, CT, CC, CS>
+    abstract fun invert(): Conflict<CT, OT>
 
-    abstract fun isRequestConflicting(request: Request<OT, CC, OS>, conflictingCondition: CC): Boolean
+    abstract fun isRequestConflicting(request: Request<OT>, conflictingCondition: Condition<CT>): Boolean
 
-    abstract fun isConditionConflicting(originCondition: OC, conflictingCondition: CC): Boolean
+    abstract fun isConditionConflicting(originCondition: Condition<OT>, conflictingCondition: Condition<CT>): Boolean
 
     // TODO: Possibly generify the return type of Condition
-    abstract fun getResolution(currentCondition: CC, subsystem: CS): Condition
+    abstract fun getResolution(currentCondition: Condition<CT>, subsystem: ColleagueSubsystem<CT>): Condition<CT>
 
     fun getName(): String {
         return "ORIGIN SUBSYSTEM: ${originSubsystem.simpleName} IN $originCondition conflicts with ${conflictingSubsystem.simpleName} IN $conflictingCondition"

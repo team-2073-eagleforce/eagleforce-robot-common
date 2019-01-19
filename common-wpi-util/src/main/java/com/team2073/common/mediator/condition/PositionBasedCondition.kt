@@ -1,18 +1,18 @@
 package com.team2073.common.mediator.condition
 
-class PositionBasedCondition(val lowerBound: Double, var exactPosition: Double, val upperBound: Double) : Condition {
+class PositionBasedCondition(val lowerBound: Double, var exactPosition: Double, val upperBound: Double) : Condition<Double> {
 
     /** testing javadocs publish to mavenlocal */
-    override fun <Double> getConditionValue(): Double {
-        return exactPosition as Double
+    override fun getConditionValue(): Double {
+        return exactPosition
     }
 
-    override fun isInCondition(condition: Condition): Boolean {
+    override fun isInCondition(condition: Condition<Double>): Boolean {
         return ((condition as PositionBasedCondition).exactPosition in lowerBound..upperBound)
     }
 
-    fun findClosestBound(condition: Condition): Double {
-        if (condition.getConditionValue() as Double - lowerBound > condition.getConditionValue() as Double - upperBound) {
+    fun findClosestBound(condition: Condition<Double>): Double {
+        if (condition.getConditionValue() - lowerBound > condition.getConditionValue() - upperBound) {
             return upperBound
         } else {
             return lowerBound
@@ -33,7 +33,7 @@ class PositionBasedCondition(val lowerBound: Double, var exactPosition: Double, 
     }
 
     override fun toString(): String {
-        return "Between the range of [" +lowerBound + "] -- [" + upperBound + "] with an exact position of [" + exactPosition + "]"
+        return "Between the range of [$lowerBound] -- [$upperBound] with an exact position of [$exactPosition]"
     }
 
 }
