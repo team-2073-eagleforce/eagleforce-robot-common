@@ -7,9 +7,9 @@ import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.SubsystemStateCondition
 
 class PositionStateBasedConflict(
-        var originSubsystemPS: Class<ColleagueSubsystem<Double>>,
+        var originSubsystemPS: Class<out ColleagueSubsystem<Double>>,
         var originConditionPS: Condition<Double>,
-        var conflictingSubsystemPS: Class<ColleagueSubsystem<SubsystemStateCondition>>,
+        var conflictingSubsystemPS: Class<out ColleagueSubsystem<SubsystemStateCondition>>,
         var conflictingConditionPS: Condition<SubsystemStateCondition>,
         var resolveState: SubsystemStateCondition?) :
         Conflict<Double, SubsystemStateCondition>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS) {

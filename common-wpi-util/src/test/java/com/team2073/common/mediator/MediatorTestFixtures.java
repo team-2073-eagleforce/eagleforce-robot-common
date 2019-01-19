@@ -85,7 +85,7 @@ public class MediatorTestFixtures {
 //            tracker.registerTrackee(this);
         }
 
-        private State currentState;
+        private State currentState = State.STOP;
 
         @Override
         public void set(SubsystemStateCondition place) {
