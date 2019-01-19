@@ -1,6 +1,5 @@
 package com.team2073.common.simulation.runner;
 
-import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.robot.DetailedRobotState.RobotMode;
 import com.team2073.common.robot.RobotDelegate;
 import com.team2073.common.robot.adapter.RobotAdapter;
@@ -10,7 +9,7 @@ import com.team2073.common.util.EnumUtil;
 /**
  * @author pbriggs
  */
-public class SimulationRobotRunner implements PeriodicRunnable {
+public class SimulationRobotRunner {
 
     private final RobotAdapter robot;
 
@@ -30,17 +29,17 @@ public class SimulationRobotRunner implements PeriodicRunnable {
         this.robot = robot;
     }
     
-    @Override
     public void onPeriodic() {
         if (!initialized) {
             initialized = true;
             robot.robotInit();
         }
 
-        if (robotEnabled == false) {
+        if (!robotEnabled) {
             if (enabledChanged()) {
                 robot.disabledInit();
             }
+            // TODO: Shouldnt this be outside of this if block?
             prevRobotEnabled = robotEnabled;
             robot.disabledPeriodic();
         } else {
