@@ -1,12 +1,10 @@
 package com.team2073.common.mediator.condition
 
-import com.team2073.common.mediator.subsys.ColleagueSubsystem
+interface Condition<T> {
 
-interface Condition {
+    fun isInCondition(condition: Condition<T>): Boolean
 
-    fun isInCondition(condition: Condition): Boolean
-
-    fun <T> getConditionValue(): T
+    fun getConditionValue(): T
 
     override fun toString(): String
 }

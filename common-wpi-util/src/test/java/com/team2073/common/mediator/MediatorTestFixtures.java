@@ -27,7 +27,7 @@ public class MediatorTestFixtures {
 
         @Override
         public void set(Double place) {
-            currentPosition = (java.lang.Double) place;
+            currentPosition = place;
         }
 
         @Override

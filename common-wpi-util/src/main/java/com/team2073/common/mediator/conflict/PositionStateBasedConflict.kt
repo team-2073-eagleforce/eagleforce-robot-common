@@ -6,29 +6,29 @@ import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.SubsystemStateCondition
 
-class PositionStateBasedConflict<OS : ColleagueSubsystem<Double>, OC : Condition, CS : ColleagueSubsystem<SubsystemStateCondition>, CC : Condition>(
-        var originSubsystemPS: Class<OS>,
-        var originConditionPS: OC,
-        var conflictingSubsystemPS: Class<CS>,
-        var conflictingConditionPS: CC,
-        var resolveState: SubsystemStateCondition) :
-        Conflict<Double, OS, OC, SubsystemStateCondition, CC, CS>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS) {
+class PositionStateBasedConflict(
+        var originSubsystemPS: Class<ColleagueSubsystem<Double>>,
+        var originConditionPS: Condition<Double>,
+        var conflictingSubsystemPS: Class<ColleagueSubsystem<SubsystemStateCondition>>,
+        var conflictingConditionPS: Condition<SubsystemStateCondition>,
+        var resolveState: SubsystemStateCondition?) :
+        Conflict<Double, SubsystemStateCondition>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS) {
 
-    override fun isConditionConflicting(originCondition: OC, conflictingCondition: CC): Boolean {
+    override fun isConditionConflicting(originCondition: Condition<Double>, conflictingCondition: Condition<SubsystemStateCondition>): Boolean {
         return originCondition == originConditionPS && conflictingCondition == conflictingConditionPS
     }
 
-    override fun getResolution(currentCondition: CC, subsystem: CS): Condition {
+    override fun getResolution(currentCondition: Condition<SubsystemStateCondition>, subsystem: ColleagueSubsystem<SubsystemStateCondition>): Condition<SubsystemStateCondition> {
         return StateBasedCondition(resolveState)
     }
 
-    override fun isRequestConflicting(request: Request<Double, CC, OS>, conflictingCondition: CC): Boolean {
+    override fun isRequestConflicting(request: Request<Double>, conflictingCondition: Condition<SubsystemStateCondition>): Boolean {
         return conflictingCondition.isInCondition(conflictingConditionPS)
                 && originCondition.isInCondition(request.condition)
     }
 
-    override fun invert(): Conflict<Double, OS, OC, SubsystemStateCondition, CC, CS> {
-        return PositionStateBasedConflict(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS, resolveState)
+    override fun invert(): Conflict<SubsystemStateCondition, Double> {
+        return StatePositionBasedConflict(conflictingSubsystemPS, conflictingConditionPS, originSubsystemPS, originConditionPS)
     }
 
 }

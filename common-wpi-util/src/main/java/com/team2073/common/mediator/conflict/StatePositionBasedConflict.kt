@@ -7,20 +7,20 @@ import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.PositionBasedSubsystem
 import com.team2073.common.mediator.subsys.SubsystemStateCondition
 
-class StatePositionBasedConflict<OS : ColleagueSubsystem<SubsystemStateCondition>, OC : Condition, CS : ColleagueSubsystem<Double>, CC : Condition>(var originSubsystemPS: Class<OS>,
-                                                                                                                   var originConditionPS: OC,
-                                                                                                                   var conflictingSubsystemPS: Class<CS>,
-                                                                                                                   var conflictingConditionPS: CC) :
-        Conflict<SubsystemStateCondition, OS, OC, Double, CC, CS>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS) {
+class StatePositionBasedConflict(var originSubsystemPS: Class<ColleagueSubsystem<SubsystemStateCondition>>,
+                                 var originConditionPS: Condition<SubsystemStateCondition>,
+                                 var conflictingSubsystemPS: Class<ColleagueSubsystem<Double>>,
+                                 var conflictingConditionPS: Condition<Double>) :
+        Conflict<SubsystemStateCondition, Double>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS) {
 
-    override fun isConditionConflicting(originCondition: OC, conflictingCondition: CC): Boolean {
+    override fun isConditionConflicting(originCondition: Condition<SubsystemStateCondition>, conflictingCondition: Condition<Double>): Boolean {
         return originCondition == originConditionPS && conflictingCondition == conflictingConditionPS
     }
 
-    override fun getResolution(currentCondition: CC, subsystem: CS): Condition {
+    override fun getResolution(currentCondition: Condition<Double>, subsystem: ColleagueSubsystem<Double>): Condition<Double> {
         var closestBound = (conflictingConditionPS as PositionBasedCondition).findClosestBound(currentCondition)
         var safetyRange = (subsystem as PositionBasedSubsystem).getSafetyRange()
-        lateinit var resolutionCondition: Condition
+        lateinit var resolutionCondition: Condition<Double>
         val islowerBound = (conflictingConditionPS as PositionBasedCondition).isLowerBound(closestBound)
 
         if (islowerBound == null) {
@@ -37,7 +37,7 @@ class StatePositionBasedConflict<OS : ColleagueSubsystem<SubsystemStateCondition
         return resolutionCondition
     }
 
-    override fun isRequestConflicting(request: Request<SubsystemStateCondition, CC, OS>, conflictingCondition: CC): Boolean {
+    override fun isRequestConflicting(request: Request<SubsystemStateCondition>, conflictingCondition: Condition<Double>): Boolean {
 
         var conflictCase = false
         var originCase = false
@@ -53,8 +53,8 @@ class StatePositionBasedConflict<OS : ColleagueSubsystem<SubsystemStateCondition
 
     }
 
-    override fun invert(): Conflict<SubsystemStateCondition, OS, OC, Double, CC, CS> {
-        return StatePositionBasedConflict(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS)
+    override fun invert(): Conflict<Double, SubsystemStateCondition> {
+        return PositionStateBasedConflict(conflictingSubsystemPS, conflictingConditionPS, originSubsystemPS, originConditionPS, null)
     }
 
 }
