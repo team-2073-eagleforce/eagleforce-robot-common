@@ -78,7 +78,15 @@ public abstract class AbstractRobotDelegator extends TimedRobot implements Smart
 	public AbstractRobotDelegator(RobotDelegate robot) {
 		this.robot = robot;
 	}
-	
+
+	/**
+	 * @param period the time in seconds between each periodic call.
+	 */
+	public AbstractRobotDelegator(RobotDelegate robot, double period) {
+		super(period);
+		this.robot = robot;
+	}
+
 	private enum MatchPeriod {
 		SETUP,
 		AUTONOMOUS,
