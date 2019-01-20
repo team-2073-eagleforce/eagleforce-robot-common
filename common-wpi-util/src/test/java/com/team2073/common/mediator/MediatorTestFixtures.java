@@ -3,12 +3,16 @@ package com.team2073.common.mediator;
 import com.team2073.common.mediator.Tracker.PositionBasedTrackee;
 import com.team2073.common.mediator.Tracker.StateBasedTrackee;
 import com.team2073.common.mediator.Tracker.Tracker;
+import com.team2073.common.mediator.condition.Condition;
+import com.team2073.common.mediator.condition.PositionBasedCondition;
+import com.team2073.common.mediator.condition.StateBasedCondition;
 import com.team2073.common.mediator.conflict.Conflict;
 import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.ColleagueSubsystem;
 import com.team2073.common.mediator.subsys.PositionBasedSubsystem;
 import com.team2073.common.mediator.subsys.StateBasedSubsystem;
 import com.team2073.common.mediator.subsys.SubsystemStateCondition;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -17,11 +21,7 @@ import java.util.Map;
 
 public class MediatorTestFixtures {
 
-    static class PositionSubsystem implements PositionBasedSubsystem, PositionBasedTrackee {
-
-        PositionSubsystem() {
-//            tracker.registerTrackee(this);
-        }
+    static class PositionSubsystem implements PositionBasedSubsystem {
 
         private Double currentPosition = 0d;
 
@@ -40,15 +40,14 @@ public class MediatorTestFixtures {
 
         }
 
+        @NotNull
         @Override
-        public Double updateTracker() {
-            return currentPosition;
+        public Condition<Double> getCurrentCondition() {
+            return new PositionBasedCondition(currentPosition - getSafetyRange(), currentPosition, currentPosition + getSafetyRange());
         }
-
-
     }
 
-    static class DeadPositionSubsystem implements PositionBasedSubsystem, PositionBasedTrackee {
+    static class DeadPositionSubsystem implements PositionBasedSubsystem {
 
         //empty class
 
@@ -66,9 +65,10 @@ public class MediatorTestFixtures {
 
         }
 
+        @NotNull
         @Override
-        public Double updateTracker() {
-            return 0d;
+        public Condition<Double> getCurrentCondition() {
+            return new PositionBasedCondition(0, 0, 0);
         }
     }
 
@@ -79,16 +79,12 @@ public class MediatorTestFixtures {
         CLOSE
     }
 
-    static class StateSubsystem implements StateBasedSubsystem, StateBasedTrackee {
-
-        StateSubsystem() {
-//            tracker.registerTrackee(this);
-        }
+    static class StateSubsystem implements StateBasedSubsystem {
 
         private State currentState = State.STOP;
 
         @Override
-        public void set(SubsystemStateCondition place) {
+        public void set(@NotNull SubsystemStateCondition place) {
             currentState = (State) place;
         }
 
@@ -97,18 +93,13 @@ public class MediatorTestFixtures {
 
         }
 
+        @NotNull
         @Override
-        public SubsystemStateCondition updateTracker() {
-            return currentState;
+        public Condition<SubsystemStateCondition> getCurrentCondition() {
+            return new StateBasedCondition(currentState);
         }
     }
 
     static class TestMediator extends Mediator {
-        private Deque<Deque<Request>> executeList = new LinkedList<>();
-
-
-        //        public Deque<Deque<Request>> getExecuteList(){
-//            return executeList;
-//        }
     }
 }

@@ -29,26 +29,27 @@ import java.util.*;
  * <ul>
  * <li>{@link ConflictMap}</li>
  * <li>{@link SubsystemMap}</li>
- * <li>{@link Tracker}</li>
  * </ul>
  */
 public class Mediator implements PeriodicRunnable {
-    private Map<Class<? extends ColleagueSubsystem>, ColleagueSubsystem> subsystemMap;
+    private Map<Class<? extends ColleagueSubsystem>, ColleagueSubsystem> subsystemMap = new HashMap<>();
     private Map<Class<? extends ColleagueSubsystem>, ArrayList<Conflict>> conflictMap;
-    private Tracker subsystemTracker;
     private Deque<Deque<Request>> executeList = new LinkedList<>();
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public void init(Map<Class<? extends ColleagueSubsystem>, ColleagueSubsystem> subsystemMap, Map<Class<? extends ColleagueSubsystem>, ArrayList<Conflict>> conflictMap, Tracker subsystemTracker) {
-        Assert.assertNotNull(subsystemMap, "subsystemMap");
+    public void init(Map<Class<? extends ColleagueSubsystem>, ArrayList<Conflict>> conflictMap) {
         Assert.assertNotNull(conflictMap, "conflictMap");
-        Assert.assertNotNull(subsystemTracker, "subsystemTracker");
 
-        this.subsystemMap = subsystemMap;
         this.conflictMap = conflictMap;
-        this.subsystemTracker = subsystemTracker;
         LogUtil.infoInit(this.getClass(), logger);
         autoRegisterWithPeriodicRunner();
+    }
+
+    public void registerColleague(Class<? extends ColleagueSubsystem> colleagueClass, ColleagueSubsystem colleagueSubsystem) {
+        Assert.assertNotNull(colleagueClass, "colleagueClass");
+        Assert.assertNotNull(colleagueSubsystem, "colleagueSubsystem");
+        subsystemMap.put(colleagueClass, colleagueSubsystem);
+        logger.debug("Registered [{}] as Colleague", colleagueSubsystem);
     }
 
     /**
@@ -82,9 +83,9 @@ public class Mediator implements PeriodicRunnable {
             Request request = requestList.peekLast();
             if (request != null) {
                 currentRequest = request;
-                logger.debug("RequestedCondition: [{}]... ActualPosition: [{}]", request.getCondition(), subsystemTracker.findSubsystemCondition(request.getSubsystem()));
-                logger.debug("Requested position is actual position: " + request.getCondition().isInCondition(subsystemTracker.findSubsystemCondition(request.getSubsystem())));
-                if (!request.getCondition().isInCondition(subsystemTracker.findSubsystemCondition(request.getSubsystem()))) {
+                logger.debug("RequestedCondition: [{}]... ActualPosition: [{}]", request.getCondition(), subsystemMap.get(request.getSubsystem()).getCurrentCondition());
+                logger.debug("Requested position is actual position: " + request.getCondition().isInCondition(subsystemMap.get(request.getSubsystem()).getCurrentCondition()));
+                if (!request.getCondition().isInCondition(subsystemMap.get(request.getSubsystem()).getCurrentCondition())) {
                     periodicCalls += 1;
                     if (periodicCalls > 15) {
                         logger.debug("Removing request [{}]" + request.getName());
@@ -94,7 +95,7 @@ public class Mediator implements PeriodicRunnable {
                         execute(request);
                     }
                 } else {
-                    logger.debug("Finished request with [{}] in condition: [{}]", request.getSubsystem(), subsystemTracker.findSubsystemCondition(request.getSubsystem()));
+                    logger.debug("Finished request with [{}] in condition: [{}]", request.getSubsystem(), subsystemMap.get(request.getSubsystem()).getCurrentCondition());
                     requestList.removeLast();
                 }
             } else {
@@ -152,7 +153,7 @@ public class Mediator implements PeriodicRunnable {
         }
 
         for (Conflict possibleConflict : possibleConflicts) {
-            boolean isConflicting = possibleConflict.isRequestConflicting(request, subsystemTracker.findSubsystemCondition(possibleConflict.getConflictingSubsystem()));
+            boolean isConflicting = possibleConflict.isRequestConflicting(request, subsystemMap.get(possibleConflict.getConflictingSubsystem()).getCurrentCondition());
             if (isConflicting) {
                 logger.debug("Adding conflicting conflict: [{}].", possibleConflict.getName());
                 conflicts.add(possibleConflict);
@@ -170,6 +171,11 @@ public class Mediator implements PeriodicRunnable {
         return new Request<>(conflict.getConflictingSubsystem(),
                 conflict.getResolution(conflict.getConflictingCondition(),
                         subsystemMap.get(conflict.getConflictingSubsystem())));
+    }
+
+    @VisibleForTesting
+    Map<Class<? extends ColleagueSubsystem>, ColleagueSubsystem> getSubsystemMap() {
+        return subsystemMap;
     }
 
     @VisibleForTesting
