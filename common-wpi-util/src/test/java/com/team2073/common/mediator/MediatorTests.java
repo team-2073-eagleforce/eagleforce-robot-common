@@ -74,35 +74,51 @@ class MediatorTests {
     }
 
     @Test
+    public void mediator_SHOULD_RegisterSubsystemsProperly() {
+        TestMediator testMediator = new TestMediator();
+        testMediator.init(conflictMap);
+
+        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
+        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
+        testMediator.registerColleague(DeadPositionSubsystem.class, deadPositionSubsystem);
+
+        assertThat(testMediator.getSubsystemMap().size()).isEqualTo(3);
+    }
+
+    @Test
     public void mediator_WHEN_PositionSubsystemAskedToMove_SHOULD_Move() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(subsystemMap, conflictMap, tracker);
+        testMediator.init(conflictMap);
+        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
+        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
 
-        tracker.registerTrackee(positionSubsystem);
         Request<Double> request = new Request<Double>(PositionSubsystem.class, new PositionBasedCondition(5, 10, 15));
         testMediator.add(request);
         testMediator.onPeriodic();
 
-        assertThat(positionSubsystem.updateTracker()).isEqualTo(10);
+        assertThat(positionSubsystem.getCurrentCondition().getConditionValue()).isEqualTo(10);
     }
 
     @Test
     public void mediator_WHEN_StateSubsystemAskedToMove_SHOULD_Move() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(subsystemMap, conflictMap, tracker);
+        testMediator.init(conflictMap);
+        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
+        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
 
-        tracker.registerTrackee(stateSubsystem);
-        Request<SubsystemStateCondition> request = new Request<SubsystemStateCondition>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
+        Request<SubsystemStateCondition> request = new Request<>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
         testMediator.add(request);
         testMediator.onPeriodic();
 
-        assertThat(stateSubsystem.updateTracker()).isEqualTo(State.OPEN);
+        assertThat(stateSubsystem.getCurrentCondition().getConditionValue()).isEqualTo(State.OPEN);
     }
 
     @Test
     public void mediator_WHEN_FinishedWithRequest_SHOULD_RemoveFromList() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(subsystemMap, conflictMap, tracker);
+        testMediator.init(conflictMap);
+        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
+        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
 
         Request<Double> request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(5, 10, 15));
 
@@ -119,7 +135,9 @@ class MediatorTests {
     @Test
     public void mediator_WHEN_IteratingThroughRequests_SHOULD_IterateOverMostRecentlyAdded() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(subsystemMap, conflictMap, tracker);
+        testMediator.init(conflictMap);
+        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
+        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
 
         Request<Double> request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(5, 10, 15));
         Request<Double> request2 = new Request<>(PositionSubsystem.class, new PositionBasedCondition(0, 5, 10));
@@ -139,10 +157,12 @@ class MediatorTests {
     @Test
     public void mediator_WHEN_FoundConflict_SHOULD_AddRequest() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(subsystemMap, conflictMap, tracker);
+        testMediator.init(conflictMap);
+        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
+        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
 
-        Request request = new Request<Double>(PositionSubsystem.class, new PositionBasedCondition(85d, 90d, 95d));
-        Request request2 = new Request<SubsystemStateCondition>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
+        Request request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(85d, 90d, 95d));
+        Request request2 = new Request<>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
 
         testMediator.add(request);
         testMediator.add(request2);
@@ -157,37 +177,41 @@ class MediatorTests {
     @Test
     public void mediator_WHEN_EncounteredConflict_SHOULD_ResolveConflict() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(subsystemMap, conflictMap, tracker);
+        testMediator.init(conflictMap);
+        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
+        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
 
-        Request positionRequest = new Request<Double>(PositionSubsystem.class, new PositionBasedCondition(85d, 90d, 95d));
-        Request stateRequest = new Request<SubsystemStateCondition>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
+        Request positionRequest = new Request<>(PositionSubsystem.class, new PositionBasedCondition(85d, 90d, 95d));
+        Request stateRequest = new Request<>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
 
         testMediator.add(stateRequest);
         callPeriodic(testMediator, 2);
-        assertThat(stateSubsystem.updateTracker()).isEqualTo(State.OPEN);
+        assertThat(stateSubsystem.getCurrentCondition().getConditionValue()).isEqualTo(State.OPEN);
         testMediator.add(positionRequest);
 
         callPeriodic(testMediator, 6);
 
-        assertThat(stateSubsystem.updateTracker()).isEqualTo(State.CLOSE);
-        assertThat(positionSubsystem.updateTracker()).isEqualTo(90d);
+        assertThat(stateSubsystem.getCurrentCondition().getConditionValue()).isEqualTo(State.CLOSE);
+        assertThat(positionSubsystem.getCurrentCondition().getConditionValue()).isEqualTo(90d);
 
     }
 
     @Test
     public void mediator_WHEN_RequestTakesTooLong_SHOULD_ClearOutRequest() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(subsystemMap, conflictMap, tracker);
-        tracker.registerTrackee(deadPositionSubsystem);
+        testMediator.init(conflictMap);
+        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
+        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
+        testMediator.registerColleague(DeadPositionSubsystem.class, deadPositionSubsystem);
 
-        testMediator.add(new Request<Double>(PositionSubsystem.class, new PositionBasedCondition(30, 35, 40)));
-        testMediator.add(new Request<Double>(DeadPositionSubsystem.class, new PositionBasedCondition(20, 25, 30)));
-        testMediator.add(new Request<Double>(PositionSubsystem.class, new PositionBasedCondition(0, 5, 15)));
+        testMediator.add(new Request<>(PositionSubsystem.class, new PositionBasedCondition(30, 35, 40)));
+        testMediator.add(new Request<>(DeadPositionSubsystem.class, new PositionBasedCondition(20, 25, 30)));
+        testMediator.add(new Request<>(PositionSubsystem.class, new PositionBasedCondition(0, 5, 15)));
 
         callPeriodic(testMediator, 30);
 
         assertThat(testMediator.getExecuteList().size()).isEqualTo(0);
-        assertThat(positionSubsystem.updateTracker()).isCloseTo(5d, Offset.offset(0d));
+        assertThat(positionSubsystem.getCurrentCondition().getConditionValue()).isCloseTo(5d, Offset.offset(0d));
     }
 
     //TODO finish filling out
@@ -195,7 +219,7 @@ class MediatorTests {
     @Test
     public void mediator_WHEN_FinishedWithLargeRequestList_SHOULD_ProperlyReset() {
 //        TestMediator testMediator = new TestMediator();
-//        testMediator.init(subsystemMap, conflictMap, tracker);
+//        testMediator.init(conflictMap, tracker);
 //
 //        RobotContext robotContext = RobotContext.getInstance();
 //        PeriodicRunner periodicRunner = robotContext.getPeriodicRunner();
@@ -222,7 +246,6 @@ class MediatorTests {
         private ArrayList<SubsystemTrackee> instanceList = new ArrayList<>();
 
         public void registerTrackee(SubsystemTrackee instance) {
-            System.out.println("registering: " + instance.toString());
             instanceList.add(instance);
         }
 
