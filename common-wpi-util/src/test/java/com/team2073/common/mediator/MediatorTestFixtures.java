@@ -1,23 +1,12 @@
 package com.team2073.common.mediator;
 
-import com.team2073.common.mediator.Tracker.PositionBasedTrackee;
-import com.team2073.common.mediator.Tracker.StateBasedTrackee;
-import com.team2073.common.mediator.Tracker.Tracker;
 import com.team2073.common.mediator.condition.Condition;
 import com.team2073.common.mediator.condition.PositionBasedCondition;
 import com.team2073.common.mediator.condition.StateBasedCondition;
-import com.team2073.common.mediator.conflict.Conflict;
-import com.team2073.common.mediator.request.Request;
-import com.team2073.common.mediator.subsys.ColleagueSubsystem;
 import com.team2073.common.mediator.subsys.PositionBasedSubsystem;
 import com.team2073.common.mediator.subsys.StateBasedSubsystem;
 import com.team2073.common.mediator.subsys.SubsystemStateCondition;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Map;
 
 public class MediatorTestFixtures {
 
@@ -72,20 +61,20 @@ public class MediatorTestFixtures {
         }
     }
 
-    enum State implements SubsystemStateCondition {
+    enum State implements SubsystemStateCondition<State> {
         STOP,
         RUNNING,
         OPEN,
         CLOSE
     }
 
-    static class StateSubsystem implements StateBasedSubsystem {
+    static class StateSubsystem implements StateBasedSubsystem<State> {
 
         private State currentState = State.STOP;
 
         @Override
-        public void set(@NotNull SubsystemStateCondition place) {
-            currentState = (State) place;
+        public void set(@NotNull State place) {
+            currentState = place;
         }
 
         @Override
@@ -95,7 +84,7 @@ public class MediatorTestFixtures {
 
         @NotNull
         @Override
-        public Condition<SubsystemStateCondition> getCurrentCondition() {
+        public Condition<State> getCurrentCondition() {
             return new StateBasedCondition(currentState);
         }
     }
