@@ -7,13 +7,13 @@ import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.PositionBasedSubsystem
 import com.team2073.common.mediator.subsys.SubsystemStateCondition
 
-class StatePositionBasedConflict(var originSubsystemPS: Class<out ColleagueSubsystem<SubsystemStateCondition>>,
-                                 var originConditionPS: Condition<SubsystemStateCondition>,
+class StatePositionBasedConflict<T: Enum<T>>(var originSubsystemPS: Class<out ColleagueSubsystem<SubsystemStateCondition<T>>>,
+                                 var originConditionPS: Condition<SubsystemStateCondition<T>>,
                                  var conflictingSubsystemPS: Class<out ColleagueSubsystem<Double>>,
                                  var conflictingConditionPS: Condition<Double>) :
-        Conflict<SubsystemStateCondition, Double>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS) {
+        Conflict<SubsystemStateCondition<T>, Double>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS) {
 
-    override fun isConditionConflicting(originCondition: Condition<SubsystemStateCondition>, conflictingCondition: Condition<Double>): Boolean {
+    override fun isConditionConflicting(originCondition: Condition<SubsystemStateCondition<T>>, conflictingCondition: Condition<Double>): Boolean {
         return originCondition == originConditionPS && conflictingCondition == conflictingConditionPS
     }
 
@@ -37,7 +37,7 @@ class StatePositionBasedConflict(var originSubsystemPS: Class<out ColleagueSubsy
         return resolutionCondition
     }
 
-    override fun isRequestConflicting(request: Request<SubsystemStateCondition>, conflictingCondition: Condition<Double>): Boolean {
+    override fun isRequestConflicting(request: Request<SubsystemStateCondition<T>>, conflictingCondition: Condition<Double>): Boolean {
 
         var conflictCase = false
         var originCase = false
@@ -53,7 +53,7 @@ class StatePositionBasedConflict(var originSubsystemPS: Class<out ColleagueSubsy
 
     }
 
-    override fun invert(): Conflict<Double, SubsystemStateCondition> {
+    override fun invert(): Conflict<Double, SubsystemStateCondition<T>> {
         return PositionStateBasedConflict(conflictingSubsystemPS, conflictingConditionPS, originSubsystemPS, originConditionPS, null)
     }
 

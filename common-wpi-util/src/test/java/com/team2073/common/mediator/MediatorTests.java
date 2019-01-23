@@ -12,9 +12,7 @@ import com.team2073.common.mediator.conflict.PositionStateBasedConflict;
 import com.team2073.common.mediator.conflict.StatePositionBasedConflict;
 import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.ColleagueSubsystem;
-import com.team2073.common.mediator.subsys.PositionBasedSubsystem;
 import com.team2073.common.mediator.subsys.SubsystemStateCondition;
-import com.team2073.common.position.Position;
 import com.team2073.common.test.annon.TestNotWrittenYet;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeEach;
@@ -106,7 +104,7 @@ class MediatorTests {
         testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
         testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
 
-        Request<SubsystemStateCondition> request = new Request<>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
+        Request<SubsystemStateCondition<State>> request = new Request<>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
         testMediator.add(request);
         testMediator.onPeriodic();
 
@@ -259,7 +257,7 @@ class MediatorTests {
                 condition = new PositionBasedCondition(position - 5, position, position + 5);
 
             } else if (subsystem instanceof StateBasedTrackee) {
-                condition = new StateBasedCondition((SubsystemStateCondition) subsystem.updateTracker());
+                condition = new StateBasedCondition((SubsystemStateCondition<State>) subsystem.updateTracker());
             }
 
             return condition;
