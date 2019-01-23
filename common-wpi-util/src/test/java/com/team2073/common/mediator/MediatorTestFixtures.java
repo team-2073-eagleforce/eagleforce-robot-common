@@ -89,6 +89,33 @@ public class MediatorTestFixtures {
         }
     }
 
+    enum StateDeux implements SubsystemStateCondition{
+        STOP,
+        OPEN,
+        RUNNING
+    }
+
+    static class StateSubsystemDeux implements StateBasedSubsystem<StateDeux>{
+
+        StateDeux currentState = StateDeux.STOP;
+
+        @Override
+        public void set(StateDeux place) {
+            currentState = place;
+        }
+
+        @NotNull
+        @Override
+        public Condition<StateDeux> getCurrentCondition() {
+            return new StateBasedCondition<>(currentState);
+        }
+
+        @Override
+        public void onPeriodic() {
+
+        }
+    }
+
     static class TestMediator extends Mediator {
     }
 }
