@@ -1,15 +1,9 @@
 package com.team2073.common.mediator;
 
 import com.team2073.common.mediator.MediatorTestFixtures.*;
-import com.team2073.common.mediator.Tracker.PositionBasedTrackee;
-import com.team2073.common.mediator.Tracker.StateBasedTrackee;
-import com.team2073.common.mediator.Tracker.SubsystemTrackee;
-import com.team2073.common.mediator.condition.Condition;
 import com.team2073.common.mediator.condition.PositionBasedCondition;
 import com.team2073.common.mediator.condition.StateBasedCondition;
-import com.team2073.common.mediator.conflict.Conflict;
-import com.team2073.common.mediator.conflict.PositionStateBasedConflict;
-import com.team2073.common.mediator.conflict.StatePositionBasedConflict;
+import com.team2073.common.mediator.conflict.*;
 import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.ColleagueSubsystem;
 import com.team2073.common.mediator.subsys.SubsystemStateCondition;
@@ -26,9 +20,9 @@ import java.util.Map;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class MediatorTests {
-    private Tracker tracker = new Tracker();
     private PositionSubsystem positionSubsystem = new PositionSubsystem();
     private StateSubsystem stateSubsystem = new StateSubsystem();
+    private StateSubsystemDeux stateSubsystemDeux = new StateSubsystemDeux();
     private DeadPositionSubsystem deadPositionSubsystem = new DeadPositionSubsystem();
 
     private ArrayList<Conflict> positionConflicts = new ArrayList<>();
@@ -74,21 +68,35 @@ class MediatorTests {
     @Test
     public void mediator_SHOULD_RegisterSubsystemsProperly() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(conflictMap);
+        testMediator.registerConflict(positionConflicts);
 
-        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
-        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
-        testMediator.registerColleague(DeadPositionSubsystem.class, deadPositionSubsystem);
+        testMediator.registerColleague(positionSubsystem);
+        testMediator.registerConflict(positionConflicts);
+        testMediator.registerColleague(stateSubsystem);
+        testMediator.registerColleague(deadPositionSubsystem);
+        testMediator.registerColleague(deadPositionSubsystem, deadPositionSubsystem, positionSubsystem);
 
         assertThat(testMediator.getSubsystemMap().size()).isEqualTo(3);
     }
 
     @Test
+    public void mediator_SHOULD_RegisterConflictsCorrectly() {
+        TestMediator testMediator = new TestMediator();
+        testMediator.registerColleague(positionSubsystem);
+
+        testMediator.registerConflict(new PositionBasedConflict(PositionSubsystem.class,
+                new PositionBasedCondition(0, 0, 0), DeadPositionSubsystem.class,
+                new PositionBasedCondition(0, 0, 0)));
+
+        assertThat(testMediator.getConflictMap().size()).isEqualTo(1);
+    }
+
+    @Test
     public void mediator_WHEN_PositionSubsystemAskedToMove_SHOULD_Move() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(conflictMap);
-        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
-        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
+        testMediator.registerColleague(positionSubsystem);
+        testMediator.registerColleague(stateSubsystem);
+        testMediator.registerConflict(positionConflicts);
 
         Request<Double> request = new Request<Double>(PositionSubsystem.class, new PositionBasedCondition(5, 10, 15));
         testMediator.add(request);
@@ -100,9 +108,9 @@ class MediatorTests {
     @Test
     public void mediator_WHEN_StateSubsystemAskedToMove_SHOULD_Move() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(conflictMap);
-        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
-        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
+        testMediator.registerColleague(stateSubsystem);
+        testMediator.registerColleague(positionSubsystem);
+        testMediator.registerConflict(stateConflicts);
 
         Request<SubsystemStateCondition<State>> request = new Request<>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
         testMediator.add(request);
@@ -114,9 +122,9 @@ class MediatorTests {
     @Test
     public void mediator_WHEN_FinishedWithRequest_SHOULD_RemoveFromList() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(conflictMap);
-        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
-        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
+        testMediator.registerColleague(stateSubsystem);
+        testMediator.registerColleague(positionSubsystem);
+        testMediator.registerConflict(positionConflicts);
 
         Request<Double> request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(5, 10, 15));
 
@@ -133,9 +141,9 @@ class MediatorTests {
     @Test
     public void mediator_WHEN_IteratingThroughRequests_SHOULD_IterateOverMostRecentlyAdded() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(conflictMap);
-        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
-        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
+        testMediator.registerColleague(stateSubsystem);
+        testMediator.registerColleague(positionSubsystem);
+        testMediator.registerConflict(positionConflicts);
 
         Request<Double> request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(5, 10, 15));
         Request<Double> request2 = new Request<>(PositionSubsystem.class, new PositionBasedCondition(0, 5, 10));
@@ -155,9 +163,10 @@ class MediatorTests {
     @Test
     public void mediator_WHEN_FoundConflict_SHOULD_AddRequest() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(conflictMap);
-        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
-        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
+        testMediator.registerColleague(stateSubsystem);
+        testMediator.registerColleague(positionSubsystem);
+        testMediator.registerConflict(positionConflicts);
+        testMediator.registerConflict(stateConflicts);
 
         Request request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(85d, 90d, 95d));
         Request request2 = new Request<>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
@@ -175,9 +184,10 @@ class MediatorTests {
     @Test
     public void mediator_WHEN_EncounteredConflict_SHOULD_ResolveConflict() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(conflictMap);
-        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
-        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
+        testMediator.registerColleague(stateSubsystem);
+        testMediator.registerColleague(positionSubsystem);
+        testMediator.registerConflict(positionConflicts);
+        testMediator.registerConflict(stateConflicts);
 
         Request positionRequest = new Request<>(PositionSubsystem.class, new PositionBasedCondition(85d, 90d, 95d));
         Request stateRequest = new Request<>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
@@ -195,12 +205,32 @@ class MediatorTests {
     }
 
     @Test
+    public void mediator_WHEN_EncounteredStateConflictWithTwoEnums_SHOULD_ResolveConflict(){
+        TestMediator testMediator = new TestMediator();
+
+        testMediator.registerColleague(stateSubsystem);
+        testMediator.registerColleague(stateSubsystemDeux);
+        testMediator.registerConflict(new StateBasedConflict(StateSubsystem.class,
+                new StateBasedCondition(State.OPEN),
+                StateSubsystemDeux.class,
+                new StateBasedCondition<StateDeux>(StateDeux.OPEN), StateDeux.STOP));
+
+        testMediator.add(new Request(StateSubsystemDeux.class, new StateBasedCondition(StateDeux.OPEN)));
+        testMediator.add(new Request(StateSubsystem.class, new StateBasedCondition(State.OPEN)));
+
+        callPeriodic(testMediator, 6);
+
+        assertThat(stateSubsystemDeux.getCurrentCondition().getConditionValue()).isEqualTo(StateDeux.STOP);
+    }
+
+    @Test
     public void mediator_WHEN_RequestTakesTooLong_SHOULD_ClearOutRequest() {
         TestMediator testMediator = new TestMediator();
-        testMediator.init(conflictMap);
-        testMediator.registerColleague(StateSubsystem.class, stateSubsystem);
-        testMediator.registerColleague(PositionSubsystem.class, positionSubsystem);
-        testMediator.registerColleague(DeadPositionSubsystem.class, deadPositionSubsystem);
+        testMediator.registerColleague(stateSubsystem);
+        testMediator.registerColleague(positionSubsystem);
+        testMediator.registerColleague(deadPositionSubsystem);
+        testMediator.registerConflict(positionConflicts);
+        testMediator.registerConflict(stateConflicts);
 
         testMediator.add(new Request<>(PositionSubsystem.class, new PositionBasedCondition(30, 35, 40)));
         testMediator.add(new Request<>(DeadPositionSubsystem.class, new PositionBasedCondition(20, 25, 30)));
@@ -237,33 +267,6 @@ class MediatorTests {
 //                });
 
     }
-
-
-    class Tracker implements com.team2073.common.mediator.Tracker.Tracker {
-
-        private ArrayList<SubsystemTrackee> instanceList = new ArrayList<>();
-
-        public void registerTrackee(SubsystemTrackee instance) {
-            instanceList.add(instance);
-        }
-
-        @Override
-        public Condition findSubsystemCondition(Class clazz) {
-            SubsystemTrackee subsystem = (SubsystemTrackee) subsystemMap.get(clazz);
-            Condition condition = null;
-
-            if (subsystem instanceof PositionBasedTrackee) {
-                double position = (double) subsystem.updateTracker();
-                condition = new PositionBasedCondition(position - 5, position, position + 5);
-
-            } else if (subsystem instanceof StateBasedTrackee) {
-                condition = new StateBasedCondition((SubsystemStateCondition<State>) subsystem.updateTracker());
-            }
-
-            return condition;
-        }
-    }
-
 }
 
 
