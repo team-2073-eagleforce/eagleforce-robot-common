@@ -21,15 +21,15 @@ class PositionBasedConflict(
         var closestBound = (conflictingConditionP as PositionBasedCondition).findClosestBound(currentCondition)
         var safetyRange = (subsystem as PositionBasedSubsystem).getSafetyRange()
         lateinit var resolutionCondition: Condition<Double>
-        val islowerBound = (conflictingConditionP as PositionBasedCondition).isLowerBound(closestBound)
+        val isLowerBound = (conflictingConditionP as PositionBasedCondition).isLowerBound(closestBound)
 
-        if (islowerBound == null) {
+        if (isLowerBound == null) {
             println("bound not upper/lower in condition")
-        } else if (islowerBound) {
+        } else if (isLowerBound) {
             resolutionCondition = PositionBasedCondition(closestBound - safetyRange,
                     ((closestBound - safetyRange) + (closestBound)) / 2,
                     closestBound)
-        } else if (!islowerBound) {
+        } else if (!isLowerBound) {
             resolutionCondition = PositionBasedCondition(closestBound,
                     ((closestBound + safetyRange) + (closestBound)) / 2,
                     closestBound + safetyRange)
@@ -44,6 +44,4 @@ class PositionBasedConflict(
     override fun invert(): Conflict<Double, Double> {
         return PositionBasedConflict(originSubsystemP, originConditionP, conflictingSubsystemP, conflictingConditionP)
     }
-
-
 }

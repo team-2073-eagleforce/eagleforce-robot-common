@@ -7,10 +7,10 @@ import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.PositionBasedSubsystem
 import com.team2073.common.mediator.subsys.SubsystemStateCondition
 
-class StatePositionBasedConflict<T: Enum<T>>(var originSubsystemPS: Class<out ColleagueSubsystem<SubsystemStateCondition<T>>>,
-                                 var originConditionPS: Condition<SubsystemStateCondition<T>>,
-                                 var conflictingSubsystemPS: Class<out ColleagueSubsystem<Double>>,
-                                 var conflictingConditionPS: Condition<Double>) :
+class StatePositionBasedConflict<T : Enum<T>>(var originSubsystemPS: Class<out ColleagueSubsystem<SubsystemStateCondition<T>>>,
+                                              var originConditionPS: Condition<SubsystemStateCondition<T>>,
+                                              var conflictingSubsystemPS: Class<out ColleagueSubsystem<Double>>,
+                                              var conflictingConditionPS: Condition<Double>) :
         Conflict<SubsystemStateCondition<T>, Double>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS) {
 
     override fun isConditionConflicting(originCondition: Condition<SubsystemStateCondition<T>>, conflictingCondition: Condition<Double>): Boolean {
@@ -18,8 +18,8 @@ class StatePositionBasedConflict<T: Enum<T>>(var originSubsystemPS: Class<out Co
     }
 
     override fun getResolution(currentCondition: Condition<Double>, subsystem: ColleagueSubsystem<Double>): Condition<Double> {
-        var closestBound = (conflictingConditionPS as PositionBasedCondition).findClosestBound(currentCondition)
-        var safetyRange = (subsystem as PositionBasedSubsystem).getSafetyRange()
+        val closestBound = (conflictingConditionPS as PositionBasedCondition).findClosestBound(currentCondition)
+        val safetyRange = (subsystem as PositionBasedSubsystem).getSafetyRange()
         lateinit var resolutionCondition: Condition<Double>
         val islowerBound = (conflictingConditionPS as PositionBasedCondition).isLowerBound(closestBound)
 
@@ -56,5 +56,4 @@ class StatePositionBasedConflict<T: Enum<T>>(var originSubsystemPS: Class<out Co
     override fun invert(): Conflict<Double, SubsystemStateCondition<T>> {
         return PositionStateBasedConflict(conflictingSubsystemPS, conflictingConditionPS, originSubsystemPS, originConditionPS, null)
     }
-
 }

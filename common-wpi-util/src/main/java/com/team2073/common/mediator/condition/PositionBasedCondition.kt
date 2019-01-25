@@ -1,8 +1,7 @@
 package com.team2073.common.mediator.condition
 
-class PositionBasedCondition(val lowerBound: Double, var exactPosition: Double, val upperBound: Double) : Condition<Double> {
+class PositionBasedCondition(private val lowerBound: Double, var exactPosition: Double, private val upperBound: Double) : Condition<Double> {
 
-    /** testing javadocs publish to mavenlocal */
     override fun getConditionValue(): Double {
         return exactPosition
     }
@@ -12,10 +11,10 @@ class PositionBasedCondition(val lowerBound: Double, var exactPosition: Double, 
     }
 
     fun findClosestBound(condition: Condition<Double>): Double {
-        if (condition.getConditionValue() - lowerBound > condition.getConditionValue() - upperBound) {
-            return upperBound
+        return if (condition.getConditionValue() - lowerBound > condition.getConditionValue() - upperBound) {
+            upperBound
         } else {
-            return lowerBound
+            lowerBound
         }
     }
 
@@ -23,12 +22,10 @@ class PositionBasedCondition(val lowerBound: Double, var exactPosition: Double, 
      * @return returns true if value is lower bound, false if value is upper bound, and null if value is neither
      */
     fun isLowerBound(bound: Double): Boolean? {
-        if (bound == lowerBound) {
-            return true
-        } else if (bound == upperBound) {
-            return false
-        } else {
-            return null
+        return when (bound) {
+            lowerBound -> true
+            upperBound -> false
+            else -> null
         }
     }
 

@@ -38,8 +38,6 @@ public class MediatorTestFixtures {
 
     static class DeadPositionSubsystem implements PositionBasedSubsystem {
 
-        //empty class
-
         @Override
         public void set(Double place) {
         }
@@ -89,13 +87,13 @@ public class MediatorTestFixtures {
         }
     }
 
-    enum StateDeux implements SubsystemStateCondition{
+    enum StateDeux implements SubsystemStateCondition {
         STOP,
         OPEN,
         RUNNING
     }
 
-    static class StateSubsystemDeux implements StateBasedSubsystem<StateDeux>{
+    static class StateSubsystemDeux implements StateBasedSubsystem<StateDeux> {
 
         StateDeux currentState = StateDeux.STOP;
 

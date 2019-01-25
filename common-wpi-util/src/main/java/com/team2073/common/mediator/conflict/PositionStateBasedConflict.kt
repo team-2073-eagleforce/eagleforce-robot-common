@@ -6,7 +6,7 @@ import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.SubsystemStateCondition
 
-class PositionStateBasedConflict<T: Enum<T>>(
+class PositionStateBasedConflict<T : Enum<T>>(
         var originSubsystemPS: Class<out ColleagueSubsystem<Double>>,
         var originConditionPS: Condition<Double>,
         var conflictingSubsystemPS: Class<out ColleagueSubsystem<SubsystemStateCondition<T>>>,
@@ -30,5 +30,4 @@ class PositionStateBasedConflict<T: Enum<T>>(
     override fun invert(): Conflict<SubsystemStateCondition<T>, Double> {
         return StatePositionBasedConflict(conflictingSubsystemPS, conflictingConditionPS, originSubsystemPS, originConditionPS)
     }
-
 }
