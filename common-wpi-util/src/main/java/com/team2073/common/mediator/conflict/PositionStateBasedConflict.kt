@@ -28,6 +28,6 @@ class PositionStateBasedConflict<T : Enum<T>>(
     }
 
     override fun invert(): Conflict<SubsystemStateCondition<T>, Double> {
-        return StatePositionBasedConflict(conflictingSubsystemPS, conflictingConditionPS, originSubsystemPS, originConditionPS)
+        return StatePositionBasedConflict(conflictingSubsystemPS, conflictingConditionPS, originSubsystemPS, originConditionPS, null)
     }
 }

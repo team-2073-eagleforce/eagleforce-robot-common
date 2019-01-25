@@ -11,11 +11,12 @@ class StateBasedConflict<OT : Enum<OT>, CT : Enum<CT>>(
         var originConditionS: Condition<SubsystemStateCondition<OT>>,
         var conflictingSubsystemS: Class<ColleagueSubsystem<SubsystemStateCondition<CT>>>,
         var conflictingConditionS: Condition<SubsystemStateCondition<CT>>,
-        var resolveState: SubsystemStateCondition<CT>?) :
+        var resolveState: SubsystemStateCondition<CT>?,
+        var inverseResolveState: SubsystemStateCondition<OT>?) :
         Conflict<SubsystemStateCondition<OT>, SubsystemStateCondition<CT>>(originSubsystemS, originConditionS, conflictingSubsystemS, conflictingConditionS) {
 
     override fun invert(): Conflict<SubsystemStateCondition<CT>, SubsystemStateCondition<OT>> {
-        return StateBasedConflict(conflictingSubsystemS, conflictingConditionS, originSubsystemS, originConditionS, null)
+        return StateBasedConflict(conflictingSubsystemS, conflictingConditionS, originSubsystemS, originConditionS, inverseResolveState, resolveState)
     }
 
     override fun isRequestConflicting(request: Request<SubsystemStateCondition<OT>>, conflictingCondition: Condition<SubsystemStateCondition<CT>>): Boolean {
