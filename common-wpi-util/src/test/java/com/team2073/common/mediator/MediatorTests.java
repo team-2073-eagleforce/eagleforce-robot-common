@@ -41,7 +41,7 @@ class MediatorTests {
         stateConflicts.add(new StatePositionBasedConflict(StateSubsystem.class,
                 new StateBasedCondition(State.OPEN),
                 PositionSubsystem.class,
-                new PositionBasedCondition(85, 90, 95)));
+                new PositionBasedCondition(85, 90, 95), State.CLOSE));
     }
 
     @BeforeEach
@@ -81,7 +81,7 @@ class MediatorTests {
                 new PositionBasedCondition(0, 0, 0), DeadPositionSubsystem.class,
                 new PositionBasedCondition(0, 0, 0)));
 
-        assertThat(testMediator.getConflictMap().size()).isEqualTo(1);
+        assertThat(testMediator.getConflictMap().size()).isEqualTo(2);
     }
 
     @Test
@@ -200,12 +200,31 @@ class MediatorTests {
         testMediator.registerConflict(new StateBasedConflict(StateSubsystem.class,
                 new StateBasedCondition(State.OPEN),
                 StateSubsystemDeux.class,
-                new StateBasedCondition<StateDeux>(StateDeux.OPEN), StateDeux.STOP));
+                new StateBasedCondition<StateDeux>(StateDeux.OPEN), StateDeux.STOP, State.STOP));
 
         testMediator.add(new Request(StateSubsystemDeux.class, new StateBasedCondition(StateDeux.OPEN)));
         testMediator.add(new Request(StateSubsystem.class, new StateBasedCondition(State.OPEN)));
 
         callPeriodic(testMediator, 6);
+
+        assertThat(stateSubsystemDeux.getCurrentCondition().getConditionValue()).isEqualTo(StateDeux.STOP);
+    }
+
+    @Test
+    public void mediator_WHEN_ConflictFlipped_SHOULD_ResolveConflict() {
+        TestMediator testMediator = new TestMediator();
+
+        testMediator.registerColleague(stateSubsystem);
+        testMediator.registerColleague(stateSubsystemDeux);
+
+        testMediator.registerConflict(new StateBasedConflict(StateSubsystemDeux.class,
+                new StateBasedCondition<StateDeux>(StateDeux.OPEN),
+                StateSubsystem.class,
+                new StateBasedCondition<State>(State.OPEN), State.CLOSE, StateDeux.STOP));
+
+        stateSubsystemDeux.set(StateDeux.OPEN);
+        testMediator.add(new Request(StateSubsystem.class, new StateBasedCondition(State.OPEN)));
+        callPeriodic(testMediator, 3);
 
         assertThat(stateSubsystemDeux.getCurrentCondition().getConditionValue()).isEqualTo(StateDeux.STOP);
     }

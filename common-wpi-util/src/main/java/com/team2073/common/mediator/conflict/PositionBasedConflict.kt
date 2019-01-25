@@ -42,6 +42,6 @@ class PositionBasedConflict(
     }
 
     override fun invert(): Conflict<Double, Double> {
-        return PositionBasedConflict(originSubsystemP, originConditionP, conflictingSubsystemP, conflictingConditionP)
+        return PositionBasedConflict(conflictingSubsystemP, conflictingConditionP, originSubsystemP, originConditionP)
     }
 }

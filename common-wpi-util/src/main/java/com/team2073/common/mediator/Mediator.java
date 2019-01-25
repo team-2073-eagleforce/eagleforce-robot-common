@@ -68,16 +68,20 @@ public class Mediator implements PeriodicRunnable {
 
     /**
      * Adds to the conflict map to be checked periodically
+     * Also adds the {@link Conflict} flipped
      * @param conflict
      */
     public void registerConflict(Conflict conflict) {
         if (conflictMap.get(conflict.getOriginSubsystem()) == null) {
             ArrayList<Conflict> conflicts = new ArrayList<>();
+            ArrayList<Conflict> inverseConflicts = new ArrayList<>();
             conflictMap.put(conflict.getOriginSubsystem(), conflicts);
-            logger.debug("Creating conflict list for: [{}]", conflict.getOriginSubsystem());
+            conflictMap.put(conflict.getConflictingSubsystem(), inverseConflicts);
+            logger.debug("Creating conflict list for: [{}] and [{}]", conflict.getOriginSubsystem(), conflict.getConflictingSubsystem());
         }
         conflictMap.get(conflict.getOriginSubsystem()).add(conflict);
-        logger.debug("Adding conflict: [{}]", conflict.getName());
+        conflictMap.get(conflict.getConflictingSubsystem()).add(conflict.invert());
+        logger.debug("Adding conflict: [{}] and [{}]", conflict.getName(), conflict.invert().getName());
     }
 
     /**
@@ -188,10 +192,7 @@ public class Mediator implements PeriodicRunnable {
                 logger.error("Conflicting Subsystem not registered");
                 return conflicts;
             }
-            boolean isConflicting = possibleConflict.isRequestConflicting(request,
-                    subsystemMap.get(
-                            possibleConflict.getConflictingSubsystem())
-                            .getCurrentCondition());
+            boolean isConflicting = possibleConflict.isRequestConflicting(request, subsystemMap.get(possibleConflict.getConflictingSubsystem()).getCurrentCondition());
             if (isConflicting) {
                 logger.debug("Adding conflicting conflict: [{}].", possibleConflict.getName());
                 conflicts.add(possibleConflict);
