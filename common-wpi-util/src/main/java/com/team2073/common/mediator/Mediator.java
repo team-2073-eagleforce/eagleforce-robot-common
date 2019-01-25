@@ -4,10 +4,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.mediator.condition.Condition;
 import com.team2073.common.mediator.conflict.Conflict;
-import com.team2073.common.mediator.conflict.ConflictMap;
 import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.ColleagueSubsystem;
-import com.team2073.common.mediator.subsys.SubsystemMap;
 import com.team2073.common.periodic.PeriodicRunnable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +13,17 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- * Manages how {@link ColleagueSubsystem}s interact by checking for and resolving Conflicts between
- * {@link Request}s and {@link Condition}s.
+ * Manages how {@link ColleagueSubsystem}s interact by checking for and resolving {@link Conflict}s between
+ * {@link Request}s and the {@link Condition}s {@link ColleagueSubsystem}s are in.
  *
  * <h3>Use</h3>
- * Call {@link #onPeriodic()} in a periodic method like Robot.periodic() and add to the {@link ConflictMap} and {@link SubsystemMap}
- * from robot commands using {@link #add(Request)} to pass in a movement which will be iterated over.
+ * From robot commands use {@link #add(Request)} to pass in a {@link Request} with a
+ * {@link Condition} which will be iterated over.
  *
  * <h3>Configuration</h3>
- * Needs the following to know which subsystems to 'mediate':
+ * For setup {@link #registerColleague(ColleagueSubsystem)} in a {@link ColleagueSubsystem}'s constructor
+ * and {@link #registerConflict(Conflict)} in an init method
  * <ul>
- * <li>{@link ConflictMap}</li>
- * <li>{@link SubsystemMap}</li>
  * </ul>
  */
 public class Mediator implements PeriodicRunnable {
@@ -49,6 +46,10 @@ public class Mediator implements PeriodicRunnable {
         }
     }
 
+    /**
+     * Adds to the subsystem map for the {@link Mediator} to keep track of
+     * @param colleagueSubsystem
+     */
     public void registerColleague(ColleagueSubsystem colleagueSubsystem) {
         Assert.assertNotNull(colleagueSubsystem, "colleagueSubsystem");
         subsystemMap.put(colleagueSubsystem.getClass(), colleagueSubsystem);
@@ -65,6 +66,10 @@ public class Mediator implements PeriodicRunnable {
         }
     }
 
+    /**
+     * Adds to the conflict map to be checked periodically
+     * @param conflict
+     */
     public void registerConflict(Conflict conflict) {
         if (conflictMap.get(conflict.getOriginSubsystem()) == null) {
             ArrayList<Conflict> conflicts = new ArrayList<>();
@@ -93,8 +98,10 @@ public class Mediator implements PeriodicRunnable {
     private int periodicCalls = 0;
 
     /**
-     * Call this method continuously. Iterates through the list of {@link Request}s and attempts to execute them,
-     * first resolving their conflicts if any.
+     * This method is called continuously. Iterates through the list of {@link Request}s and attempts to execute them,
+     * resolving their conflicts if any.
+     *
+     * After 15 periodic loops of unresponsiveness, it will clear the current {@link Request} and go to the next one
      */
     @Override
     public void onPeriodic() {
@@ -160,8 +167,6 @@ public class Mediator implements PeriodicRunnable {
     }
 
     /**
-     * Uses a {@link ConflictMap} to determine whether the requested condition is conflicting with current subsystem positions
-     *
      * @param request the request that is being checked
      * @return found conflicts in a list or just an empty list if there aren't any
      * <p>
@@ -177,7 +182,16 @@ public class Mediator implements PeriodicRunnable {
         }
 
         for (Conflict possibleConflict : possibleConflicts) {
-            boolean isConflicting = possibleConflict.isRequestConflicting(request, subsystemMap.get(possibleConflict.getConflictingSubsystem()).getCurrentCondition());
+            try {
+                subsystemMap.get(possibleConflict.getConflictingSubsystem()).getCurrentCondition();
+            } catch (Exception e) {
+                logger.error("Conflicting Subsystem not registered");
+                return conflicts;
+            }
+            boolean isConflicting = possibleConflict.isRequestConflicting(request,
+                    subsystemMap.get(
+                            possibleConflict.getConflictingSubsystem())
+                            .getCurrentCondition());
             if (isConflicting) {
                 logger.debug("Adding conflicting conflict: [{}].", possibleConflict.getName());
                 conflicts.add(possibleConflict);
@@ -191,7 +205,7 @@ public class Mediator implements PeriodicRunnable {
     /**
      * @return a {@link Request} that resolves the {@link Conflict}
      */
-    public Request createConflictRequest(Conflict conflict) {
+    private Request createConflictRequest(Conflict conflict) {
         return new Request<>(conflict.getConflictingSubsystem(),
                 conflict.getResolution(conflict.getConflictingCondition(),
                         subsystemMap.get(conflict.getConflictingSubsystem())));

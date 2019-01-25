@@ -16,7 +16,6 @@ abstract class Conflict<OT, CT>(
 
     abstract fun isConditionConflicting(originCondition: Condition<OT>, conflictingCondition: Condition<CT>): Boolean
 
-    // TODO: Possibly generify the return type of Condition
     abstract fun getResolution(currentCondition: Condition<CT>, subsystem: ColleagueSubsystem<CT>): Condition<CT>
 
     fun getName(): String {

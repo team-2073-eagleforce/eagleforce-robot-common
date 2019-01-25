@@ -6,7 +6,7 @@ import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.SubsystemStateCondition
 
-class StateBasedConflict<OT: Enum<OT>, CT: Enum<CT>>(
+class StateBasedConflict<OT : Enum<OT>, CT : Enum<CT>>(
         var originSubsystemS: Class<ColleagueSubsystem<SubsystemStateCondition<OT>>>,
         var originConditionS: Condition<SubsystemStateCondition<OT>>,
         var conflictingSubsystemS: Class<ColleagueSubsystem<SubsystemStateCondition<CT>>>,
@@ -29,5 +29,4 @@ class StateBasedConflict<OT: Enum<OT>, CT: Enum<CT>>(
     override fun getResolution(currentCondition: Condition<SubsystemStateCondition<CT>>, subsystem: ColleagueSubsystem<SubsystemStateCondition<CT>>): Condition<SubsystemStateCondition<CT>> {
         return StateBasedCondition(resolveState)
     }
-
 }
