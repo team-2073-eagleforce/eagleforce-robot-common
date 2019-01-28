@@ -10,7 +10,15 @@ import com.team2073.common.periodic.PeriodicRunnable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Manages how {@link ColleagueSubsystem}s interact by checking for and resolving {@link Conflict}s between
@@ -27,9 +35,9 @@ import java.util.*;
  * </ul>
  */
 public class Mediator implements PeriodicRunnable {
-    private Map<Class<? extends ColleagueSubsystem>, ColleagueSubsystem> subsystemMap = new HashMap<>();
-    private Map<Class<? extends ColleagueSubsystem>, ArrayList<Conflict>> conflictMap = new HashMap<>();
-    private Deque<Deque<Request>> executeList = new LinkedList<>();
+    private final Map<Class<? extends ColleagueSubsystem>, ColleagueSubsystem> subsystemMap = new HashMap<>();
+    private final Map<Class<? extends ColleagueSubsystem>, ArrayList<Conflict>> conflictMap = new HashMap<>();
+    private final Deque<Deque<Request>> executeList = new LinkedList<>();
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public Mediator() {
@@ -144,7 +152,7 @@ public class Mediator implements PeriodicRunnable {
      *
      * @param request the request to be fulfilled <br\>
      */
-    public void execute(Request request) {
+    private void execute(Request request) {
         Assert.assertNotNull(request, "request");
         ArrayList<Conflict> conflicts = findRequestConflicts(request);
         Deque<Request> requestList = executeList.peekFirst();
@@ -214,19 +222,20 @@ public class Mediator implements PeriodicRunnable {
 
     @VisibleForTesting
     Map<Class<? extends ColleagueSubsystem>, ArrayList<Conflict>> getConflictMap() {
-        return conflictMap;
+        return Collections.unmodifiableMap(conflictMap);
     }
 
     @VisibleForTesting
     Map<Class<? extends ColleagueSubsystem>, ColleagueSubsystem> getSubsystemMap() {
-        return subsystemMap;
+        return Collections.unmodifiableMap(subsystemMap);
     }
 
     @VisibleForTesting
-    Deque<Deque<Request>> getExecuteList() {
-        return executeList;
+    List<Deque<Request>> getExecuteList() {
+        return Collections.unmodifiableList(new ArrayList<>(executeList));
     }
 
+    @VisibleForTesting
     private Request currentRequest;
 
     @VisibleForTesting

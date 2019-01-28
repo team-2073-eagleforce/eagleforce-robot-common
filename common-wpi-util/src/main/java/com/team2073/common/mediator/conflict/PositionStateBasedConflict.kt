@@ -7,11 +7,11 @@ import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.SubsystemStateCondition
 
 class PositionStateBasedConflict<T : Enum<T>>(
-        var originSubsystemPS: Class<out ColleagueSubsystem<Double>>,
-        var originConditionPS: Condition<Double>,
-        var conflictingSubsystemPS: Class<out ColleagueSubsystem<SubsystemStateCondition<T>>>,
-        var conflictingConditionPS: Condition<SubsystemStateCondition<T>>,
-        var resolveState: SubsystemStateCondition<T>?) :
+        val originSubsystemPS: Class<out ColleagueSubsystem<Double>>,
+        val originConditionPS: Condition<Double>,
+        val conflictingSubsystemPS: Class<out ColleagueSubsystem<SubsystemStateCondition<T>>>,
+        val conflictingConditionPS: Condition<SubsystemStateCondition<T>>,
+        val resolveState: SubsystemStateCondition<T>?) :
         Conflict<Double, SubsystemStateCondition<T>>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS) {
 
     override fun isConditionConflicting(originCondition: Condition<Double>, conflictingCondition: Condition<SubsystemStateCondition<T>>): Boolean {

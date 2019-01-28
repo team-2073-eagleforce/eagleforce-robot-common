@@ -1,6 +1,6 @@
 package com.team2073.common.mediator.condition
 
-class PositionBasedCondition(private val lowerBound: Double, var exactPosition: Double, private val upperBound: Double) : Condition<Double> {
+class PositionBasedCondition(private val lowerBound: Double, val exactPosition: Double, private val upperBound: Double) : Condition<Double> {
 
     override fun getConditionValue(): Double {
         return exactPosition

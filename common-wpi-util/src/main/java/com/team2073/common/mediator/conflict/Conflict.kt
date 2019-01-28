@@ -5,10 +5,10 @@ import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 
 abstract class Conflict<OT, CT>(
-        var originSubsystem: Class<out ColleagueSubsystem<OT>>,
-        var originCondition: Condition<OT>,
-        var conflictingSubsystem: Class<out ColleagueSubsystem<CT>>,
-        var conflictingCondition: Condition<CT>) {
+        val originSubsystem: Class<out ColleagueSubsystem<OT>>,
+        val originCondition: Condition<OT>,
+        val conflictingSubsystem: Class<out ColleagueSubsystem<CT>>,
+        val conflictingCondition: Condition<CT>) {
 
     abstract fun invert(): Conflict<CT, OT>
 
