@@ -7,12 +7,12 @@ import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.SubsystemStateCondition
 
 class StateBasedConflict<OT : Enum<OT>, CT : Enum<CT>>(
-        var originSubsystemS: Class<ColleagueSubsystem<SubsystemStateCondition<OT>>>,
-        var originConditionS: Condition<SubsystemStateCondition<OT>>,
-        var conflictingSubsystemS: Class<ColleagueSubsystem<SubsystemStateCondition<CT>>>,
-        var conflictingConditionS: Condition<SubsystemStateCondition<CT>>,
-        var resolveState: SubsystemStateCondition<CT>?,
-        var inverseResolveState: SubsystemStateCondition<OT>?) :
+        val originSubsystemS: Class<ColleagueSubsystem<SubsystemStateCondition<OT>>>,
+        val originConditionS: Condition<SubsystemStateCondition<OT>>,
+        val conflictingSubsystemS: Class<ColleagueSubsystem<SubsystemStateCondition<CT>>>,
+        val conflictingConditionS: Condition<SubsystemStateCondition<CT>>,
+        val resolveState: SubsystemStateCondition<CT>?,
+        val inverseResolveState: SubsystemStateCondition<OT>?) :
         Conflict<SubsystemStateCondition<OT>, SubsystemStateCondition<CT>>(originSubsystemS, originConditionS, conflictingSubsystemS, conflictingConditionS) {
 
     override fun invert(): Conflict<SubsystemStateCondition<CT>, SubsystemStateCondition<OT>> {
