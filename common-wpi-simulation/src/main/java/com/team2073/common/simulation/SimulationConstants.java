@@ -17,19 +17,21 @@ public class SimulationConstants {
      * kt units are inch pounds per amp
      */
     public enum MotorType {
-        PRO(Pro.MOTOR_KV, Pro.MOTOR_KT, Pro.RESISTANCE),
-        BAG(Bag.MOTOR_KV, Bag.MOTOR_KT, Bag.RESISTANCE),
-        CIM(Cim.MOTOR_KV, Cim.MOTOR_KT, Cim.RESISTANCE),
-        MINI_CIM(MiniCim.MOTOR_KV, MiniCim.MOTOR_KT, MiniCim.RESISTANCE);
-        
+        PRO(Pro.MOTOR_KV, Pro.MOTOR_KT, Pro.RESISTANCE, Pro.MOTOR_KV_IN_DEGREES),
+        BAG(Bag.MOTOR_KV, Bag.MOTOR_KT, Bag.RESISTANCE, Bag.MOTOR_KV_IN_DEGREES),
+        CIM(Cim.MOTOR_KV, Cim.MOTOR_KT, Cim.RESISTANCE, Cim.MOTOR_KV_IN_DEGREES),
+        MINI_CIM(MiniCim.MOTOR_KV, MiniCim.MOTOR_KT, MiniCim.RESISTANCE, MiniCim.MOTOR_KV_IN_DEGREES);
+
         public final double velocityConstant;
         public final double torqueConstant;
         public final double motorResistance;
+        public final double velocityConstantInDegrees;
 
-        MotorType(double velocityConstant, double torqueConstant, double motorResistance) {
+        MotorType(double velocityConstant, double torqueConstant, double motorResistance, double velocityConstantInDegrees) {
             this.velocityConstant = velocityConstant;
             this.torqueConstant = torqueConstant;
             this.motorResistance = motorResistance;
+            this.velocityConstantInDegrees = velocityConstantInDegrees;
         }
     }
 
@@ -45,6 +47,7 @@ public class SimulationConstants {
             public static final double RESISTANCE = 12 / STALL_CURRENT;
             public static final double MOTOR_KV = ((FREE_SPEED_RPM / 60) * 360)
                     / (12 - RESISTANCE * FREE_CURRENT);
+            public static final double MOTOR_KV_IN_DEGREES = (FREE_SPEED_RPM * 60) / (12 - FREE_CURRENT * RESISTANCE);
         }
 
         public abstract class Bag {
@@ -57,6 +60,7 @@ public class SimulationConstants {
             public static final double RESISTANCE = 12 / STALL_CURRENT;
             public static final double MOTOR_KV = ((FREE_SPEED_RPM / 60) * 360)
                     / (12 - RESISTANCE * FREE_CURRENT);
+            public static final double MOTOR_KV_IN_DEGREES = (FREE_SPEED_RPM * 60) / (12 - FREE_CURRENT * RESISTANCE);
         }
 
         public abstract class Cim {
@@ -69,6 +73,7 @@ public class SimulationConstants {
             public static final double RESISTANCE = 12 / STALL_CURRENT;
             public static final double MOTOR_KV = ((FREE_SPEED_RPM / 60) * 360)
                     / (12 - RESISTANCE * FREE_CURRENT);
+            public static final double MOTOR_KV_IN_DEGREES = (FREE_SPEED_RPM * 60) / (12 - FREE_CURRENT * RESISTANCE);
         }
 
         public abstract class MiniCim {
@@ -81,6 +86,7 @@ public class SimulationConstants {
             public static final double RESISTANCE = 12 / STALL_CURRENT;
             public static final double MOTOR_KV = ((FREE_SPEED_RPM / 60) * 360)
                     / (12 - RESISTANCE * FREE_CURRENT);
+            public static final double MOTOR_KV_IN_DEGREES = (FREE_SPEED_RPM * 60) / (12 - FREE_CURRENT * RESISTANCE);
         }
 
     }
