@@ -13,7 +13,6 @@ public class SimulationEnvironment {
     private AtomicInteger currCycle = new AtomicInteger(0);
 
     // Periodic members
-    private int robotInterval = 20;
     private AtomicInteger currRobotPeriodic = new AtomicInteger(0);
 
     // Other members
@@ -33,10 +32,6 @@ public class SimulationEnvironment {
 
     public int getCurrCycle() {
         return currCycle.get();
-    }
-
-    public int getRobotInterval() {
-        return robotInterval;
     }
 
     public int getCurrRobotPeriodic() {

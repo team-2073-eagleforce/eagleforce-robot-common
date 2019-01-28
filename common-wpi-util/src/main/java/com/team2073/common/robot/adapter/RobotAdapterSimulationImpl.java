@@ -14,12 +14,6 @@ public class RobotAdapterSimulationImpl implements RobotAdapter {
         this.robotRunner = new RobotRunner(robot);
     }
     
-    public RobotAdapterSimulationImpl(RobotDelegate robot, double period) {
-        // TODO: Use period properly
-//        super(period);
-        this.robotRunner = new RobotRunner(robot);
-    }
-    
     @Override
     public void robotInit() {
         robotRunner.robotInit();
@@ -68,11 +62,6 @@ public class RobotAdapterSimulationImpl implements RobotAdapter {
     @Override
     public void testPeriodic() {
         robotRunner.testPeriodic();
-    }
-    
-    @Override
-    public void free() {
-        robotRunner.free();
     }
     
     @Override

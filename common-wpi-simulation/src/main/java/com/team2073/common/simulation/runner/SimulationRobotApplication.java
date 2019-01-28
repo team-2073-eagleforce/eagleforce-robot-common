@@ -258,6 +258,7 @@ public class SimulationRobotApplication {
 
         private Future<?> prevThreadResult;
 
+        private int lastPeriodicCycle;
         private boolean exitPreviouslyRequested = false;
 
         @Override
@@ -281,7 +282,9 @@ public class SimulationRobotApplication {
             log.trace("CycleTask: Running cycle iteration [{}].", currCycle);
 
             // Run robot periodic every x iterations
-            if (currCycle % simEnv.getRobotInterval() == 0) {
+            double periodMillis = robotDelegate.getPeriod() * 1000;
+            if ((currCycle - lastPeriodicCycle) - periodMillis > 0) {
+                lastPeriodicCycle = currCycle;
                 log.trace("CycleTask: Invoking periodic thread...");
                 logPrevPeriodicThreadIncomplete();
                 prevThreadResult = periodicThreadRunner.submit(periodicTask);
@@ -358,10 +361,15 @@ public class SimulationRobotApplication {
 
         @Override
         public boolean shouldExitSimulation(SimulationEnvironment simEnv) {
-            return simEnv.getCurrCycle() >= iterationCount * simEnv.getRobotInterval() - 1;
+            return simEnv.getCurrCycle() >= iterationCount * robotDelegate.getPeriod() * 1000 - 1;
         }
     }
     
-    private static class NoOpRobotDelegate implements RobotDelegate {}
+    private static class NoOpRobotDelegate implements RobotDelegate {
+        @Override
+        public double getPeriod() {
+            return .01;
+        }
+    }
     
 }

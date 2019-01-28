@@ -79,14 +79,6 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 		this.robot = robot;
 	}
 
-	/**
-	 * @param period the time in seconds between each periodic call.
-	 */
-	public AbstractRobotDelegator(RobotDelegate robot, double period) {
-		super(period);
-		this.robot = robot;
-	}
-
 	private enum MatchPeriod {
 		SETUP,
 		AUTONOMOUS,
@@ -325,6 +317,11 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 	@Override
 	public void readSmartDashboard() {
 		
+	}
+	
+	@Override
+	public double getPeriod() {
+		return robot.getPeriod();
 	}
 
 }

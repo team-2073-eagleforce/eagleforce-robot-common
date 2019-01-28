@@ -24,74 +24,65 @@ public class RobotAdapterDefaultImpl extends TimedRobot implements RobotAdapter 
         return instance;
     }
     
-    private final RobotRunner robotDelegator;
+    private final RobotRunner robotRunner;
     
     private RobotAdapterDefaultImpl(RobotDelegate robot) {
-        this.robotDelegator = new RobotRunner(robot);
-    }
-    
-    private RobotAdapterDefaultImpl(RobotDelegate robot, double period) {
-        super(period);
-        this.robotDelegator = new RobotRunner(robot);
+        super(robot.getPeriod());
+        this.robotRunner = new RobotRunner(robot);
     }
     
     @Override
     public void robotInit() {
-        robotDelegator.robotInit();
+        robotRunner.robotInit();
     }
     
     @Override
     public void disabledInit() {
-        robotDelegator.disabledInit();
+        robotRunner.disabledInit();
     }
     
     @Override
     public void autonomousInit() {
-        robotDelegator.autonomousInit();
+        robotRunner.autonomousInit();
     }
     
     @Override
     public void teleopInit() {
-        robotDelegator.teleopInit();
+        robotRunner.teleopInit();
     }
     
     @Override
     public void testInit() {
-        robotDelegator.testInit();
+        robotRunner.testInit();
     }
     
     @Override
     public void robotPeriodic() {
-        robotDelegator.robotPeriodic();
+        robotRunner.robotPeriodic();
     }
     
     @Override
     public void disabledPeriodic() {
-        robotDelegator.disabledPeriodic();
+        robotRunner.disabledPeriodic();
     }
     
     @Override
     public void autonomousPeriodic() {
-        robotDelegator.autonomousPeriodic();
+        robotRunner.autonomousPeriodic();
     }
     
     @Override
     public void teleopPeriodic() {
-        robotDelegator.teleopPeriodic();
+        robotRunner.teleopPeriodic();
     }
     
     @Override
     public void testPeriodic() {
-        robotDelegator.testPeriodic();
-    }
-    
-    @Override
-    public void free() {
-        robotDelegator.free();
+        robotRunner.testPeriodic();
     }
     
     @Override
     public RobotRunner getRobotRunner() {
-        return robotDelegator;
+        return robotRunner;
     }
 }
