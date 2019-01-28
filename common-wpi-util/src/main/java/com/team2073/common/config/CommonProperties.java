@@ -38,6 +38,10 @@ public class CommonProperties {
     // PropertyLoader
     private Integer propLoaderRefreshPropsInterval = DEFAULT_LONG_INTERVAL;
     
+    // RobotRunner
+    private Boolean loggingLevelModuleEnabled = true;
+    private Boolean diagnosticLoggingModuleEnabled = false;
+    private Boolean diagnosticLoggingModuleDataRecordingEnabled = false;
     
     public Boolean getRealMatch() {
         return realMatch;
@@ -141,5 +145,29 @@ public class CommonProperties {
     
     public void setPropLoaderRefreshPropsInterval(Integer propLoaderRefreshPropsInterval) {
         this.propLoaderRefreshPropsInterval = propLoaderRefreshPropsInterval;
+    }
+    
+    public Boolean getLoggingLevelModuleEnabled() {
+        return loggingLevelModuleEnabled;
+    }
+    
+    public void setLoggingLevelModuleEnabled(Boolean loggingLevelModuleEnabled) {
+        this.loggingLevelModuleEnabled = loggingLevelModuleEnabled;
+    }
+    
+    public Boolean getDiagnosticLoggingModuleEnabled() {
+        return diagnosticLoggingModuleEnabled;
+    }
+    
+    public void setDiagnosticLoggingModuleEnabled(Boolean diagnosticLoggingModuleEnabled) {
+        this.diagnosticLoggingModuleEnabled = diagnosticLoggingModuleEnabled;
+    }
+    
+    public Boolean getDiagnosticLoggingModuleDataRecordingEnabled() {
+        return diagnosticLoggingModuleDataRecordingEnabled;
+    }
+    
+    public void setDiagnosticLoggingModuleDataRecordingEnabled(Boolean diagnosticLoggingModuleDataRecordingEnabled) {
+        this.diagnosticLoggingModuleDataRecordingEnabled = diagnosticLoggingModuleDataRecordingEnabled;
     }
 }

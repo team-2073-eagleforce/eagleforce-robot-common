@@ -1,5 +1,6 @@
 package com.team2073.common.robot;
 
+import com.team2073.common.config.CommonProperties;
 import com.team2073.common.datarecorder.DataRecorder;
 import com.team2073.common.event.RobotEventPublisher;
 import com.team2073.common.periodic.OccasionalLoggingRunner;
@@ -55,6 +56,10 @@ public interface RobotDelegate {
 
 	/** See {@link IterativeRobotBase#testPeriodic()} */
 	default void testPeriodic() {
+	}
+	
+	default CommonProperties createCommonProperties() {
+		return null;
 	}
 
 	default PeriodicRunner createPeriodicRunner() {

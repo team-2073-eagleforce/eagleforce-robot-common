@@ -1,6 +1,7 @@
 package com.team2073.common.robot;
 
 import com.team2073.common.CommonConstants;
+import com.team2073.common.config.CommonProperties;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.datarecorder.DataRecorder;
 import com.team2073.common.event.RobotEventPublisher;
@@ -12,6 +13,8 @@ import com.team2073.common.periodic.SmartDashboardAwareRunner;
 import com.team2073.common.proploader.PropertyLoader;
 import com.team2073.common.robot.adapter.DriverStationAdapter;
 import com.team2073.common.robot.adapter.SchedulerAdapter;
+import com.team2073.common.robot.module.DiagnosticLoggingModule;
+import com.team2073.common.robot.module.LoggingLevelModule;
 import com.team2073.common.util.ExceptionUtil;
 import com.team2073.common.util.LogUtil;
 import edu.wpi.first.wpilibj.RobotController;
@@ -64,8 +67,9 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 	private boolean loggedFmsMatchData = false;
 
 	private RobotContext robotContext;
-
+	
 	// Fields from RobotContext
+	private CommonProperties commonProps;
 	private PeriodicRunner periodicRunner;
 	private OccasionalLoggingRunner loggingRunner;
 	private DataRecorder dataRecorder;
@@ -74,6 +78,10 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 	private PropertyLoader propertyLoader;
 	private DriverStationAdapter driverStation;
 	private SchedulerAdapter scheduler;
+	
+	// Modules
+	private LoggingLevelModule loggingLevelModule;
+	private DiagnosticLoggingModule diagnosticLoggingModule;
 
 	public RobotRunner(RobotDelegate robot) {
 		this.robot = robot;
@@ -93,6 +101,7 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 		LogUtil.infoInit(getClass(), log);
 		robotContext = RobotContext.getInstance();
 		initializeDelegator();
+		registerModules();
 		robotContext.registerPeriodicInstances();
 		robot.robotInit();
 		// Allow subclasses to register their own periodic instances
@@ -100,10 +109,26 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 		resetLastCheckedTime();
 		LogUtil.infoInitEnd(getClass(), log);
 	}
+	
+	private void registerModules() {
+		if (commonProps.getLoggingLevelModuleEnabled()) {
+			loggingLevelModule = new LoggingLevelModule();
+			loggingLevelModule.autoRegisterWithPeriodicRunner();
+		}
+		if (commonProps.getDiagnosticLoggingModuleEnabled()) {
+			diagnosticLoggingModule = new DiagnosticLoggingModule();
+			diagnosticLoggingModule.autoRegisterWithPeriodicRunner();
+			if (commonProps.getDiagnosticLoggingModuleDataRecordingEnabled())
+				robotContext.getDataRecorder().registerRecordable(diagnosticLoggingModule);
+		}
+	}
 
 	private void initializeDelegator() {
 		log.info("Initializing Robot Delegator Context...");
-
+		
+		if ((commonProps = robot.createCommonProperties()) != null)
+			robotContext.setCommonProps(commonProps);
+		
 		if ((periodicRunner = robot.createPeriodicRunner()) != null)
 			robotContext.setPeriodicRunner(periodicRunner);
 
