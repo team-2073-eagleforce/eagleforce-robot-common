@@ -12,7 +12,7 @@ class StatePositionBasedConflict<T : Enum<T>>(val originSubsystemPS: Class<out C
                                               val conflictingSubsystemPS: Class<out ColleagueSubsystem<Double>>,
                                               val conflictingConditionPS: Condition<Double>,
                                               val inverseResolveState: SubsystemStateCondition<T>?) :
-        Conflict<SubsystemStateCondition<T>, Double>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS) {
+        Conflict<SubsystemStateCondition<T>, Double>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS){
 
     override fun isConditionConflicting(originCondition: Condition<SubsystemStateCondition<T>>, conflictingCondition: Condition<Double>): Boolean {
         return originCondition == originConditionPS && conflictingCondition == conflictingConditionPS
@@ -36,6 +36,8 @@ class StatePositionBasedConflict<T : Enum<T>>(val originSubsystemPS: Class<out C
                     closestBound + safetyRange)
         }
         return resolutionCondition
+
+
     }
 
     override fun isRequestConflicting(request: Request<SubsystemStateCondition<T>>, conflictingCondition: Condition<Double>): Boolean {

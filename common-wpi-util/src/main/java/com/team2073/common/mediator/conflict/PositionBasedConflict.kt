@@ -5,6 +5,7 @@ import com.team2073.common.mediator.condition.PositionBasedCondition
 import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.PositionBasedSubsystem
+import com.team2073.common.position.Position
 
 class PositionBasedConflict(
         val originSubsystemP: Class<out ColleagueSubsystem<Double>>,
@@ -18,10 +19,10 @@ class PositionBasedConflict(
     }
 
     override fun getResolution(currentCondition: Condition<Double>, subsystem: ColleagueSubsystem<Double>): Condition<Double> {
-        var closestBound = (conflictingConditionP as PositionBasedCondition).findClosestBound(currentCondition)
-        var safetyRange = (subsystem as PositionBasedSubsystem).getSafetyRange()
+        val closestBound = (conflictingConditionP as PositionBasedCondition).findClosestBound(currentCondition)
+        val safetyRange = (subsystem as PositionBasedSubsystem).getSafetyRange()
         lateinit var resolutionCondition: Condition<Double>
-        val isLowerBound = (conflictingConditionP as PositionBasedCondition).isLowerBound(closestBound)
+        val isLowerBound = (conflictingConditionP).isLowerBound(closestBound)
 
         if (isLowerBound == null) {
             println("bound not upper/lower in condition")

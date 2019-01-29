@@ -1,13 +1,13 @@
 package com.team2073.common.mediator.condition
 
-class PositionBasedCondition(private val lowerBound: Double, val exactPosition: Double, private val upperBound: Double) : Condition<Double> {
+class PositionBasedCondition(val lowerBound: Double, val exactPosition: Double, val upperBound: Double) : Condition<Double> {
 
     override fun getConditionValue(): Double {
         return exactPosition
     }
 
     override fun isInCondition(condition: Condition<Double>): Boolean {
-        return ((condition as PositionBasedCondition).exactPosition in lowerBound..upperBound)
+        return ((condition.getConditionValue()) in lowerBound..upperBound)
     }
 
     fun findClosestBound(condition: Condition<Double>): Double {
