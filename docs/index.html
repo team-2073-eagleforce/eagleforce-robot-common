@@ -1,0 +1,2522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.8">
+<meta name="author" content="Jason Stanley, Minh Nguyen, Gabe Bui, Preston Briggs">
+<title>Eagleforce Common - Reference Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
+/* Uncomment @import statement below to use as custom stylesheet */
+/*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}
+audio,canvas,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+script{display:none!important}
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+a{background:transparent}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+abbr[title]{border-bottom:1px dotted}
+b,strong{font-weight:bold}
+dfn{font-style:italic}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,*::before,*::after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:none}
+p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
+ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
+ul.square{list-style-type:square}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
+abbr{text-transform:none}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
+blockquote cite::before{content:"\2014 \0020"}
+blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+*:not(pre)>code.nobreak{word-wrap:normal}
+*:not(pre)>code.nowrap{white-space:nowrap}
+pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:100%;background-color:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:inherit}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
+.sidebarblock{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock pre:not(.highlight),.listingblock pre[class="highlight"],.listingblock pre[class^="highlight "],.listingblock pre.CodeRay,.listingblock pre.prettyprint{background:#f7f7f8}
+.sidebarblock .literalblock pre,.sidebarblock .listingblock pre:not(.highlight),.sidebarblock .listingblock pre[class="highlight"],.sidebarblock .listingblock pre[class^="highlight "],.sidebarblock .listingblock pre.CodeRay,.sidebarblock .listingblock pre.prettyprint{background:#f2f1f1}
+.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:1em}}
+.literalblock pre.nowrap,.literalblock pre.nowrap pre,.listingblock pre.nowrap,.listingblock pre.nowrap pre{white-space:pre;word-wrap:normal}
+.literalblock.output pre{color:#f7f7f8;background-color:rgba(0,0,0,.9)}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:#999}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:#999}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+table.pyhltable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.pyhltable td{vertical-align:top;padding-top:0;padding-bottom:0;line-height:1.45}
+table.pyhltable td.code{padding-left:.75em;padding-right:0}
+pre.pygments .lineno,table.pyhltable td:not(.code){color:#999;padding-left:0;padding-right:.5em;border-right:1px solid #dddddf}
+pre.pygments .lineno{display:inline-block;margin-right:.25em}
+table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin:0 0 1.25em;padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
+table.tableblock{max-width:100%;border-collapse:separate}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
+table.frame-all{border-width:1px}
+table.frame-sides{border-width:0 1px}
+table.frame-topbot,table.frame-ends{border-width:1px 0}
+table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd){background:#f8f8f7}
+table.stripes-none tr,table.stripes-odd tr:nth-of-type(even){background:none}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+td>div.verse{white-space:pre}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
+ul.inline{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
+.gist .file-data>table td.line-data{width:99%}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background-color:#00fafa}
+.black{color:#000}
+.black-background{background-color:#000}
+.blue{color:#0000bf}
+.blue-background{background-color:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background-color:#fa00fa}
+.gray{color:#606060}
+.gray-background{background-color:#7d7d7d}
+.green{color:#006000}
+.green-background{background-color:#007d00}
+.lime{color:#00bf00}
+.lime-background{background-color:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background-color:#7d0000}
+.navy{color:#000060}
+.navy-background{background-color:#00007d}
+.olive{color:#606000}
+.olive-background{background-color:#7d7d00}
+.purple{color:#600060}
+.purple-background{background-color:#7d007d}
+.red{color:#bf0000}
+.red-background{background-color:#fa0000}
+.silver{color:#909090}
+.silver-background{background-color:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background-color:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background-color:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background-color:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background-color:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background-color:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media print,amzn-kf8{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>Eagleforce Common - Reference Guide</h1>
+<div class="details">
+<span id="author" class="author">Jason Stanley</span><br>
+<span id="author2" class="author">Minh Nguyen</span><br>
+<span id="author3" class="author">Gabe Bui</span><br>
+<span id="author4" class="author">Preston Briggs</span><br>
+<span id="email4" class="email"><a href="mailto:pbriggs28@gmail.com">pbriggs28@gmail.com</a></span><br>
+<span id="revnumber">version 0.3.0-SNAPSHOT,</span>
+<span id="revdate">11/14/2018</span>
+<br><span id="revremark">Alpha</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_overview">1. Overview</a></li>
+<li><a href="#_quick_start">2. Quick Start</a></li>
+<li><a href="#_wpi_modules">3. WPI Modules</a>
+<ul class="sectlevel2">
+<li><a href="#_data_recorder">3.1. Data Recorder</a>
+<ul class="sectlevel3">
+<li><a href="#_overview_2">3.1.1. Overview</a></li>
+<li><a href="#_quick_start_2">3.1.2. Quick Start</a></li>
+<li><a href="#_recordables">3.1.3. Recordables</a>
+<ul class="sectlevel4">
+<li><a href="#_supported_field_types">Supported Field Types</a>
+<ul class="sectlevel5">
+<li><a href="#_includingexcluding_fields">Including/Excluding Fields</a></li>
+<li><a href="#_including_fields_with_datapoint">Including Fields with <code>@DataPoint</code></a></li>
+<li><a href="#_excluding_fields_with_datapointignore">Excluding Fields with <code>@DataPointIgnore</code></a></li>
+<li><a href="#_configuring_recordable_name">Configuring Recordable Name</a></li>
+<li><a href="#_configuring_recordable_field_names">Configuring Recordable Field Names</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_datarecorder">3.1.4. DataRecorder</a>
+<ul class="sectlevel4">
+<li><a href="#_registering_recordables">Registering Recordables</a></li>
+<li><a href="#_registering_output_handlers">Registering Output Handlers</a></li>
+<li><a href="#_running_the_datarecorder">Running the DataRecorder</a>
+<ul class="sectlevel5">
+<li><a href="#_running_with_periodic_runner_recommended">Running with Periodic Runner (Recommended)</a></li>
+<li><a href="#_running_in_auto_record_mode">Running in Auto-Record Mode</a></li>
+<li><a href="#_running_manually_not_recommended">Running Manually (Not Recommended)</a></li>
+</ul>
+</li>
+<li><a href="#_stopping_the_datarecorder">Stopping the DataRecorder</a></li>
+<li><a href="#_configuring_the_datarecorder">Configuring the DataRecorder</a></li>
+</ul>
+</li>
+<li><a href="#_output_handlers">3.1.5. Output Handlers</a></li>
+</ul>
+</li>
+<li><a href="#_property_loader">3.2. Property Loader</a>
+<ul class="sectlevel3">
+<li><a href="#_overview_3">3.2.1. Overview</a></li>
+<li><a href="#_quick_start_3">3.2.2. Quick Start</a>
+<ul class="sectlevel4">
+<li><a href="#_1_create_a_property_container_class">1) Create a Property Container Class</a></li>
+<li><a href="#_2_create_a_properties_file">2) Create a Properties File</a></li>
+<li><a href="#_3_register_property_containers_load_properties_and_access_property_values">3) Register Property Containers, Load Properties, and Access Property Values</a></li>
+</ul>
+</li>
+<li><a href="#_properties_files">3.2.3. <code>.properties</code> Files</a></li>
+<li><a href="#_property_containers">3.2.4. Property Containers</a>
+<ul class="sectlevel4">
+<li><a href="#_overview_4">Overview</a></li>
+<li><a href="#_restrictions">Restrictions</a></li>
+<li><a href="#_ignoring_fields">Ignoring Fields</a></li>
+<li><a href="#_property_container_file_name_resolution">Property Container File Name Resolution</a></li>
+<li><a href="#_property_container_field_name_resolution">Property Container Field Name Resolution</a></li>
+<li><a href="#_nested_property_containers">Nested Property Containers</a></li>
+<li><a href="#_inherited_property_containers">Inherited Property Containers</a></li>
+</ul>
+</li>
+<li><a href="#_registering_property_containers">3.2.5. Registering Property Containers</a>
+<ul class="sectlevel4">
+<li><a href="#_manual_registration">Manual Registration</a>
+<ul class="sectlevel5">
+<li><a href="#_why_cant_i_pass_in_an_already_instantiated_instance_of_my_property_container">Why can&#8217;t I pass in an already instantiated instance of my Property Container?</a></li>
+</ul>
+</li>
+<li><a href="#_auto_registration">Auto Registration</a></li>
+</ul>
+</li>
+<li><a href="#_retrieving_property_containers">3.2.6. Retrieving Property Containers</a></li>
+<li><a href="#_loading_property_containers">3.2.7. Loading Property Containers</a></li>
+<li><a href="#_property_file_loading_priority">3.2.8. Property File Loading Priority</a>
+<ul class="sectlevel4">
+<li><a href="#_location">Location</a>
+<ul class="sectlevel5">
+<li><a href="#_classpath">Classpath</a></li>
+<li><a href="#_external">External</a></li>
+</ul>
+</li>
+<li><a href="#_profiles">Profiles</a></li>
+<li><a href="#_property_file_priority">Property File Priority</a></li>
+</ul>
+</li>
+<li><a href="#_property_loader_configuration">3.2.9. Property Loader Configuration</a>
+<ul class="sectlevel4">
+<li><a href="#_external_properties_directory">External Properties Directory</a></li>
+<li><a href="#_classpath_properties_directory">Classpath Properties Directory</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_robot_profiles">3.3. Robot Profiles</a>
+<ul class="sectlevel3">
+<li><a href="#_activate_profiles">3.3.1. Activate Profiles</a></li>
+<li><a href="#_check_if_profile_is_active">3.3.2. Check if Profile is Active</a></li>
+<li><a href="#_get_active_profiles">3.3.3. Get Active Profiles</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_wpi_simulation_modules">4. WPI Simulation Modules</a></li>
+<li><a href="#_common_utilities">5. Common Utilities</a>
+<ul class="sectlevel2">
+<li><a href="#_args">5.1. Args</a></li>
+<li><a href="#_enumutil">5.2. EnumUtil</a></li>
+<li><a href="#_exceptionutil">5.3. ExceptionUtil</a></li>
+<li><a href="#_logutil">5.4. LogUtil</a></li>
+<li><a href="#_threadutil">5.5. ThreadUtil</a></li>
+<li><a href="#_throw">5.6. Throw</a></li>
+</ul>
+</li>
+<li><a href="#_appendix">6. Appendix</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_overview">1. Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_quick_start">2. Quick Start</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_wpi_modules">3. WPI Modules</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_data_recorder">3.1. Data Recorder</h3>
+<div class="sect3">
+<h4 id="_overview_2">3.1.1. Overview</h4>
+<div class="paragraph">
+<p>The Data Recorder module is used to automatically record data from objects on a periodic basis and output their data for analysis.
+For instance, recording position, velocity, acceleration, and voltage and then graphing these values to help tune motion profiles.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/simple-graph.png" alt="dd">
+</div>
+</div>
+<div class="paragraph">
+<p>The Data Recorder module consists of 3 main components:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Recordables</dt>
+<dd>
+<p>These are the objects holding the data you would like to record.
+These can be any Java object, there is no need to implement an interface or add an annotation.
+The fields do not need to be public and no getters/setters are required.
+All this allows the flexibility to record any object, even classes you can&#8217;t modify, such as a those from 3rd party libraries (for example, a Talon).</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The only exception to this is primitives and primitive wrapper types which are not allowed.
+There is no sense in graphing data on a primitive/primitive wrapper since it&#8217;s value is immutable (cannot change).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Registering a Collection/Array will result in each object in the Collection/Array being registered, and not the actual Collection/Array being registered since you most likely do not want to graph data on the internals of a Collection/Array.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Data Recorder</dt>
+<dd>
+<p>Responsible for periodically querying the data from the registered Recordables and storing the data temporarily until it can be flushed to the various output handlers.
+Simply register all your Recordables and output handlers with the DataRecorder and then start recording and everything will be taken care of for you.</p>
+</dd>
+<dt class="hdlist1">Output Handlers</dt>
+<dd>
+<p>The Objects capable of receiving data from the DataRecorder and outputting it in some form.
+For example outputting to a csv file, printing to the console, or updating the SmartDashboard.
+There are a few built in output handlers but you can write your own for your own custom output.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_quick_start_2">3.1.2. Quick Start</h4>
+<div class="paragraph">
+<p>There are 3 steps to configuring and running a DataRecorder:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+recorder.registerRecordable(intakeSubsystem); <i class="conum" data-value="1"></i><b>(1)</b>
+recorder.registerRecordable(elevatorSubsystem); <i class="conum" data-value="1"></i><b>(1)</b>
+
+// Register output handlers (optional, by default a csv output handler will be registered)
+DataRecordOutputHandler customOutputHandler = // get your own custom output handler if you want
+recorder.registerCsvOutputHandler(); <i class="conum" data-value="2"></i><b>(2)</b>
+recorder.registerSmartDashboardOutputHandler(); <i class="conum" data-value="2"></i><b>(2)</b>
+recorder.registerOutputHandler(customOutputHandler); <i class="conum" data-value="2"></i><b>(2)</b>
+
+recorder.startAutoRecordAndFlush(); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Register objects to record</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Register output handlers (optional, by default a csv output handler will be registered if no other handlers are registered)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Start the DataRecorder</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_recordables">3.1.3. Recordables</h4>
+<div class="paragraph">
+<p>You can think of a Recordable as one csv (Excel) spreadsheet and each field in that Recordable as a column in that spreadsheet.</p>
+</div>
+<div class="paragraph">
+<p>So the following Recordable&#8230;&#8203;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ElevatorSubsystem {
+    private double position;
+    private double velocity;
+    private double acceleration;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#8230;&#8203;would result in a csv similar to:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">position</th>
+<th class="tableblock halign-left valign-top">velocity</th>
+<th class="tableblock halign-left valign-top">acceleration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.054235775</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.536928869</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.644106451</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.063723158</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.581877371</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.643961171</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.066066531</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.592453131</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.643926989</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect4">
+<h5 id="_supported_field_types">Supported Field Types</h5>
+<div class="paragraph">
+<p>Although any Object is eligible for recording, the fields of an Object to be recorded act a little differently.
+Certain field types can never be mapped (for example Collections/Arrays) and others (most Object types) are not mapped by default.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>See Including/Excluding Fields section for how to map a field that is not mapped by default.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ElevatorSubsystem {
+
+    public enum State {
+        NEW,
+        INITIALIZING,
+        RUNNING,
+        SHUTDOWN
+    }
+
+    // The following will all be mapped automatically
+    private double position;
+    private double velocity;
+    private double acceleration;
+    private Integer currentCycle;
+    private String lastError;
+    private State state = State.NEW;
+
+    // Collections/Arrays are not ever mappable
+    private int[] arrayField;
+    private Collection&lt;Integer&gt; collectionField;
+
+    // Objects are not mapped by default
+    private Command currentCommand;
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DataType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mapped by Default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Notes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Primitive Types (int, double, etc.)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Primitive Wrappers (Integer, Double, etc.)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Strings</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enums</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use EnumDataPoint to control the output value</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Objects</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Future Support</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inner Class Objects</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Future Support?</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional of Primitive Wrapper/String or Enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Future Support</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional of Object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Future Support</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arrays</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Never</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collections</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Never</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>How a field&#8217;s value maps to the actual output is pretty straight forward for most types.
+There are a few special cases, however.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Booleans</dt>
+<dd>
+<p>Booleans will output a <code>1</code> or <code>0</code> instead of <code>true</code> or <code>false</code> so they graph properly.</p>
+</dd>
+<dt class="hdlist1">Enums</dt>
+<dd>
+<p>By default, an enum will simply output its <code>toString()</code> value which is the name of the enum.
+This can be customized by having the Enum implement <code>EnumDataPoint</code> and overriding <code>convertToDataPoint()</code>.
+This way the enum value can graph properly as a number.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public enum State implements EnumDataPoint {
+    NEW(1),
+    INITIALIZING(2),
+    RUNNING(3),
+    SHUTDOWN(4);
+
+    private final long outputValue;
+
+    State(long outputValue) {
+        this.outputValue = outputValue;
+    }
+
+    @Override
+    public Long convertToDataPoint() {
+        return outputValue;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Optionals</dt>
+<dd>
+<p>Java&#8217;s <code>Optional</code> class is used to mark a variable that might be null.
+This helps avoid NullPointerExceptions.
+If a field is of type <code>Optional</code>, it will be unwrapped.
+If the value is <code>null</code>, that will be the output, if the value is not null, it will follow the normal mapping rules (map primitives, enums, etc. automatically, only map Object types if explicitly told to do so with <code>@DataPoint</code>).</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Feature not active: Mapping of Optionals is not yet supported. Coming soon!</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Inner Classes</dt>
+<dd>
+<p>Mapping of Objects that are an inner class is not yet supported and might not ever be.</p>
+</dd>
+</dl>
+</div>
+<div class="sect5">
+<h6 id="_includingexcluding_fields">Including/Excluding Fields</h6>
+<div class="paragraph">
+<p>By default, all primitives, primitive wrappers, Strings, enums, and Optionals (holding any of the previoulsy listed types) will be mapped automatically.
+Most Objects will not be mapped by default.</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_including_fields_with_datapoint">Including Fields with <code>@DataPoint</code></h6>
+<div class="paragraph">
+<p>To map a field that is by default not mapped, simply annotate it with <code>@DataPoint</code>:</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Feature not active: Using <code>@DataPoint</code> to map nested objects is not yet implemented. Coming soon!</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ElevatorSubsystem {
+
+    // This field will not be mapped
+    private TalonSRX elevatorMotor = new TalonSRX(0);
+
+
+    // This field will be mapped
+    // NOTE: This feature is not yet implemented. Coming soon!
+    @DataPoint
+    private TalonSRX elevatorMotor = new TalonSRX(1);
+
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Static and final fields are not mapped by default since static does not relate to the instance being recorded and final fields will never change.
+Use <code>@DataPoint</code> to map these.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_excluding_fields_with_datapointignore">Excluding Fields with <code>@DataPointIgnore</code></h6>
+<div class="paragraph">
+<p>To ignore a field that is mapped by default, annotate it with <code>@DataPointIgnore</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ElevatorSubsystem {
+
+    // This field will be mapped
+    private double position;
+
+    // This field will not be mapped
+    @DataPointIgnore
+    private double velocity;
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_configuring_recordable_name">Configuring Recordable Name</h6>
+<div class="paragraph">
+<p>By default, the simple name of the Recordable&#8217;s class is used by the output handlers (in the case of a csv outputter, this would correlate to the name of the csv file). When multiple Recordable instances of the same class are registered, a number will be incremented and suffixed on the name. For example <code>TalonSRX</code>, <code>TalonSRX2</code>, <code>TalonSRX3</code>, and so on. Note that the first instance will not have a number suffixed.</p>
+</div>
+<div class="paragraph">
+<p>There are two ways to customize the name of a Recordable, statically via the <code>@Recordable</code> annotation and dynamically by implementing <code>NameAware</code>.</p>
+</div>
+<div class="paragraph">
+<p>To customize the name of a Recordable in a static manner, annotate the Recordable class with <code>@Recordable</code> and specify the <code>name</code> attribute. This applies to all instances of this class so you can have the same name collision issues as before and the will be resolved the same way, by suffixing a number.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">@Recordable(name = "MyCustomRecordableName")
+public class ElevatorSubsystem {
+    // fields excluded for brevity
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To customize the name of a Recordable in a dynamic way at runtime, implement <code>NameAware</code>. This will allow you to generate a name of off dynamic data at runtime, like for instance, the port number of a <code>TalonSRX</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class IntakePivotArm implements NameAware { <i class="conum" data-value="1"></i><b>(1)</b>
+
+    public enum Side {
+        LEFT,
+        RIGHT;
+    }
+
+    private final Side side;
+    private TalonSRX armMotor = new TalonSRX(0);
+
+    public IntakePivotArm(Side side) {
+        this.side = side;
+    }
+
+    @Override
+    public String getName() { <i class="conum" data-value="2"></i><b>(2)</b>
+        // Would return either:
+        // IntakePivotArm-LEFT[0]
+        // IntakePivotArm-RIGHT[0]
+        return "IntakePivotArm-" + side + "[" + armMotor.getDeviceID() +"]";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Implement <code>NameAware</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Override <code>getName()</code> providing a custom name (unique if possible)</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_configuring_recordable_field_names">Configuring Recordable Field Names</h6>
+<div class="paragraph">
+<p>To configure the output name of a field, use the <code>@DataPoint</code> annotation and specify the <code>name</code> attribute.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ElevatorSubsystem {
+
+    // This field will be named: position
+    private double position;
+
+    // This field will be named: v
+    @DataPoint(name = "v")
+    private double velocity;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_datarecorder">3.1.4. DataRecorder</h4>
+<div class="sect4">
+<h5 id="_registering_recordables">Registering Recordables</h5>
+<div class="paragraph">
+<p>Any type of Object (besides primitives and primitive wrappers) can be registered with the DataRecorder.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+recorder.registerRecordable(intakeSubsystem);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, instances will be registered with a default interval retrieved from <code>CommonProperties</code>. This is the interval inbetween records.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Feature not active: Customizing recording interval is not yet supported. Coming soon!</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To change this interval for all Recordable instances change the property <em>before</em> registering any instances:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">// Time is in millis
+RobotContext.getInstance().getCommonProps().setDataRecorderDefaultRecordInterval(10);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To change this interval for one instance, use the method accepting an interval. This is generally not recommended as this will cause your Recordable instances to have different timestamps which can make it harder to graph them together.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+// Time is in millis
+recorder.registerRecordable(intakeSubsystem, 10);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_registering_output_handlers">Registering Output Handlers</h5>
+<div class="paragraph">
+<p>By default, if no output handlers are registered a <code>DataRecorderOutputHandlerCsvImpl</code> will be registered and output files to <code>~/data-recorder</code>. A sub directory will be created with the current timestamp.</p>
+</div>
+<div class="paragraph">
+<p>To register additional output handlers, either use the built in methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+recorder.registerConsoleOutputHandler();
+recorder.registerCsvOutputHandler();
+recorder.registerSmartDashboardOutputHandler();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#8230;&#8203;or register your own custom output handler:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+DataRecordOutputHandler customOutputHandler;
+recorder.registerOutputHandler(customOutputHandler);</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>A CSV output handler will only be automatically registered if no other handlers are registered.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_running_the_datarecorder">Running the DataRecorder</h5>
+<div class="paragraph">
+<p>There are three ways to run the DataRecorder however only two of them are recommended. If you are using <code>PeriodicRunner</code> already, run it with that. If not, have it run in auto-record mode. Running manually should be your last resort.</p>
+</div>
+<div class="sect5">
+<h6 id="_running_with_periodic_runner_recommended">Running with Periodic Runner (Recommended)</h6>
+<div class="paragraph">
+<p>If you are already using a <code>PeriodicRunner</code> (calling <code>invokePeriodicInstances()</code> on it) or are using an <code>AbstractRobotDelegator</code> (handles running <code>PeriodicRunner</code> for you), then it is recommended to use that approach.</p>
+</div>
+<div class="paragraph">
+<p>You cannot simply register the <code>DataRecorder</code> with the <code>PeriodicRunner</code> as you normally do. There is special multi threading logic involved and it needs to register twice (record and flush) so the <code>DataRecorder</code> needs to register itself.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+recorder.registerWithPeriodicRunner();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you are using a custom <code>PeriodicRunner</code> and haven&#8217;t configured the <code>RobotContext</code> with it, you can pass it in to the <code>DataRecorder</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">PeriodicRunner periodicRunner = RobotContext.getInstance().getPeriodicRunner();
+DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+recorder.registerWithPeriodicRunner(periodicRunner);</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Neither of these will work if the <code>PeriodicRunner</code> is not being ran. Either call the method <code>periodicRunner.invokePeriodicInstances()</code> in your robot&#8217;s <code>robotPeriodic()</code> method or simply use an <code>AbstractRobotDelegator</code> which handles this for you.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_running_in_auto_record_mode">Running in Auto-Record Mode</h6>
+<div class="paragraph">
+<p>If you cannot use the <code>PeriodicRunner</code> for some reason, you can have the <code>DataRecorder</code> automatically run itself.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+recorder.startAutoRecordAndFlush();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can optionally customize the interval at which it flushes data to the output handlers.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+// Time is in millis
+recorder.startAutoRecordAndFlush(5000);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_running_manually_not_recommended">Running Manually (Not Recommended)</h6>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This section is for advanced users. If you do not feel comfortable with anything in this section, run either in auto-record mode or with the <code>PeriodicRunner</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Only run manually if you have a specific reason to do so. For instance if you need to implement some custom logic for precisely when to record or flush.</p>
+</div>
+<div class="paragraph">
+<p>If running manually, call <code>manualRecord()</code> on every iteration (or as often as you want to record data) and call <code>manualFlush()</code> about every 2-10 seconds (or however often you want to dump your data). The longer you wait, the more JVM memory will be consumed by the data waiting to be flushed.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you forget to flush, you will likely run out of JVM memory.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class MyRobot extends TimedRobot {
+
+	int iteration = 0;
+	private DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+
+	@Override
+	public void robotPeriodic() {
+	    // This call is non-blocking
+		recorder.manualRecord();
+		if (iteration++ % 100 == 0) {
+		    // flush every 100 iterations
+			recorder.manualFlush();
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both of these calls are non-blocking. If you don&#8217;t know what non-blocking is and the implications of blocking calls, you should not be running this manually.</p>
+</div>
+<div class="paragraph">
+<p>Both of these calls are non-blocking, meaning when you call either of them, your code will return <em>immediately</em> before the recording or flushing is completed (or even started for that matter). How it does this is internally there is another thread running to handle record/flush requests. When calling this method, the <code>DataRecorder</code> processes the request on these other threads so the main thread can continue executing.</p>
+</div>
+<div class="paragraph">
+<p>This is <em>extremely</em> important when running on the main robot thread (if you don&#8217;t know whether you are, then you are). If these calls were blocking, then when you called them, it could take anywhere from 1/16 to 2 seconds (depending on the flush interval and how much data has accumulated) for the method to finish. During this time, none of your motors would update and the robot would continue outputting at the same voltage regardless of the driver&#8217;s input. More likely it will be about 1/4 second if you are outputting to files but that is still significant lag that will impact your drivers.</p>
+</div>
+<div class="paragraph">
+<p>If for some reason you need to know when a record or a flush finished, you can call <code>block()</code> on the returned value.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>DO NOT DO THIS ON THE MAIN ROBOT THREAD. ADVANCED USERS ONLY.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+// These calls are blocking!!!!!
+recorder.manualRecord().block();
+recorder.manualFlush().block();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_stopping_the_datarecorder">Stopping the DataRecorder</h5>
+<div class="paragraph">
+<p>You can stop and start the <code>DataRecorder</code> as much as needed, for instance, turning it off when the robot is disabled.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class MyRobot extends TimedRobot {
+
+    private DataRecorder recorder = RobotContext.getInstance().getDataRecorder();
+
+	@Override
+	public void disabledInit() {
+        recorder.disable();
+	}
+
+	@Override
+	public void teleopInit() {
+        recorder.enable();
+	}
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_configuring_the_datarecorder">Configuring the DataRecorder</h5>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_output_handlers">3.1.5. Output Handlers</h4>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This section is for advanced users</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_property_loader">3.2. Property Loader</h3>
+<div class="sect3">
+<h4 id="_overview_3">3.2.1. Overview</h4>
+<div class="paragraph">
+<p>The Property Loader module is used to parse properties from <code>.properties</code> files into Java objects.
+This allows you to quickly make changes in a properties file that your code can then use to behave differently.
+For instance you could extract your PID values to a <code>.properties</code> file and then use these property values in the code to set PID values.
+This would allow you to have different PID values for different robots running the same code
+(maybe your practice bot needs different PID values than your comp bot due to differences in mechanical resistance, etc.).
+Another example would be turning certain logging or performance monitoring off when in a competition to free up resources/CPU.</p>
+</div>
+<div class="paragraph">
+<p>In the next section we&#8217;ll take a look at how this would look.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_quick_start_3">3.2.2. Quick Start</h4>
+<div class="sect4">
+<h5 id="_1_create_a_property_container_class">1) Create a Property Container Class</h5>
+<div class="paragraph">
+<p>Create a class that represents the properties you want to extract:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ApplicationProperties {
+    private double elevatorP = 0.8;
+    private double elevatorI = 0.0006;
+    private double elevatorD = 10;
+
+    // getters and setters omitted for brevity
+
+    public double getElevatorP() {
+        return elevatorP;
+    }
+
+    public double getElevatorI() {
+        return elevatorI;
+    }
+
+    public double getElevatorD() {
+        return elevatorD;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+It is recommended to set default values at the field level
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_2_create_a_properties_file">2) Create a Properties File</h5>
+<div class="paragraph">
+<p>Create a properties file matching the name format of the class and place it in the <code>~/robot/conf</code> directory on the RIO
+(see Property Containers section for more info on file name resolution).</p>
+</div>
+<div class="listingblock">
+<div class="title">~/robot/conf/Application.properties</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-properties" data-lang="properties">p = 0.9
+i = 0.0005
+d = 10</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_3_register_property_containers_load_properties_and_access_property_values">3) Register Property Containers, Load Properties, and Access Property Values</h5>
+<div class="paragraph">
+<p>Use the <code>PropertyLoader</code> to dynamically set values based on what is found in the properties file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">PropertyLoader loader = RobotContext.getInstance().getPropertyLoader(); <i class="conum" data-value="1"></i><b>(1)</b>
+
+ApplicationProperties applicationProperties = loader.registerPropContainer(ApplicationProperties.class); <i class="conum" data-value="2"></i><b>(2)</b>
+
+loader.loadProperties(); <i class="conum" data-value="3"></i><b>(3)</b>
+
+TalonSRX talon = new TalonSRX(0);
+talon.config_kP(0, applicationProperties.getElevatorP(), 0); <i class="conum" data-value="4"></i><b>(4)</b>
+talon.config_kI(0, applicationProperties.getElevatorI(), 0); <i class="conum" data-value="4"></i><b>(4)</b>
+talon.config_kD(0, applicationProperties.getElevatorD(), 0); <i class="conum" data-value="4"></i><b>(4)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Get a <code>PropertyLoader</code> instance</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Register your Property Container</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Load the properties from the various properties files</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Use the configured Property Container to dynamically set values or change application behavior in some way</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_properties_files">3.2.3. <code>.properties</code> Files</h4>
+<div class="paragraph">
+<p>Property files follow a format of <code>key = value</code> with each key/value pair on its own line.</p>
+</div>
+<div class="listingblock">
+<div class="title">Application.properties</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-properties" data-lang="properties">controller.leftJoystickSensitivity = 0.8
+controller.rightJoystickSensitivity = 1.0
+
+elevator.talonPortMaster = 0
+elevator.talonPortSlave = 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Whitespace</div>
+<p>Any whitespace around the <code>value</code> will be trimmed.
+So the key/value pair <code>foo = Hello world!&nbsp;&nbsp;</code> would resolve to <code>"Hello world!"</code> and not <code>" Hello world! &nbsp;"</code>.</p>
+</div>
+<div class="paragraph">
+<div class="title">Comments</div>
+<p>Anything after a <code>#</code> is a comment and will be ignored.</p>
+</div>
+<div class="listingblock">
+<div class="title">Application.properties</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-properties" data-lang="properties"># This whole line is a comment
+controller.rightJoystickSensitivity = 1.0 # Only the end of this line is a comment</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_property_containers">3.2.4. Property Containers</h4>
+<div class="sect4">
+<h5 id="_overview_4">Overview</h5>
+<div class="paragraph">
+<p>Property Containers are the simple <a href="https://www.geeksforgeeks.org/pojo-vs-java-beans/">POJO</a> classes that represent the properties you want to extract to a properties file.
+The <code>PropertyLoader</code> parses values from the properties files and sets values on your Property Container objects.
+This allows you to access your properties in a type-safe manner (<code>applicationProperties.getElevatorP()</code>)
+compared to accessing them in a non type-safe way (<code>System.getProperty("elevatorP");</code>).</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_restrictions">Restrictions</h5>
+<div class="paragraph">
+<p>Although Property Containers are <a href="https://www.geeksforgeeks.org/pojo-vs-java-beans/">POJOs</a>, there are still a few rules that must be followed in order for the <code>PropertyLoader</code> to function properly.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Must not be an abstract class</p>
+</li>
+<li>
+<p>Must not be an interface</p>
+</li>
+<li>
+<p>Must not be a <strong>non-static</strong> inner class (use <code>static class</code> instead)</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>// Not allowed
+public class Robot {
+    public class ApplicationProperties { }
+}
+
+// Allowed
+public class Robot {
+    public static class ApplicationProperties { }
+}</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Must be a public class</p>
+</li>
+<li>
+<p>Must have a public no-args constructor</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>public class ApplicationProperties {
+    // Not allowed
+    public ApplicationProperties(String foo) { }
+}</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Must contain only primitive (int, double, float, etc.), primitive wrapper (Integer, Double, Float, etc.), String, or enum field values</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See next section for how to ignore fields</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ApplicationProperties {
+    private String foo = "default value";
+    private int bar = 42;
+
+    // Not allowed
+    private TalonSRX elevatorTalon;
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>One exception to this is that a Property Container can contain other Property Container classes, assuming they follow the rules above as well;
+See <code>Nested Property Containers</code> section for details</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_ignoring_fields">Ignoring Fields</h5>
+<div class="paragraph">
+<p>If there is a field you would like the <code>PropertyLoader</code> to ignore you can annotate it with <code>@PropertyContainerFieldIgnore</code>.
+This can be useful if you want to store non-primitive objects (such as a <code>TalonSRX</code>) in your Property Containers (normally the <code>PropertyLoader</code> will fail on such fields).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ApplicationProperties {
+    private String foo = "default value";
+    private int bar = 42;
+
+    // This field will be ignored
+    @PropertyContainerFieldIgnore
+    private TalonSRX elevatorTalon;
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Static and final fields will never be mapped so there is no need to ignore them</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_property_container_file_name_resolution">Property Container File Name Resolution</h5>
+<div class="paragraph">
+<p>When a Property Container is registered with the <code>PropertyLoader</code>, a file name is resolved.
+The properties for this Property Container class will only be loaded from it&#8217;s own properties file.
+If a <code>@PropertyContainer</code> annotation with the <code>name</code> attribute populated is present on the Property Container class,
+then this name will be used.</p>
+</div>
+<div class="paragraph">
+<p>The example below would result in a file name of <code>Foo.properties</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">@PropertyContainer(name = "Foo")
+public class ApplicationProperties {
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If no <code>@PropertyContainer</code> annotation is present, the class name will be used.
+Any trailing "Properties" in the Property Container&#8217;s class name will be stripped out so that a class named <code>ApplicationProperties</code>
+does not result in a redundant file name of <code>ApplicationProperties.properties</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Resolved Property File Name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ApplicationProperties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application.properties</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application.properties</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FooBar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FooBar.properties</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Additional files will be scanned if any robot profiles are active.
+See the <code>Profiles</code> portion of the <code>Property File Loading Priority</code> section for details.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_property_container_field_name_resolution">Property Container Field Name Resolution</h5>
+<div class="paragraph">
+<p>When the <code>PropertyLoader</code> is reading properties from a file, it uses the field name as the property key.</p>
+</div>
+<div class="paragraph">
+<p>So a Property Container class of&#8230;&#8203;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ApplicationProperties {
+    private String fooBar;
+    private int baz;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#8230;&#8203;would be expecting a properties file similar to&#8230;&#8203;</p>
+</div>
+<div class="listingblock">
+<div class="title">~/robot/conf/Application.properties</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-properties" data-lang="properties">fooBar = Hello world
+baz = 42</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If custom property keys are required, the annotation <code>@PropertyContainerField</code> can be used to override this value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ApplicationProperties {
+    @PropertyContainerField(name = "bar")
+    private int foo;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_nested_property_containers">Nested Property Containers</h5>
+<div class="paragraph">
+<p>Property Containers can contain other Property Containers as fields to improve organization.
+For example, you could have a root <code>ApplicationProperties</code> which had a <code>ControllerProperties</code>, <code>ElevatorProperties</code>, <code>DrivetrainProperties</code>, etc.
+This way you don&#8217;t have 100+ properties in one class.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ApplicationProperties {
+    private ControllerProperties controller;
+    private ElevatorProperties elevator;
+    private DrivetrainProperties drivetrain;
+
+    // getters/setters omitted for brevity
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>ApplicationProperties</code> Property Container above holds instances of the Property Containers below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ControllerProperties {
+    private double leftJoystickSensitivity;
+    private double rightJoystickSensitivity;
+
+    // getters/setters omitted for brevity
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ElevatorProperties {
+    private int talonPortMaster;
+    private int talonPortSlave;
+
+    // getters/setters omitted for brevity
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class DrivetrainProperties {
+    private DrivetrainTalonPorts talonPorts;
+    @PropertyContainerField(name = "tuning")
+    private DrivetrainTuningProperties tuningProperties;
+
+    // getters/setters omitted for brevity
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>DrivetrainProperties</code> Property Container above holds instances of the Property Containers below creating three levels deep of nested Property Containers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class DrivetrainTalonPorts {
+    private int talonPortLeftMaster;
+    private int talonPortLeftSlave;
+    private int talonPortRightMaster;
+    private int talonPortRightSlave;
+
+    // getters/setters omitted for brevity
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class DrivetrainTuningProperties {
+    private double autonMaxVelocityHighGear;
+    private double autonMaxVelocityLowGear;
+    private double autonMaxAcceleration;
+
+    // getters/setters omitted for brevity
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The property name that will be searched in the properties files will be resolved by chaining together the property names down the hierarchy.
+So for the example above, the properties file might look something similar to:</p>
+</div>
+<div class="listingblock">
+<div class="title">~/robot/conf/Application.properties</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-properties" data-lang="properties">controller.leftJoystickSensitivity = 0.8
+controller.rightJoystickSensitivity = 1.0
+
+elevator.talonPortMaster = 0
+elevator.talonPortSlave = 1
+
+drivetrain.talonPorts.talonPortLeftMaster = 2
+drivetrain.talonPorts.talonPortLeftSlave = 3
+drivetrain.talonPorts.talonPortRightMaster = 4
+drivetrain.talonPorts.talonPortRightSlave = 5
+
+# Notice for DrivetrainTuningProperties the key "tuning" is used instead
+# of tuningProperties due to the @PropertyContainerField annotation
+drivetrain.tuning.autonMaxVelocityHighGear = 5600
+drivetrain.tuning.autonMaxVelocityLowGear = 3100
+drivetrain.tuning.autonMaxAcceleration = 15</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_inherited_property_containers">Inherited Property Containers</h5>
+<div class="paragraph">
+<p>Property Containers fields will also be resolved by examining parent class fields.
+The <code>ChildProperties</code> example below would contain both the properties <code>foo</code> and <code>bar</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class ParentProperties {
+    private Integer foo;
+}
+
+public class ChildProperties extends ParentProperties {
+    private Integer bar;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_registering_property_containers">3.2.5. Registering Property Containers</h4>
+<div class="sect4">
+<h5 id="_manual_registration">Manual Registration</h5>
+<div class="paragraph">
+<p>To manually register each Property Container individually, use <code>PropertyLoader#registerPropContainer(Class propContainerClass)</code>.
+This will register the property container, construct an instance of the class, create the field to property key mappings,
+find all the files for the given Property Container, and return the Property Container instance.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Registering a class multiple times will not result in multiple Property Container classes being instantiated;
+If it is already registered, subsequent calls to <code>registerPropContainer(&#8230;&#8203;)</code> will simply return the existing instance</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_why_cant_i_pass_in_an_already_instantiated_instance_of_my_property_container">Why can&#8217;t I pass in an already instantiated instance of my Property Container?</h6>
+<div class="paragraph">
+<p>Great question, the reason is if you instantiated multiple instances of a Property Container in multiple places,
+updates to one of the instances would not be reflected in the other and your Property Containers would now contain different values.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_auto_registration">Auto Registration</h5>
+<div class="paragraph">
+<p>Instead of manually registering each Property Container instance you can rely on auto registration.
+Simply follow these steps:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Annotate <strong>all</strong> your Property Containers with <code>@PropertyContainer</code></p>
+</li>
+<li>
+<p>Call <code>PropertyLoader#autoRegisterAllPropContainers(&#8230;&#8203;)</code> passing in the package that <strong>all</strong> the Property Containers reside in</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Ex: <code>propLoader.autoRegisterAllPropContainers("com.team2073.robot.conf")</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note, it is ok for Property Containers to exist in subpackages of the package passed in.
+For example, maybe the Property Containers actually exist in the following packages:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>com.team2073.robot.conf.rio</code></p>
+</li>
+<li>
+<p><code>com.team2073.robot.conf.robot</code></p>
+</li>
+<li>
+<p><code>com.team2073.robot.conf.userprefs</code></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Once the <code>PropertyLoader</code> has been ran (<code>loadProperties()</code>), no more Property Containers can be registered</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_retrieving_property_containers">3.2.6. Retrieving Property Containers</h4>
+<div class="paragraph">
+<p>The recommended way to retrieve a Property Container is to call <code>PropertyLoader#registerPropContainer(Class propContainerClass)</code>.
+This way, if the Property Container was never registered it will be, so you are guaranteed to receive a a non null Property Container.</p>
+</div>
+<div class="paragraph">
+<p>An alternative is to call <code>PropertyLoader#getPropertyContainer(Class propContainerClass)</code>.
+This will return an <code>Optional&lt;Object&gt;</code> that will only contain a value if the Property Container was already registered.
+Use this method if you need to react differently if a Property Container was never registered.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_loading_property_containers">3.2.7. Loading Property Containers</h4>
+<div class="paragraph">
+<p>After all the Property Containers have been registered, you can load the properties.
+This will parse all the files and set the values on the Property Container instances that were registered using <code>registerPropContainer(Class propContainerClass)</code> or <code>autoRegisterAllPropContainers(String rootPackage)</code>.</p>
+</div>
+<div class="paragraph">
+<p>If you only require loading the properties one time and don&#8217;t want to automatically pick up changes to <code>.properties</code> files
+then simply call <code>PropertyLoader#loadProperties()</code> in <code>robotInit()</code> after you have registered all Property Containers.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>DO NOT CALL <code>loadProperties()</code> FROM ANY PERIODIC METHOD! This will result in severe delays in the robot causing
+erratic and dangerous behavior!</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Since any file IO is time consuming (comparatively speaking), if properties are to be loaded repeatedly,
+this must be done on a separate thread than the main robot thread.
+It is <strong>strongly</strong> recommended to use the <code>AbstractRobotDelegator</code>.
+This will automatically run the <code>PropertyLoader</code> (reload the properties) on an async periodic loop every 5 seconds.</p>
+</div>
+<div class="paragraph">
+<p>The <code>PropertyLoader</code> registers itself with the <code>PeriodicRunner</code> automatically and the <code>AbstractRobotDelegator</code>
+runs the <code>PeriodicRunner</code> automatically so no additional steps are required.</p>
+</div>
+<div class="paragraph">
+<p>See the <code>Robot Delegator</code> section for details.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_property_file_loading_priority">3.2.8. Property File Loading Priority</h4>
+<div class="paragraph">
+<p>Property Containers are linked to a list of files to parse properties from.
+This list of files is parsed in a specific order to allow overriding properties on a per-robot basis or when a
+specific profile is active, all without ever changing any code.</p>
+</div>
+<div class="paragraph">
+<p>For example, by default you could set default PID values for a motor but on your practice bot you could override these values
+to adjust for differences in mechanical resistance.</p>
+</div>
+<div class="paragraph">
+<p>There are two things that impact the priority of properties files:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The location of the <code>.properties</code> file</p>
+</li>
+<li>
+<p>The currently active profiles</p>
+</li>
+</ol>
+</div>
+<div class="sect4">
+<h5 id="_location">Location</h5>
+<div class="paragraph">
+<p><code>.properties</code> files are searched for in two locations:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The classpath (in the source code) - Lower priority</p>
+</li>
+<li>
+<p>Externally (in the user directory on the RIO) - Higher priority</p>
+</li>
+</ol>
+</div>
+<div class="sect5">
+<h6 id="_classpath">Classpath</h6>
+<div class="paragraph">
+<p>These <code>.properties</code> files are a lower priority than external files.</p>
+</div>
+<div class="paragraph">
+<p>They are the files on the classpath under the <code>/conf</code> directory.
+In a maven or gradle project, this would be at <code>src/main/resources/conf</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/proploader/conf-dir-classpath.png" alt="conf-dir-classpath">
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+See the <code>Property Loader Configuration</code> section below for how to change this default path
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Con</dt>
+<dd>
+<p>Making a change to these requires redeploying code to the RIO</p>
+</dd>
+<dt class="hdlist1">Pro</dt>
+<dd>
+<p>Since these files exist in source code, changes to them will be included in your version control.</p>
+</dd>
+<dt class="hdlist1">Purpose</dt>
+<dd>
+<p>These are not meant for quick changes or changes that only apply to one robot (mainbot vs practice bot).</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_external">External</h6>
+<div class="paragraph">
+<p>These <code>.properties</code> files are a higher priority than classpath files.
+These <code>.properties</code> files are the highest priority.
+This means if a property exists in the file on the classpath and on the rio, the property on the rio will take precedence.</p>
+</div>
+<div class="paragraph">
+<p>They are the files on the rio&#8217;s <code>~/robot/conf</code> directory.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+See the <code>Property Loader Configuration</code> section below for how to change this default path
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Pro</dt>
+<dd>
+<p>Making a change to these does not require redeploying code to the RIO (it only requires a restart of the robot)</p>
+</dd>
+<dt class="hdlist1">Con</dt>
+<dd>
+<p>Since these files only exist on the RIO and not in source code, changes to them will <em>not</em> be included in your version control.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you use the <code>AbstractRobotDelegator</code> a restart is not even required as properties are automatically reloaded every 5 seconds.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Purpose</dt>
+<dd>
+<p>These are meant for quick changes or changes that only apply to one robot (mainbot vs practice bot).</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_profiles">Profiles</h5>
+<div class="paragraph">
+<p>The second thing that can affect the priority of properties loading are the currently active profiles.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>Robot Profiles</code> section covers how profiles are activated.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For each profile that is active, an additional file will be searched for in each location using the following pattern:</p>
+</div>
+<div class="paragraph">
+<p><code>&lt;Original Resolved File Name&gt;-&lt;Profile Name&gt;.properties</code></p>
+</div>
+<div class="paragraph">
+<p>So for example, if the profiles <code>foo</code> and <code>bar</code> were active and a Property Container originally resolved to a file name
+of <code>Application.properties</code> then the following files would be searched:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Application.properties</code> (original)</p>
+</li>
+<li>
+<p><code>Application-foo.properties</code></p>
+</li>
+<li>
+<p><code>Application-bar.properties</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This can be used to keep robot-specific properties files in source code (under <code>src/main/resources</code>)
+rather than on the RIO (<code>~/robot/conf</code>), yet still only load specific files on specific robots.</p>
+</div>
+<div class="paragraph">
+<p>For example, create an <code>Application-mainbot.properties</code> and an <code>Application-practicebot.properties</code> in the
+<code>src/main/resources/conf</code> directory and then just activate the <code>mainbot</code> profile on the mainbot and vice versa.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_property_file_priority">Property File Priority</h5>
+<div class="paragraph">
+<p>If the same property exists in multiple files, the following rules determine which file takes priority:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A profile-specific <code>.properties</code> file takes priority over a non-profile-specific <code>.properties</code> file, regardless of location</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This means an <code>Application-mainbot.properties</code> file from the classpath takes priority over an <code>Application.properties</code>
+file in the external directory (even though external files normally takes priority over classpath files)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>If two or more profiles are active and a priority tie occurs (same location), the last profile added takes priority</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Example Scenario</div>
+<p>Let&#8217;s take an example scenario where there are two profiles active, <code>profile-1</code> and <code>profile-2</code>.
+There are 6 possible files that properties could be loaded from:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Classpath: Application.properties</p>
+</li>
+<li>
+<p>Classpath: Application-profile1.properties</p>
+</li>
+<li>
+<p>Classpath: Application-profile2.properties</p>
+</li>
+<li>
+<p>External: Application.properties</p>
+</li>
+<li>
+<p>External: Application-profile1.properties</p>
+</li>
+<li>
+<p>External: Application-profile2.properties</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>We will assume each file contains a value for the property <code>foo</code>.
+The chart below shows 6 scenarios (columns) and which files exist (rows).
+The file with the &#11088; is the file that the <code>foo</code> property will be loaded from.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#9989;: File exists</p>
+</li>
+<li>
+<p>&#10060;: File does not exist</p>
+</li>
+<li>
+<p>&#11088;: File with the highest priority in the current scenario (column)</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scenario A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scenario B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scenario C</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scenario D</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scenario E</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scenario F</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Classpath: Application.properties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989; &#11088;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Classpath: Application-profile1.properties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989; &#11088;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Classpath: Application-profile2.properties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989; &#11088;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External: Application.properties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989; &#11088;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External: Application-profile1.properties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989; &#11088;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External: Application-profile2.properties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#10060;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#9989; &#11088;</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_property_loader_configuration">3.2.9. Property Loader Configuration</h4>
+<div class="sect4">
+<h5 id="_external_properties_directory">External Properties Directory</h5>
+<div class="paragraph">
+<p>To change the external directory (on the RIO) the <code>.properties</code> files are loaded from use
+<code>PropertyLoader#setExternalPropertiesDirPath(String propDir</code> or <code>PropertyLoader#setExternalPropertiesDir(File propDir)</code>.</p>
+</div>
+<div class="paragraph">
+<p>If the path starts with <code>~</code>, it will be resolved relative to the user directory.
+For example <code>~/foo/bar</code> might resolve to <code>/home/lvuser/foo/bar</code>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_classpath_properties_directory">Classpath Properties Directory</h5>
+<div class="paragraph">
+<p>To change the classpath directory (source code directory) the <code>.properties</code> files are loaded from use
+<code>PropertyLoader#setSourceCodePropertiesDirPath(String propDir)</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_robot_profiles">3.3. Robot Profiles</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+<div class="paragraph">
+<p>Still need to document this section but here&#8217;s a two second overview:</p>
+</div>
+<div class="sect3">
+<h4 id="_activate_profiles">3.3.1. Activate Profiles</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">RobotContext.getInstance().getRobotProfiles().addProfiles("foo", "bar");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#8230;&#8203;or create a file at <code>~/conf/robot/robot.profiles</code></p>
+</div>
+<div class="listingblock">
+<div class="title">~/conf/robot/robot.profiles</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-properties" data-lang="properties">foo,bar</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_check_if_profile_is_active">3.3.2. Check if Profile is Active</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">if (RobotContext.getInstance().getRobotProfiles().isProfileActive("foo")) {
+    // do something
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_get_active_profiles">3.3.3. Get Active Profiles</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">Set&lt;String&gt; profileList = RobotContext.getInstance().getRobotProfiles().getProfileList();</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_wpi_simulation_modules">4. WPI Simulation Modules</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_common_utilities">5. Common Utilities</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section only lists a few of the most useful utility classes.
+The rest can be found in the <strong>common-util</strong> module, in the package <code>com.team2073.common.util</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_args">5.1. Args</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_enumutil">5.2. EnumUtil</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exceptionutil">5.3. ExceptionUtil</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_logutil">5.4. LogUtil</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_threadutil">5.5. ThreadUtil</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_throw">5.6. Throw</h3>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_appendix">6. Appendix</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.3.0-SNAPSHOT<br>
+Last updated 2019-01-22 17:38:30 -0800
+</div>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+<script>prettyPrint()</script>
+</body>
+</html>
