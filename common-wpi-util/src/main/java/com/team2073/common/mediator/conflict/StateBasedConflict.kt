@@ -4,7 +4,7 @@ import com.team2073.common.mediator.condition.Condition
 import com.team2073.common.mediator.condition.StateBasedCondition
 import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
-import com.team2073.common.mediator.condition.SubsystemStateCondition
+import com.team2073.common.mediator.subsys.SubsystemStateCondition
 
 class StateBasedConflict<OT : Enum<OT>, CT : Enum<CT>>(
         val originSubsystemS: Class<ColleagueSubsystem<SubsystemStateCondition<OT>>>,

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.Queue;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -50,6 +51,34 @@ class MediatorTests {
     }
 
     @Test
+    public void mediator_SHOULD_registerWithPeriodicRunner() {
+
+    }
+
+    @Test
+    public void mediator_SHOULD_AddInverseConflictToConflictMap() {
+        TestMediator testMediator = new TestMediator();
+
+        PositionBasedConflict conflict = new PositionBasedConflict(PositionSubsystem.class, new PositionBasedCondition(0,0,0),
+                DeadPositionSubsystem.class, new PositionBasedCondition(0,0,0));
+
+        testMediator.registerConflict(conflict);
+
+        assertThat(testMediator.getConflictMap().get(DeadPositionSubsystem.class).size()).isEqualTo(1);
+    }
+
+    @Test
+    public void mediator_SHOULD_AddRequestsProperly() {
+        TestMediator testMediator = new TestMediator();
+
+        Request request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(0, 0, 0));
+
+        testMediator.add(request);
+
+        assertThat(testMediator.getExecuteList().size()).isEqualTo(1);
+    }
+
+    @Test
     public void mediator_SHOULD_WorkWithoutRegisteringConflicts() {
         TestMediator testMediator = new TestMediator();
         testMediator.registerColleague(positionSubsystem);
@@ -76,6 +105,9 @@ class MediatorTests {
     @Test
     public void mediator_SHOULD_RegisterConflictsCorrectly() {
         TestMediator testMediator = new TestMediator();
+
+        Conflict inverseConflict = new PositionBasedConflict(DeadPositionSubsystem.class, new PositionBasedCondition(0, 0, 0),
+                PositionSubsystem.class, new PositionBasedCondition(0, 0, 0));
 
         testMediator.registerConflict(new PositionBasedConflict(PositionSubsystem.class,
                 new PositionBasedCondition(0, 0, 0), DeadPositionSubsystem.class,
@@ -116,12 +148,13 @@ class MediatorTests {
         Request<Double> request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(5, 10, 15));
 
         testMediator.add(request);
-        Deque<Deque<Request>> list = testMediator.getExecuteList();
+        Queue<Deque<Request>> list = testMediator.getExecuteList();
 
         assertThat(list.size()).isEqualTo(1);
 
         callPeriodic(testMediator, 3);
 
+        list = testMediator.getExecuteList();
         assertThat(list.size()).isEqualTo(0);
     }
 
@@ -160,7 +193,7 @@ class MediatorTests {
 
         testMediator.add(request);
         testMediator.add(request2);
-        Deque<Deque<Request>> list = testMediator.getExecuteList();
+        Queue<Deque<Request>> list = testMediator.getExecuteList();
         assertThat(list.size()).isEqualTo(2);
 
         callPeriodic(testMediator, 4);
@@ -240,7 +273,7 @@ class MediatorTests {
         testMediator.add(new Request<>(DeadPositionSubsystem.class, new PositionBasedCondition(20, 25, 30)));
         testMediator.add(new Request<>(PositionSubsystem.class, new PositionBasedCondition(0, 5, 15)));
 
-        callPeriodic(testMediator, 30);
+        callPeriodic(testMediator, Mediator.MAX_CONSECUTIVE_PERIODIC_CALLS * 2);
 
         assertThat(testMediator.getExecuteList().size()).isEqualTo(0);
         assertThat(positionSubsystem.getCurrentCondition().getConditionValue()).isCloseTo(5d, Offset.offset(0d));

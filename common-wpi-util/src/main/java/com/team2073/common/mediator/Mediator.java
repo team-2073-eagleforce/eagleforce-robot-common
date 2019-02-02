@@ -7,6 +7,7 @@ import com.team2073.common.mediator.conflict.Conflict;
 import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.ColleagueSubsystem;
 import com.team2073.common.periodic.PeriodicRunnable;
+import org.apache.commons.collections4.queue.UnmodifiableQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,7 @@ public class Mediator implements PeriodicRunnable {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private int periodicCalls = 0;
+    public static final int MAX_CONSECUTIVE_PERIODIC_CALLS = 500;
 
     public Mediator() {
         autoRegisterWithPeriodicRunner();
@@ -66,10 +68,13 @@ public class Mediator implements PeriodicRunnable {
         for (Conflict conflict : conflicts) {
             if (conflictMap.get(conflict.getOriginSubsystem()) == null) {
                 ArrayList<Conflict> originConflicts = new ArrayList<>();
-                ArrayList<Conflict> inverseConflicts = new ArrayList<>();
                 conflictMap.put(conflict.getOriginSubsystem(), originConflicts);
+                logger.debug("Creating conflict list for: [{}] and [{}]", conflict.getOriginSubsystem());
+            }
+            if(conflictMap.get(conflict.getConflictingSubsystem()) == null){
+                ArrayList<Conflict> inverseConflicts = new ArrayList<>();
                 conflictMap.put(conflict.getConflictingSubsystem(), inverseConflicts);
-                logger.debug("Creating conflict list for: [{}] and [{}]", conflict.getOriginSubsystem(), conflict.getConflictingSubsystem());
+                logger.debug("Creating conflict list for: [{}]", conflict.getConflictingSubsystem());
             }
             conflictMap.get(conflict.getOriginSubsystem()).add(conflict);
             conflictMap.get(conflict.getConflictingSubsystem()).add(conflict.invert());
@@ -120,7 +125,7 @@ public class Mediator implements PeriodicRunnable {
                 logger.debug("Requested position is actual position: " + currentCondition);
                 if (!request.getCondition().isInCondition(currentCondition)) {
                     periodicCalls += 1;
-                    if (periodicCalls > 15) {
+                    if (periodicCalls > MAX_CONSECUTIVE_PERIODIC_CALLS) {
                         logger.warn("Removing request [{}] because of excessive periodic calls" + request.getName());
                         periodicCalls = 0;
                         currentRequestList.removeLast();
@@ -130,9 +135,10 @@ public class Mediator implements PeriodicRunnable {
                 } else {
                     logger.debug("Finished request with [{}] in condition: [{}]", request.getSubsystem(), subsystemMap.get(request.getSubsystem()).getCurrentCondition());
                     currentRequestList.removeLast();
+                    periodicCalls = 0;
                 }
             } else {
-                logger.debug("Finished and removing [{}]", currentRequestList);
+                logger.debug("Finished and removing current request list");
                 executeList.removeFirst();
             }
         }
@@ -222,8 +228,8 @@ public class Mediator implements PeriodicRunnable {
     }
 
     @VisibleForTesting
-    List<Deque<Request>> getExecuteList() {
-        return Collections.unmodifiableList(new ArrayList<>(executeList));
+    Queue<Deque<Request>> getExecuteList() {
+        return UnmodifiableQueue.unmodifiableQueue(executeList);
     }
 
     @VisibleForTesting

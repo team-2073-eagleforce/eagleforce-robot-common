@@ -22,7 +22,7 @@ class StatePositionBasedConflict<T : Enum<T>>(val originSubsystemPS: Class<out C
         val closestBound = (conflictingConditionPS as PositionBasedCondition).findClosestBound(currentCondition)
         val safetyRange = (subsystem as PositionBasedSubsystem).getSafetyRange()
         lateinit var resolutionCondition: Condition<Double>
-        val islowerBound = (conflictingConditionPS as PositionBasedCondition).isLowerBound(closestBound)
+        val islowerBound = conflictingConditionPS.isLowerBound(closestBound)
 
         if (islowerBound == null) {
             println("bound not upper/lower in condition")
