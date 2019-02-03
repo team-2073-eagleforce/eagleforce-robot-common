@@ -68,17 +68,6 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 
 	private RobotContext robotContext;
 	
-	// Fields from RobotContext
-	private CommonProperties commonProps;
-	private PeriodicRunner periodicRunner;
-	private OccasionalLoggingRunner loggingRunner;
-	private DataRecorder dataRecorder;
-	private RobotEventPublisher eventPublisher;
-	private SmartDashboardAwareRunner smartDashboardRunner;
-	private PropertyLoader propertyLoader;
-	private DriverStationAdapter driverStation;
-	private SchedulerAdapter scheduler;
-	
 	// Modules
 	private LoggingLevelModule loggingLevelModule;
 	private DiagnosticLoggingModule diagnosticLoggingModule;
@@ -111,9 +100,14 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 	}
 	
 	private void registerModules() {
+		CommonProperties commonProps = robotContext.getCommonProps();
+		
 		if (commonProps.getLoggingLevelModuleEnabled()) {
-			loggingLevelModule = new LoggingLevelModule();
-			loggingLevelModule.autoRegisterWithPeriodicRunner();
+			// TODO: 1/16/19 - Create PreferencesAdapter and remove this if check
+			if (!RobotContext.instanceIsSimulationMode()) {
+				loggingLevelModule = new LoggingLevelModule();
+				loggingLevelModule.autoRegisterWithPeriodicRunner();
+			}
 		}
 		if (commonProps.getDiagnosticLoggingModuleEnabled()) {
 			diagnosticLoggingModule = new DiagnosticLoggingModule();
@@ -125,6 +119,16 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 
 	private void initializeDelegator() {
 		log.info("Initializing Robot Delegator Context...");
+		
+		CommonProperties commonProps;
+		PeriodicRunner periodicRunner;
+		OccasionalLoggingRunner loggingRunner;
+		DataRecorder dataRecorder;
+		RobotEventPublisher eventPublisher;
+		SmartDashboardAwareRunner smartDashboardRunner;
+		PropertyLoader propertyLoader;
+		DriverStationAdapter driverStation;
+		SchedulerAdapter scheduler;
 		
 		if ((commonProps = robot.createCommonProperties()) != null)
 			robotContext.setCommonProps(commonProps);
@@ -146,8 +150,13 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 		
 		if ((propertyLoader = robot.createPropertyLoader()) != null)
 			robotContext.setPropertyLoader(propertyLoader);
+		
+		if ((driverStation = robot.createDriverStationAdapter()) != null)
+			robotContext.setDriverStation(driverStation);
+		
+		if ((scheduler = robot.createSchedulerAdapter()) != null)
+			robotContext.setScheduler(scheduler);
 
-		refreshFromAppContext();
 		log.info("Initializing Robot Delegator complete.");
 	}
 
@@ -156,7 +165,7 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 		log.info("Robot disabled.");
 		resetLastCheckedTime();
 		ExceptionUtil.suppressVoid(robot::disabledInit, "robot::disabledInit");
-		eventPublisher.setCurrentEvent(RobotStateEvent.DISABLED);
+		robotContext.getEventPublisher().setCurrentEvent(RobotStateEvent.DISABLED);
 	}
 
 	@Override
@@ -164,7 +173,7 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 		log.info("Autonomous enabled.");
 		currentPeriod = MatchPeriod.AUTONOMOUS;
 		ExceptionUtil.suppressVoid(robot::autonomousInit, "robot::autonomousInit");
-		eventPublisher.setCurrentEvent(RobotStateEvent.AUTONOMOUS_START);
+		robotContext.getEventPublisher().setCurrentEvent(RobotStateEvent.AUTONOMOUS_START);
 	}
 
 	@Override
@@ -172,62 +181,51 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 		log.info("Teleop enabled.");
 		currentPeriod = MatchPeriod.TELEOP;
 		ExceptionUtil.suppressVoid(robot::teleopInit, "robot::teleopInit");
-		eventPublisher.setCurrentEvent(RobotStateEvent.TELEOP_START);
+		robotContext.getEventPublisher().setCurrentEvent(RobotStateEvent.TELEOP_START);
 	}
 
 	@Override
 	public void testInit() {
 		log.info("Test mode enabled.");
 		ExceptionUtil.suppressVoid(robot::testInit, "robot::testInit");
-		eventPublisher.setCurrentEvent(RobotStateEvent.TEST_START);
+		robotContext.getEventPublisher().setCurrentEvent(RobotStateEvent.TEST_START);
 	}
 
 	@Override
 	public void robotPeriodic() {
-		refreshFromAppContext();
 		logAllChecks();
 		logStartingConfig();
-		eventPublisher.setCurrentEvent(RobotStateEvent.PERIODIC);
+		robotContext.getEventPublisher().setCurrentEvent(RobotStateEvent.PERIODIC);
 		// scheduler was at the end but I feel like it needs to be before we run all subsystems
-		scheduler.run();
+		robotContext.getScheduler().run();
 		ExceptionUtil.suppressVoid(robot::robotPeriodic, "robot::robotPeriodic");
-		periodicRunner.invokePeriodicInstances();
+		robotContext.getPeriodicRunner().invokePeriodicInstances();
 	}
 
 	@Override
 	public void disabledPeriodic() {
 		ExceptionUtil.suppressVoid(robot::disabledPeriodic, "robot::disabledPeriodic");
-		eventPublisher.setCurrentEvent(RobotStateEvent.PERIODIC);
+		robotContext.getEventPublisher().setCurrentEvent(RobotStateEvent.PERIODIC);
 	}
 
 	@Override
 	public void autonomousPeriodic() {
 		ExceptionUtil.suppressVoid(robot::autonomousPeriodic, "robot::autonomousPeriodic");
-		eventPublisher.setCurrentEvent(RobotStateEvent.PERIODIC);
+		robotContext.getEventPublisher().setCurrentEvent(RobotStateEvent.PERIODIC);
 	}
 
 	@Override
 	public void teleopPeriodic() {
 		ExceptionUtil.suppressVoid(robot::teleopPeriodic, "robot::teleopPeriodic");
-		eventPublisher.setCurrentEvent(RobotStateEvent.PERIODIC);
+		robotContext.getEventPublisher().setCurrentEvent(RobotStateEvent.PERIODIC);
 	}
 
 	@Override
 	public void testPeriodic() {
 		ExceptionUtil.suppressVoid(robot::testPeriodic, "robot::testPeriodic");
-		eventPublisher.setCurrentEvent(RobotStateEvent.PERIODIC);
+		robotContext.getEventPublisher().setCurrentEvent(RobotStateEvent.PERIODIC);
 	}
 
-	private void refreshFromAppContext() {
-		periodicRunner = robotContext.getPeriodicRunner();
-		loggingRunner = robotContext.getLoggingRunner();
-		dataRecorder = robotContext.getDataRecorder();
-		eventPublisher = robotContext.getEventPublisher();
-		smartDashboardRunner = robotContext.getSmartDashboardRunner();
-		driverStation = robotContext.getDriverStation();
-		scheduler = robotContext.getScheduler();
-	}
-	
 	private enum DsStatusMessage {
 		CONNECTED,
 		DISCONNECTED;
@@ -236,12 +234,12 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 	private DsStatusMessage previousDSMessage = DsStatusMessage.DISCONNECTED;
 	
 	public void logDsStatus() {
-		if(driverStation.isDSAttached()) {
+		if(robotContext.getDriverStation().isDSAttached()) {
 			if(previousDSMessage != DsStatusMessage.CONNECTED)
 				log.info("Driver Station Connected");
 				previousDSMessage = DsStatusMessage.CONNECTED;
-		}else {
-			if(previousDSMessage != DsStatusMessage.DISCONNECTED) {
+		} else {
+			if (previousDSMessage != DsStatusMessage.DISCONNECTED) {
 				log.info("Driver Station Disconnected");
 				previousDSMessage = DsStatusMessage.DISCONNECTED;
 			}
@@ -249,17 +247,18 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 	}
 	
 	private boolean isRealMatch() {
-		return driverStation.isFMSAttached();
+		return robotContext.getDriverStation().isFMSAttached();
 	}
 		
 	public void logStartingConfig() {		
 		if(!loggedFmsMatchData && isRealMatch()) {
 			loggedFmsMatchData = true;
+			DriverStationAdapter ds = robotContext.getDriverStation();
 			log.info("Alliance: [{}], DriverStation: [{}], Match type: [{}], Match Number: [{}]"
-					, driverStation.getAlliance().toString()
-					, driverStation.getLocation()
-					, driverStation.getMatchType()
-					, Integer.toString(driverStation.getMatchNumber()));
+					, ds.getAlliance().toString()
+					, ds.getLocation()
+					, ds.getMatchType()
+					, Integer.toString(ds.getMatchNumber()));
 		}
 	}
 
@@ -277,14 +276,15 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 		lastCheckedTime = -1.0;
 	}
 	
-	public void logRemainingMatchTime() {	
-		if(driverStation.getMatchTime() != -1.0) {
-			if(lastCheckedTime == -1.0 || lastCheckedTime-10 > driverStation.getMatchTime()){
+	public void logRemainingMatchTime() {
+		DriverStationAdapter ds = robotContext.getDriverStation();
+		if(ds.getMatchTime() != -1.0) {
+			if(lastCheckedTime == -1.0 || lastCheckedTime-10 > ds.getMatchTime()){
 				log.info("[{}] seconds left in [{}]"
-				, formatter.format(driverStation.getMatchTime())
+				, formatter.format(ds.getMatchTime())
 				, currentPeriod.toString());
 				
-				lastCheckedTime = Math.abs(driverStation.getMatchTime());
+				lastCheckedTime = Math.abs(ds.getMatchTime());
 			}
 		}
 	}
@@ -332,11 +332,12 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 
 	@Override
 	public void updateSmartDashboard() {
-		SmartDashboard.putBoolean("field.FMS Connected", driverStation.isFMSAttached());
-		SmartDashboard.putString("field.Alliance", driverStation.getAlliance().toString());
-		SmartDashboard.putNumber("field.Station Number", driverStation.getLocation());
-		SmartDashboard.putString("field.Match Type", driverStation.getMatchType().toString());
-		SmartDashboard.putNumber("field.Match Number", driverStation.getMatchNumber());
+		DriverStationAdapter ds = robotContext.getDriverStation();
+		SmartDashboard.putBoolean("field.FMS Connected", ds.isFMSAttached());
+		SmartDashboard.putString("field.Alliance", ds.getAlliance().toString());
+		SmartDashboard.putNumber("field.Station Number", ds.getLocation());
+		SmartDashboard.putString("field.Match Type", ds.getMatchType().toString());
+		SmartDashboard.putNumber("field.Match Number", ds.getMatchNumber());
 	}
 
 	@Override

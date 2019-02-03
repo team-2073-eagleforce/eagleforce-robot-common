@@ -7,6 +7,8 @@ import com.team2073.common.periodic.OccasionalLoggingRunner;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.periodic.SmartDashboardAwareRunner;
 import com.team2073.common.proploader.PropertyLoader;
+import com.team2073.common.robot.adapter.DriverStationAdapter;
+import com.team2073.common.robot.adapter.SchedulerAdapter;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
 
 /**
@@ -83,6 +85,14 @@ public interface RobotDelegate {
 	}
 	
 	default PropertyLoader createPropertyLoader() {
+		return null;
+	}
+	
+	default DriverStationAdapter createDriverStationAdapter() {
+		return null;
+	}
+	
+	default SchedulerAdapter createSchedulerAdapter() {
 		return null;
 	}
 

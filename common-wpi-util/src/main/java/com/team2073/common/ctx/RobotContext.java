@@ -161,7 +161,7 @@ public class RobotContext {
 //        smartDashboardRunner.registerSelf(periodicRunner);
 //        loggingRunner.registerSelf(periodicRunner);
         // TODO: Check if we are already registered. Currently, this is blocking implementations from customizing the registration
-        dataRecorder.registerWithPeriodicRunner(periodicRunner);
+        getDataRecorder().registerWithPeriodicRunner(periodicRunner);
         log.info("Registering Periodic instances complete.");
     }
 
