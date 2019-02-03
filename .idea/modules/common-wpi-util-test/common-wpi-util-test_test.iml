@@ -33,9 +33,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="common-wpi-util-test_main" />
-    <orderEntry type="library" name="Gradle: com.team2073:common-wpi-util:0.4.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Gradle: com.team2073:common-util:0.4.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Gradle: com.team2073:common-util-test:0.4.0-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="common-wpi-util_main" />
+    <orderEntry type="module" module-name="common-util_main" />
     <orderEntry type="library" name="Gradle: org.assertj:assertj-core:3.9.1" level="project" />
     <orderEntry type="library" name="Gradle: org.mockito:mockito-junit-jupiter:2.17.0" level="project" />
     <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-engine:5.2.0" level="project" />
