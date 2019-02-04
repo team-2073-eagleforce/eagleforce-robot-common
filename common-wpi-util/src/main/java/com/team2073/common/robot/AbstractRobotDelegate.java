@@ -6,14 +6,13 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
- * A simple implementation of {@link RobotDelegate} that provides a no-op
- * implementation of all the required methods (so you don't have to). Also fills
- * in the utility methods such as {@link RobotBase#isEnabled()} so they are
+ * A simple implementation of {@link RobotDelegate} that provides the
+ * utility methods such as {@link RobotBase#isEnabled()} so they are
  * still available from subclasses.
  *
  * @author Preston Briggs
  */
-public class AbstractRobotDelegate implements RobotDelegate {
+public abstract class AbstractRobotDelegate implements RobotDelegate {
 
 	// Static
 	// ============================================================
@@ -31,8 +30,14 @@ public class AbstractRobotDelegate implements RobotDelegate {
 	// Instance
 	// ============================================================
 	protected final DriverStation ds;
+	private final double period;
 
 	public AbstractRobotDelegate() {
+		this(.01);
+	}
+	
+	public AbstractRobotDelegate(double period) {
+		this.period = period;
 		ds = DriverStation.getInstance();
 	}
 
@@ -66,5 +71,10 @@ public class AbstractRobotDelegate implements RobotDelegate {
 	/** See {@link IterativeRobot#isNewDataAvailable()} */
 	public final boolean isNewDataAvailable() {
 		return ds.isNewControlData();
+	}
+	
+	@Override
+	public double getPeriod() {
+		return period;
 	}
 }

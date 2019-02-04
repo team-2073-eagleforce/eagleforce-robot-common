@@ -11,7 +11,9 @@ import com.team2073.common.simulation.env.SimulationEnvironment;
  * @author Jason Stanley
  */
 public abstract class AbstractSimulationMechanism implements SimulationMechanism, LifecycleAwareRecordable {
-
+	
+	private final RobotContext robotContext = RobotContext.getInstance();
+	
 	protected Runnable whenSolenoidActive = () -> {};
 	protected boolean isSolenoidExtended;
 
@@ -48,7 +50,7 @@ public abstract class AbstractSimulationMechanism implements SimulationMechanism
 
 //		doubles the stall torque to make "super motor" based on motor count
 		torqueConstant = motor.torqueConstant * 2 * motorCount;
-		RobotContext.getInstance().getDataRecorder().registerRecordable(this);
+		robotContext.getDataRecorder().registerRecordable(this);
 	}
 
 	@Override

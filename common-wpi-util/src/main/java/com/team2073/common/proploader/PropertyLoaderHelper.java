@@ -380,7 +380,7 @@ class PropertyLoaderHelper {
         RobotContext robotContext = RobotContext.getInstance();
         File targetDir = new File(robotContext.getRobotDirectory().getTempDir(), "property-loader");
         targetDir = new File(targetDir, "copied-from-source-code");
-        String timestamp = FileUtil.formatTimestamp(RobotContext.getInstance().getBootTimestamp());
+        String timestamp = FileUtil.formatTimestamp(robotContext.getBootTimestamp());
         targetDir = new File(targetDir, confDirName);
         targetDir = new File(targetDir, timestamp);
 

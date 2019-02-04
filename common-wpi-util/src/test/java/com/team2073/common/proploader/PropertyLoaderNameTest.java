@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.*;
 /**
  * @author Preston Briggs
  */
-class PropertyLoaderNameTest {
+class PropertyLoaderNameTest extends PropertyLoaderBaseTest {
 
     private static class FooProperties {
         public static final String CLASS_NAME_WITHOUT_PROPERTIES = "Foo";

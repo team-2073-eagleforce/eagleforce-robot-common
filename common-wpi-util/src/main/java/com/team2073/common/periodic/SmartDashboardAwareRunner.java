@@ -12,10 +12,10 @@ import java.util.List;
 public class SmartDashboardAwareRunner implements AsyncPeriodicRunnable {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private final RobotContext robotContext = RobotContext.getInstance();
 	private final List<SmartDashboardAware> instanceList = new LinkedList<>();
 
 	public SmartDashboardAwareRunner() {
-		RobotContext robotContext = RobotContext.getInstance();
 		autoRegisterWithPeriodicRunner(robotContext.getCommonProps().getSmartDashboardAsyncPeriod());
 		robotContext.getPeriodicRunner().registerSmartDashboard(this);
 	}

@@ -1,12 +1,15 @@
 package com.team2073.common.robot;
 
+import com.team2073.common.config.CommonProperties;
 import com.team2073.common.datarecorder.DataRecorder;
 import com.team2073.common.event.RobotEventPublisher;
 import com.team2073.common.periodic.OccasionalLoggingRunner;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.periodic.SmartDashboardAwareRunner;
 import com.team2073.common.proploader.PropertyLoader;
-import edu.wpi.first.wpilibj.IterativeRobot;
+import com.team2073.common.robot.adapter.DriverStationAdapter;
+import com.team2073.common.robot.adapter.SchedulerAdapter;
+import edu.wpi.first.wpilibj.IterativeRobotBase;
 
 /**
  * An interface declaring all the methods a Robot might need. Extend {@link AbstractRobotDelegate}
@@ -17,48 +20,48 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public interface RobotDelegate {
 
-	/** See {@link IterativeRobot#robotInit()} */
+	/** See {@link IterativeRobotBase#robotInit()} */
 	default void robotInit() {
 	}
 
-	/** See {@link IterativeRobot#disabledInit()} */
+	/** See {@link IterativeRobotBase#disabledInit()} */
 	default void disabledInit() {
 	}
 
-	/** See {@link IterativeRobot#autonomousInit()} */
+	/** See {@link IterativeRobotBase#autonomousInit()} */
 	default void autonomousInit() {
 	}
 
-	/** See {@link IterativeRobot#teleopInit()} */
+	/** See {@link IterativeRobotBase#teleopInit()} */
 	default void teleopInit() {
 	}
 
-	/** See {@link IterativeRobot#testInit()} */
+	/** See {@link IterativeRobotBase#testInit()} */
 	default void testInit() {
 	}
 
-	/** See {@link IterativeRobot#robotPeriodic()} */
+	/** See {@link IterativeRobotBase#robotPeriodic()} */
 	default void robotPeriodic() {
 	}
 
-	/** See {@link IterativeRobot#disabledPeriodic()} */
+	/** See {@link IterativeRobotBase#disabledPeriodic()} */
 	default void disabledPeriodic() {
 	}
 
-	/** See {@link IterativeRobot#autonomousPeriodic()} */
+	/** See {@link IterativeRobotBase#autonomousPeriodic()} */
 	default void autonomousPeriodic() {
 	}
 
-	/** See {@link IterativeRobot#teleopPeriodic()} */
+	/** See {@link IterativeRobotBase#teleopPeriodic()} */
 	default void teleopPeriodic() {
 	}
 
-	/** See {@link IterativeRobot#testPeriodic()} */
+	/** See {@link IterativeRobotBase#testPeriodic()} */
 	default void testPeriodic() {
 	}
-
-	/** See {@link IterativeRobot#free()} */
-	default void free() {
+	
+	default CommonProperties createCommonProperties() {
+		return null;
 	}
 
 	default PeriodicRunner createPeriodicRunner() {
@@ -84,8 +87,18 @@ public interface RobotDelegate {
 	default PropertyLoader createPropertyLoader() {
 		return null;
 	}
+	
+	default DriverStationAdapter createDriverStationAdapter() {
+		return null;
+	}
+	
+	default SchedulerAdapter createSchedulerAdapter() {
+		return null;
+	}
 
 	default void registerPeriodicInstance(PeriodicRunner periodicRunner) {
 
 	}
+	
+	double getPeriod();
 }

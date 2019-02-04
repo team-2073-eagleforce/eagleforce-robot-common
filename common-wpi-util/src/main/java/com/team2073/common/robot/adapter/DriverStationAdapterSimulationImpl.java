@@ -1,4 +1,4 @@
-package com.team2073.common.smartdashboard.adapter;
+package com.team2073.common.robot.adapter;
 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
@@ -37,7 +37,7 @@ public class DriverStationAdapterSimulationImpl implements DriverStationAdapter 
     @Override
     public Alliance getAlliance() {
         // TODO: Maybe create setters?
-        return null;
+        return Alliance.Red;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class DriverStationAdapterSimulationImpl implements DriverStationAdapter 
     @Override
     public MatchType getMatchType() {
         // TODO: Maybe create setters?
-        return null;
+        return MatchType.None;
     }
 
     @Override

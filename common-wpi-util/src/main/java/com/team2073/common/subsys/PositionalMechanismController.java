@@ -18,8 +18,8 @@ import com.team2073.common.position.converter.PositionConverter;
 import com.team2073.common.position.hold.DisabledHoldingStrategy;
 import com.team2073.common.position.hold.HoldingStrategy;
 import com.team2073.common.position.hold.PIDHoldingStrategy;
-import com.team2073.common.smartdashboard.adapter.NetworkTableAdapter;
-import com.team2073.common.smartdashboard.adapter.NetworkTableEntryAdapter;
+import com.team2073.common.robot.adapter.NetworkTableAdapter;
+import com.team2073.common.robot.adapter.NetworkTableEntryAdapter;
 import com.team2073.common.speedcontroller.PidIndex;
 import com.team2073.common.subsys.PositionalMechanismController.IOGateway.Info;
 import com.team2073.common.util.StringUtil;
@@ -98,7 +98,8 @@ public class PositionalMechanismController<T extends Enum<T> & PositionContainer
 	// TODO: Create setter
 	private int pidIdx = PidIndex.PRIMARY.id;
 	private int slotIdx = 0;
-	private CommonProperties props = RobotContext.getInstance().getCommonProps();
+	private final RobotContext robotContext = RobotContext.getInstance();
+	private CommonProperties props = robotContext.getCommonProps();
 
 
 	public PositionalMechanismController(IMotorController... motors) {
@@ -125,7 +126,7 @@ public class PositionalMechanismController<T extends Enum<T> & PositionContainer
 		io = new IOGateway();
 		logTable = new NetworkTableGrouping(StringUtil.toFileCase(baseName));
 		data = new PositionalMechanismControllerData(this);
-		RobotContext.getInstance().getDataRecorder().registerRecordable(data);
+		robotContext.getDataRecorder().registerRecordable(data);
 		autoRegisterWithPeriodicRunner(getName());
 	}
 
@@ -504,7 +505,7 @@ public class PositionalMechanismController<T extends Enum<T> & PositionContainer
 
 			private void updateHoldPosition() {
 				// TODO: Change to use robot event pattern
-				enabled = RobotContext.getInstance().getDriverStation().isEnabled();
+				enabled = robotContext.getDriverStation().isEnabled();
 				
 				if(enabled != enabledPrevIteration && enabled) {
 					onEnabled();
@@ -536,7 +537,7 @@ public class PositionalMechanismController<T extends Enum<T> & PositionContainer
 		private NetworkTableEntryAdapter currTicsEntry;
 
 		public NetworkTableGrouping(String baseTableName) {
-			this(RobotContext.getInstance().getSmartDashboard().getTable("subsys").getSubTable(baseTableName).getSubTable("pos-ctrl"));
+			this(robotContext.getSmartDashboard().getTable("subsys").getSubTable(baseTableName).getSubTable("pos-ctrl"));
 		}
 		
 		public NetworkTableGrouping(NetworkTableAdapter baseTable) {

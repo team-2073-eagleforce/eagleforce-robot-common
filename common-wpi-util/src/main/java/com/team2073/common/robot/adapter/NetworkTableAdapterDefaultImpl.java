@@ -1,4 +1,4 @@
-package com.team2073.common.smartdashboard.adapter;
+package com.team2073.common.robot.adapter;
 
 import edu.wpi.first.networktables.NetworkTable;
 

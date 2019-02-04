@@ -437,7 +437,7 @@ A CSV output handler will only be automatically registered if no other handlers 
 There are three ways to run the DataRecorder however only two of them are recommended. If you are using `PeriodicRunner` already, run it with that. If not, have it run in auto-record mode. Running manually should be your last resort.
 
 ====== Running with Periodic Runner (Recommended)
-If you are already using a `PeriodicRunner` (calling `invokePeriodicInstances()` on it) or are using an `AbstractRobotDelegator` (handles running `PeriodicRunner` for you), then it is recommended to use that approach.
+If you are already using a `PeriodicRunner` (calling `invokePeriodicInstances()` on it) or are using a `RobotRunner` (handles running `PeriodicRunner` for you), then it is recommended to use that approach.
 
 You cannot simply register the `DataRecorder` with the `PeriodicRunner` as you normally do. There is special multi threading logic involved and it needs to register twice (record and flush) so the `DataRecorder` needs to register itself.
 
@@ -458,7 +458,7 @@ recorder.registerWithPeriodicRunner(periodicRunner);
 
 [WARNING]
 ====
-Neither of these will work if the `PeriodicRunner` is not being ran. Either call the method `periodicRunner.invokePeriodicInstances()` in your robot's `robotPeriodic()` method or simply use an `AbstractRobotDelegator` which handles this for you.
+Neither of these will work if the `PeriodicRunner` is not being ran. Either call the method `periodicRunner.invokePeriodicInstances()` in your robot's `robotPeriodic()` method or simply use an `RobotRunner` which handles this for you.
 ====
 
 ====== Running in Auto-Record Mode
@@ -1005,10 +1005,10 @@ erratic and dangerous behavior!
 
 Since any file IO is time consuming (comparatively speaking), if properties are to be loaded repeatedly,
 this must be done on a separate thread than the main robot thread.
-It is *strongly* recommended to use the `AbstractRobotDelegator`.
+It is *strongly* recommended to use the `RobotRunner`.
 This will automatically run the `PropertyLoader` (reload the properties) on an async periodic loop every 5 seconds.
 
-The `PropertyLoader` registers itself with the `PeriodicRunner` automatically and the `AbstractRobotDelegator`
+The `PropertyLoader` registers itself with the `PeriodicRunner` automatically and the `RobotRunner`
 runs the `PeriodicRunner` automatically so no additional steps are required.
 
 See the `Robot Delegator` section for details.
@@ -1063,12 +1063,12 @@ TIP: See the `Property Loader Configuration` section below for how to change thi
 
 Pro:: Making a change to these does not require redeploying code to the RIO (it only requires a restart of the robot)
 
-Con:: Since these files only exist on the RIO and not in source code, changes to them will _not_ be included in your version control.
-
 [TIP]
 ====
-If you use the `AbstractRobotDelegator` a restart is not even required as properties are automatically reloaded every 5 seconds.
+If you use the `RobotRunner` a restart is not even required as properties are automatically reloaded every 5 seconds.
 ====
+
+Con:: Since these files only exist on the RIO and not in source code, changes to them will _not_ be included in your version control.
 
 Purpose:: These are meant for quick changes or changes that only apply to one robot (mainbot vs practice bot).
 

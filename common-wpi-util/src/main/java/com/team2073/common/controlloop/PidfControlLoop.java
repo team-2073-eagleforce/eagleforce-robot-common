@@ -1,8 +1,6 @@
 package com.team2073.common.controlloop;
 
 import com.team2073.common.ctx.RobotContext;
-import com.team2073.common.datarecorder.model.DataPointIgnore;
-import com.team2073.common.datarecorder.model.LifecycleAwareRecordable;
 import com.team2073.common.util.ConversionUtil;
 import com.team2073.common.util.Throw;
 import org.slf4j.Logger;
@@ -17,6 +15,7 @@ public class PidfControlLoop {
     private static final double DEFAULT_INTERVAL = .01;
 
 	private Logger log = LoggerFactory.getLogger(getClass());
+	private final RobotContext robotContext = RobotContext.getInstance();
 
 	private boolean active;
 
@@ -45,7 +44,7 @@ public class PidfControlLoop {
 		this.d = d;
 		this.f = f;
 		this.maxOutput = maxOutput;
-		RobotContext.getInstance().getDataRecorder().registerRecordable(this);
+		robotContext.getDataRecorder().registerRecordable(this);
 	}
 
     public PidfControlLoop(double p, double i, double d, double f, double maxOutput, PositionSupplier positionSupplier) {
@@ -55,7 +54,7 @@ public class PidfControlLoop {
         this.f = f;
         this.maxOutput = maxOutput;
         this.positionSupplier = positionSupplier;
-        RobotContext.getInstance().getDataRecorder().registerRecordable(this);
+        robotContext.getDataRecorder().registerRecordable(this);
     }
 
 	public void updatePID(double interval) {

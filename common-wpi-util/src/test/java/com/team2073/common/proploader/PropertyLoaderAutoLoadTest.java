@@ -5,7 +5,6 @@ import com.team2073.common.proploader.autoload.test1.FooProperties;
 import com.team2073.common.proploader.autoload.test1.RootAutoLoad1Class;
 import com.team2073.common.proploader.autoload.test2.OuterClass.InnerProperties;
 import com.team2073.common.proploader.autoload.test2.RootAutoLoad2Class;
-import com.team2073.common.wpitest.BaseWpiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,9 +16,7 @@ import static org.assertj.core.api.Assertions.*;
 /**
  * @author Preston Briggs
  */
-public class PropertyLoaderAutoLoadTest extends BaseWpiTest {
-    
-    private PropertyLoader loader = new PropertyLoader();
+public class PropertyLoaderAutoLoadTest extends PropertyLoaderBaseTest {
     
     @Test
     @DisplayName("WHEN: Auto registering all @PropertyContainer classes - THEN: Expected classes are registered")

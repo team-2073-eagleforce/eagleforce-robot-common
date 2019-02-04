@@ -3,7 +3,6 @@ package com.team2073.common.proploader;
 import com.team2073.common.proploader.PropertyLoaderRegisterTest.OuterClass.InnerProperties;
 import com.team2073.common.proploader.PropertyLoaderTestFixtures.SimpleProperties;
 import com.team2073.common.proploader.model.PropertyContainerWrapper;
-import com.team2073.common.wpitest.BaseWpiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,10 +14,8 @@ import static org.assertj.core.api.Assertions.*;
 /**
  * @author Preston Briggs
  */
-public class PropertyLoaderRegisterTest extends BaseWpiTest {
+public class PropertyLoaderRegisterTest extends PropertyLoaderBaseTest {
     
-    private PropertyLoader loader = new PropertyLoader();
-
     @Test
     @DisplayName("WHEN: Property container class is registered - THEN: Class is registered properly (smoke test)")
     void smokeTest() {

@@ -1,16 +1,17 @@
 package com.team2073.common.simulation.runner;
 
-import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.robot.DetailedRobotState.RobotMode;
-import com.team2073.common.simulation.env.SimulationRobot;
+import com.team2073.common.robot.RobotDelegate;
+import com.team2073.common.robot.adapter.RobotAdapter;
+import com.team2073.common.robot.adapter.RobotAdapterSimulationImpl;
 import com.team2073.common.util.EnumUtil;
 
 /**
  * @author pbriggs
  */
-public class SimulationRobotRunner implements PeriodicRunnable {
+public class SimulationRobotRunner {
 
-    private SimulationRobot robot = new SimulationRobot();
+    private final RobotAdapter robot;
 
     private boolean initialized = false;
 
@@ -19,45 +20,56 @@ public class SimulationRobotRunner implements PeriodicRunnable {
 
     private RobotMode robotMode = RobotMode.TELEOP;
     private boolean robotEnabled = true;
-
-    @Override
+    
+    public SimulationRobotRunner(RobotDelegate robotDelegate) {
+        this(new RobotAdapterSimulationImpl(robotDelegate));
+    }
+    
+    public SimulationRobotRunner(RobotAdapter robot) {
+        this.robot = robot;
+    }
+    
     public void onPeriodic() {
         if (!initialized) {
             initialized = true;
             robot.robotInit();
         }
 
-        if (robotEnabled == false) {
+        if (!robotEnabled) {
             if (enabledChanged()) {
                 robot.disabledInit();
             }
-            prevRobotEnabled = robotEnabled;
             robot.disabledPeriodic();
         } else {
             switch (robotMode) {
                 case TELEOP:
-                    if (modeChanged())
+                    if (modeChanged() || disabledToEnabled())
                         robot.teleopInit();
                     robot.teleopPeriodic();
                     break;
                 case AUTONOMOUS:
-                    if (modeChanged())
+                    if (modeChanged() || disabledToEnabled())
                         robot.autonomousInit();
                     robot.autonomousPeriodic();
                     break;
                 case TEST:
-                    if (modeChanged())
+                    if (modeChanged() || disabledToEnabled())
                         robot.testInit();
                     robot.testPeriodic();
                     break;
                 default:
                     EnumUtil.throwUnknownValueException(robotMode);
             }
-            prevRobotMode = robotMode;
         }
+        prevRobotMode = robotMode;
+        prevRobotEnabled = robotEnabled;
         robot.robotPeriodic();
     }
 
+    private boolean disabledToEnabled() {
+        return prevRobotEnabled == false && robotEnabled == true;
+    }
+    
     private boolean enabledChanged() {
         return prevRobotEnabled != robotEnabled;
     }

@@ -2,12 +2,13 @@ package com.team2073.common.motionprofiling;
 
 import com.team2073.common.controlloop.MotionProfileControlloop;
 import com.team2073.common.util.ThreadUtil;
+import com.team2073.common.wpitest.BaseWpiTest;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
-public class SCurveTests {
+public class SCurveTests extends BaseWpiTest {
 
 	@Test
 	public void SCurveMotionProfileGenerator_WHEN_decelerating_RETURNS_appropriateValues(){

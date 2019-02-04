@@ -11,7 +11,7 @@ import com.team2073.common.datarecorder.output.DataRecordOutputHandlerConsoleImp
 import com.team2073.common.datarecorder.output.DataRecordOutputHandlerCsvImpl;
 import com.team2073.common.datarecorder.output.DataRecordOutputHandlerSmartDashboardImpl;
 import com.team2073.common.periodic.PeriodicRunner;
-import com.team2073.common.smartdashboard.adapter.SmartDashboardAdapterSimulationImpl;
+import com.team2073.common.robot.adapter.SmartDashboardAdapterSimulationImpl;
 import com.team2073.common.test.annon.TestNotWrittenYet;
 import com.team2073.common.util.ThreadUtil;
 import org.apache.commons.io.FileUtils;

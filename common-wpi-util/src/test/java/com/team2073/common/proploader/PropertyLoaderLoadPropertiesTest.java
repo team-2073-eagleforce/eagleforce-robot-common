@@ -3,7 +3,6 @@ package com.team2073.common.proploader;
 import com.team2073.common.proploader.PropertyLoaderLoadPropertiesTest.EnumProperties.Foo;
 import com.team2073.common.util.FileUtil;
 import com.team2073.common.util.JvmUtil;
-import com.team2073.common.wpitest.BaseWpiTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +15,7 @@ import static org.assertj.core.api.Assertions.*;
 /**
  * @author Preston Briggs
  */
-public class PropertyLoaderLoadPropertiesTest extends BaseWpiTest {
+public class PropertyLoaderLoadPropertiesTest extends PropertyLoaderBaseTest {
 
     public static class InvalidDataTypeProperties {
         Integer foo;

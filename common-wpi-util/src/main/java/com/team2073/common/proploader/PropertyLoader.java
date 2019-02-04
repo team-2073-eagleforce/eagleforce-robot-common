@@ -9,7 +9,7 @@ import com.team2073.common.proploader.model.PropertyContainer;
 import com.team2073.common.proploader.model.PropertyContainerWrapper;
 import com.team2073.common.proploader.model.PropertyFileAccessor;
 import com.team2073.common.proploader.model.PropertyMapping;
-import com.team2073.common.robot.AbstractRobotDelegator;
+import com.team2073.common.robot.RobotRunner;
 import com.team2073.common.util.Ex;
 import com.team2073.common.util.FileUtil;
 import org.apache.commons.io.FileUtils;
@@ -67,6 +67,8 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
     }
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+    
+    private final RobotContext robotContext = RobotContext.getInstance();
 
     // State
     private PropertyLoaderState state = NO_PROPERTY_CONTAINERS_REGISTERED;
@@ -75,15 +77,15 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
 
     // Customizable config
     private String sourceCodePropDirPath = DEFAULT_CONF_DIR_NAME;
-    private File externalPropDir = RobotContext.getInstance().getRobotDirectory().getConfDir();
-
+    private File externalPropDir = robotContext.getRobotDirectory().getConfDir();
+    
     // Other
     private final List<File> propDirList = new ArrayList<>();
     private final Map<Class<?>, PropertyContainerWrapper> containerWrapperMap = new HashMap<>();
     
     public PropertyLoader() {
-        Integer interval = RobotContext.getInstance().getCommonProps().getPropLoaderRefreshPropsInterval();
-        RobotContext.getInstance().getPeriodicRunner().autoRegisterAsync(this, interval);
+        Integer interval = robotContext.getCommonProps().getPropLoaderRefreshPropsInterval();
+        robotContext.getPeriodicRunner().autoRegisterAsync(this, interval);
     }
     
     /**
@@ -148,7 +150,7 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
         log.debug("Creating property container from class [{}].", propContainerClass.getName());
 
         // Resolve all the PropertyContainer data
-        Set<String> profileList = RobotContext.getInstance().getRobotProfiles().getProfileList();
+        Set<String> profileList = robotContext.getRobotProfiles().getProfileList();
         Object propContainer = PropertyLoaderHelper.constructPropertyContainer(propContainerClass);
         List<PropertyMapping> mappingList = PropertyLoaderHelper.createMappings(propContainer);
         String propContainerName = PropertyLoaderHelper.resolvePropertyContainerName(propContainer);
@@ -238,7 +240,7 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
      *
      * <p>Since any file IO is time consuming (comparatively speaking), if properties are to be loaded repeatedly,
      * this must be done on a separate thread than the main robot thread. It is strongly recommended to use the
-     * {@link AbstractRobotDelegator}. This will automatically run the {@link PropertyLoader} (reload the properties)
+     * {@link RobotRunner}. This will automatically run the {@link PropertyLoader} (reload the properties)
      * on an async periodic loop every 5 seconds.</p>
      *
      */

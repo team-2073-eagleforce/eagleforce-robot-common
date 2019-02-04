@@ -1,4 +1,4 @@
-package com.team2073.common.smartdashboard.adapter;
+package com.team2073.common.robot.adapter;
 
 import com.team2073.common.util.EnumUtil;
 import com.team2073.common.util.ReflectionUtil;

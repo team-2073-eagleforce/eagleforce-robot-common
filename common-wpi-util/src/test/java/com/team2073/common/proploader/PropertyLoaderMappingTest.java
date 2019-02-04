@@ -17,9 +17,7 @@ import static org.assertj.core.api.Assertions.*;
 /**
  * @author Preston Briggs
  */
-public class PropertyLoaderMappingTest {
-    
-    private PropertyLoader loader = new PropertyLoader();
+public class PropertyLoaderMappingTest extends PropertyLoaderBaseTest {
     
     public static class RecursiveParentProperties {
         private RecursiveChildProperties child;
