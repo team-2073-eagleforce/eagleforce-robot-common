@@ -35,7 +35,6 @@ public class SimulationPidfEagleSRX extends SimulationEagleSRX {
             pid.updatePID(.01);
             setOutputPercent(pid.getOutput());
         }
-        System.out.println(mechanism.position());
 
         super.onPeriodic();
     }

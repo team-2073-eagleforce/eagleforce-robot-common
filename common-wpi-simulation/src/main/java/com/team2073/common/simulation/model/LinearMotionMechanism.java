@@ -12,7 +12,7 @@ import static com.team2073.common.util.ConversionUtil.*;
  */
 public class LinearMotionMechanism extends AbstractSimulationMechanism {
 
-	private double pulleyRadius;
+	private final double pulleyRadius;
 
 	public LinearMotionMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double pullyRadius) {
 		super(gearRatio, motor, motorCount, massOnSystem);
@@ -34,6 +34,7 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 
 	/**
 	 * Calculates the Mechanism's acceleration given the current mechanism velocity and voltage operating on the motors.
+	 * a = (Volt * K_t * G * r)/ (m * R) - (V * K_t * G^2 * r) / ( K_v * m * R)
 	 */
 	@Override
 	public double calculateAcceleration() {
@@ -44,6 +45,7 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 
 	/**
 	 * Integrates over the Acceleration to find how much our velocity has changed in the past interval.
+	 * v = a * t + v_0
 	 *
 	 * @param intervalInMs
 	 */
@@ -55,6 +57,7 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 
 	/**
 	 * Integrates over the Velocity to find how much our position has changed in the past interval.
+	 * p = v * t + p_0
 	 *
 	 * @param intervalInMs
 	 */
