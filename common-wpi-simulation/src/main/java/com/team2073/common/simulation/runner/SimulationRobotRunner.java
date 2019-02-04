@@ -39,34 +39,37 @@ public class SimulationRobotRunner {
             if (enabledChanged()) {
                 robot.disabledInit();
             }
-            // TODO: Shouldnt this be outside of this if block?
-            prevRobotEnabled = robotEnabled;
             robot.disabledPeriodic();
         } else {
             switch (robotMode) {
                 case TELEOP:
-                    if (modeChanged())
+                    if (modeChanged() || disabledToEnabled())
                         robot.teleopInit();
                     robot.teleopPeriodic();
                     break;
                 case AUTONOMOUS:
-                    if (modeChanged())
+                    if (modeChanged() || disabledToEnabled())
                         robot.autonomousInit();
                     robot.autonomousPeriodic();
                     break;
                 case TEST:
-                    if (modeChanged())
+                    if (modeChanged() || disabledToEnabled())
                         robot.testInit();
                     robot.testPeriodic();
                     break;
                 default:
                     EnumUtil.throwUnknownValueException(robotMode);
             }
-            prevRobotMode = robotMode;
         }
+        prevRobotMode = robotMode;
+        prevRobotEnabled = robotEnabled;
         robot.robotPeriodic();
     }
 
+    private boolean disabledToEnabled() {
+        return prevRobotEnabled == false && robotEnabled == true;
+    }
+    
     private boolean enabledChanged() {
         return prevRobotEnabled != robotEnabled;
     }
