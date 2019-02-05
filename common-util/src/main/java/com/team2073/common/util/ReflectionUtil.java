@@ -100,9 +100,7 @@ public abstract class ReflectionUtil {
             return PrimitiveType.BOOLEAN;
 
         } else if (type.isAssignableFrom(String.class) || type.isAssignableFrom(String.class) && countStringAsPrimitive) {
-            if(countStringAsPrimitive){
-                return PrimitiveType.STRING;
-            }
+            return PrimitiveType.STRING;
         }
         return null;
     }
