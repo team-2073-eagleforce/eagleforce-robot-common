@@ -22,7 +22,7 @@ public class SimulatedElevatorSubsystem implements PeriodicRunnable {
     private double ticsPerInch = 1350;
 
     //		UNITS FOR P are in percentages per inch
-    private PidfControlLoop pid = new PidfControlLoop(.023, 0, .02, 0, 1);
+    private PidfControlLoop pid = new PidfControlLoop(.14, 0, .08, 0, 1);
 
     public SimulatedElevatorSubsystem(IMotorControllerEnhanced talon, DigitalInput zeroSensor, Solenoid brake) {
         this.talon = talon;
