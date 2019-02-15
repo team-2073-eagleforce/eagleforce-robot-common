@@ -6,6 +6,7 @@ import com.team2073.common.mediator.condition.StateBasedCondition;
 import com.team2073.common.mediator.subsys.PositionBasedSubsystem;
 import com.team2073.common.mediator.subsys.StateBasedSubsystem;
 import com.team2073.common.mediator.subsys.SubsystemStateCondition;
+import org.apache.commons.lang3.Range;
 import org.jetbrains.annotations.NotNull;
 
 public class MediatorTestFixtures {
@@ -32,7 +33,7 @@ public class MediatorTestFixtures {
         @NotNull
         @Override
         public Condition<Double> getCurrentCondition() {
-            return new PositionBasedCondition(currentPosition - getSafetyRange(), currentPosition, currentPosition + getSafetyRange());
+            return new PositionBasedCondition(currentPosition, Range.between(currentPosition - getSafetyRange(), currentPosition + getSafetyRange()));
         }
     }
 
@@ -55,7 +56,7 @@ public class MediatorTestFixtures {
         @NotNull
         @Override
         public Condition<Double> getCurrentCondition() {
-            return new PositionBasedCondition(0, 0, 0);
+            return new PositionBasedCondition(0, Range.between(0d,0d));
         }
     }
 

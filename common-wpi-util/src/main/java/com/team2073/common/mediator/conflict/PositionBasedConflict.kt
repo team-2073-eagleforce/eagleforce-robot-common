@@ -5,7 +5,7 @@ import com.team2073.common.mediator.condition.PositionBasedCondition
 import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.PositionBasedSubsystem
-import com.team2073.common.position.Position
+import org.apache.commons.lang3.Range
 
 class PositionBasedConflict(
         val originSubsystemP: Class<out ColleagueSubsystem<Double>>,
@@ -21,25 +21,17 @@ class PositionBasedConflict(
     override fun getResolution(currentCondition: Condition<Double>, subsystem: ColleagueSubsystem<Double>): Condition<Double> {
         val closestBound = (conflictingConditionP as PositionBasedCondition).findClosestBound(currentCondition)
         val safetyRange = (subsystem as PositionBasedSubsystem).getSafetyRange()
-        lateinit var resolutionCondition: Condition<Double>
-        val isLowerBound = (conflictingConditionP).isLowerBound(closestBound)
 
-        if (isLowerBound == null) {
-            println("bound not upper/lower in condition")
-        } else if (isLowerBound) {
-            resolutionCondition = PositionBasedCondition(closestBound - safetyRange,
-                    ((closestBound - safetyRange) + (closestBound)) / 2,
-                    closestBound)
-        } else if (!isLowerBound) {
-            resolutionCondition = PositionBasedCondition(closestBound,
-                    ((closestBound + safetyRange) + (closestBound)) / 2,
-                    closestBound + safetyRange)
-        }
-        return resolutionCondition
+        return PositionBasedCondition(closestBound, Range.between(closestBound - safetyRange, closestBound + safetyRange))
+
     }
 
-    override fun isRequestConflicting(request: Request<Double>, conflictingCondition: Condition<Double>): Boolean {
-        return originCondition.isInCondition(request.condition) && conflictingCondition.isInCondition(conflictingConditionP)
+    override fun isRequestConflicting(request: Request<Double>, conflictingCondition: Condition<Double>, currentOriginCondition: Condition<Double>): Boolean {
+        var range: Range<Double> = Range.between(currentOriginCondition.getConditionValue(), request.condition.getConditionValue())
+        var conflictingRange: Range<Double> = Range.between((conflictingCondition as PositionBasedCondition).range.minimum,
+                conflictingCondition.range.maximum)
+
+        return range.isOverlappedBy(conflictingRange)
     }
 
     override fun invert(): Conflict<Double, Double> {

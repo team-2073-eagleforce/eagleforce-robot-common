@@ -1,20 +1,22 @@
 package com.team2073.common.mediator.condition
 
-class PositionBasedCondition(val lowerBound: Double, val exactPosition: Double, val upperBound: Double) : Condition<Double> {
+import org.apache.commons.lang3.Range
+
+class PositionBasedCondition(val exactPosition: Double, val range: Range<Double>) : Condition<Double> {
 
     override fun getConditionValue(): Double {
         return exactPosition
     }
 
     override fun isInCondition(condition: Condition<Double>): Boolean {
-        return ((condition.getConditionValue()) in lowerBound..upperBound)
+        return range.contains(condition.getConditionValue())
     }
 
     fun findClosestBound(condition: Condition<Double>): Double {
-        return if (condition.getConditionValue() - lowerBound > condition.getConditionValue() - upperBound) {
-            upperBound
+        return if (condition.getConditionValue() - range.minimum > condition.getConditionValue() - range.maximum) {
+            range.maximum
         } else {
-            lowerBound
+            range.minimum
         }
     }
 
@@ -23,14 +25,14 @@ class PositionBasedCondition(val lowerBound: Double, val exactPosition: Double, 
      */
     fun isLowerBound(bound: Double): Boolean? {
         return when (bound) {
-            lowerBound -> true
-            upperBound -> false
+            range.minimum -> true
+            range.maximum -> false
             else -> null
         }
     }
 
     override fun toString(): String {
-        return "Between the range of [$lowerBound] -- [$upperBound] with an exact position of [$exactPosition]"
+        return "Between the range of [${range.minimum}] -- [${range.maximum}] with an exact position of [$exactPosition]"
     }
 
 }

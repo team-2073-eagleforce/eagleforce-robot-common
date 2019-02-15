@@ -6,6 +6,7 @@ import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.PositionBasedSubsystem
 import com.team2073.common.mediator.subsys.SubsystemStateCondition
+import org.apache.commons.lang3.Range
 
 class StatePositionBasedConflict<T : Enum<T>>(val originSubsystemPS: Class<out ColleagueSubsystem<SubsystemStateCondition<T>>>,
                                               val originConditionPS: Condition<SubsystemStateCondition<T>>,
@@ -21,27 +22,12 @@ class StatePositionBasedConflict<T : Enum<T>>(val originSubsystemPS: Class<out C
     override fun getResolution(currentCondition: Condition<Double>, subsystem: ColleagueSubsystem<Double>): Condition<Double> {
         val closestBound = (conflictingConditionPS as PositionBasedCondition).findClosestBound(currentCondition)
         val safetyRange = (subsystem as PositionBasedSubsystem).getSafetyRange()
-        lateinit var resolutionCondition: Condition<Double>
-        val islowerBound = conflictingConditionPS.isLowerBound(closestBound)
 
-        if (islowerBound == null) {
-            println("bound not upper/lower in condition")
-        } else if (islowerBound) {
-            resolutionCondition = PositionBasedCondition(closestBound - safetyRange,
-                    ((closestBound - safetyRange) + (closestBound)) / 2,
-                    closestBound)
-        } else if (!islowerBound) {
-            resolutionCondition = PositionBasedCondition(closestBound,
-                    ((closestBound + safetyRange) + (closestBound)) / 2,
-                    closestBound + safetyRange)
-        }
-        return resolutionCondition
-
+        return PositionBasedCondition(closestBound, Range.between(closestBound - safetyRange, closestBound + safetyRange))
 
     }
 
-    override fun isRequestConflicting(request: Request<SubsystemStateCondition<T>>, conflictingCondition: Condition<Double>): Boolean {
-
+    override fun isRequestConflicting(request: Request<SubsystemStateCondition<T>>, conflictingCondition: Condition<Double>, currentOriginCondition: Condition<SubsystemStateCondition<T>>): Boolean {
         var conflictCase = false
         var originCase = false
 
@@ -53,7 +39,6 @@ class StatePositionBasedConflict<T : Enum<T>>(val originSubsystemPS: Class<out C
         }
 
         return originCase && conflictCase
-
     }
 
     override fun invert(): Conflict<Double, SubsystemStateCondition<T>> {

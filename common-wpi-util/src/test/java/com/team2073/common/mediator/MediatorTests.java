@@ -7,6 +7,7 @@ import com.team2073.common.mediator.conflict.*;
 import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.SubsystemStateCondition;
 import com.team2073.common.test.annon.TestNotWrittenYet;
+import org.apache.commons.lang3.Range;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,7 @@ class MediatorTests {
 
     private void makeConflicts() {
         positionConflicts.add(new PositionStateBasedConflict(PositionSubsystem.class,
-                new PositionBasedCondition(85d, 90d, 95d),
+                new PositionBasedCondition(90, Range.between(85d, 95d)),
                 MediatorTestFixtures.StateSubsystem.class,
                 new StateBasedCondition(State.OPEN),
                 State.CLOSE));
@@ -42,7 +43,7 @@ class MediatorTests {
         stateConflicts.add(new StatePositionBasedConflict(StateSubsystem.class,
                 new StateBasedCondition(State.OPEN),
                 PositionSubsystem.class,
-                new PositionBasedCondition(85, 90, 95), State.CLOSE));
+                new PositionBasedCondition(90, Range.between(85d, 95d)), State.CLOSE));
     }
 
     @BeforeEach
@@ -59,8 +60,8 @@ class MediatorTests {
     public void mediator_SHOULD_AddInverseConflictToConflictMap() {
         TestMediator testMediator = new TestMediator();
 
-        PositionBasedConflict conflict = new PositionBasedConflict(PositionSubsystem.class, new PositionBasedCondition(0,0,0),
-                DeadPositionSubsystem.class, new PositionBasedCondition(0,0,0));
+        PositionBasedConflict conflict = new PositionBasedConflict(PositionSubsystem.class, new PositionBasedCondition(0d, Range.between(0d,0d)),
+                DeadPositionSubsystem.class, new PositionBasedCondition(0,Range.between(0d, 0d)));
 
         testMediator.registerConflict(conflict);
 
@@ -71,7 +72,7 @@ class MediatorTests {
     public void mediator_SHOULD_AddRequestsProperly() {
         TestMediator testMediator = new TestMediator();
 
-        Request request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(0, 0, 0));
+        Request request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(0, Range.between(0d, 0d)));
 
         testMediator.add(request);
 
@@ -82,7 +83,7 @@ class MediatorTests {
     public void mediator_SHOULD_WorkWithoutRegisteringConflicts() {
         TestMediator testMediator = new TestMediator();
         testMediator.registerColleague(positionSubsystem);
-        testMediator.add(new Request<>(PositionSubsystem.class, new PositionBasedCondition(0, 0, 0)));
+        testMediator.add(new Request<>(PositionSubsystem.class, new PositionBasedCondition(0, Range.between(0d, 0d))));
 
         callPeriodic(testMediator, 5);
 
@@ -106,12 +107,12 @@ class MediatorTests {
     public void mediator_SHOULD_RegisterConflictsCorrectly() {
         TestMediator testMediator = new TestMediator();
 
-        Conflict inverseConflict = new PositionBasedConflict(DeadPositionSubsystem.class, new PositionBasedCondition(0, 0, 0),
-                PositionSubsystem.class, new PositionBasedCondition(0, 0, 0));
+        Conflict inverseConflict = new PositionBasedConflict(DeadPositionSubsystem.class, new PositionBasedCondition(0, Range.between(0d, 0d)),
+                PositionSubsystem.class, new PositionBasedCondition(0, Range.between(0d, 0d)));
 
         testMediator.registerConflict(new PositionBasedConflict(PositionSubsystem.class,
-                new PositionBasedCondition(0, 0, 0), DeadPositionSubsystem.class,
-                new PositionBasedCondition(0, 0, 0)));
+                new PositionBasedCondition(0, Range.between(0d, 0d)), DeadPositionSubsystem.class,
+                new PositionBasedCondition(0, Range.between(0d, 0d))));
 
         assertThat(testMediator.getConflictMap().size()).isEqualTo(2);
     }
@@ -121,7 +122,7 @@ class MediatorTests {
         TestMediator testMediator = new TestMediator();
         testMediator.registerColleague(positionSubsystem);
 
-        Request<Double> request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(5, 10, 15));
+        Request<Double> request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(10, Range.between(5d, 15d)));
         testMediator.add(request);
         testMediator.onPeriodic();
 
@@ -145,7 +146,7 @@ class MediatorTests {
         TestMediator testMediator = new TestMediator();
         testMediator.registerColleague(positionSubsystem);
 
-        Request<Double> request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(5, 10, 15));
+        Request<Double> request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(10, Range.between(5d, 15d)));
 
         testMediator.add(request);
         Queue<Deque<Request>> list = testMediator.getExecuteList();
@@ -165,8 +166,8 @@ class MediatorTests {
         testMediator.registerColleague(positionSubsystem);
         testMediator.registerConflict(positionConflicts);
 
-        Request<Double> request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(5, 10, 15));
-        Request<Double> request2 = new Request<>(PositionSubsystem.class, new PositionBasedCondition(0, 5, 10));
+        Request<Double> request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(10, Range.between(5d, 15d)));
+        Request<Double> request2 = new Request<>(PositionSubsystem.class, new PositionBasedCondition(5, Range.between(0d, 10d)));
 
         testMediator.add(request);
         testMediator.onPeriodic();
@@ -188,7 +189,7 @@ class MediatorTests {
         testMediator.registerConflict(positionConflicts);
         testMediator.registerConflict(stateConflicts);
 
-        Request request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(85d, 90d, 95d));
+        Request request = new Request<>(PositionSubsystem.class, new PositionBasedCondition(90, Range.between(85d, 95d)));
         Request request2 = new Request<>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
 
         testMediator.add(request);
@@ -209,7 +210,7 @@ class MediatorTests {
         testMediator.registerConflict(positionConflicts);
         testMediator.registerConflict(stateConflicts);
 
-        Request positionRequest = new Request<>(PositionSubsystem.class, new PositionBasedCondition(85d, 90d, 95d));
+        Request positionRequest = new Request<>(PositionSubsystem.class, new PositionBasedCondition(90, Range.between(85d, 95d)));
         Request stateRequest = new Request<>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
 
         testMediator.add(stateRequest);
@@ -269,9 +270,9 @@ class MediatorTests {
         testMediator.registerColleague(deadPositionSubsystem);
         testMediator.registerConflict(positionConflicts);
 
-        testMediator.add(new Request<>(PositionSubsystem.class, new PositionBasedCondition(30, 35, 40)));
-        testMediator.add(new Request<>(DeadPositionSubsystem.class, new PositionBasedCondition(20, 25, 30)));
-        testMediator.add(new Request<>(PositionSubsystem.class, new PositionBasedCondition(0, 5, 15)));
+        testMediator.add(new Request<>(PositionSubsystem.class, new PositionBasedCondition(35, Range.between(30d ,40d))));
+        testMediator.add(new Request<>(DeadPositionSubsystem.class, new PositionBasedCondition(25, Range.between(20d, 30d))));
+        testMediator.add(new Request<>(PositionSubsystem.class, new PositionBasedCondition(5, Range.between(0d, 10d))));
 
         callPeriodic(testMediator, Mediator.MAX_CONSECUTIVE_PERIODIC_CALLS * 2);
 

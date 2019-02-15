@@ -197,7 +197,9 @@ public class Mediator implements PeriodicRunnable {
                 logger.error("Conflicting Subsystem not registered");
                 return conflicts;
             }
-            boolean isConflicting = possibleConflict.isRequestConflicting(request, subsystemMap.get(possibleConflict.getConflictingSubsystem()).getCurrentCondition());
+            boolean isConflicting = possibleConflict.isRequestConflicting(request,
+                    subsystemMap.get(possibleConflict.getConflictingSubsystem()).getCurrentCondition(),
+                    subsystemMap.get(possibleConflict.getOriginSubsystem()).getCurrentCondition());
             if (isConflicting) {
                 logger.debug("Adding conflicting conflict: [{}].", possibleConflict.getName());
                 conflicts.add(possibleConflict);

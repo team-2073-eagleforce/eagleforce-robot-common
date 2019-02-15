@@ -22,7 +22,7 @@ class PositionStateBasedConflict<T : Enum<T>>(
         return StateBasedCondition(resolveState)
     }
 
-    override fun isRequestConflicting(request: Request<Double>, conflictingCondition: Condition<SubsystemStateCondition<T>>): Boolean {
+    override fun isRequestConflicting(request: Request<Double>, conflictingCondition: Condition<SubsystemStateCondition<T>>, currentOriginCondition: Condition<Double>): Boolean {
         return conflictingCondition.isInCondition(conflictingConditionPS)
                 && originCondition.isInCondition(request.condition)
     }
