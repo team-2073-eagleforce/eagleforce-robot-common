@@ -12,7 +12,7 @@ abstract class Conflict<OT, CT>(
 
     abstract fun invert(): Conflict<CT, OT>
 
-    abstract fun isRequestConflicting(request: Request<OT>, conflictingCondition: Condition<CT>, currentOriginCondition: Condition<OT>): Boolean
+    abstract fun isRequestConflicting(request: Request<OT>, currentConflictingCondition: Condition<CT>, currentOriginCondition: Condition<OT>): Boolean
 
     abstract fun isConditionConflicting(originCondition: Condition<OT>, conflictingCondition: Condition<CT>): Boolean
 

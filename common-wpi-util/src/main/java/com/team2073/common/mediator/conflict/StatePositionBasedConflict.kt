@@ -27,18 +27,8 @@ class StatePositionBasedConflict<T : Enum<T>>(val originSubsystemPS: Class<out C
 
     }
 
-    override fun isRequestConflicting(request: Request<SubsystemStateCondition<T>>, conflictingCondition: Condition<Double>, currentOriginCondition: Condition<SubsystemStateCondition<T>>): Boolean {
-        var conflictCase = false
-        var originCase = false
-
-        if (conflictingCondition.isInCondition(conflictingConditionPS)) {
-            conflictCase = true
-        }
-        if (originCondition.isInCondition(request.condition)) {
-            originCase = true
-        }
-
-        return originCase && conflictCase
+    override fun isRequestConflicting(request: Request<SubsystemStateCondition<T>>, currentConflictingCondition: Condition<Double>, currentOriginCondition: Condition<SubsystemStateCondition<T>>): Boolean {
+        return request.condition.isInCondition(originCondition) && currentConflictingCondition.isInCondition(conflictingConditionPS)
     }
 
     override fun invert(): Conflict<Double, SubsystemStateCondition<T>> {

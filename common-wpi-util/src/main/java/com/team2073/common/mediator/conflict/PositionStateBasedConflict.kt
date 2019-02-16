@@ -5,6 +5,7 @@ import com.team2073.common.mediator.condition.StateBasedCondition
 import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.SubsystemStateCondition
+import org.apache.commons.lang3.Range
 
 class PositionStateBasedConflict<T : Enum<T>>(
         val originSubsystemPS: Class<out ColleagueSubsystem<Double>>,
@@ -22,9 +23,10 @@ class PositionStateBasedConflict<T : Enum<T>>(
         return StateBasedCondition(resolveState)
     }
 
-    override fun isRequestConflicting(request: Request<Double>, conflictingCondition: Condition<SubsystemStateCondition<T>>, currentOriginCondition: Condition<Double>): Boolean {
-        return conflictingCondition.isInCondition(conflictingConditionPS)
-                && originCondition.isInCondition(request.condition)
+    override fun isRequestConflicting(request: Request<Double>, currentConflictingCondition: Condition<SubsystemStateCondition<T>>, currentOriginCondition: Condition<Double>): Boolean {
+        val travelRange: Range<Double> = Range.between(currentOriginCondition.getConditionValue(), request.condition.getConditionValue())
+        return currentConflictingCondition.isInCondition(conflictingConditionPS)
+                && travelRange.contains(originConditionPS.getConditionValue())
     }
 
     override fun invert(): Conflict<SubsystemStateCondition<T>, Double> {

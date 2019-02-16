@@ -26,10 +26,10 @@ class PositionBasedConflict(
 
     }
 
-    override fun isRequestConflicting(request: Request<Double>, conflictingCondition: Condition<Double>, currentOriginCondition: Condition<Double>): Boolean {
-        var range: Range<Double> = Range.between(currentOriginCondition.getConditionValue(), request.condition.getConditionValue())
-        var conflictingRange: Range<Double> = Range.between((conflictingCondition as PositionBasedCondition).range.minimum,
-                conflictingCondition.range.maximum)
+    override fun isRequestConflicting(request: Request<Double>, currentConflictingCondition: Condition<Double>, currentOriginCondition: Condition<Double>): Boolean {
+        val range: Range<Double> = Range.between(currentOriginCondition.getConditionValue(), request.condition.getConditionValue())
+        val conflictingRange: Range<Double> = Range.between((currentConflictingCondition as PositionBasedCondition).range.minimum,
+                currentConflictingCondition.range.maximum)
 
         return range.isOverlappedBy(conflictingRange)
     }
