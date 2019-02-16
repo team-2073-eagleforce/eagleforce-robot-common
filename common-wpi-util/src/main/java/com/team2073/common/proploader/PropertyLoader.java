@@ -259,7 +259,10 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
 
         state = RUNNING;
 
+        log.debug("Refreshing [{}] Property Containers...", containerWrapperMap.values().size());
+
         for (PropertyContainerWrapper wrapper : containerWrapperMap.values()) {
+            log.debug("Refreshing PropertyContainer: [{}]", simpleName(wrapper));
             PropertyLoaderHelper.injectProperties(wrapper);
         }
     }
