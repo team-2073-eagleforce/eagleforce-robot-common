@@ -15,14 +15,10 @@ import com.team2073.common.util.JvmUtil;
 import com.team2073.common.util.ReflectionUtil;
 import com.team2073.common.util.StringUtil;
 import javassist.Modifier;
-import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.builder.ReloadingFileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
-import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.ex.ConversionException;
-import org.apache.commons.configuration2.reloading.PeriodicReloadingTrigger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -39,7 +35,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import static com.team2073.common.util.ClassUtil.*;
 
@@ -310,16 +305,17 @@ class PropertyLoaderHelper {
         }
 
         try {
-            Parameters params = new Parameters();
-
-            ReloadingFileBasedConfigurationBuilder<FileBasedConfiguration> builder =
-                    new ReloadingFileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
-                            .configure(params.fileBased()
-                                    .setFile(propFile));
-            PeriodicReloadingTrigger trigger = new PeriodicReloadingTrigger(builder.getReloadingController(),
-                    null, 1, TimeUnit.SECONDS);
-            trigger.start();
-            return builder.properties(propFile);
+//            Parameters params = new Parameters();
+//
+//            ReloadingFileBasedConfigurationBuilder<FileBasedConfiguration> builder =
+//                    new ReloadingFileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
+//                            .configure(params.fileBased()
+//                                    .setFile(propFile));
+//            PeriodicReloadingTrigger trigger = new PeriodicReloadingTrigger(builder.getReloadingController(),
+//                    null, 1, TimeUnit.SECONDS);
+//            trigger.start();
+//            return builder.properties(propFile);
+            return configBuilder.properties(propFile);
         } catch (ConfigurationException e) {
             throw Ex.illegalState("ConfigurationException occurred creating properties configuration. " +
                     "Property container: [{}]. Property file: [{}].", e);
