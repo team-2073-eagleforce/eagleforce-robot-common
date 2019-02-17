@@ -6,13 +6,15 @@ import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.PositionBasedSubsystem
 import org.apache.commons.lang3.Range
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D
 
 class PositionBasedConflict(
         val originSubsystemP: Class<out ColleagueSubsystem<Double>>,
         val originConditionP: Condition<Double>,
         val conflictingSubsystemP: Class<out ColleagueSubsystem<Double>>,
-        val conflictingConditionP: Condition<Double>) :
-        Conflict<Double, Double>(originSubsystemP, originConditionP, conflictingSubsystemP, conflictingConditionP) {
+        val conflictingConditionP: Condition<Double>,
+        val canInvertP: Boolean) :
+        Conflict<Double, Double>(originSubsystemP, originConditionP, conflictingSubsystemP, conflictingConditionP, canInvertP) {
 
     override fun isConditionConflicting(originCondition: Condition<Double>, conflictingCondition: Condition<Double>): Boolean {
         return originCondition == originConditionP && conflictingCondition == conflictingConditionP
@@ -26,6 +28,40 @@ class PositionBasedConflict(
 
     }
 
+    override fun getOriginInterimResolution(originSubsystem: ColleagueSubsystem<Double>, conflictingSubsystem: ColleagueSubsystem<Double>): Condition<Double> {
+        val originPoint: Vector2D = (originSubsystem as PositionBasedSubsystem).positionToPoint(originSubsystem.getCurrentCondition().getConditionValue())
+        val conflictingPoint: Vector2D = (conflictingSubsystem as PositionBasedSubsystem).positionToPoint(conflictingSubsystem.getCurrentCondition().getConditionValue())
+        val nearestOriginSafeY: Double
+        val nearestConflictSafeY: Double
+        val nearestOriginSafeX: Double
+        val nearestConflictSafeX: Double
+        val originSafetyRange = originSubsystem.getSafetyRange()
+
+        if (originPoint.y > conflictingPoint.y) {
+            nearestOriginSafeY = originPoint.y - originSubsystem.getSafetyRange()
+            nearestConflictSafeY = conflictingPoint.y + conflictingSubsystem.getSafetyRange()
+        } else {
+            nearestOriginSafeY = originPoint.y + originSubsystem.getSafetyRange()
+            nearestConflictSafeY = conflictingPoint.y - conflictingSubsystem.getSafetyRange()
+        }
+
+        if(originPoint.x > conflictingPoint.x){
+            nearestOriginSafeX = originPoint.x - originSubsystem.getSafetyRange()
+            nearestConflictSafeX = conflictingPoint.x + conflictingSubsystem.getSafetyRange()
+        }else{
+            nearestOriginSafeX = originPoint.x + originSubsystem.getSafetyRange()
+            nearestConflictSafeX = conflictingPoint.x - conflictingSubsystem.getSafetyRange()
+        }
+
+        val nearestOriginSafePoint = Vector2D(nearestOriginSafeX, nearestOriginSafeY)
+        val nearestConflictSafePoint = Vector2D(nearestConflictSafeX, nearestConflictSafeY)
+
+        val nearestOriginSafePosition = originSubsystem.pointToPosition(nearestOriginSafePoint);
+
+        return PositionBasedCondition(nearestOriginSafePosition,
+                Range.between(nearestOriginSafePosition - originSafetyRange, nearestOriginSafePosition + originSafetyRange))
+    }
+
     override fun isRequestConflicting(request: Request<Double>, currentConflictingCondition: Condition<Double>, currentOriginCondition: Condition<Double>): Boolean {
         val range: Range<Double> = Range.between(currentOriginCondition.getConditionValue(), request.condition.getConditionValue())
         val conflictingRange: Range<Double> = Range.between((currentConflictingCondition as PositionBasedCondition).range.minimum,
@@ -35,6 +71,6 @@ class PositionBasedConflict(
     }
 
     override fun invert(): Conflict<Double, Double> {
-        return PositionBasedConflict(conflictingSubsystemP, conflictingConditionP, originSubsystemP, originConditionP)
+        return PositionBasedConflict(conflictingSubsystemP, conflictingConditionP, originSubsystemP, originConditionP, canInvertP)
     }
 }

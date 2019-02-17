@@ -8,7 +8,8 @@ abstract class Conflict<OT, CT>(
         val originSubsystem: Class<out ColleagueSubsystem<OT>>,
         val originCondition: Condition<OT>,
         val conflictingSubsystem: Class<out ColleagueSubsystem<CT>>,
-        val conflictingCondition: Condition<CT>) {
+        val conflictingCondition: Condition<CT>,
+        val canInvert: Boolean) {
 
     abstract fun invert(): Conflict<CT, OT>
 
@@ -21,4 +22,6 @@ abstract class Conflict<OT, CT>(
     fun getName(): String {
         return "ORIGIN SUBSYSTEM: ${originSubsystem.simpleName} IN $originCondition conflicts with ${conflictingSubsystem.simpleName} IN $conflictingCondition"
     }
+
+    abstract fun getOriginInterimResolution(originSubsystem: ColleagueSubsystem<OT>, conflictingSubsystem: ColleagueSubsystem<CT>): Condition<OT>
 }

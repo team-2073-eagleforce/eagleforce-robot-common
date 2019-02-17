@@ -12,11 +12,16 @@ class StateBasedConflict<OT : Enum<OT>, CT : Enum<CT>>(
         val conflictingSubsystemS: Class<ColleagueSubsystem<SubsystemStateCondition<CT>>>,
         val conflictingConditionS: Condition<SubsystemStateCondition<CT>>,
         val resolveState: SubsystemStateCondition<CT>?,
-        val inverseResolveState: SubsystemStateCondition<OT>?) :
-        Conflict<SubsystemStateCondition<OT>, SubsystemStateCondition<CT>>(originSubsystemS, originConditionS, conflictingSubsystemS, conflictingConditionS) {
+        val inverseResolveState: SubsystemStateCondition<OT>?,
+        val canInvertS: Boolean) :
+        Conflict<SubsystemStateCondition<OT>, SubsystemStateCondition<CT>>(originSubsystemS, originConditionS, conflictingSubsystemS, conflictingConditionS, canInvertS) {
+
+    override fun getOriginInterimResolution(originSubsystem: ColleagueSubsystem<SubsystemStateCondition<OT>>, conflictingSubsystem: ColleagueSubsystem<SubsystemStateCondition<CT>>): Condition<SubsystemStateCondition<OT>> {
+        return StateBasedCondition(originSubsystem.getCurrentCondition().getConditionValue())
+    }
 
     override fun invert(): Conflict<SubsystemStateCondition<CT>, SubsystemStateCondition<OT>> {
-        return StateBasedConflict(conflictingSubsystemS, conflictingConditionS, originSubsystemS, originConditionS, inverseResolveState, resolveState)
+        return StateBasedConflict(conflictingSubsystemS, conflictingConditionS, originSubsystemS, originConditionS, inverseResolveState, resolveState, canInvertS)
     }
 
     override fun isRequestConflicting(request: Request<SubsystemStateCondition<OT>>, currentConflictingCondition: Condition<SubsystemStateCondition<CT>>, currentOriginCondition: Condition<SubsystemStateCondition<OT>>): Boolean {

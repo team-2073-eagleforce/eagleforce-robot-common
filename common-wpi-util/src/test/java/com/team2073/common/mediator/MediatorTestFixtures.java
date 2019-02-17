@@ -7,17 +7,68 @@ import com.team2073.common.mediator.subsys.PositionBasedSubsystem;
 import com.team2073.common.mediator.subsys.StateBasedSubsystem;
 import com.team2073.common.mediator.subsys.SubsystemStateCondition;
 import org.apache.commons.lang3.Range;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.jetbrains.annotations.NotNull;
 
 public class MediatorTestFixtures {
 
-    static class PositionSubsystem implements PositionBasedSubsystem {
+    static class LinearPositionSubsystem implements PositionBasedSubsystem {
 
+        private Double setpoint;
         private Double currentPosition = 0d;
 
         @Override
         public void set(Double place) {
-            currentPosition = place;
+            setpoint = place;
+        }
+
+        @Override
+        public double getSafetyRange() {
+            return 0;
+        }
+
+        @Override
+        public void onPeriodic() {
+            if (setpoint == null) {
+                return;
+            }
+
+            if(!currentPosition.equals(setpoint)) {
+                if (currentPosition > setpoint) {
+                    currentPosition--;
+                } else {
+                    currentPosition++;
+                }
+            }
+
+        }
+
+        @NotNull
+        @Override
+        public Condition<Double> getCurrentCondition() {
+            return new PositionBasedCondition(currentPosition, Range.between(currentPosition - getSafetyRange(), currentPosition + getSafetyRange()));
+        }
+
+        @NotNull
+        @Override
+        public Vector2D positionToPoint(double position) {
+            return new Vector2D(0, currentPosition);
+        }
+
+        @Override
+        public double pointToPosition(@NotNull Vector2D point) {
+            return point.getY();
+        }
+    }
+
+    static class HorizontalPositionSubsystem implements PositionBasedSubsystem {
+
+        private Double setpoint;
+        private Double currentPosition = 0d;
+
+        @Override
+        public void set(Double place) {
+            setpoint = place;
         }
 
         @Override
@@ -28,12 +79,34 @@ public class MediatorTestFixtures {
         @Override
         public void onPeriodic() {
 
+            if (setpoint == null) {
+                return;
+            }
+
+            if(!setpoint.equals(currentPosition)) {
+                if (currentPosition > setpoint) {
+                    currentPosition--;
+                } else {
+                    currentPosition++;
+                }
+            }
         }
 
         @NotNull
         @Override
         public Condition<Double> getCurrentCondition() {
             return new PositionBasedCondition(currentPosition, Range.between(currentPosition - getSafetyRange(), currentPosition + getSafetyRange()));
+        }
+
+        @NotNull
+        @Override
+        public Vector2D positionToPoint(double position) {
+            return new Vector2D(currentPosition, 0);
+        }
+
+        @Override
+        public double pointToPosition(@NotNull Vector2D point) {
+            return point.getX();
         }
     }
 
@@ -56,7 +129,18 @@ public class MediatorTestFixtures {
         @NotNull
         @Override
         public Condition<Double> getCurrentCondition() {
-            return new PositionBasedCondition(0, Range.between(0d,0d));
+            return new PositionBasedCondition(0, Range.between(0d, 0d));
+        }
+
+        @NotNull
+        @Override
+        public Vector2D positionToPoint(double position) {
+            return new Vector2D(0, 0);
+        }
+
+        @Override
+        public double pointToPosition(@NotNull Vector2D point) {
+            return 0;
         }
     }
 

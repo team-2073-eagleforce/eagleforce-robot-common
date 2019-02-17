@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.mediator.condition.Condition;
 import com.team2073.common.mediator.conflict.Conflict;
+import com.team2073.common.mediator.conflict.PositionBasedConflict;
 import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.ColleagueSubsystem;
 import com.team2073.common.periodic.PeriodicRunnable;
@@ -71,13 +72,15 @@ public class Mediator implements PeriodicRunnable {
                 conflictMap.put(conflict.getOriginSubsystem(), originConflicts);
                 logger.debug("Creating conflict list for: [{}] and [{}]", conflict.getOriginSubsystem());
             }
-            if(conflictMap.get(conflict.getConflictingSubsystem()) == null){
+            if (conflictMap.get(conflict.getConflictingSubsystem()) == null) {
                 ArrayList<Conflict> inverseConflicts = new ArrayList<>();
                 conflictMap.put(conflict.getConflictingSubsystem(), inverseConflicts);
                 logger.debug("Creating conflict list for: [{}]", conflict.getConflictingSubsystem());
             }
             conflictMap.get(conflict.getOriginSubsystem()).add(conflict);
-            conflictMap.get(conflict.getConflictingSubsystem()).add(conflict.invert());
+            if (conflict.getCanInvert()) {
+                conflictMap.get(conflict.getConflictingSubsystem()).add(conflict.invert());
+            }
             logger.debug("Adding conflict: [{}] and [{}]", conflict.getName(), conflict.invert().getName());
 
         }
@@ -101,7 +104,6 @@ public class Mediator implements PeriodicRunnable {
 
         requestList.add(request);
         executeList.add(requestList);
-
     }
 
     /**
@@ -112,8 +114,6 @@ public class Mediator implements PeriodicRunnable {
      */
     @Override
     public void onPeriodic() {
-//        Iterator<Deque<Request>> exeItr = executeList.iterator();
-
         Deque<Request> currentRequestList = executeList.peekFirst();
         if (currentRequestList != null) {
             logger.trace("Iterating through requestList [{}]", Arrays.toString(currentRequestList.toArray()));
@@ -159,7 +159,12 @@ public class Mediator implements PeriodicRunnable {
 
         if (conflicts.isEmpty()) {
             logger.debug("Executing request [{}]. Conflicts: [{}]", request.getName(), conflicts.size());
+
             subsystemMap.get(subsystem).set(condition.getConditionValue());
+            if (request.getParallelRequest() != null) {
+                logger.debug("Executing parallel Request [{}]", request.getParallelRequest().getName());
+                subsystemMap.get(request.getParallelRequest().getSubsystem()).set(request.getParallelRequest().getCondition().getConditionValue());
+            }
         } else {
             for (Conflict conflict : conflicts) {
                 logger.debug("Conflict [{}]", conflict.toString());
@@ -214,9 +219,16 @@ public class Mediator implements PeriodicRunnable {
      * @return a {@link Request} that resolves the {@link Conflict}
      */
     private Request createConflictRequest(Conflict conflict) {
-        return new Request<>(conflict.getConflictingSubsystem(),
+        Request request = new Request<>(conflict.getConflictingSubsystem(),
                 conflict.getResolution(conflict.getConflictingCondition(),
                         subsystemMap.get(conflict.getConflictingSubsystem())));
+        Request conflictingRequest = new Request<>(conflict.getOriginSubsystem(), conflict.getOriginInterimResolution(subsystemMap.get(conflict.getOriginSubsystem()),
+                subsystemMap.get(conflict.getConflictingSubsystem())));
+
+        if (conflict instanceof PositionBasedConflict) {
+            request.setParallelRequest(conflictingRequest);
+        }
+        return request;
     }
 
     @VisibleForTesting

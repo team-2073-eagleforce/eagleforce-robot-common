@@ -1,9 +1,11 @@
 package com.team2073.common.mediator.conflict
 
 import com.team2073.common.mediator.condition.Condition
+import com.team2073.common.mediator.condition.PositionBasedCondition
 import com.team2073.common.mediator.condition.StateBasedCondition
 import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
+import com.team2073.common.mediator.subsys.PositionBasedSubsystem
 import com.team2073.common.mediator.subsys.SubsystemStateCondition
 import org.apache.commons.lang3.Range
 
@@ -12,8 +14,15 @@ class PositionStateBasedConflict<T : Enum<T>>(
         val originConditionPS: Condition<Double>,
         val conflictingSubsystemPS: Class<out ColleagueSubsystem<SubsystemStateCondition<T>>>,
         val conflictingConditionPS: Condition<SubsystemStateCondition<T>>,
-        val resolveState: SubsystemStateCondition<T>?) :
-        Conflict<Double, SubsystemStateCondition<T>>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS) {
+        val resolveState: SubsystemStateCondition<T>?,
+        val canInvertPS: Boolean) :
+        Conflict<Double, SubsystemStateCondition<T>>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS, canInvertPS) {
+
+    override fun getOriginInterimResolution(originSubsystem: ColleagueSubsystem<Double>, conflictingSubsystem: ColleagueSubsystem<SubsystemStateCondition<T>>): Condition<Double> {
+        val originSafetyRange: Double = (originSubsystem as PositionBasedSubsystem).getSafetyRange()
+        return PositionBasedCondition(originSubsystem.getCurrentCondition().getConditionValue(),
+                Range.between(originSubsystem.getCurrentCondition().getConditionValue() - originSafetyRange, originSubsystem.getCurrentCondition().getConditionValue() + originSafetyRange))
+    }
 
     override fun isConditionConflicting(originCondition: Condition<Double>, conflictingCondition: Condition<SubsystemStateCondition<T>>): Boolean {
         return originCondition == originConditionPS && conflictingCondition == conflictingConditionPS
@@ -30,6 +39,6 @@ class PositionStateBasedConflict<T : Enum<T>>(
     }
 
     override fun invert(): Conflict<SubsystemStateCondition<T>, Double> {
-        return StatePositionBasedConflict(conflictingSubsystemPS, conflictingConditionPS, originSubsystemPS, originConditionPS, null)
+        return StatePositionBasedConflict(conflictingSubsystemPS, conflictingConditionPS, originSubsystemPS, originConditionPS, null, canInvertPS)
     }
 }
