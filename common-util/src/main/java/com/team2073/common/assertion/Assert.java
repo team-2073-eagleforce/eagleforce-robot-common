@@ -1,5 +1,7 @@
 package com.team2073.common.assertion;
 
+import com.team2073.common.util.Ex;
+
 public abstract class Assert {
 
 	/**
@@ -21,6 +23,16 @@ public abstract class Assert {
 	 */
 	public static void assertNotNull(Object variable, String variableName) {
 		if(variable == null)
-			throw new IllegalArgumentException(String.format("[%s] must not be null.", variableName));
+			throw Ex.illegalArg("[%s] must not be null.", variableName);
+	}
+	
+	public static void assertNotNegative(double number, String variableName) {
+		if (number < 0)
+			throw Ex.illegalArg("[%s] must be positive.", variableName);
+	}
+	
+	public static void assertNotPositive(double number, String variableName) {
+		if (number > 0)
+			throw Ex.illegalArg("[%s] must be positive.", variableName);
 	}
 }
