@@ -4,7 +4,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.mediator.condition.Condition;
 import com.team2073.common.mediator.conflict.Conflict;
-import com.team2073.common.mediator.conflict.PositionBasedConflict;
 import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.ColleagueSubsystem;
 import com.team2073.common.periodic.PeriodicRunnable;
@@ -225,7 +224,7 @@ public class Mediator implements PeriodicRunnable {
         Request conflictingRequest = new Request<>(conflict.getOriginSubsystem(), conflict.getOriginInterimResolution(subsystemMap.get(conflict.getOriginSubsystem()),
                 subsystemMap.get(conflict.getConflictingSubsystem())));
 
-        if (conflict instanceof PositionBasedConflict) {
+        if (conflict.getParallelism()) {
             request.setParallelRequest(conflictingRequest);
         }
         return request;

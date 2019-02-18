@@ -9,7 +9,8 @@ abstract class Conflict<OT, CT>(
         val originCondition: Condition<OT>,
         val conflictingSubsystem: Class<out ColleagueSubsystem<CT>>,
         val conflictingCondition: Condition<CT>,
-        val canInvert: Boolean) {
+        val canInvert: Boolean,
+        val parallelism: Boolean) {
 
     abstract fun invert(): Conflict<CT, OT>
 

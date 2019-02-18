@@ -13,8 +13,9 @@ class PositionBasedConflict(
         val originConditionP: Condition<Double>,
         val conflictingSubsystemP: Class<out ColleagueSubsystem<Double>>,
         val conflictingConditionP: Condition<Double>,
-        val canInvertP: Boolean) :
-        Conflict<Double, Double>(originSubsystemP, originConditionP, conflictingSubsystemP, conflictingConditionP, canInvertP) {
+        val canInvertP: Boolean,
+        val parallelismP: Boolean) :
+        Conflict<Double, Double>(originSubsystemP, originConditionP, conflictingSubsystemP, conflictingConditionP, canInvertP, parallelismP) {
 
     override fun isConditionConflicting(originCondition: Condition<Double>, conflictingCondition: Condition<Double>): Boolean {
         return originCondition == originConditionP && conflictingCondition == conflictingConditionP
@@ -36,6 +37,8 @@ class PositionBasedConflict(
         val nearestOriginSafeX: Double
         val nearestConflictSafeX: Double
         val originSafetyRange = originSubsystem.getSafetyRange()
+        val originResolution = getResolution(originSubsystem.getCurrentCondition(), originSubsystem)
+        val isOriginTop = false
 
         if (originPoint.y > conflictingPoint.y) {
             nearestOriginSafeY = originPoint.y - originSubsystem.getSafetyRange()
@@ -56,7 +59,8 @@ class PositionBasedConflict(
         val nearestOriginSafePoint = Vector2D(nearestOriginSafeX, nearestOriginSafeY)
         val nearestConflictSafePoint = Vector2D(nearestConflictSafeX, nearestConflictSafeY)
 
-        val nearestOriginSafePosition = originSubsystem.pointToPosition(nearestOriginSafePoint);
+        val nearestOriginSafePosition = originSubsystem.pointToPosition(nearestOriginSafePoint)
+
 
         return PositionBasedCondition(nearestOriginSafePosition,
                 Range.between(nearestOriginSafePosition - originSafetyRange, nearestOriginSafePosition + originSafetyRange))
@@ -71,6 +75,6 @@ class PositionBasedConflict(
     }
 
     override fun invert(): Conflict<Double, Double> {
-        return PositionBasedConflict(conflictingSubsystemP, conflictingConditionP, originSubsystemP, originConditionP, canInvertP)
+        return PositionBasedConflict(conflictingSubsystemP, conflictingConditionP, originSubsystemP, originConditionP, canInvertP, parallelismP)
     }
 }
