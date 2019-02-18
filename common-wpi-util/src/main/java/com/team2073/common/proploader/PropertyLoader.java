@@ -133,11 +133,6 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
     public <R, T extends Class<R>> R registerPropContainer(T propContainerClass) {
         Assert.assertNotNull(propContainerClass, "propContainerClass");
 
-        if (state == RUNNING || state == FAILED) {
-            throw Ex.illegalState("Cannot register property containers after [{}] has already been ran.",
-                    simpleName(PropertyLoader.class));
-        }
-
         init(propContainerClass);
 
         PropertyContainerWrapper propWrapper = containerWrapperMap.get(propContainerClass);
@@ -145,6 +140,11 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
         if (propWrapper != null) {
             log.debug("[{}] class [{}] already registered.", simpleName(this), simpleName(propContainerClass));
             return (R) propWrapper.getPropContainer();
+        }
+    
+        if (state == RUNNING || state == FAILED) {
+            throw Ex.illegalState("Cannot register property containers after [{}] has already been ran.",
+                    simpleName(PropertyLoader.class));
         }
 
         log.debug("Creating property container from class [{}].", propContainerClass.getName());
