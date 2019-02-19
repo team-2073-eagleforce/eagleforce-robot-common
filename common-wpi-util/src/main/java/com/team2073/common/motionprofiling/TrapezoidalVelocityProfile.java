@@ -66,7 +66,7 @@ public class TrapezoidalVelocityProfile {
                 currentVelocity = maxVelocity;
             currentPosition += currentVelocity * timeStep + (.5) * currentAcceleration * Math.pow(timeStep, 2);
         } else if (currentTime >= timeToAccelerate && currentTime <= totalTime - timeToAccelerate) {
-
+            currentAcceleration = 0;
             currentVelocity = maxVelocity;
             currentPosition += currentVelocity * timeStep;
         } else {
