@@ -24,5 +24,5 @@ abstract class Conflict<OT, CT>(
         return "ORIGIN SUBSYSTEM: ${originSubsystem.simpleName} IN $originCondition conflicts with ${conflictingSubsystem.simpleName} IN $conflictingCondition"
     }
 
-    abstract fun getOriginInterimResolution(originSubsystem: ColleagueSubsystem<OT>, conflictingSubsystem: ColleagueSubsystem<CT>): Condition<OT>
+    abstract fun getOriginParallelResolution(originSubsystem: ColleagueSubsystem<OT>, conflictingSubsystem: ColleagueSubsystem<CT>): Condition<OT>
 }

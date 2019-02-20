@@ -59,6 +59,18 @@ public class MediatorTestFixtures {
         public double pointToPosition(@NotNull Vector2D point) {
             return point.getY();
         }
+
+        @NotNull
+        @Override
+        public Vector2D getLowerLeftBound() {
+            return new Vector2D(0, 0);
+        }
+
+        @NotNull
+        @Override
+        public Vector2D getUpperRightBound() {
+            return new Vector2D(0,100);
+        }
     }
 
     static class HorizontalPositionSubsystem implements PositionBasedSubsystem {
@@ -108,6 +120,18 @@ public class MediatorTestFixtures {
         public double pointToPosition(@NotNull Vector2D point) {
             return point.getX();
         }
+
+        @NotNull
+        @Override
+        public Vector2D getLowerLeftBound() {
+            return new Vector2D(0, 0);
+        }
+
+        @NotNull
+        @Override
+        public Vector2D getUpperRightBound() {
+            return new Vector2D(100, 0);
+        }
     }
 
     static class DeadPositionSubsystem implements PositionBasedSubsystem {
@@ -141,6 +165,18 @@ public class MediatorTestFixtures {
         @Override
         public double pointToPosition(@NotNull Vector2D point) {
             return 0;
+        }
+
+        @NotNull
+        @Override
+        public Vector2D getLowerLeftBound() {
+            return new Vector2D(0, 0);
+        }
+
+        @NotNull
+        @Override
+        public Vector2D getUpperRightBound() {
+            return new Vector2D(0, 0);
         }
     }
 

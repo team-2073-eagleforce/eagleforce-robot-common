@@ -160,9 +160,11 @@ public class Mediator implements PeriodicRunnable {
             logger.debug("Executing request [{}]. Conflicts: [{}]", request.getName(), conflicts.size());
 
             subsystemMap.get(subsystem).set(condition.getConditionValue());
-            if (request.getParallelRequest() != null) {
-                logger.debug("Executing parallel Request [{}]", request.getParallelRequest().getName());
-                subsystemMap.get(request.getParallelRequest().getSubsystem()).set(request.getParallelRequest().getCondition().getConditionValue());
+            if (request.getParallelConflict() != null) {
+                Conflict parallelConflict = request.getParallelConflict();
+                logger.debug("Executing parallel Conflict [{}]", parallelConflict.getName());
+                subsystemMap.get(parallelConflict.getOriginSubsystem()).set(parallelConflict.getOriginParallelResolution(subsystemMap.get(parallelConflict.getOriginSubsystem()),
+                        subsystemMap.get(parallelConflict.getConflictingSubsystem())).getConditionValue());
             }
         } else {
             for (Conflict conflict : conflicts) {
@@ -221,11 +223,9 @@ public class Mediator implements PeriodicRunnable {
         Request request = new Request<>(conflict.getConflictingSubsystem(),
                 conflict.getResolution(conflict.getConflictingCondition(),
                         subsystemMap.get(conflict.getConflictingSubsystem())));
-        Request conflictingRequest = new Request<>(conflict.getOriginSubsystem(), conflict.getOriginInterimResolution(subsystemMap.get(conflict.getOriginSubsystem()),
-                subsystemMap.get(conflict.getConflictingSubsystem())));
 
         if (conflict.getParallelism()) {
-            request.setParallelRequest(conflictingRequest);
+            request.setParallelConflict(conflict);
         }
         return request;
     }

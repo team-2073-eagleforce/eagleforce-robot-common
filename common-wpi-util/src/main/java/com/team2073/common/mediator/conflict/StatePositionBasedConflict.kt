@@ -18,7 +18,7 @@ class StatePositionBasedConflict<T : Enum<T>>(val originSubsystemPS: Class<out C
                                               val parallelismSP: Boolean) :
         Conflict<SubsystemStateCondition<T>, Double>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS, canInvertPS, parallelismSP){
 
-    override fun getOriginInterimResolution(originSubsystem: ColleagueSubsystem<SubsystemStateCondition<T>>, conflictingSubsystem: ColleagueSubsystem<Double>): Condition<SubsystemStateCondition<T>> {
+    override fun getOriginParallelResolution(originSubsystem: ColleagueSubsystem<SubsystemStateCondition<T>>, conflictingSubsystem: ColleagueSubsystem<Double>): Condition<SubsystemStateCondition<T>> {
         return StateBasedCondition(originSubsystem.getCurrentCondition().getConditionValue())
     }
 

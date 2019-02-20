@@ -29,38 +29,28 @@ class PositionBasedConflict(
 
     }
 
-    override fun getOriginInterimResolution(originSubsystem: ColleagueSubsystem<Double>, conflictingSubsystem: ColleagueSubsystem<Double>): Condition<Double> {
+    override fun getOriginParallelResolution(originSubsystem: ColleagueSubsystem<Double>, conflictingSubsystem: ColleagueSubsystem<Double>): Condition<Double> {
         val originPoint: Vector2D = (originSubsystem as PositionBasedSubsystem).positionToPoint(originSubsystem.getCurrentCondition().getConditionValue())
         val conflictingPoint: Vector2D = (conflictingSubsystem as PositionBasedSubsystem).positionToPoint(conflictingSubsystem.getCurrentCondition().getConditionValue())
         val nearestOriginSafeY: Double
-        val nearestConflictSafeY: Double
         val nearestOriginSafeX: Double
-        val nearestConflictSafeX: Double
         val originSafetyRange = originSubsystem.getSafetyRange()
-        val originResolution = getResolution(originSubsystem.getCurrentCondition(), originSubsystem)
-        val isOriginTop = false
+        val conflictingSafetyRange = conflictingSubsystem.getSafetyRange()
 
-        if (originPoint.y > conflictingPoint.y) {
-            nearestOriginSafeY = originPoint.y - originSubsystem.getSafetyRange()
-            nearestConflictSafeY = conflictingPoint.y + conflictingSubsystem.getSafetyRange()
+        nearestOriginSafeY = if (originPoint.y > conflictingPoint.y) {
+            conflictingPoint.y - conflictingSafetyRange - originSubsystem.getSafetyRange()
         } else {
-            nearestOriginSafeY = originPoint.y + originSubsystem.getSafetyRange()
-            nearestConflictSafeY = conflictingPoint.y - conflictingSubsystem.getSafetyRange()
+            conflictingPoint.y + conflictingSafetyRange + originSubsystem.getSafetyRange()
         }
 
-        if(originPoint.x > conflictingPoint.x){
-            nearestOriginSafeX = originPoint.x - originSubsystem.getSafetyRange()
-            nearestConflictSafeX = conflictingPoint.x + conflictingSubsystem.getSafetyRange()
+        nearestOriginSafeX = if(originPoint.x > conflictingPoint.x){
+            conflictingPoint.x - conflictingSafetyRange - originSubsystem.getSafetyRange()
         }else{
-            nearestOriginSafeX = originPoint.x + originSubsystem.getSafetyRange()
-            nearestConflictSafeX = conflictingPoint.x - conflictingSubsystem.getSafetyRange()
+            conflictingPoint.x + conflictingSafetyRange + originSubsystem.getSafetyRange()
         }
 
         val nearestOriginSafePoint = Vector2D(nearestOriginSafeX, nearestOriginSafeY)
-        val nearestConflictSafePoint = Vector2D(nearestConflictSafeX, nearestConflictSafeY)
-
         val nearestOriginSafePosition = originSubsystem.pointToPosition(nearestOriginSafePoint)
-
 
         return PositionBasedCondition(nearestOriginSafePosition,
                 Range.between(nearestOriginSafePosition - originSafetyRange, nearestOriginSafePosition + originSafetyRange))

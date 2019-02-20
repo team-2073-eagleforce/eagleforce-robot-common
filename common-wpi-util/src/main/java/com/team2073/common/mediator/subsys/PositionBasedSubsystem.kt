@@ -6,6 +6,10 @@ interface PositionBasedSubsystem : ColleagueSubsystem<Double> {
 
     fun getSafetyRange(): Double
 
+    fun getLowerLeftBound(): Vector2D
+
+    fun getUpperRightBound(): Vector2D
+
     fun positionToPoint(position: Double): Vector2D
 
     fun pointToPosition(point: Vector2D): Double
