@@ -24,7 +24,7 @@ public class MediatorTestFixtures {
 
         @Override
         public double getSafetyRange() {
-            return 0;
+            return 5;
         }
 
         @Override
@@ -32,6 +32,8 @@ public class MediatorTestFixtures {
             if (setpoint == null) {
                 return;
             }
+
+            System.out.println("linear: " + currentPosition);
 
             if(!currentPosition.equals(setpoint)) {
                 if (currentPosition > setpoint) {
@@ -59,21 +61,60 @@ public class MediatorTestFixtures {
         public double pointToPosition(@NotNull Vector2D point) {
             return point.getY();
         }
+    }
 
-        @NotNull
+    static class LinearPositionSubsystem2 implements PositionBasedSubsystem {
+
+        private Double setpoint;
+        private Double currentPosition = 0d;
+
         @Override
-        public Vector2D getLowerLeftBound() {
-            return new Vector2D(0, 0);
+        public void set(Double place) {
+            setpoint = place;
+        }
+
+        @Override
+        public double getSafetyRange() {
+            return 5;
+        }
+
+        @Override
+        public void onPeriodic() {
+            if (setpoint == null) {
+                return;
+            }
+
+            System.out.println("linear2: " + currentPosition);
+
+            if (!currentPosition.equals(setpoint)) {
+                if (currentPosition > setpoint) {
+                    currentPosition--;
+                } else {
+                    currentPosition++;
+                }
+            }
+
         }
 
         @NotNull
         @Override
-        public Vector2D getUpperRightBound() {
-            return new Vector2D(0,100);
+        public Condition<Double> getCurrentCondition() {
+            return new PositionBasedCondition(currentPosition, Range.between(currentPosition - getSafetyRange(), currentPosition + getSafetyRange()));
+        }
+
+        @NotNull
+        @Override
+        public Vector2D positionToPoint(double position) {
+            return new Vector2D(0, currentPosition);
+        }
+
+        @Override
+        public double pointToPosition(@NotNull Vector2D point) {
+            return point.getY();
         }
     }
 
-    static class HorizontalPositionSubsystem implements PositionBasedSubsystem {
+        static class HorizontalPositionSubsystem implements PositionBasedSubsystem {
 
         private Double setpoint;
         private Double currentPosition = 0d;
@@ -94,6 +135,8 @@ public class MediatorTestFixtures {
             if (setpoint == null) {
                 return;
             }
+
+            System.out.println("horizontal: " + currentPosition);
 
             if(!setpoint.equals(currentPosition)) {
                 if (currentPosition > setpoint) {
@@ -119,18 +162,6 @@ public class MediatorTestFixtures {
         @Override
         public double pointToPosition(@NotNull Vector2D point) {
             return point.getX();
-        }
-
-        @NotNull
-        @Override
-        public Vector2D getLowerLeftBound() {
-            return new Vector2D(0, 0);
-        }
-
-        @NotNull
-        @Override
-        public Vector2D getUpperRightBound() {
-            return new Vector2D(100, 0);
         }
     }
 
@@ -165,18 +196,6 @@ public class MediatorTestFixtures {
         @Override
         public double pointToPosition(@NotNull Vector2D point) {
             return 0;
-        }
-
-        @NotNull
-        @Override
-        public Vector2D getLowerLeftBound() {
-            return new Vector2D(0, 0);
-        }
-
-        @NotNull
-        @Override
-        public Vector2D getUpperRightBound() {
-            return new Vector2D(0, 0);
         }
     }
 

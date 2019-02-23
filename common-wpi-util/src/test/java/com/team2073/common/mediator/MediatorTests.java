@@ -20,6 +20,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class MediatorTests {
     private LinearPositionSubsystem linearPositionSubsystem = new LinearPositionSubsystem();
+    private LinearPositionSubsystem2 linearPositionSubsystem2 = new LinearPositionSubsystem2();
     private HorizontalPositionSubsystem horizontalPositionSubsystem = new HorizontalPositionSubsystem();
     private StateSubsystem stateSubsystem = new StateSubsystem();
     private StateSubsystemDeux stateSubsystemDeux = new StateSubsystemDeux();
@@ -176,11 +177,6 @@ class MediatorTests {
         TestMediator testMediator = new TestMediator();
         testMediator.registerColleague(stateSubsystem);
         testMediator.registerColleague(linearPositionSubsystem);
-        testMediator.registerConflict(new PositionStateBasedConflict(LinearPositionSubsystem.class,
-                new PositionBasedCondition(90, Range.between(85d, 95d)),
-                MediatorTestFixtures.StateSubsystem.class,
-                new StateBasedCondition(State.OPEN),
-                State.CLOSE, true, false));
         testMediator.registerConflict(new StatePositionBasedConflict(StateSubsystem.class,
                 new StateBasedCondition(State.OPEN),
                 LinearPositionSubsystem.class,
@@ -189,12 +185,12 @@ class MediatorTests {
         Request request = new Request<>(LinearPositionSubsystem.class, new PositionBasedCondition(90, Range.between(85d, 95d)));
         Request request2 = new Request<>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
 
-        testMediator.add(request);
         testMediator.add(request2);
+        testMediator.add(request);
         Queue<Deque<Request>> list = testMediator.getExecuteList();
         assertThat(list.size()).isEqualTo(2);
 
-        callPeriodic(1, testMediator, linearPositionSubsystem);
+        callPeriodic(4, testMediator, linearPositionSubsystem);
 
         System.out.println(Arrays.toString(testMediator.getExecuteList().toArray()));
 
@@ -210,11 +206,11 @@ class MediatorTests {
                 new PositionBasedCondition(90, Range.between(85d, 95d)),
                 MediatorTestFixtures.StateSubsystem.class,
                 new StateBasedCondition(State.OPEN),
-                State.CLOSE, true, false));
+                State.CLOSE, false, false));
         testMediator.registerConflict(new StatePositionBasedConflict(StateSubsystem.class,
                 new StateBasedCondition(State.OPEN),
                 LinearPositionSubsystem.class,
-                new PositionBasedCondition(90, Range.between(85d, 95d)), State.CLOSE, true, false));
+                new PositionBasedCondition(90, Range.between(85d, 95d)), State.CLOSE, false, false));
 
         Request positionRequest = new Request<>(LinearPositionSubsystem.class, new PositionBasedCondition(90, Range.between(85d, 95d)));
         Request stateRequest = new Request<State>(StateSubsystem.class, new StateBasedCondition(State.OPEN));
@@ -293,19 +289,19 @@ class MediatorTests {
     @Test
     public void mediator_SHOULD_HandlePositionBasedConflict_WITH_ParallelActions() {
         TestMediator testMediator = new TestMediator();
-        testMediator.registerColleague(linearPositionSubsystem, horizontalPositionSubsystem);
-        testMediator.registerConflict(new PositionBasedConflict(HorizontalPositionSubsystem.class,
+        testMediator.registerColleague(linearPositionSubsystem, linearPositionSubsystem2);
+        testMediator.registerConflict(new PositionBasedConflict(LinearPositionSubsystem.class,
                 new PositionBasedCondition(10, Range.between(5d, 20d)),
-                LinearPositionSubsystem.class,
-                new PositionBasedCondition(10, Range.between(5d, 20d)), false, true));
+                LinearPositionSubsystem2.class,
+                new PositionBasedCondition(10, Range.between(5d, 20d)), true, true));
 
-        testMediator.add(new Request<>(HorizontalPositionSubsystem.class, new PositionBasedCondition(10d, Range.between(10d, 10d))));
         testMediator.add(new Request<>(LinearPositionSubsystem.class, new PositionBasedCondition(10d, Range.between(10d, 10d))));
+        testMediator.add(new Request<>(LinearPositionSubsystem2.class, new PositionBasedCondition(10d, Range.between(10d, 10d))));
 
-        callPeriodic(20, testMediator, horizontalPositionSubsystem, linearPositionSubsystem);
+        callPeriodic(50, testMediator, linearPositionSubsystem2, linearPositionSubsystem);
 
-        assertThat(horizontalPositionSubsystem.getCurrentCondition().getConditionValue()).isEqualTo(10d);
-        assertThat(linearPositionSubsystem.getCurrentCondition().getConditionValue()).isEqualTo(20d);
+        assertThat(linearPositionSubsystem2.getCurrentCondition().getConditionValue()).isNotZero();
+        assertThat(linearPositionSubsystem.getCurrentCondition().getConditionValue()).isNotZero();
 
     }
 

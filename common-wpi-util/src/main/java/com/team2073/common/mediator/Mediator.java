@@ -69,7 +69,7 @@ public class Mediator implements PeriodicRunnable {
             if (conflictMap.get(conflict.getOriginSubsystem()) == null) {
                 ArrayList<Conflict> originConflicts = new ArrayList<>();
                 conflictMap.put(conflict.getOriginSubsystem(), originConflicts);
-                logger.debug("Creating conflict list for: [{}] and [{}]", conflict.getOriginSubsystem());
+                logger.debug("Creating conflict list for: [{}] and [{}]", conflict.getOriginSubsystem(), conflict.getConflictingSubsystem());
             }
             if (conflictMap.get(conflict.getConflictingSubsystem()) == null) {
                 ArrayList<Conflict> inverseConflicts = new ArrayList<>();
@@ -156,16 +156,19 @@ public class Mediator implements PeriodicRunnable {
         Condition condition = request.getCondition();
         Class subsystem = request.getSubsystem();
 
-        if (conflicts.isEmpty()) {
-            logger.debug("Executing request [{}]. Conflicts: [{}]", request.getName(), conflicts.size());
-
-            subsystemMap.get(subsystem).set(condition.getConditionValue());
+        if (conflicts.isEmpty() || request.getParallelConflict() != null) {
             if (request.getParallelConflict() != null) {
                 Conflict parallelConflict = request.getParallelConflict();
                 logger.debug("Executing parallel Conflict [{}]", parallelConflict.getName());
                 subsystemMap.get(parallelConflict.getOriginSubsystem()).set(parallelConflict.getOriginParallelResolution(subsystemMap.get(parallelConflict.getOriginSubsystem()),
                         subsystemMap.get(parallelConflict.getConflictingSubsystem())).getConditionValue());
+
+
+                System.out.println("parallel conflict output: " + parallelConflict.getOriginParallelResolution(subsystemMap.get(parallelConflict.getOriginSubsystem()),
+                        subsystemMap.get(parallelConflict.getConflictingSubsystem())).getConditionValue());
             }
+            logger.debug("Executing request [{}]. Conflicts: [{}]", request.getName(), conflicts.size());
+            subsystemMap.get(subsystem).set(condition.getConditionValue());
         } else {
             for (Conflict conflict : conflicts) {
                 logger.debug("Conflict [{}]", conflict.toString());
