@@ -34,7 +34,13 @@ public abstract class MathUtil {
 		return degrees * (Math.PI/180.);
 	}
 
+	public static double average(double...inputs){
+		double total = 0;
+		for (double input: inputs) {
+			total = total + input;
+		}
 
-
+		return total/inputs.length;
+	}
 
 }
