@@ -33,7 +33,7 @@ public abstract class BaseSimulationMotorController implements SimulationMotorCo
         this.mechanism = mechanism;
         this.name = name;
         robotContext.getPeriodicRunner().register(this);
-        robotContext.getDataRecorder().registerRecordable(this);
+//        robotContext.getDataRecorder().registerRecordable(this);
     }
 
     @Override

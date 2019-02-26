@@ -112,8 +112,8 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 		if (commonProps.getDiagnosticLoggingModuleEnabled()) {
 			diagnosticLoggingModule = new DiagnosticLoggingModule();
 			diagnosticLoggingModule.autoRegisterWithPeriodicRunner();
-			if (commonProps.getDiagnosticLoggingModuleDataRecordingEnabled())
-				robotContext.getDataRecorder().registerRecordable(diagnosticLoggingModule);
+//			if (commonProps.getDiagnosticLoggingModuleDataRecordingEnabled())
+//				robotContext.getDataRecorder().registerRecordable(diagnosticLoggingModule);
 		}
 	}
 
@@ -123,7 +123,7 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 		CommonProperties commonProps;
 		PeriodicRunner periodicRunner;
 		OccasionalLoggingRunner loggingRunner;
-		DataRecorder dataRecorder;
+//		DataRecorder dataRecorder;
 		RobotEventPublisher eventPublisher;
 		SmartDashboardAwareRunner smartDashboardRunner;
 		PropertyLoader propertyLoader;
@@ -145,8 +145,8 @@ public class RobotRunner implements RobotDelegate, SmartDashboardAware {
 		if ((loggingRunner = robot.createLoggingRunner()) != null)
 			robotContext.setLoggingRunner(loggingRunner);
 		
-		if ((dataRecorder = robot.createDataRecorder()) != null)
-			robotContext.setDataRecorder(dataRecorder);
+//		if ((dataRecorder = robot.createDataRecorder()) != null)
+//			robotContext.setDataRecorder(dataRecorder);
 		
 		if ((propertyLoader = robot.createPropertyLoader()) != null)
 			robotContext.setPropertyLoader(propertyLoader);

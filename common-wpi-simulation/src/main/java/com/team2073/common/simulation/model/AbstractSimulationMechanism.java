@@ -50,7 +50,7 @@ public abstract class AbstractSimulationMechanism implements SimulationMechanism
 
 //		doubles the stall torque to make "super motor" based on motor count
 		torqueConstant = motor.torqueConstant * motorCount;
-        robotContext.getDataRecorder().registerRecordable(this);
+//        robotContext.getDataRecorder().registerRecordable(this);
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class PidfControlLoop {
 		this.d = d;
 		this.f = f;
 		this.maxOutput = maxOutput;
-		robotContext.getDataRecorder().registerRecordable(this);
+//		robotContext.getDataRecorder().registerRecordable(this);
 	}
 
     public PidfControlLoop(double p, double i, double d, double f, double maxOutput, PositionSupplier positionSupplier) {
@@ -54,7 +54,7 @@ public class PidfControlLoop {
         this.f = f;
         this.maxOutput = maxOutput;
         this.positionSupplier = positionSupplier;
-        robotContext.getDataRecorder().registerRecordable(this);
+//        robotContext.getDataRecorder().registerRecordable(this);
     }
 
 	public void updatePID(double interval) {

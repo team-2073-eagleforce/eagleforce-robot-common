@@ -87,8 +87,8 @@ public class RobotContext {
                     "");
         }
     
-        if (instance != null)
-            instance.close();
+//        if (instance != null)
+//            instance.close();
         
         // See TODO about custom classloader
         instance = new RobotContext(true);
@@ -135,7 +135,7 @@ public class RobotContext {
     // Custom instances
     private PeriodicRunner periodicRunner;
     private OccasionalLoggingRunner loggingRunner;
-    private DataRecorder dataRecorder;
+//    private DataRecorder dataRecorder;
     private RobotEventPublisher eventPublisher;
     private PropertyLoader propertyLoader;
     private SmartDashboardAwareRunner smartDashboardRunner;
@@ -152,16 +152,16 @@ public class RobotContext {
         this.simulationMode = simulationMode;
     }
     
-    private void close() {
-        instance.getDataRecorder().requestShutdown();
-    }
+//    private void close() {
+//        instance.getDataRecorder().requestShutdown();
+//    }
     
     public void registerPeriodicInstances() {
         log.info("Registering Periodic instances...");
 //        smartDashboardRunner.registerSelf(periodicRunner);
 //        loggingRunner.registerSelf(periodicRunner);
         // TODO: Check if we are already registered. Currently, this is blocking implementations from customizing the registration
-        getDataRecorder().registerWithPeriodicRunner(periodicRunner);
+//        getDataRecorder().registerWithPeriodicRunner(periodicRunner);
         log.info("Registering Periodic instances complete.");
     }
 
@@ -212,17 +212,17 @@ public class RobotContext {
         return this;
     }
 
-    public DataRecorder getDataRecorder() {
-        if (dataRecorder == null)
-            dataRecorder = new DataRecorder();
+//    public DataRecorder getDataRecorder() {
+//        if (dataRecorder == null)
+//            dataRecorder = new DataRecorder();
+//
+//        return dataRecorder;
+//    }
 
-        return dataRecorder;
-    }
-
-    public RobotContext setDataRecorder(DataRecorder dataRecorder) {
-        this.dataRecorder = dataRecorder;
-        return this;
-    }
+//    public RobotContext setDataRecorder(DataRecorder dataRecorder) {
+//        this.dataRecorder = dataRecorder;
+//        return this;
+//    }
 
     public RobotEventPublisher getEventPublisher() {
         if (eventPublisher == null)
