@@ -217,7 +217,7 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
         }
         
         runMode = PERIODIC_RUNNER;
-        loadProperties();
+//        loadProperties();
     }
     
     /**
