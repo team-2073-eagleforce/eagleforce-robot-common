@@ -22,14 +22,18 @@ class PositionBasedConflict(
     }
 
     override fun getResolution(currentCondition: Condition<Double>, subsystem: ColleagueSubsystem<Double>): Condition<Double> {
-        val closestBound = (conflictingConditionP as PositionBasedCondition).findClosestBound(currentCondition)
+        var closestBound = (conflictingConditionP as PositionBasedCondition).findClosestBound(currentCondition)
         val safetyRange = (subsystem as PositionBasedSubsystem).getSafetyRange()
 
+        if (closestBound - subsystem.getCurrentCondition().getConditionValue() > 0) {
+            closestBound += safetyRange
+        } else {
+            closestBound -= safetyRange
+        }
         return PositionBasedCondition(closestBound, Range.between(closestBound - safetyRange, closestBound + safetyRange))
-
     }
 
-    fun isWithinBounds(lowerBound: Double, value: Double, upperBound: Double): Boolean{
+    fun isWithinBounds(lowerBound: Double, value: Double, upperBound: Double): Boolean {
         return Range.between(lowerBound, upperBound).contains(value)
     }
 
@@ -46,9 +50,9 @@ class PositionBasedConflict(
         } else {
             conflictingPoint.y + conflictingSafetyRange + originSubsystem.getSafetyRange()
         }
-        nearestOriginSafeX = if(originPoint.x > conflictingPoint.x){
+        nearestOriginSafeX = if (originPoint.x > conflictingPoint.x) {
             conflictingPoint.x - conflictingSafetyRange - originSubsystem.getSafetyRange()
-        }else{
+        } else {
             conflictingPoint.x + conflictingSafetyRange + originSubsystem.getSafetyRange()
         }
 
@@ -56,20 +60,20 @@ class PositionBasedConflict(
         val nearestOriginSafePosition = originSubsystem.pointToPosition(nearestOriginSafePoint)
 
         //TODO needs to convert safety range to a relative point
-        return if(originPoint.x - conflictingPoint.x < originSafetyRange || originPoint.y - conflictingPoint.y < originSafetyRange){
+        return if (originPoint.x - conflictingPoint.x < originSafetyRange || originPoint.y - conflictingPoint.y < originSafetyRange) {
             originSubsystem.getCurrentCondition()
-        }else {
+        } else {
             PositionBasedCondition(nearestOriginSafePosition,
                     Range.between(nearestOriginSafePosition - originSafetyRange, nearestOriginSafePosition + originSafetyRange))
         }
     }
 
     override fun isRequestConflicting(request: Request<Double>, currentConflictingCondition: Condition<Double>, currentOriginCondition: Condition<Double>): Boolean {
-        val range: Range<Double> = Range.between(currentOriginCondition.getConditionValue(), request.condition.getConditionValue())
-        val conflictingRange: Range<Double> = Range.between((currentConflictingCondition as PositionBasedCondition).range.minimum,
-                currentConflictingCondition.range.maximum)
+        val originTravelRange: Range<Double> = Range.between(currentOriginCondition.getConditionValue(), request.condition.getConditionValue())
+        val originConflictingRange: Range<Double> = (originConditionP as PositionBasedCondition).range
+        val currentConflictingRange: Range<Double> = (currentConflictingCondition as PositionBasedCondition).range
 
-        return range.isOverlappedBy(conflictingRange)
+        return originTravelRange.isOverlappedBy(originConflictingRange) && (conflictingConditionP as PositionBasedCondition).range.isOverlappedBy(currentConflictingRange)
     }
 
     override fun invert(): Conflict<Double, Double> {

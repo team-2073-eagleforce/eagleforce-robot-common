@@ -32,10 +32,10 @@ public class MediatorIntegrationTest {
         TestMediator mediator = new TestMediator();
         mediator.registerColleague(angularSubsystem, linearSubsystem);
         mediator.registerConflict(new PositionBasedConflict(LinearSubsystem.class,
-                new PositionBasedCondition(0, Range.between(0d, 25d)),
+                new PositionBasedCondition(0d, Range.between(0d, 25d)),
                 AngularSubsystem.class,
                 new PositionBasedCondition(0d, Range.between(0d, 90d)),
-                true, false));
+                true, true));
 
         mediator.add(new Request<>(AngularSubsystem.class, new PositionBasedCondition(95d, Range.between(90d, 90d))));
 

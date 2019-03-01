@@ -160,12 +160,11 @@ public class Mediator implements PeriodicRunnable {
             if (request.getParallelConflict() != null) {
                 Conflict parallelConflict = request.getParallelConflict();
                 logger.debug("Executing parallel Conflict [{}]", parallelConflict.getName());
-                subsystemMap.get(parallelConflict.getOriginSubsystem()).set(parallelConflict.getOriginParallelResolution(subsystemMap.get(parallelConflict.getOriginSubsystem()),
-                        subsystemMap.get(parallelConflict.getConflictingSubsystem())).getConditionValue());
+                Condition requestedParallelCondition = parallelConflict.getOriginParallelResolution(subsystemMap.get(parallelConflict.getOriginSubsystem()),
+                        subsystemMap.get(parallelConflict.getConflictingSubsystem()));
+                    subsystemMap.get(parallelConflict.getOriginSubsystem()).set(requestedParallelCondition.getConditionValue());
 
-
-                System.out.println("parallel conflict output: " + parallelConflict.getOriginParallelResolution(subsystemMap.get(parallelConflict.getOriginSubsystem()),
-                        subsystemMap.get(parallelConflict.getConflictingSubsystem())).getConditionValue());
+                System.out.println("parallel conflict output: " + requestedParallelCondition.getConditionValue());
             }
             logger.debug("Executing request [{}]. Conflicts: [{}]", request.getName(), conflicts.size());
             subsystemMap.get(subsystem).set(condition.getConditionValue());
