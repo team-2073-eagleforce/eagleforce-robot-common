@@ -37,6 +37,15 @@ class PositionBasedConflict(
         return Range.between(lowerBound, upperBound).contains(value)
     }
 
+    override fun canOverrideConflict(originSubsystem: ColleagueSubsystem<Double>, conflictingSubsystem: ColleagueSubsystem<Double>): Boolean {
+        val originPoint: Vector2D = (originSubsystem as PositionBasedSubsystem).positionToPoint(originSubsystem.getCurrentCondition().getConditionValue())
+        val conflictingPoint: Vector2D = (conflictingSubsystem as PositionBasedSubsystem).positionToPoint(conflictingSubsystem.getCurrentCondition().getConditionValue())
+        val originSafetyRange = originSubsystem.getSafetyRange()
+        val conflictingSafetyRange = conflictingSubsystem.getSafetyRange()
+
+        return Math.abs(originPoint.x - conflictingPoint.x) > originSafetyRange && Math.abs(originPoint.y - conflictingPoint.y) > originSafetyRange
+    }
+
     override fun getOriginParallelResolution(originSubsystem: ColleagueSubsystem<Double>, conflictingSubsystem: ColleagueSubsystem<Double>): Condition<Double> {
         val originPoint: Vector2D = (originSubsystem as PositionBasedSubsystem).positionToPoint(originSubsystem.getCurrentCondition().getConditionValue())
         val conflictingPoint: Vector2D = (conflictingSubsystem as PositionBasedSubsystem).positionToPoint(conflictingSubsystem.getCurrentCondition().getConditionValue())
@@ -60,12 +69,8 @@ class PositionBasedConflict(
         val nearestOriginSafePosition = originSubsystem.pointToPosition(nearestOriginSafePoint)
 
         //TODO needs to convert safety range to a relative point
-        return if (originPoint.x - conflictingPoint.x < originSafetyRange || originPoint.y - conflictingPoint.y < originSafetyRange) {
-            originSubsystem.getCurrentCondition()
-        } else {
-            PositionBasedCondition(nearestOriginSafePosition,
-                    Range.between(nearestOriginSafePosition - originSafetyRange, nearestOriginSafePosition + originSafetyRange))
-        }
+        return PositionBasedCondition(nearestOriginSafePosition,
+                Range.between(nearestOriginSafePosition - originSafetyRange, nearestOriginSafePosition + originSafetyRange))
     }
 
     override fun isRequestConflicting(request: Request<Double>, currentConflictingCondition: Condition<Double>, currentOriginCondition: Condition<Double>): Boolean {

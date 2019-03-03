@@ -19,6 +19,10 @@ class PositionStateBasedConflict<T : Enum<T>>(
         val parallelismPS: Boolean) :
         Conflict<Double, SubsystemStateCondition<T>>(originSubsystemPS, originConditionPS, conflictingSubsystemPS, conflictingConditionPS, canInvertPS, parallelismPS) {
 
+    override fun canOverrideConflict(originSubsystem: ColleagueSubsystem<Double>, conflictingSubsystem: ColleagueSubsystem<SubsystemStateCondition<T>>): Boolean {
+        return false
+    }
+
     override fun getOriginParallelResolution(originSubsystem: ColleagueSubsystem<Double>, conflictingSubsystem: ColleagueSubsystem<SubsystemStateCondition<T>>): Condition<Double> {
         val originSafetyRange: Double = (originSubsystem as PositionBasedSubsystem).getSafetyRange()
         return PositionBasedCondition(originSubsystem.getCurrentCondition().getConditionValue(),

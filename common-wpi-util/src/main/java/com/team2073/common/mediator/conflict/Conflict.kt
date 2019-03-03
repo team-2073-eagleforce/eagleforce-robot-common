@@ -14,6 +14,8 @@ abstract class Conflict<OT, CT>(
 
     abstract fun invert(): Conflict<CT, OT>
 
+    abstract fun canOverrideConflict(originSubsystem: ColleagueSubsystem<OT>, conflictingSubsystem: ColleagueSubsystem<CT>): Boolean
+
     abstract fun isRequestConflicting(request: Request<OT>, currentConflictingCondition: Condition<CT>, currentOriginCondition: Condition<OT>): Boolean
 
     abstract fun isConditionConflicting(originCondition: Condition<OT>, conflictingCondition: Condition<CT>): Boolean

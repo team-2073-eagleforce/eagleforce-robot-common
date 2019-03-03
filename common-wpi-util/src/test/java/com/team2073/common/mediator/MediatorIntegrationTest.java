@@ -31,13 +31,14 @@ public class MediatorIntegrationTest {
 
         TestMediator mediator = new TestMediator();
         mediator.registerColleague(angularSubsystem, linearSubsystem);
-        mediator.registerConflict(new PositionBasedConflict(LinearSubsystem.class,
-                new PositionBasedCondition(0d, Range.between(0d, 25d)),
+        mediator.registerConflict(new PositionBasedConflict(
                 AngularSubsystem.class,
                 new PositionBasedCondition(0d, Range.between(0d, 90d)),
-                true, true));
+                LinearSubsystem.class,
+                new PositionBasedCondition(0d, Range.between(0d, 25d)),
+                false, true));
 
-        mediator.add(new Request<>(AngularSubsystem.class, new PositionBasedCondition(95d, Range.between(90d, 90d))));
+        mediator.add(new Request<>(AngularSubsystem.class, new PositionBasedCondition(95d, Range.between(90d, 100d))));
 
         callPeriodic(100, mediator, angularSubsystem, linearSubsystem);
     }
@@ -88,9 +89,9 @@ public class MediatorIntegrationTest {
         @Override
         public void onPeriodic() {
 
-            System.out.println("Angular Position: " + position);
+            System.out.println("Angular Position: " + position + "\t setpoint: " + setpoint);
 
-            if (position != setpoint) {
+            if (position != setpoint && !Double.isNaN(setpoint)) {
                 if (position > setpoint) {
                     position--;
                 } else {
@@ -135,9 +136,9 @@ public class MediatorIntegrationTest {
         @Override
         public void onPeriodic() {
 
-            System.out.println("Linear Position: " + position);
+            System.out.println("Linear Position: " + position + "\t setpoint: " + setpoint);
 
-            if (position != setpoint) {
+            if (position != setpoint && !Double.isNaN(setpoint)) {
                 if (position > setpoint) {
                     position--;
                 } else {
