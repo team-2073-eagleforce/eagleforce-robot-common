@@ -45,7 +45,7 @@ public abstract class CommonConstants {
 	// TODO: Treat as defaults
 	public abstract class Diagnostics {
 		public static final double UNSAFE_BATTERY_VOLTAGE = 8.0;
-		public static final long LONG_ON_PERIODIC_CALL = 3;
+		public static final long LONG_ON_PERIODIC_CALL = 10;
 		public static final long LONG_PERIODIC_LOOP = 30;
 	}
 
