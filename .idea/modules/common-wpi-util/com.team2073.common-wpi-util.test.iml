@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id=":common-wpi-util:main" external.linked.project.path="$MODULE_DIR$/../../../common-wpi-util" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="com.team2073" external.system.module.type="sourceSet" external.system.module.version="0.4.0-SNAPSHOT" type="JAVA_MODULE" version="4">
+<module external.linked.project.id=":common-wpi-util:test" external.linked.project.path="$MODULE_DIR$/../../../common-wpi-util" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="com.team2073" external.system.module.type="sourceSet" external.system.module.version="0.4.0-SNAPSHOT" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="kotlin-language" name="Kotlin">
       <configuration version="3" platform="JVM 1.8" useProjectSettings="false">
         <compilerSettings />
         <compilerArguments>
-          <option name="destination" value="$MODULE_DIR$/../../../common-wpi-util/build/classes/kotlin/main" />
+          <option name="destination" value="$MODULE_DIR$/../../../common-wpi-util/build/classes/kotlin/test" />
           <option name="noStdlib" value="true" />
           <option name="noReflect" value="true" />
           <option name="moduleName" value="common-wpi-util" />
@@ -27,29 +27,30 @@
         </compilerArguments>
       </configuration>
     </facet>
-    <facet type="FRC_FACET" name="FRC">
-      <configuration />
-    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
-    <output url="file://$MODULE_DIR$/../../../common-wpi-util/out/production/classes" />
+    <output-test url="file://$MODULE_DIR$/../../../common-wpi-util/out/test/classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../../common-wpi-util/src/main">
-      <sourceFolder url="file://$MODULE_DIR$/../../../common-wpi-util/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../common-wpi-util/src/main/resources" type="java-resource" />
+    <content url="file://$MODULE_DIR$/../../../common-wpi-util/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../../common-wpi-util/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../common-wpi-util/src/test/resources" type="java-test-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibj:wpilibj-java:2019.4.1" level="project" />
-    <orderEntry type="library" name="Gradle: edu.wpi.first.ntcore:ntcore-java:2019.4.1" level="project" />
-    <orderEntry type="library" name="Gradle: edu.wpi.first.wpiutil:wpiutil-java:2019.4.1" level="project" />
+    <orderEntry type="module" module-name="com.team2073.common-wpi-util.main" />
+    <orderEntry type="module" module-name="com.team2073.common-wpi-simulation.main" />
+    <orderEntry type="module" module-name="com.team2073.common-wpi-util-test.main" />
+    <orderEntry type="module" module-name="com.team2073.common-wpi-util.main" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibj:wpilibj-java:2019.3.1" level="project" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.ntcore:ntcore-java:2019.3.1" level="project" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.wpiutil:wpiutil-java:2019.3.1" level="project" />
     <orderEntry type="library" name="Gradle: edu.wpi.first.thirdparty.frc2019.opencv:opencv-java:3.4.4-4" level="project" />
-    <orderEntry type="library" name="Gradle: edu.wpi.first.cscore:cscore-java:2019.4.1" level="project" />
-    <orderEntry type="library" name="Gradle: edu.wpi.first.cameraserver:cameraserver-java:2019.4.1" level="project" />
-    <orderEntry type="library" name="Gradle: edu.wpi.first.hal:hal-java:2019.4.1" level="project" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.cscore:cscore-java:2019.3.1" level="project" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.cameraserver:cameraserver-java:2019.3.1" level="project" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.hal:hal-java:2019.3.1" level="project" />
     <orderEntry type="library" name="Gradle: com.ctre.phoenix:api-java:5.12.0" level="project" />
     <orderEntry type="library" name="Gradle: com.ctre.phoenix:wpiapi-java:5.12.0" level="project" />
-    <orderEntry type="module" module-name="common-util_main" />
+    <orderEntry type="module" module-name="com.team2073.common-util.main" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-configuration2:2.4" level="project" />
     <orderEntry type="module-library">
       <library name="Gradle: commons-io:commons-io:2.5">
@@ -66,9 +67,19 @@
     <orderEntry type="library" name="Gradle: javax.validation:validation-api:2.0.0.Final" level="project" />
     <orderEntry type="library" name="Gradle: org.reflections:reflections:0.9.11" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava:20.0" level="project" />
+    <orderEntry type="module" module-name="com.team2073.common-util-test.main" />
+    <orderEntry type="module" module-name="com.team2073.common-wpi-simulation-stubs.main" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.51" level="project" />
     <orderEntry type="library" name="Gradle: ch.qos.logback:logback-classic:1.2.3" level="project" />
-    <orderEntry type="library" name="Gradle: org.mockito:mockito-core:2.15.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.mockito:mockito-junit-jupiter:2.17.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.mockito:mockito-core:2.17.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.commons:commons-collections4:4.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.51" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.51" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.assertj:assertj-core:3.9.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-engine:5.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-api:5.2.0" level="project" />
     <orderEntry type="library" name="Gradle: commons-beanutils:commons-beanutils:1.9.3" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-text:1.6" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.8.1" level="project" />
@@ -84,15 +95,17 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Gradle: org.javassist:javassist:3.21.0-GA" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.51" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.51" level="project" />
     <orderEntry type="library" name="Gradle: ch.qos.logback:logback-core:1.2.3" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.25" level="project" />
-    <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy:1.7.9" level="project" />
-    <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy-agent:1.7.9" level="project" />
+    <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy:1.8.0" level="project" />
+    <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy-agent:1.8.0" level="project" />
     <orderEntry type="library" name="Gradle: org.objenesis:objenesis:2.6" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.platform:junit-platform-engine:1.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.platform:junit-platform-commons:1.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apiguardian:apiguardian-api:1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.opentest4j:opentest4j:1.1.0" level="project" />
     <orderEntry type="library" name="Gradle: commons-collections:commons-collections:3.2.2" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.2.51" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
   </component>
+  <component name="TestModuleProperties" production-module="com.team2073.common-wpi-util.main" />
 </module>
