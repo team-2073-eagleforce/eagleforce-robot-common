@@ -20,6 +20,10 @@
           <option name="pluginClasspaths">
             <array />
           </option>
+          <option name="coroutinesState" value="warn" />
+          <option name="errors">
+            <ArgumentParseErrors />
+          </option>
         </compilerArguments>
       </configuration>
     </facet>
@@ -29,7 +33,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../common-guice/src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../../common-guice/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../common-guice/src/main/resources" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
