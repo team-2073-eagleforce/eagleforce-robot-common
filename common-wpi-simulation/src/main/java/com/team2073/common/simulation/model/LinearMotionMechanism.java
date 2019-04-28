@@ -1,7 +1,9 @@
 package com.team2073.common.simulation.model;
 
+import com.team2073.common.motionprofiling.SCurveProfileGenerator;
 import com.team2073.common.simulation.SimulationConstants.MotorType;
 import com.team2073.common.simulation.env.SimulationEnvironment;
+import com.team2073.common.util.GraphCSVUtil;
 
 import static com.team2073.common.util.ConversionUtil.*;
 
@@ -17,6 +19,21 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 	public LinearMotionMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double pullyRadius) {
 		super(gearRatio, motor, motorCount, massOnSystem);
 		this.pulleyRadius = inchesToMeters(pullyRadius);
+	}
+
+	public static void main(String[] args) {
+		GraphCSVUtil graph = new GraphCSVUtil("ElevatorSimulation", "time", "ProfilePosition", "ProfileVelocity", "ProfileAcceleration", "ProfileJerk");
+		SCurveProfileGenerator profile = new SCurveProfileGenerator(100, 80, 60, 30);
+		double time = 0;
+		while (time < profile.getTotalTime()) {
+			if(time >= 2.64){
+				System.out.println("Breakie time");
+			}
+			profile.nextPoint(.01);
+			graph.updateMainFile(time, profile.currentPosition(), profile.currentVelocity(), profile.currentAcceleration());
+			time += .01;
+		}
+		graph.writeToFile();
 	}
 
 	@Override
