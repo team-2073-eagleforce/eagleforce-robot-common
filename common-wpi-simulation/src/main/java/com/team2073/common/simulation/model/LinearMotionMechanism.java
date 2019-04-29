@@ -23,12 +23,12 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 
 	public static void main(String[] args) {
 		GraphCSVUtil graph = new GraphCSVUtil("ElevatorSimulation", "time", "ProfilePosition", "ProfileVelocity", "ProfileAcceleration", "ProfileJerk");
-		SCurveProfileGenerator profile = new SCurveProfileGenerator(100, 80, 60, 30);
+		SCurveProfileGenerator profile = new SCurveProfileGenerator(80, 100, 400, 4000);
 		double time = 0;
 		while (time < profile.getTotalTime()) {
-			if(time >= 2.64){
-				System.out.println("Breakie time");
-			}
+//			if(time >= 2.64){
+//				System.out.println("Breakie time");
+//			}
 			profile.nextPoint(.01);
 			graph.updateMainFile(time, profile.currentPosition(), profile.currentVelocity(), profile.currentAcceleration());
 			time += .01;
