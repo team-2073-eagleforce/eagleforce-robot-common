@@ -29,7 +29,7 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
-    <output url="file://$MODULE_DIR$/../../../common-util-test/out/production/classes" />
+    <output url="file://$MODULE_DIR$/../../../common-util-test/build/classes/java/main" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../common-util-test/src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../../common-util-test/src/main/java" isTestSource="false" />
