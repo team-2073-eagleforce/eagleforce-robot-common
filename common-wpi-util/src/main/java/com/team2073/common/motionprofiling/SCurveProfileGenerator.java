@@ -3,41 +3,42 @@ package com.team2073.common.motionprofiling;
 import org.apache.commons.math3.exception.OutOfRangeException;
 
 import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 
 public class SCurveProfileGenerator {
 
-	private final double goalPosition;
-	private final double vMax;
-	private final double aMax;
-	private final double jMax;
+	private double goalPosition;
+	private double vMax;
+	private double aMax;
+	private double jMax;
 
-	private final double t1;
-	private final double t2;
-	private final double t3;
-	private final double t4;
-	private final double t5;
-	private final double t6;
-	private final double t7;
+	private double t1;
+	private double t2;
+	private double t3;
+	private double t4;
+	private double t5;
+	private double t6;
+	private double t7;
 
-	private final double wT1;
-	private final double wT2;
-	private final double wT3;
-	private final double wT4;
-	private final double wT5;
-	private final double wT6;
-	private final double wT7;
+	private double wT1;
+	private double wT2;
+	private double wT3;
+	private double wT4;
+	private double wT5;
+	private double wT6;
+	private double wT7;
 
-	private final double p1;
-	private final double p2;
-	private final double p3;
-	private final double p4;
-	private final double p5;
-	private final double p6;
+	private double p1;
+	private double p2;
+	private double p3;
+	private double p4;
+	private double p5;
+	private double p6;
 
-	private final double v1;
-	private final double v2;
-	private final double v5;
-	private final double v6;
+	private double v1;
+	private double v2;
+	private double v5;
+	private double v6;
 
 
 	private double currentPosition;
@@ -65,10 +66,30 @@ public class SCurveProfileGenerator {
 
 		this.aMax = aMax;
 		this.jMax = jMax;
+		if (vMax < pow(aMax, 2) / jMax) {
+			this.aMax = sqrt(vMax* jMax);
+		}
+
+		generateParams(this.goalPosition, this.vMax, this.aMax, this.jMax);
+
+
+		if (wT4 < 0) {
+			double newMaxV = .5 * (((.57735 * sqrt(this.aMax) * sqrt((-24d * pow(this.aMax, 2) * wT3) +
+					(3d * this.aMax * this.jMax * pow(wT1, 2)) + (12 * this.aMax * this.jMax * pow(wT3, 2)) + (12 * this.goalPosition * this.jMax)
+					- (8 * pow(this.jMax, 2) * pow(wT1, 3)))) / sqrt(this.jMax)) +
+					(2 * pow(this.aMax, 2)) / this.jMax - this.aMax * wT1 - 2 * this.aMax * wT3);
+			this.vMax = newMaxV;
+			generateParams(this.goalPosition, newMaxV, this.aMax, this.jMax);
+		}
+
+	}
+
+	private void generateParams(double goalPosition, double vMax, double aMax, double jMax) {
 
 		t1 = aMax / jMax;
 		wT1 = t1;
 		t2 = t1 + vMax / aMax - aMax / jMax;
+		t2 = t1 + (jMax * vMax - pow(aMax, 2)) / (aMax * jMax);
 		wT2 = t2 - t1;
 		t3 = t2 + wT1;
 		wT3 = wT1;
@@ -93,8 +114,6 @@ public class SCurveProfileGenerator {
 		v2 = v1 + aMax * wT2;
 		v5 = vMax - .5 * aMax * wT1;
 		v6 = v5 - aMax * wT2;
-
-
 	}
 
 	public ProfileTrajectoryPoint nextPoint(double interval) {
@@ -238,5 +257,9 @@ public class SCurveProfileGenerator {
 
 	public double currentAcceleration() {
 		return calcAcceleration();
+	}
+
+	public double currentJerk() {
+		return calcJerk();
 	}
 }
