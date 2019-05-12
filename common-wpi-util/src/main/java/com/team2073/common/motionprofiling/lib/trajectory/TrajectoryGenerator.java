@@ -246,12 +246,18 @@ public class TrajectoryGenerator {
 
 	///// INNER CLASSES /////
 	public static class Config {
-
 		public double dt;
 		public double max_vel;
 		public double max_acc;
 		public double max_jerk;
+		public Config(ProfileConfiguration configuration) {
+			dt = configuration.getInterval();
+			max_acc = configuration.getMaxAcceleration();
+			max_jerk = configuration.getMaxJerk();
+			max_vel = configuration.getMaxVelocity();
+		}
 	}
+
 
 	public static class Strategy {
 

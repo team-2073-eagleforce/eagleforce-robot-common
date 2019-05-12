@@ -19,12 +19,14 @@ public class WaypointSequence {
 		waypoints_ = new Waypoint[max_size];
 	}
 
-	public void addWaypoint(Waypoint w) {
+	public WaypointSequence addWaypoint(Waypoint w) {
 		if (num_waypoints_ < waypoints_.length) {
 			waypoints_[num_waypoints_] = w;
 			++num_waypoints_;
 		}
+		return this;
 	}
+
 
 	public int getNumWaypoints() {
 		return num_waypoints_;

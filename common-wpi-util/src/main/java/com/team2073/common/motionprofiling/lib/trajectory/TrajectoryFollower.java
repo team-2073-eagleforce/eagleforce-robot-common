@@ -7,6 +7,7 @@ package com.team2073.common.motionprofiling.lib.trajectory;
  */
 public class TrajectoryFollower {
 
+	public String name;
 	private double kp_;
 	private double ki_;  // Not currently used, but might be in the future.
 	private double kd_;
@@ -17,8 +18,8 @@ public class TrajectoryFollower {
 	private int current_segment;
 	private Trajectory profile_;
 
-	public TrajectoryFollower() {
-
+	public TrajectoryFollower(String name) {
+		this.name = name;
 	}
 
 	public void configure(double kp, double ki, double kd, double kv, double ka) {
@@ -49,7 +50,6 @@ public class TrajectoryFollower {
 			last_error_ = error;
 			current_heading = segment.heading;
 			current_segment++;
-			//System.out.println("so far: " + distance_so_far + "; output: " + output);
 			return output;
 		} else {
 			return 0;
@@ -62,5 +62,13 @@ public class TrajectoryFollower {
 
 	public boolean isFinishedTrajectory() {
 		return current_segment >= profile_.getNumSegments();
+	}
+
+	public int getCurrentSegment() {
+		return current_segment;
+	}
+
+	public int getNumSegments() {
+		return profile_.getNumSegments();
 	}
 }
