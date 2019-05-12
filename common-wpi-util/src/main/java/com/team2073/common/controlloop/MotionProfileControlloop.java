@@ -11,6 +11,7 @@ public class MotionProfileControlloop {
 	private double d;
 	private double kv;
 	private double ka;
+	private double kj;
 
 	private double output;
 	private double maxOutput;
@@ -19,6 +20,7 @@ public class MotionProfileControlloop {
 	private double position;
 	private ProfileTrajectoryPoint currentPoint;
 	private Callable<ProfileTrajectoryPoint> dataPointUpdater;
+	private Callable<ProfileTrajectoryPoint> redundantDataPointUpdater;
 	private PositionSupplier positionUpdater;
 
 	/**
@@ -28,21 +30,35 @@ public class MotionProfileControlloop {
 	 * @param ka        acceleration constant
 	 * @param maxOutput
 	 */
+	public MotionProfileControlloop(double p, double d, double kv, double ka, double kj, double maxOutput) {
+		this.p = p;
+		this.d = d;
+		this.kv = kv;
+		this.ka = ka;
+		this.kj = kj;
+		this.maxOutput = maxOutput;
+	}
+
 	public MotionProfileControlloop(double p, double d, double kv, double ka, double maxOutput) {
 		this.p = p;
 		this.d = d;
 		this.kv = kv;
 		this.ka = ka;
+		this.kj = 0;
 		this.maxOutput = maxOutput;
 	}
 
 	public void update(double interval) {
 		try {
 			this.currentPoint = dataPointUpdater.call();
-			this.position = positionUpdater.currentPosition();
 		} catch (Exception e) {
-			e.printStackTrace();
+			try {
+				this.currentPoint = redundantDataPointUpdater.call();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
+		this.position = positionUpdater.currentPosition();
 		pidCycle(interval);
 	}
 
@@ -54,6 +70,7 @@ public class MotionProfileControlloop {
 		output += d * ((error - lastError) / interval - currentPoint.getVelocity());
 		output += kv * currentPoint.getVelocity();
 		output += ka * currentPoint.getAcceleration();
+		output += kj * currentPoint.getJerk();
 
 
 		if (Math.abs(output) >= maxOutput) {
@@ -69,6 +86,10 @@ public class MotionProfileControlloop {
 
 	public void dataPointCallable(Callable<ProfileTrajectoryPoint> desiredPoint) {
 		this.dataPointUpdater = desiredPoint;
+	}
+
+	public void setRedundantDataPointUpdater(Callable<ProfileTrajectoryPoint> desiredPoint) {
+		this.redundantDataPointUpdater = desiredPoint;
 	}
 
 	public void updatePosition(PositionSupplier returnsPosition) {

@@ -1,13 +1,14 @@
 package com.team2073.common.motionprofiling;
 
+import com.team2073.common.motionprofiling.lib.trajectory.Trajectory;
 import org.apache.commons.math3.exception.OutOfRangeException;
 
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
+import static java.lang.Math.*;
 
-public class SCurveProfileGenerator {
+@Deprecated
+public class SCurveProfile {
 
-	private double goalPosition;
+	private double deltaD;
 	private double vMax;
 	private double aMax;
 	private double jMax;
@@ -27,6 +28,8 @@ public class SCurveProfileGenerator {
 	private double wT5;
 	private double wT6;
 	private double wT7;
+	private double startingPosition;
+	private double goalPosition;
 
 	private double p1;
 	private double p2;
@@ -49,37 +52,32 @@ public class SCurveProfileGenerator {
 
 	private double currentTime;
 
-
 	/**
 	 * Creates a series of 7-segment piecewise functions for each of Position, Velocity, Acceleration, and Jerk. <br/>
 	 * On construction, calculates each point of domain change for the various piecewise sections. \(ax^2 + bx + c\)
-	 *
-	 * @param goalPosition
-	 * @param vMax
-	 * @param aMax
-	 * @param jMax
 	 */
-	public SCurveProfileGenerator(double goalPosition, double vMax, double aMax, double jMax) {
+	public SCurveProfile(double startingPosition, double goalPosition, ProfileConfiguration configuration) {
+		this.deltaD = abs(startingPosition - goalPosition);
+		this.startingPosition = startingPosition;
 		this.goalPosition = goalPosition;
+		this.vMax = configuration.getMaxVelocity();
 
-		this.vMax = vMax;
-
-		this.aMax = aMax;
-		this.jMax = jMax;
+		this.aMax = configuration.getMaxAcceleration();
+		this.jMax = configuration.getMaxJerk();
 		if (vMax < pow(aMax, 2) / jMax) {
-			this.aMax = sqrt(vMax* jMax);
+			this.aMax = sqrt(vMax * jMax);
 		}
 
-		generateParams(this.goalPosition, this.vMax, this.aMax, this.jMax);
+		generateParams(this.deltaD, this.vMax, this.aMax, this.jMax);
 
 
 		if (wT4 < 0) {
 			double newMaxV = .5 * (((.57735 * sqrt(this.aMax) * sqrt((-24d * pow(this.aMax, 2) * wT3) +
-					(3d * this.aMax * this.jMax * pow(wT1, 2)) + (12 * this.aMax * this.jMax * pow(wT3, 2)) + (12 * this.goalPosition * this.jMax)
+					(3d * this.aMax * this.jMax * pow(wT1, 2)) + (12 * this.aMax * this.jMax * pow(wT3, 2)) + (12 * this.deltaD * this.jMax)
 					- (8 * pow(this.jMax, 2) * pow(wT1, 3)))) / sqrt(this.jMax)) +
 					(2 * pow(this.aMax, 2)) / this.jMax - this.aMax * wT1 - 2 * this.aMax * wT3);
 			this.vMax = newMaxV;
-			generateParams(this.goalPosition, newMaxV, this.aMax, this.jMax);
+			generateParams(this.deltaD, newMaxV, this.aMax, this.jMax);
 		}
 
 	}
@@ -117,8 +115,12 @@ public class SCurveProfileGenerator {
 	}
 
 	public ProfileTrajectoryPoint nextPoint(double interval) {
-		currentTime += interval;
-		return new ProfileTrajectoryPoint(calcPosition(), calcVelocity(), calcAcceleration(), calcJerk(), interval, currentTime);
+		if (wT1 >= 0 && wT2 >= 0 && wT3 >= 0 && wT4 >= 0 && wT5 >= 0 && wT6 >= 0 && wT7 >= 0) {
+			currentTime += interval;
+			return new ProfileTrajectoryPoint(calcPosition(), calcVelocity(), calcAcceleration(), calcJerk(), interval, currentTime);
+		} else {
+			throw new OutOfRangeException(wT4, 0, 225);
+		}
 	}
 
 
@@ -146,7 +148,7 @@ public class SCurveProfileGenerator {
 		} else if (isBetweenTimes(t6, t7)) {
 			position = p6 + v6 * (currentTime - t6) - (aMax / 2) * pow(currentTime - t6, 2) + (jMax / 6) * pow(currentTime - t6, 3);
 		} else if (currentTime >= t7) {
-			position = goalPosition;
+			position = deltaD;
 		} else {
 			throw new OutOfRangeException(currentTime, 0d, t7);
 		}
@@ -239,7 +241,7 @@ public class SCurveProfileGenerator {
 	}
 
 	private boolean isBetweenTimes(double startTime, double endTime) {
-		return currentTime > startTime && currentTime < endTime;
+		return currentTime >= startTime && currentTime <= endTime;
 	}
 
 
@@ -248,18 +250,40 @@ public class SCurveProfileGenerator {
 	}
 
 	public double currentPosition() {
-		return calcPosition();
+		if (startingPosition > goalPosition) {
+			return startingPosition - calcPosition();
+		} else {
+			return startingPosition + calcPosition();
+		}
 	}
 
 	public double currentVelocity() {
-		return calcVelocity();
+
+		if (startingPosition > goalPosition) {
+			return -1d * calcVelocity();
+		} else {
+			return calcVelocity();
+		}
 	}
 
 	public double currentAcceleration() {
-		return calcAcceleration();
+
+		if (startingPosition > goalPosition) {
+			return -1d * calcAcceleration();
+		} else {
+			return calcAcceleration();
+		}
 	}
 
 	public double currentJerk() {
-		return calcJerk();
+		if (startingPosition > goalPosition) {
+			return -1d * calcJerk();
+		} else {
+			return calcJerk();
+		}
+	}
+
+	public boolean isFinished() {
+		return currentTime > t7;
 	}
 }

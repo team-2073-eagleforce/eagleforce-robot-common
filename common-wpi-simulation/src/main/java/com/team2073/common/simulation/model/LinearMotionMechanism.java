@@ -1,6 +1,9 @@
 package com.team2073.common.simulation.model;
 
-import com.team2073.common.motionprofiling.SCurveProfileGenerator;
+import com.team2073.common.controlloop.MotionProfileControlloop;
+import com.team2073.common.motionprofiling.ProfileConfiguration;
+import com.team2073.common.motionprofiling.SCurveProfileManager;
+import com.team2073.common.motionprofiling.lib.trajectory.Trajectory;
 import com.team2073.common.simulation.SimulationConstants.MotorType;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 import com.team2073.common.util.GraphCSVUtil;
@@ -15,6 +18,7 @@ import static com.team2073.common.util.ConversionUtil.*;
 public class LinearMotionMechanism extends AbstractSimulationMechanism {
 
 	private final double pulleyRadius;
+	double time;
 
 	public LinearMotionMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double pullyRadius) {
 		super(gearRatio, motor, motorCount, massOnSystem);
@@ -22,18 +26,41 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 	}
 
 	public static void main(String[] args) {
-		GraphCSVUtil graph = new GraphCSVUtil("ElevatorSimulation", "time", "ProfilePosition", "ProfileVelocity", "ProfileAcceleration", "ProfileJerk");
-		SCurveProfileGenerator profile = new SCurveProfileGenerator(80, 100, 600, 6000);
+		LinearMotionMechanism lmm = new LinearMotionMechanism(25, MotorType.PRO, 3, 15, 1.75 / 2);
+		GraphCSVUtil graph = new GraphCSVUtil("ElevatorSimulation", "time", "ProfilePosition",
+				"ProfileVelocity", "ProfileAcceleration", "ProfileJerk", "actual position", "actual velocity");
+		SCurveProfileManager manager = new SCurveProfileManager(new MotionProfileControlloop(.05, 0, .01, .15 / 800, .05, 1),
+				new ProfileConfiguration(100, 800, 8000, .01), () -> lmm.dank(30, .30));
 		double time = 0;
-		while (time < profile.getTotalTime()) {
-			if(time >= 0.58){
-				System.out.println("Breakie time");
-			}
-			profile.nextPoint(.01);
-			graph.updateMainFile(time, profile.currentPosition(), profile.currentVelocity(), profile.currentAcceleration(), profile.currentJerk());
+		manager.setPoint(30d);
+		while (!manager.isCurrentProfileFinished()) {
+			lmm.manualUpdate(10);
+			manager.newOutput();
+			Trajectory.Segment seg = manager.getProfile().getSegment((int) Math.round(time / .01));
+			graph.updateMainFile(time, seg.pos, seg.vel,
+					seg.acc, seg.jerk, lmm.position(), lmm.velocity(), manager.getOutput());
 			time += .01;
 		}
+		double t1 = time;
+		System.out.println(t1);
+		manager.setPoint(33d);
+		while (!manager.isCurrentProfileFinished()) {
+			manager.newOutput();
+			Trajectory.Segment seg = manager.getProfile().getSegment((int) Math.round((time - t1) / .01));
+			graph.updateMainFile(time, seg.pos, seg.vel,
+					seg.acc, seg.jerk, lmm.position(), lmm.velocity(), manager.getOutput());
+			time += .01;
+		}
+
 		graph.writeToFile();
+
+	}
+
+	public double dank(double posofT1, double timeOfT1) {
+		if (time < timeOfT1) {
+			return 10d;
+		}
+		return posofT1;
 	}
 
 	@Override
@@ -47,6 +74,12 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 
 		setPosition(calculatePosition(env.getIntervalMs()));
 		setVelocity(calculateVelocity(env.getIntervalMs()));
+	}
+
+	public void manualUpdate(int intervalMs) {
+		time += msToSeconds(intervalMs);
+		setPosition(calculatePosition(intervalMs));
+		setVelocity(calculateVelocity(intervalMs));
 	}
 
 	/**
