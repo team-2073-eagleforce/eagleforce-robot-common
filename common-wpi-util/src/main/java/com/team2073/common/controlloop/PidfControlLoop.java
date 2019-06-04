@@ -3,6 +3,7 @@ package com.team2073.common.controlloop;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.util.ConversionUtil;
 import com.team2073.common.util.Throw;
+import edu.wpi.first.wpilibj.RobotController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,7 @@ public class PidfControlLoop {
 	private PositionSupplier positionSupplier;
 	private Callable<Boolean> fCondition;
 	private int fConditionExceptionCount;
-	private double lastTime = ConversionUtil.msToSeconds(System.currentTimeMillis());
+	private double lastTime = ConversionUtil.microSecToSec(RobotController.getFPGATime());
 
 	public PidfControlLoop(double p, double i, double d, double f, double maxOutput) {
 		this.p = p;
@@ -100,7 +101,7 @@ public class PidfControlLoop {
 	}
 
 	public void updatePID(){
-		double currentTime = ConversionUtil.msToSeconds(System.currentTimeMillis());
+		double currentTime = ConversionUtil.microSecToSec(RobotController.getFPGATime());
 		if(currentTime - lastTime > LONG_PID_INTERVAL){
 			updatePID(DEFAULT_INTERVAL);
 		}else{

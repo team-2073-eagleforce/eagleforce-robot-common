@@ -1,6 +1,8 @@
 package com.team2073.common.controlloop;
 
 import com.team2073.common.motionprofiling.ProfileTrajectoryPoint;
+import com.team2073.common.util.ConversionUtil;
+import edu.wpi.first.wpilibj.RobotController;
 
 import java.util.concurrent.Callable;
 
@@ -22,6 +24,7 @@ public class MotionProfileControlloop {
 	private Callable<ProfileTrajectoryPoint> dataPointUpdater;
 	private Callable<ProfileTrajectoryPoint> redundantDataPointUpdater;
 	private PositionSupplier positionUpdater;
+	private double lastTime = ConversionUtil.microSecToSec(RobotController.getFPGATime());
 
 	/**
 	 * @param p         proportional gain
@@ -48,6 +51,12 @@ public class MotionProfileControlloop {
 		this.maxOutput = maxOutput;
 	}
 
+	public void update() {
+		double currentTime = ConversionUtil.microSecToSec(RobotController.getFPGATime());
+		update(currentTime - lastTime);
+		lastTime = currentTime;
+	}
+
 	public void update(double interval) {
 		try {
 			this.currentPoint = dataPointUpdater.call();
@@ -67,7 +76,7 @@ public class MotionProfileControlloop {
 
 		output = 0;
 		output += p * error;
-		output += d * ((error - lastError) / interval - currentPoint.getVelocity());
+		output += d * ((error - lastError) / interval);
 		output += kv * currentPoint.getVelocity();
 		output += ka * currentPoint.getAcceleration();
 		output += kj * currentPoint.getJerk();
