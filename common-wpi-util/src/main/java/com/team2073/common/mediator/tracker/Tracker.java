@@ -1,4 +1,4 @@
-package com.team2073.common.mediator.Tracker;
+package com.team2073.common.mediator.tracker;
 
 import com.team2073.common.mediator.condition.Condition;
 

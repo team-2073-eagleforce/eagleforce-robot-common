@@ -22,7 +22,6 @@ import static com.team2073.common.util.ClassUtil.*;
 
 public class EagleSRX extends TalonSRX implements AsyncPeriodicRunnable, SmartDashboardAware {
 
-    // TODO: Change case to EagleSrx (same with EagleSPX)
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final RobotContext robotContext = RobotContext.getInstance();
