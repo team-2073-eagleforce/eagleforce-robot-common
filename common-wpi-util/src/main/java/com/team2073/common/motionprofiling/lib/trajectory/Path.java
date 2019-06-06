@@ -40,6 +40,11 @@ public class Path {
 		return (go_left_ ? go_left_pair_.right : go_left_pair_.left);
 	}
 
+	public Trajectory getRobotTrajectory(){
+		return go_left_pair_.center;
+	}
+
+
 	public Trajectory.Pair getPair() {
 		return go_left_pair_;
 	}

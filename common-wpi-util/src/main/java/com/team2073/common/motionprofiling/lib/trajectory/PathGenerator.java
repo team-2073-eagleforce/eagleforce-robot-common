@@ -11,7 +11,7 @@ public class PathGenerator {
 	/**
 	 * Generate a path for autonomous driving.
 	 *
-	 * @param waypoints       The waypoints to drive to (FOR THE "GO LEFT" CASE!!!!)
+	 * @param waypoints       The waypoints to pathfollowing to (FOR THE "GO LEFT" CASE!!!!)
 	 * @param config          Trajectory config.
 	 * @param wheelbase_width Wheelbase separation; units must be consistent with
 	 *                        config and waypoints.
@@ -144,6 +144,6 @@ public class PathGenerator {
 			}
 		}
 
-		return new Trajectory.Pair(output[0], output[1]);
+		return new Trajectory.Pair(output[0], output[1], input);
 	}
 }

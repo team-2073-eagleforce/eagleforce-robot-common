@@ -250,6 +250,7 @@ public class TrajectoryGenerator {
 		public double max_vel;
 		public double max_acc;
 		public double max_jerk;
+
 		public Config(ProfileConfiguration configuration) {
 			dt = configuration.getInterval();
 			max_acc = configuration.getMaxAcceleration();
