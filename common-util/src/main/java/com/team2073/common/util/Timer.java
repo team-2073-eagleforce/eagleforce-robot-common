@@ -6,7 +6,11 @@ public class Timer {
 	private long stopTime = 0;
 	private TimerState state = TimerState.UNINITIALIZED;
 
-	enum TimerState {
+	public TimerState getState() {
+		return state;
+	}
+
+	public enum TimerState {
 		STOPPED, STARTED, UNINITIALIZED;
 	}
 
@@ -35,7 +39,7 @@ public class Timer {
 		long elapsed;
 		if (state == TimerState.STARTED) {
 			elapsed = (System.currentTimeMillis() - startTime);
-		} else if (state == TimerState.STOPPED){
+		} else if (state == TimerState.STOPPED) {
 			elapsed = (stopTime - startTime);
 		} else {
 			elapsed = 0;

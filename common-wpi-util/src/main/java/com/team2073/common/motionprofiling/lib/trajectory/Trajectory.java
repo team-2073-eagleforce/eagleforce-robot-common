@@ -135,6 +135,10 @@ public class Trajectory {
 		return cloned;
 	}
 
+	public Segment[] getSegments_() {
+		return segments_;
+	}
+
 	private Segment[] copySegments(Segment[] tocopy) {
 		Segment[] copied = new Segment[tocopy.length];
 		for (int i = 0; i < tocopy.length; ++i) {
