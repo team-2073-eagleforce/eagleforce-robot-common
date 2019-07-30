@@ -1,9 +1,10 @@
 package com.team2073.common.controller;
 
+import com.team2073.common.sim.ComponentType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-public class EagleJoystick {
+public class EagleJoystick implements UsbController{
 
 	private Joystick joystick;
 	private JoystickButton power1;
@@ -39,5 +40,35 @@ public class EagleJoystick {
 
 	public JoystickButton getPower5() {
 		return power5;
+	}
+
+	@Override
+	public boolean getRawButton(int port) {
+		return joystick.getRawButton(port);
+	}
+
+	@Override
+	public double getRawAxis(int axis) {
+		return joystick.getRawAxis(axis);
+	}
+
+	@Override
+	public int getPOV() {
+		return joystick.getPOV();
+	}
+
+	@Override
+	public ComponentType getComponentType() {
+		return ComponentType.JOYSTICK;
+	}
+
+	@Override
+	public int getPort() {
+		return joystick.getPort();
+	}
+
+	@Override
+	public String getName() {
+		return EagleJoystick.class.getName() + "_" + getPort();
 	}
 }
