@@ -110,6 +110,7 @@ public class PeriodicRunner {
 	private Timer instanceLoopTimer = new Timer();
 	private Timer fullLoopTimer = new Timer();
 	private Timer overallTimer = new Timer();
+	private boolean enabled;
 	private boolean started;
 	private boolean loggedEmptyList;
 	private NumberFormat formatter = new DecimalFormat("#0.00000");
@@ -278,6 +279,10 @@ public class PeriodicRunner {
             startAsyncThread();
             started = true;
         }
+
+		if(!enabled || !robotContext.getCommonProps().getPeriodicRunnerEnabled()) {
+			return;
+		}
 
 		if (instanceMap.isEmpty()) {
 			if (!loggedEmptyList) {
@@ -499,5 +504,20 @@ public class PeriodicRunner {
 		public void run() {
 			ExceptionUtil.suppressVoid(instance.instance::onPeriodicAsync, "instance::onPeriodicAsync");
 		}
+	}
+
+	public void enable() {
+		if(robotContext.getCommonProps().getPeriodicRunnerEnabled() || enabled) {
+			logger.info("PeriodicRunner enabled");
+		}
+
+		enabled = true;
+	}
+
+	public void disable() {
+		if(!enabled) {
+			logger.info("PeriodicRunner disabled");
+		}
+		enabled = false;
 	}
 }

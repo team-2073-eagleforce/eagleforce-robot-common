@@ -1,7 +1,12 @@
 package com.team2073.common.event;
 
+import com.team2073.common.ctx.RobotContext;
+import com.team2073.common.periodic.OccasionalLoggingRunner;
 import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.util.ExceptionUtil;
+import org.apache.commons.logging.impl.Jdk14Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,6 +16,13 @@ import java.util.Map;
  * @author pbriggs
  */
 public class RobotEventPublisher implements PeriodicRunnable {
+
+    private final RobotContext robotContext = RobotContext.getInstance();
+    private static final Logger logger = LoggerFactory.getLogger(OccasionalLoggingRunner.class);
+
+
+    private boolean enabled;
+
 
     // TODO:
     // -Create shutdown event.
@@ -74,7 +86,28 @@ public class RobotEventPublisher implements PeriodicRunnable {
     @Override
     public void onPeriodic() {
         // This will call every instance every periodic loop. Need to fix this.
+
+        if(!robotContext.getCommonProps().getRobotEventPublisherEnabled() || !enabled) {
+            return;
+        }
+
         instancesMap.get(currentEvent).forEach(instance ->
                 ExceptionUtil.suppressVoid(instance::onEvent, instance.getClass().getSimpleName() + " ::onEvent"));
+    }
+
+    public void enable() {
+        if(enabled || robotContext.getCommonProps().getRobotEventPublisherEnabled()) {
+            logger.info("EventPublisher enabled");
+        }
+        enabled = true;
+    }
+
+    public void disable() {
+        if(!enabled){
+            logger.info("EventPublisher disabled");
+        }
+
+        enabled = false;
+
     }
 }

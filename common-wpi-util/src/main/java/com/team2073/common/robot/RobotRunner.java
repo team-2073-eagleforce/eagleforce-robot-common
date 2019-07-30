@@ -96,7 +96,8 @@ public class RobotRunner implements RobotDelegate {
 		PropertyLoader propertyLoader;
 		DriverStationAdapter driverStation;
 		SchedulerAdapter scheduler;
-		
+
+
 		if ((commonProps = robot.createCommonProperties()) != null)
 			robotContext.setCommonProps(commonProps);
 		

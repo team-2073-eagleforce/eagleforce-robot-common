@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.team2073.common.assertion.Assert;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
+import com.team2073.common.periodic.OccasionalLoggingRunner;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.proploader.model.PropertyContainer;
 import com.team2073.common.proploader.model.PropertyContainerWrapper;
@@ -82,7 +83,10 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
     // Other
     private final List<File> propDirList = new ArrayList<>();
     private final Map<Class<?>, PropertyContainerWrapper> containerWrapperMap = new HashMap<>();
-    
+    private static final Logger logger = LoggerFactory.getLogger(OccasionalLoggingRunner.class);
+    public boolean enabled = false;
+
+
     public PropertyLoader() {
         Integer interval = robotContext.getCommonProps().getPropLoaderRefreshPropsInterval();
     }
@@ -205,6 +209,11 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
      */
     @Override
     public void onPeriodicAsync() {
+
+        if (!robotContext.getCommonProps().getPropertyLoaderEnabled() || !enabled) {
+            return;
+        }
+
         if (runMode == MANUAL) {
             if (!loggedSwitchingToManualMode) {
                 log.info("[{}] invoked manually. Ignoring all future [{}] invocations.", simpleName(this), simpleName(PeriodicRunner.class));
@@ -368,7 +377,23 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
     Collection<PropertyContainerWrapper> getContainerWrapperList() {
         return Collections.unmodifiableCollection(containerWrapperMap.values());
     }
-    
+
+    public void enable() {
+        if(enabled || robotContext.getCommonProps().getRobotEventPublisherEnabled()) {
+            logger.info("PropertyLoader enabled");
+        }
+        enabled = true;
+    }
+
+    public void disable() {
+        if(!enabled){
+            logger.info("PropertyLoader disabled");
+        }
+
+        enabled = false;
+
+    }
+
 }
 
 

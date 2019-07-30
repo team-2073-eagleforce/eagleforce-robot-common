@@ -9,19 +9,33 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SmartDashboardAwareRunner {
+public class SmartDashboardAwareRunner implements AsyncPeriodicRunnable {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final RobotContext robotContext = RobotContext.getInstance();
 	private final List<SmartDashboardAware> instanceList = new LinkedList<>();
+	private boolean enabled = true;
 
 	public SmartDashboardAwareRunner() {
+		autoRegisterWithPeriodicRunner(robotContext.getCommonProps().getSmartDashboardAsyncPeriod());
+		robotContext.getPeriodicRunner().registerSmartDashboard(this);
 	}
 
 	public void registerInstance(SmartDashboardAware instance) {
 		Assert.assertNotNull(instance, "instance");
 		logger.info("Registered [{}] SmartDashboardAware instance.", instance.getClass().getSimpleName());
 		instanceList.add(instance);
+	}
+
+	@Override
+	public void onPeriodicAsync() {
+
+		if(!robotContext.getCommonProps().getSmartDashboardAwareRunnerEnabled() || !enabled) {
+			return;
+		}
+
+		updateAll();
+		readAll();
 	}
 
 	private void updateAll() {
@@ -34,4 +48,21 @@ public class SmartDashboardAwareRunner {
 				ExceptionUtil.suppressVoid(instance::readSmartDashboard, "SmartDashboardAware::readSmartDashboard"));
 	}
 
+	public void enable() {
+		if(enabled || robotContext.getCommonProps().getSmartDashboardAwareRunnerEnabled()) {
+			logger.info("SmartDashboardAwareRunner enabled");
+			return;
+		}
+		enabled = true;
+	}
+
+	public void disable() {
+		if(!enabled){
+			logger.info("SmartDashboardAwareRunner disabled");
+			return;
+		}
+
+		enabled = false;
+
+	}
 }
