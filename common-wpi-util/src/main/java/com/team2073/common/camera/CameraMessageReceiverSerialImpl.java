@@ -56,13 +56,6 @@ public class CameraMessageReceiverSerialImpl implements CameraMessageReceiver, S
 		}
 		
 		state = State.WAITING;
-		
-		SmartDashboard.putString(smartdashboardKeyPrefix + "requestMessageCommand", requestMessageCommand);
-		SmartDashboard.putNumber(smartdashboardKeyPrefix + "circuitBreakerMinDelay", circuitBreakerMinDelay);
-		SmartDashboard.putNumber(smartdashboardKeyPrefix + "circuitBreakerMaxDelay", circuitBreakerMaxDelay);
-		SmartDashboard.putNumber(smartdashboardKeyPrefix + "circuitBreakerMultiplier", circuitBreakerMultiplier);
-		SmartDashboard.putNumber(smartdashboardKeyPrefix + "circuitBreakerMaxRetries", circuitBreakerMaxRetries);
-		SmartDashboard.putString(smartdashboardKeyPrefix + "defaultMessage", defaultMessage);
 	}
 	
 	

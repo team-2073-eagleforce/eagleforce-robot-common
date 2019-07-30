@@ -75,7 +75,7 @@ import static com.team2073.common.util.ThreadUtil.*;
  *
  * @author pbriggs
  */
-public class PeriodicRunner implements SmartDashboardAware {
+public class PeriodicRunner {
 
 	// TODO:
     // 	-Allow customizing the thread pool size (extract to properties)
@@ -96,6 +96,14 @@ public class PeriodicRunner implements SmartDashboardAware {
 	private static final Logger logger = LoggerFactory.getLogger(PeriodicRunner.class);
 	
 	private final RobotContext robotContext = RobotContext.getInstance();
+
+	public Map<PeriodicRunnable, PeriodicInstance> getInstanceMap() {
+		return instanceMap;
+	}
+
+	public Map<AsyncPeriodicRunnable, AsyncPeriodicInstance> getAsyncInstanceMap() {
+		return asyncInstanceMap;
+	}
 
 	private final Map<PeriodicRunnable, PeriodicInstance> instanceMap = new HashMap<>();
 	private final Map<AsyncPeriodicRunnable, AsyncPeriodicInstance> asyncInstanceMap = new HashMap<>();
@@ -323,39 +331,6 @@ public class PeriodicRunner implements SmartDashboardAware {
         }
         logger.info("Starting asynchronous thread pool completed.");
     }
-
-	public void registerSmartDashboard(SmartDashboardAwareRunner registry) {
-		registry.registerInstance(this);
-	}
-	
-	@Override
-	public void updateSmartDashboard() {
-		SmartDashboardAdapter smartDashboard = robotContext.getSmartDashboard();
-		smartDashboard.putNumber("periodic.overall.total", fullLoopHistory.getTotal());
-		
-		smartDashboard.putNumber("periodic.curr.count", fullLoopHistory.getCount());
-		smartDashboard.putNumber("periodic.curr.total", fullLoopHistory.getTotal());
-		smartDashboard.putNumber("periodic.curr.avg", fullLoopHistory.getAverage());
-		if(fullLoopHistory.getLongestInstance() != null) {
-			smartDashboard.putNumber("periodic.curr.longest-instance.longest", fullLoopHistory.getLongest());
-			smartDashboard.putString("periodic.curr.longest-instance.name", fullLoopHistory.getLongestInstance().getName());
-			smartDashboard.putNumber("periodic.curr.longest-instance.avg", fullLoopHistory.getLongestInstance().getAverage());
-		}
-
-		smartDashboard.putNumber("periodic.history.count", instanceLoopHistory.getCount());
-		smartDashboard.putNumber("periodic.history.total", instanceLoopHistory.getTotal());
-		smartDashboard.putNumber("periodic.history.avg", instanceLoopHistory.getAverage());
-		if(instanceLoopHistory.getLongestInstance() != null) {
-			smartDashboard.putNumber("periodic.history.longest-instance.longest", instanceLoopHistory.getLongest());
-			smartDashboard.putString("periodic.history.longest-instance.name", instanceLoopHistory.getLongestInstance().getName());
-			smartDashboard.putNumber("periodic.history.longest-instance.avg", instanceLoopHistory.getLongestInstance().getAverage());
-		}
-	}
-
-	@Override
-	public void readSmartDashboard() {
-	}
-
 
 	// Testing methods
 	// ============================================================

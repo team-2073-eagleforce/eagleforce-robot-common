@@ -1,6 +1,8 @@
 package com.team2073.common.controlloop;
 
 import com.team2073.common.motionprofiling.ProfileTrajectoryPoint;
+import com.team2073.common.util.ConversionUtil;
+import edu.wpi.first.wpilibj.RobotController;
 
 import java.util.concurrent.Callable;
 
@@ -11,6 +13,7 @@ public class MotionProfileControlloop {
 	private double d;
 	private double kv;
 	private double ka;
+	private double kj;
 
 	private double output;
 	private double maxOutput;
@@ -19,7 +22,9 @@ public class MotionProfileControlloop {
 	private double position;
 	private ProfileTrajectoryPoint currentPoint;
 	private Callable<ProfileTrajectoryPoint> dataPointUpdater;
+	private Callable<ProfileTrajectoryPoint> redundantDataPointUpdater;
 	private PositionSupplier positionUpdater;
+	private double lastTime = ConversionUtil.microSecToSec(RobotController.getFPGATime());
 
 	/**
 	 * @param p         proportional gain
@@ -28,21 +33,41 @@ public class MotionProfileControlloop {
 	 * @param ka        acceleration constant
 	 * @param maxOutput
 	 */
+	public MotionProfileControlloop(double p, double d, double kv, double ka, double kj, double maxOutput) {
+		this.p = p;
+		this.d = d;
+		this.kv = kv;
+		this.ka = ka;
+		this.kj = kj;
+		this.maxOutput = maxOutput;
+	}
+
 	public MotionProfileControlloop(double p, double d, double kv, double ka, double maxOutput) {
 		this.p = p;
 		this.d = d;
 		this.kv = kv;
 		this.ka = ka;
+		this.kj = 0;
 		this.maxOutput = maxOutput;
+	}
+
+	public void update() {
+		double currentTime = ConversionUtil.microSecToSec(RobotController.getFPGATime());
+		update(currentTime - lastTime);
+		lastTime = currentTime;
 	}
 
 	public void update(double interval) {
 		try {
 			this.currentPoint = dataPointUpdater.call();
-			this.position = positionUpdater.currentPosition();
 		} catch (Exception e) {
-			e.printStackTrace();
+			try {
+				this.currentPoint = redundantDataPointUpdater.call();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
+		this.position = positionUpdater.currentPosition();
 		pidCycle(interval);
 	}
 
@@ -51,9 +76,10 @@ public class MotionProfileControlloop {
 
 		output = 0;
 		output += p * error;
-		output += d * ((error - lastError) / interval - currentPoint.getVelocity());
+		output += d * ((error - lastError) / interval);
 		output += kv * currentPoint.getVelocity();
 		output += ka * currentPoint.getAcceleration();
+		output += kj * currentPoint.getJerk();
 
 
 		if (Math.abs(output) >= maxOutput) {
@@ -69,6 +95,10 @@ public class MotionProfileControlloop {
 
 	public void dataPointCallable(Callable<ProfileTrajectoryPoint> desiredPoint) {
 		this.dataPointUpdater = desiredPoint;
+	}
+
+	public void setRedundantDataPointUpdater(Callable<ProfileTrajectoryPoint> desiredPoint) {
+		this.redundantDataPointUpdater = desiredPoint;
 	}
 
 	public void updatePosition(PositionSupplier returnsPosition) {

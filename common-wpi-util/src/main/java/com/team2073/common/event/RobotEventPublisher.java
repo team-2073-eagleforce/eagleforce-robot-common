@@ -54,7 +54,6 @@ public class RobotEventPublisher implements PeriodicRunnable {
     private Map<RobotStateEvent, LinkedList<EventListener>> instancesMap = new HashMap<>();
 
     public RobotEventPublisher() {
-        autoRegisterWithPeriodicRunner();
         for (RobotStateEvent event : RobotStateEvent.values())
             instancesMap.put(event, new LinkedList<>());
     }

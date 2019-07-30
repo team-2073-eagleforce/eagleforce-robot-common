@@ -15,9 +15,9 @@ public class SCurveTests extends BaseWpiTest {
 		double goalPosition = 5;
 		double maxVelcoity = 6;
 		double maxAcceleration = 20;
-		double averageAcceleration = 15;
-		SCurveProfileGenerator profile = new SCurveProfileGenerator(
-				goalPosition, maxVelcoity, maxAcceleration, averageAcceleration);
+		double averageAcceleration = 100;
+		SCurveProfile profile = new SCurveProfile(0,
+				goalPosition, new ProfileConfiguration(maxVelcoity, maxAcceleration, averageAcceleration));
 
 //		Gets a point really close to the end of the profile to make sure we are decelerating appropriately
 		ProfileTrajectoryPoint endPoint = profile.nextPoint(profile.getTotalTime()-.0001);
@@ -31,11 +31,11 @@ public class SCurveTests extends BaseWpiTest {
 		double goalPosition = 5;
 		double maxVelcoity = 6;
 		double maxAcceleration = 20;
-		double averageAcceleration = 15;
+		double averageAcceleration = 100;
 
 		ProfileTrajectoryPoint point;
-		SCurveProfileGenerator profile = new SCurveProfileGenerator(
-				goalPosition, maxVelcoity, maxAcceleration, averageAcceleration);
+		SCurveProfile profile = new SCurveProfile(0,
+				goalPosition, new ProfileConfiguration(maxVelcoity, maxAcceleration, averageAcceleration));
 		MotionProfileControlloop mpc = new MotionProfileControlloop(.05, .01, .1666 , .005, 1);
 
 		mpc.dataPointCallable(() -> profile.nextPoint(.01));

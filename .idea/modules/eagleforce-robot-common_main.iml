@@ -5,11 +5,27 @@
       <configuration />
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
-    <output url="file://$MODULE_DIR$/../../out/production/classes" />
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11">
+    <output url="file://$MODULE_DIR$/../../build/classes/java/main" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../src/main" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="WPILib User Lib Directory">
+        <CLASSES>
+          <root url="file://$USER_HOME$/wpilib/user/java/lib" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="file://$USER_HOME$/wpilib/user/java/lib" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="file://$USER_HOME$/wpilib/user/java/lib" />
+        </SOURCES>
+        <jarDirectory url="file://$USER_HOME$/wpilib/user/java/lib" recursive="true" />
+        <jarDirectory url="file://$USER_HOME$/wpilib/user/java/lib" recursive="true" type="JAVADOC" />
+        <jarDirectory url="file://$USER_HOME$/wpilib/user/java/lib" recursive="true" type="SOURCES" />
+      </library>
+    </orderEntry>
   </component>
 </module>

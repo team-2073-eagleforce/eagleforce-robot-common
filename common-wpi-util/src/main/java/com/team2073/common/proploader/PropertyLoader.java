@@ -85,7 +85,6 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
     
     public PropertyLoader() {
         Integer interval = robotContext.getCommonProps().getPropLoaderRefreshPropsInterval();
-        robotContext.getPeriodicRunner().autoRegisterAsync(this, interval);
     }
     
     /**
@@ -217,7 +216,7 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
         }
         
         runMode = PERIODIC_RUNNER;
-        loadProperties();
+//        loadProperties();
     }
     
     /**

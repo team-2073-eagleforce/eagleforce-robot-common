@@ -126,7 +126,7 @@ public class PositionalMechanismController<T extends Enum<T> & PositionContainer
 		io = new IOGateway();
 		logTable = new NetworkTableGrouping(StringUtil.toFileCase(baseName));
 		data = new PositionalMechanismControllerData(this);
-		robotContext.getDataRecorder().registerRecordable(data);
+//		robotContext.getDataRecorder().registerRecordable(data);
 		autoRegisterWithPeriodicRunner(getName());
 	}
 

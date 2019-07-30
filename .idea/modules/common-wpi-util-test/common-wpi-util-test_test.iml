@@ -21,15 +21,12 @@
             <array />
           </option>
           <option name="coroutinesState" value="warn" />
-          <option name="errors">
-            <ArgumentParseErrors />
-          </option>
         </compilerArguments>
       </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
-    <output-test url="file://$MODULE_DIR$/../../../common-wpi-util-test/out/test/classes" />
+    <output-test url="file://$MODULE_DIR$/../../../common-wpi-util-test/build/classes/java/test" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../common-wpi-util-test/src/test">
       <sourceFolder url="file://$MODULE_DIR$/../../../common-wpi-util-test/src/test/java" isTestSource="true" />

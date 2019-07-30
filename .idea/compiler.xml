@@ -19,8 +19,8 @@
       <module name="common-wpi-util-test_test" target="1.8" />
       <module name="common-wpi-util_main" target="1.8" />
       <module name="common-wpi-util_test" target="1.8" />
-      <module name="eagleforce-robot-common_main" target="1.8" />
-      <module name="eagleforce-robot-common_test" target="1.8" />
+      <module name="eagleforce-robot-common_main" target="11" />
+      <module name="eagleforce-robot-common_test" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

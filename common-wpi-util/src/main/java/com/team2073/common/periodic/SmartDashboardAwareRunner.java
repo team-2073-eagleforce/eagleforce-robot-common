@@ -9,27 +9,19 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SmartDashboardAwareRunner implements AsyncPeriodicRunnable {
+public class SmartDashboardAwareRunner {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final RobotContext robotContext = RobotContext.getInstance();
 	private final List<SmartDashboardAware> instanceList = new LinkedList<>();
 
 	public SmartDashboardAwareRunner() {
-		autoRegisterWithPeriodicRunner(robotContext.getCommonProps().getSmartDashboardAsyncPeriod());
-		robotContext.getPeriodicRunner().registerSmartDashboard(this);
 	}
 
 	public void registerInstance(SmartDashboardAware instance) {
 		Assert.assertNotNull(instance, "instance");
 		logger.info("Registered [{}] SmartDashboardAware instance.", instance.getClass().getSimpleName());
 		instanceList.add(instance);
-	}
-
-	@Override
-	public void onPeriodicAsync() {
-		updateAll();
-		readAll();
 	}
 
 	private void updateAll() {
