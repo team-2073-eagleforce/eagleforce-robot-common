@@ -96,17 +96,12 @@ public class RobotEventPublisher implements PeriodicRunnable {
     }
 
     public void enable() {
-        if(enabled || robotContext.getCommonProps().getRobotEventPublisherEnabled()) {
-            logger.info("EventPublisher enabled");
-        }
+        logger.info("EventPublisher enabled");
         enabled = true;
     }
 
     public void disable() {
-        if(!enabled){
-            logger.info("EventPublisher disabled");
-        }
-
+        logger.info("EventPublisher disabled");
         enabled = false;
 
     }

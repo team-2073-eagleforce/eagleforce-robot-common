@@ -18,7 +18,6 @@ public class SmartDashboardAwareRunner implements AsyncPeriodicRunnable {
 
 	public SmartDashboardAwareRunner() {
 		autoRegisterWithPeriodicRunner(robotContext.getCommonProps().getSmartDashboardAsyncPeriod());
-		robotContext.getPeriodicRunner().registerSmartDashboard(this);
 	}
 
 	public void registerInstance(SmartDashboardAware instance) {
@@ -49,19 +48,12 @@ public class SmartDashboardAwareRunner implements AsyncPeriodicRunnable {
 	}
 
 	public void enable() {
-		if(enabled || robotContext.getCommonProps().getSmartDashboardAwareRunnerEnabled()) {
-			logger.info("SmartDashboardAwareRunner enabled");
-			return;
-		}
+		logger.info("SmartDashboardAwareRunner enabled");
 		enabled = true;
 	}
 
 	public void disable() {
-		if(!enabled){
-			logger.info("SmartDashboardAwareRunner disabled");
-			return;
-		}
-
+		logger.info("SmartDashboardAwareRunner disabled");
 		enabled = false;
 
 	}

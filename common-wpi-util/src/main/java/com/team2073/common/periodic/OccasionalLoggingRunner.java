@@ -39,16 +39,12 @@ public class OccasionalLoggingRunner implements AsyncPeriodicRunnable {
     }
 
     public void enable(){
-        if(enabled || robotContext.getCommonProps().getOccasionalLoggingRunnerEnabled()) {
-            logger.info("OccasionalLoggingRunner enabled");
-        }
+        logger.info("OccasionalLoggingRunner enabled");
         enabled = true;
     }
 
     public void disable() {
-        if(!enabled){
-            logger.info("OccasionalLoggingRunner disabled");
-        }
+        logger.info("OccasionalLoggingRunner disabled");
         enabled = false;
     }
 

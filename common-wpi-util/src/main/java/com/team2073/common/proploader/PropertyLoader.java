@@ -379,17 +379,12 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
     }
 
     public void enable() {
-        if(enabled || robotContext.getCommonProps().getRobotEventPublisherEnabled()) {
-            logger.info("PropertyLoader enabled");
-        }
+        logger.info("PropertyLoader enabled");
         enabled = true;
     }
 
     public void disable() {
-        if(!enabled){
-            logger.info("PropertyLoader disabled");
-        }
-
+        logger.info("PropertyLoader disabled");
         enabled = false;
 
     }
