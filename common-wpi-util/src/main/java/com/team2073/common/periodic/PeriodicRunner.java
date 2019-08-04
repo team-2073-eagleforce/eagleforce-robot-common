@@ -52,7 +52,7 @@ import static com.team2073.common.util.ThreadUtil.*;
  *
  * <h3>Exception Handling</h3>
  * Any exceptions thrown by instances will be caught, logged and the loop will continue running. Exceptions thrown during
- * {@link Subsystem#periodic()} or {@link Command#execute()} (the alternative to using this class) are not handled and
+ * {@link Subsystem#periodic()} ()} (the alternative to using this class) are not handled and
  * will cause the robot to stop abruptly requiring a restart.
  *
  * <h3>Elapsed Time Logging</h3>
@@ -110,6 +110,7 @@ public class PeriodicRunner {
 	private Timer instanceLoopTimer = new Timer();
 	private Timer fullLoopTimer = new Timer();
 	private Timer overallTimer = new Timer();
+	private boolean enabled;
 	private boolean started;
 	private boolean loggedEmptyList;
 	private NumberFormat formatter = new DecimalFormat("#0.00000");
@@ -279,6 +280,10 @@ public class PeriodicRunner {
             started = true;
         }
 
+		if(!enabled || !robotContext.getCommonProps().getPeriodicRunnerEnabled()) {
+			return;
+		}
+
 		if (instanceMap.isEmpty()) {
 			if (!loggedEmptyList) {
 				loggedEmptyList = true;
@@ -332,6 +337,7 @@ public class PeriodicRunner {
         logger.info("Starting asynchronous thread pool completed.");
     }
 
+
 	// Testing methods
 	// ============================================================
 
@@ -352,6 +358,7 @@ public class PeriodicRunner {
 	InstanceAwareDurationHistory getCurrInstanceLoopHistory() {
 		return currInstanceLoopHistory;
 	}
+
 
 	// Inner classes
 	// ============================================================
@@ -499,5 +506,15 @@ public class PeriodicRunner {
 		public void run() {
 			ExceptionUtil.suppressVoid(instance.instance::onPeriodicAsync, "instance::onPeriodicAsync");
 		}
+	}
+
+	public void enable() {
+		logger.info("PeriodicRunner enabled");
+		enabled = true;
+	}
+
+	public void disable() {
+		logger.info("PeriodicRunner disabled");
+		enabled = false;
 	}
 }

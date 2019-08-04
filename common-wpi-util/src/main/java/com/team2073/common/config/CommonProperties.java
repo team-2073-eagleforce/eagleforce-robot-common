@@ -21,6 +21,7 @@ public class CommonProperties {
     private Boolean realMatch = false;
 
     // PeriodicRunner
+    private Boolean periodicRunnerEnabled = true;
     private Boolean periodicRunnerAutoRegister = true;
     private Integer loggingAsyncPeriod = DEFAULT_SHORT_INTERVAL;
     private Integer smartDashboardAsyncPeriod = DEFAULT_SHORT_INTERVAL;
@@ -34,14 +35,24 @@ public class CommonProperties {
     private Boolean dataRecorderAutoFlush = true;
     private Integer dataRecorderDefaultRecordInterval = DEFAULT_SHORT_INTERVAL;
     private Integer dataRecorderAutoFlushInterval = DEFAULT_LONG_INTERVAL;
-    
+
     // PropertyLoader
+    private Boolean propertyLoaderEnabled = true;
     private Integer propLoaderRefreshPropsInterval = DEFAULT_LONG_INTERVAL;
     
     // RobotRunner
     private Boolean loggingLevelModuleEnabled = true;
     private Boolean diagnosticLoggingModuleEnabled = false;
     private Boolean diagnosticLoggingModuleDataRecordingEnabled = false;
+
+    //OccasionalLoggingRunner
+    private Boolean occasionalLoggingRunnerEnabled = true;
+
+    //RobotEventPublisher
+    private Boolean robotEventPublisherEnabled = true;
+
+    //SmartDashboardAwareRunner
+    private Boolean smartDashboardAwareRunnerEnabled = true;
     
     public Boolean getRealMatch() {
         return realMatch;
@@ -50,7 +61,15 @@ public class CommonProperties {
     public void setRealMatch(Boolean realMatch) {
         this.realMatch = realMatch;
     }
-    
+
+    public Boolean getPeriodicRunnerEnabled() {
+        return periodicRunnerEnabled;
+    }
+
+    public void setPeriodicRunnerEnabled(Boolean periodicRunnerEnabled) {
+        this.periodicRunnerEnabled = periodicRunnerEnabled;
+    }
+
     public Boolean getPeriodicRunnerAutoRegister() {
         return periodicRunnerAutoRegister;
     }
@@ -138,6 +157,14 @@ public class CommonProperties {
     public void setDataRecorderAutoFlushInterval(Integer dataRecorderAutoFlushInterval) {
         this.dataRecorderAutoFlushInterval = dataRecorderAutoFlushInterval;
     }
+
+    public Boolean getPropertyLoaderEnabled() {
+        return propertyLoaderEnabled;
+    }
+
+    public void setPropertyLoaderEnabled(Boolean propertyLoaderEnabled) {
+        this.propertyLoaderEnabled = propertyLoaderEnabled;
+    }
     
     public Integer getPropLoaderRefreshPropsInterval() {
         return propLoaderRefreshPropsInterval;
@@ -169,5 +196,29 @@ public class CommonProperties {
     
     public void setDiagnosticLoggingModuleDataRecordingEnabled(Boolean diagnosticLoggingModuleDataRecordingEnabled) {
         this.diagnosticLoggingModuleDataRecordingEnabled = diagnosticLoggingModuleDataRecordingEnabled;
+    }
+
+    public Boolean getOccasionalLoggingRunnerEnabled() {
+        return occasionalLoggingRunnerEnabled;
+    }
+
+    public void setOccasionalLoggingRunnerEnabled(Boolean occasionalLoggingRunnerEnabled) {
+        this.occasionalLoggingRunnerEnabled = occasionalLoggingRunnerEnabled;
+    }
+
+    public Boolean getRobotEventPublisherEnabled() {
+        return robotEventPublisherEnabled;
+    }
+
+    public void setRobotEventPublisherEnabled(Boolean robotEventPublisherEnabled) {
+        this.robotEventPublisherEnabled = robotEventPublisherEnabled;
+    }
+
+    public Boolean getSmartDashboardAwareRunnerEnabled() {
+        return smartDashboardAwareRunnerEnabled;
+    }
+
+    public void setSmartDashboardAwareRunnerEnabled(Boolean smartDashboardAwareRunnerEnabled) {
+        this.smartDashboardAwareRunnerEnabled = smartDashboardAwareRunnerEnabled;
     }
 }
