@@ -135,7 +135,7 @@ public class RobotContext {
     // Custom instances
     private PeriodicRunner periodicRunner;
     private OccasionalLoggingRunner loggingRunner;
-//    private DataRecorder dataRecorder;
+    private DataRecorder dataRecorder;
     private RobotEventPublisher eventPublisher;
     private PropertyLoader propertyLoader;
     private SmartDashboardAwareRunner smartDashboardRunner;
@@ -212,12 +212,12 @@ public class RobotContext {
         return this;
     }
 
-//    public DataRecorder getDataRecorder() {
-//        if (dataRecorder == null)
-//            dataRecorder = new DataRecorder();
-//
-//        return dataRecorder;
-//    }
+    public DataRecorder getDataRecorder() {
+        if (dataRecorder == null)
+            dataRecorder = new DataRecorder();
+
+        return dataRecorder;
+    }
 
 //    public RobotContext setDataRecorder(DataRecorder dataRecorder) {
 //        this.dataRecorder = dataRecorder;
