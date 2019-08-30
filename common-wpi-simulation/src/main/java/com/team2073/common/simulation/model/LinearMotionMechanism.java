@@ -29,7 +29,7 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 		LinearMotionMechanism lmm = new LinearMotionMechanism(25, MotorType.PRO, 3, 1, 1.75 / 2);
 		GraphCSVUtil graph = new GraphCSVUtil("ElevatorSimulation", "time", "ProfilePosition",
 				"ProfileVelocity", "ProfileAcceleration", "ProfileJerk", "actual position", "actual velocity");
-		SCurveProfileManager manager = new SCurveProfileManager(new MotionProfileControlloop(.05, 0, .01, .15 / 800, .05, 1),
+		SCurveProfileManager manager = new SCurveProfileManager(new MotionProfileControlloop(.05, 0, .01, .15 / 800, 1),
 				new ProfileConfiguration(100, 800, 8000, .01), () -> lmm.dank(30, .30));
 		double time = 0;
 		manager.setPoint(30d);
