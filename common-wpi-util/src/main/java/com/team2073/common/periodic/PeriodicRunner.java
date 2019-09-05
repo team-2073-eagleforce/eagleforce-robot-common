@@ -110,7 +110,7 @@ public class PeriodicRunner {
 	private Timer instanceLoopTimer = new Timer();
 	private Timer fullLoopTimer = new Timer();
 	private Timer overallTimer = new Timer();
-	private boolean enabled;
+	private boolean enabled = true;
 	private boolean started;
 	private boolean loggedEmptyList;
 	private NumberFormat formatter = new DecimalFormat("#0.00000");
