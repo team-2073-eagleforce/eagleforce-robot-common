@@ -49,8 +49,8 @@ public abstract class ConversionUtil {
 		return meters * 39.3701;
 	}
 
-	public static double inchesToMeters(double meters) {
-		return meters * 0.0254;
+	public static double inchesToMeters(double inches) {
+		return inches * 0.0254;
 	}
 
 	public static double radiansToDegrees(double radians) {
