@@ -84,7 +84,7 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
     private final List<File> propDirList = new ArrayList<>();
     private final Map<Class<?>, PropertyContainerWrapper> containerWrapperMap = new HashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(OccasionalLoggingRunner.class);
-    public boolean enabled = false;
+    public boolean enabled = true;
 
 
     public PropertyLoader() {
@@ -95,7 +95,7 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
      * An alternative to {@link #autoRegisterAllPropContainers(String)}. Pass in a class that exists in the package
      * (or parent-package) the {@literal @}{@link PropertyContainer} annotated classes reside in.
      *
-     * @param rootPackageClass The class to resolve the packge from
+     * @param rootPackageClass The class to resolve the package from
      * @return this for chaining
      *
      * @see #autoRegisterAllPropContainers(String)

@@ -21,7 +21,7 @@ public class RobotEventPublisher implements PeriodicRunnable {
     private static final Logger logger = LoggerFactory.getLogger(OccasionalLoggingRunner.class);
 
 
-    private boolean enabled;
+    private boolean enabled = true;
 
 
     // TODO:
