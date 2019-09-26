@@ -26,7 +26,7 @@ public class MotionProfileControlloop {
 	private Callable<ProfileTrajectoryPoint> dataPointUpdater;
 	private Callable<ProfileTrajectoryPoint> redundantDataPointUpdater;
 	private PositionSupplier positionUpdater;
-	private double lastTime = ConversionUtil.microSecToSec(RobotController.getFPGATime());
+	private double lastTime = -10000;
 
 	/**
 	 * @param p         proportional gain
@@ -68,6 +68,9 @@ public class MotionProfileControlloop {
 
 	public void update() {
 		double currentTime = ConversionUtil.microSecToSec(RobotController.getFPGATime());
+		if(currentTime - lastTime > 1){
+			lastTime = currentTime - .01;
+		}
 		update(currentTime - lastTime);
 		lastTime = currentTime;
 	}

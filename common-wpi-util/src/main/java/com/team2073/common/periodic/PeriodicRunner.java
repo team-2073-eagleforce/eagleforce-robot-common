@@ -90,7 +90,7 @@ public class PeriodicRunner {
 	// -Implement circuit breaker
 
 
-    public static final long DEFAULT_ASYNC_PERIOD = 20;
+    public static final long DEFAULT_ASYNC_PERIOD = 10;
     public static final long DEFAULT_SYNC_PERIOD = 20;
 
 	private static final Logger logger = LoggerFactory.getLogger(PeriodicRunner.class);
@@ -205,7 +205,7 @@ public class PeriodicRunner {
 	/** See {@link #autoRegister(PeriodicRunnable, String)} */
 	public void autoRegisterAsync(AsyncPeriodicRunnable instance, String name, long period) {
 		if (robotContext.getCommonProps().getPeriodicRunnerAutoRegister())
-			registerAsync(instance, name);
+			registerAsync(instance, name, period);
 		else
 			logger.debug("Periodic Runner Auto Register is disabled. Ignoring registering [{}].", simpleNameSafe(instance));
 	}
