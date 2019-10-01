@@ -32,6 +32,10 @@ public class Path {
 		go_left_pair_.right.setInvertedY(true);
 	}
 
+	public Path getRightCopy() {
+		return new Path(name_, new Trajectory.Pair(go_left_pair_.right, go_left_pair_.left, go_left_pair_.center)) ;
+	}
+
 	public Trajectory getLeftWheelTrajectory() {
 		return (go_left_ ? go_left_pair_.left : go_left_pair_.right);
 	}
