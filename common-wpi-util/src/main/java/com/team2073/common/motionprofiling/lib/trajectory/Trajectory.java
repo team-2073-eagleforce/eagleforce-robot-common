@@ -76,9 +76,7 @@ public class Trajectory {
         }
         Segment[] segs = new Segment[getNumSegments() - segments * multiplier];
         for (int i = 0; i < getNumSegments() - segments * multiplier; i++) {
-            if (!((i < segments && front) || (i > getNumSegments() - segments && back))) {
-                segs[i - (front? segments:0)] = new Segment(segments_[i]);
-            }
+                segs[i] = new Segment(segments_[i + (front?segments:0)]);
         }
         segments_ = segs;
         return new Trajectory(segs);
