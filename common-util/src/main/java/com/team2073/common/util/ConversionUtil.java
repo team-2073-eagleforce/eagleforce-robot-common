@@ -26,11 +26,11 @@ public abstract class ConversionUtil {
 	}
 
 	public static double microSecToSec(long timeInMicroSec) {
-		return timeInMicroSec * (1 / 10e6);
+		return timeInMicroSec * (1 / 1e6);
 	}
 
 	public static long secToMicroSec(double timeInSec) {
-		return (long) (timeInSec * 10e6);
+		return (long) (timeInSec * 1e6);
 	}
 
 	public static long secondsToMs(double timeInSeconds) {
