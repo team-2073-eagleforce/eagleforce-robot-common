@@ -3,7 +3,7 @@ package com.team2073.common.util;
 public class Timer {
 
 	private long startTime;
-	private long stopTime = 0;
+	private long pauseTime = 0;
 	private TimerState state = TimerState.UNINITIALIZED;
 
 	public TimerState getState() {
@@ -11,7 +11,7 @@ public class Timer {
 	}
 
 	public enum TimerState {
-		STOPPED, STARTED, UNINITIALIZED;
+		STOPPED, STARTED, UNINITIALIZED, PAUSED;
 	}
 
 	public void start() {
@@ -24,8 +24,11 @@ public class Timer {
 		state = TimerState.STARTED;
 	}
 
-	public void stop() {
-		this.stopTime = System.currentTimeMillis();
+	public void pause() {
+		this.pauseTime = System.currentTimeMillis();
+		this.state = TimerState.PAUSED;
+	}
+	public void stop(){
 		this.state = TimerState.STOPPED;
 	}
 
@@ -39,8 +42,8 @@ public class Timer {
 		long elapsed;
 		if (state == TimerState.STARTED) {
 			elapsed = (System.currentTimeMillis() - startTime);
-		} else if (state == TimerState.STOPPED) {
-			elapsed = (stopTime - startTime);
+		} else if (state == TimerState.PAUSED) {
+			elapsed = (pauseTime - startTime);
 		} else {
 			elapsed = 0;
 		}
