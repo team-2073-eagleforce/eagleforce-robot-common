@@ -63,7 +63,6 @@ public class ExampleAppConstants {
         public static final double PIVOT_HOLD_I = 0;
         public static final double PIVOT_HOLD_D = 12;
 
-        /** @deprecated Use {@link ShooterPivotSubsystem.PivotAngles} instead. */
         public abstract class PivotAngles {
 
             public static final double INTAKE = 20;

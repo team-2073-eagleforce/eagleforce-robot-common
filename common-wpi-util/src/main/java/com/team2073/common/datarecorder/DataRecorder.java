@@ -17,7 +17,7 @@ import com.team2073.common.datarecorder.output.DataRecordOutputHandler;
 import com.team2073.common.datarecorder.output.DataRecordOutputHandlerConsoleImpl;
 import com.team2073.common.datarecorder.output.DataRecordOutputHandlerCsvImpl;
 import com.team2073.common.datarecorder.output.DataRecordOutputHandlerSmartDashboardImpl;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.common.periodic.PeriodicRunner;
 import com.team2073.common.util.ExceptionUtil;
 import com.team2073.common.util.ReflectionUtil;
@@ -53,8 +53,9 @@ import static com.team2073.common.util.ThreadUtil.*;
  * @author pbriggs
  */
 public class DataRecorder {
-
+    
     // Misc/helpers
+    private final RobotContext robotContext = RobotContext.getInstance();
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final DataRecorderHelper mapper = new DataRecorderHelper();
     private DataRecorderStateMachine state = new DataRecorderStateMachine();
@@ -115,7 +116,10 @@ public class DataRecorder {
 
     // private until interval is actually configured
     private boolean registerRecordable(Object recordable, long period) {
-        RobotContext.getInstance().getCommonProps().setDataRecorderDefaultRecordInterval(10L);
+
+        // What the heck was I doing here?
+//        robotContext.getCommonProps().setDataRecorderDefaultRecordInterval(10L);
+
         if (recordable instanceof DataRecordOutputHandler) {
             // TODO: Check if it's annotated with @Recordable
             String recordableName = simpleName(recordable);
@@ -266,8 +270,8 @@ public class DataRecorder {
     // Periodic Runner methods
     // ============================================================
 
-    private final PeriodicAware periodicRecord = () -> periodicRunnerRecord();
-    private final PeriodicAware periodicFlush = () -> periodicRunnerFlush();
+    private final AsyncPeriodicRunnable periodicRecord = () -> periodicRunnerRecord();
+    private final AsyncPeriodicRunnable periodicFlush = () -> periodicRunnerFlush();
 
     /** See {@link #registerWithPeriodicRunner(PeriodicRunner, long)} */
     public void registerWithPeriodicRunner() {
@@ -276,7 +280,7 @@ public class DataRecorder {
 
     /** See {@link #registerWithPeriodicRunner(PeriodicRunner, long)} */
     public void registerWithPeriodicRunner(long flushInterval) {
-        registerWithPeriodicRunner(RobotContext.getInstance().getPeriodicRunner(), flushInterval);
+        registerWithPeriodicRunner(robotContext.getPeriodicRunner(), flushInterval);
     }
 
     /** See {@link #registerWithPeriodicRunner(PeriodicRunner, long)} */
@@ -287,7 +291,7 @@ public class DataRecorder {
     /** TODO */
     public void registerWithPeriodicRunner(PeriodicRunner periodicRunner, long flushInterval) {
         if (state.recording.isPeriodicRecordingActive()) {
-            log.info("Ignoring call to activate periodic recording, it is already active.", flushInterval);
+            log.info("Ignoring call to activate periodic recording with interval of [{}], it is already active.", flushInterval);
             return;
         }
 
@@ -552,7 +556,7 @@ public class DataRecorder {
     }
 
     private CommonProperties getCommonProps() {
-        return RobotContext.getInstance().getCommonProps();
+        return robotContext.getCommonProps();
     }
 
     // Testing methods

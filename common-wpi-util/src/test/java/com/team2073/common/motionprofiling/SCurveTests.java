@@ -2,21 +2,22 @@ package com.team2073.common.motionprofiling;
 
 import com.team2073.common.controlloop.MotionProfileControlloop;
 import com.team2073.common.util.ThreadUtil;
+import com.team2073.common.wpitest.BaseWpiTest;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
-public class SCurveTests {
+public class SCurveTests extends BaseWpiTest {
 
 	@Test
 	public void SCurveMotionProfileGenerator_WHEN_decelerating_RETURNS_appropriateValues(){
 		double goalPosition = 5;
 		double maxVelcoity = 6;
 		double maxAcceleration = 20;
-		double averageAcceleration = 15;
-		SCurveProfileGenerator profile = new SCurveProfileGenerator(
-				goalPosition, maxVelcoity, maxAcceleration, averageAcceleration);
+		double averageAcceleration = 100;
+		SCurveProfile profile = new SCurveProfile(0,
+				goalPosition, new ProfileConfiguration(maxVelcoity, maxAcceleration, averageAcceleration));
 
 //		Gets a point really close to the end of the profile to make sure we are decelerating appropriately
 		ProfileTrajectoryPoint endPoint = profile.nextPoint(profile.getTotalTime()-.0001);
@@ -30,11 +31,11 @@ public class SCurveTests {
 		double goalPosition = 5;
 		double maxVelcoity = 6;
 		double maxAcceleration = 20;
-		double averageAcceleration = 15;
+		double averageAcceleration = 100;
 
 		ProfileTrajectoryPoint point;
-		SCurveProfileGenerator profile = new SCurveProfileGenerator(
-				goalPosition, maxVelcoity, maxAcceleration, averageAcceleration);
+		SCurveProfile profile = new SCurveProfile(0,
+				goalPosition, new ProfileConfiguration(maxVelcoity, maxAcceleration, averageAcceleration));
 		MotionProfileControlloop mpc = new MotionProfileControlloop(.05, .01, .1666 , .005, 1);
 
 		mpc.dataPointCallable(() -> profile.nextPoint(.01));

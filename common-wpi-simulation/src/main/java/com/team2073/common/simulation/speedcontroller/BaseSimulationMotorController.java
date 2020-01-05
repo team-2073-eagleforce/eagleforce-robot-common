@@ -5,31 +5,35 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.datarecorder.model.DataPointIgnore;
 import com.team2073.common.datarecorder.model.LifecycleAwareRecordable;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.simulation.model.SimulationMechanism;
 import com.team2073.common.util.EnumUtil;
 import com.team2073.common.util.Throw;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class BaseSimulationMotorController implements SimulationMotorController, LifecycleAwareRecordable, PeriodicAware {
+public abstract class BaseSimulationMotorController implements SimulationMotorController, LifecycleAwareRecordable, PeriodicRunnable {
 
     @DataPointIgnore
     public static final double VOLTAGE = 12;
     
     private Logger log = LoggerFactory.getLogger(getClass());
+    private final RobotContext robotContext = RobotContext.getInstance();
 
-    @DataPointIgnore protected String name;
+    @DataPointIgnore
+    protected String name;
     protected SimulationMechanism mechanism;
-    @DataPointIgnore protected double maxVoltageForward = VOLTAGE;
-    @DataPointIgnore protected double maxVoltageReverse = -VOLTAGE;
+    @DataPointIgnore
+    protected double maxVoltageForward = VOLTAGE;
+    @DataPointIgnore
+    protected double maxVoltageReverse = -VOLTAGE;
     private double outputVoltage;
 
     public BaseSimulationMotorController(String name, SimulationMechanism mechanism){
         this.mechanism = mechanism;
         this.name = name;
-        RobotContext.getInstance().getPeriodicRunner().register(this);
-        RobotContext.getInstance().getDataRecorder().registerRecordable(this);
+        robotContext.getPeriodicRunner().register(this);
+//        robotContext.getDataRecorder().registerRecordable(this);
     }
 
     @Override

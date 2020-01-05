@@ -40,7 +40,7 @@ import edu.wpi.first.wpilibj.command.Command;
  * 
  * @see AbstractLoggingCommandGroup
  * @see AbstractLoggingInstantCommand
- * @author Gabe Bui & Preston Briggs
+ * @author Gabe Bui and Preston Briggs
  *
  */
 public abstract class AbstractLoggingCommand extends Command {

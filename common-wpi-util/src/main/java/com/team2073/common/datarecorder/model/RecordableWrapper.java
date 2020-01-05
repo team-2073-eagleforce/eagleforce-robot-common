@@ -15,6 +15,7 @@ public abstract class RecordableWrapper {
 
     @Override
     public boolean equals(Object o) {
+        // Needed for use in DataRecorder's Map<RecordableWrapper, DataRecordTable> dataTableMap
         if (this == o) return true;
         if (!(o instanceof RecordableWrapper)) return false;
         RecordableWrapper that = (RecordableWrapper) o;
@@ -23,6 +24,7 @@ public abstract class RecordableWrapper {
 
     @Override
     public int hashCode() {
+        // Needed for use in DataRecorder's Map<RecordableWrapper, DataRecordTable> dataTableMap
         return Objects.hashCode(getInstance());
     }
 }

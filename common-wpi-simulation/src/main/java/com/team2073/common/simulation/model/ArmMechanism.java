@@ -1,7 +1,6 @@
 package com.team2073.common.simulation.model;
 
 
-import com.team2073.common.datarecorder.model.DataPointIgnore;
 import com.team2073.common.simulation.SimulationConstants.MotorType;
 import com.team2073.common.simulation.env.SimulationEnvironment;
 
@@ -14,12 +13,15 @@ import static com.team2073.common.util.ConversionUtil.*;
  */
 public class ArmMechanism extends AbstractSimulationMechanism {
 
-	@DataPointIgnore
 	private final double lengthOfArm;
+
+	private final double moment;
 
 	public ArmMechanism(double gearRatio, MotorType motor, int motorCount, double massOnSystem, double lengthOfArm) {
 		super(gearRatio, motor, motorCount, massOnSystem);
 		this.lengthOfArm = lengthOfArm;
+		// inertia approximation using (1/2) * mass * length^2
+		moment = .5 * inchesToMeters(lengthOfArm) * inchesToMeters(lengthOfArm) * lbToKg(massOnSystem);
 	}
 
 	@Override
@@ -37,19 +39,19 @@ public class ArmMechanism extends AbstractSimulationMechanism {
 
 	/**
 	 * Calculates the Mechanism's acceleration given the current mechanism velocity and voltage operating on the motors.
+	 *
+	 * a = (Volt * K_t * G)/ (I * R) - (K_t * G^2 * V)/( K_v * I * R)
 	 */
 	@Override
 	public double calculateAcceleration() {
-		acceleration = ((gearRatio * torqueConstant * currentVoltage)
-				- ((1 / velocityConstant) * torqueConstant * velocity * gearRatio * gearRatio))
-				/ (motorResistance * massOnSystem * Math.pow(lengthOfArm, 2));
-
-		return acceleration;
+		acceleration = ((currentVoltage * torqueConstant * gearRatio) / (moment * motorResistance))
+				- ((torqueConstant * Math.pow(gearRatio, 2) * degreesToRadians(velocity)) / (velocityConstant * moment * motorResistance));
+		return radiansToDegrees(acceleration);
 	}
 
 	/**
 	 * Integrates over the Acceleration to find how much our velocity has changed in the past interval.
-	 *
+	 *  v = a*t + v_0
 	 * @param intervalInMs
 	 */
 	@Override
@@ -60,7 +62,7 @@ public class ArmMechanism extends AbstractSimulationMechanism {
 
 	/**
 	 * Integrates over the Velocity to find how much our position has changed in the past interval.
-	 *
+	 *  p = v*t + p_0
 	 * @param intervalInMs
 	 */
 	@Override

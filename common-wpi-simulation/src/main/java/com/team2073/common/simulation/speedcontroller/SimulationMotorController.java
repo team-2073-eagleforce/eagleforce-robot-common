@@ -4,20 +4,38 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.TrajectoryPoint;
-import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.ControlFrame;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.Faults;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.IMotorController;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.SensorTerm;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.StickyFaults;
 
 
 public interface SimulationMotorController extends IMotorController {
-
+	
 	default void throwUnsupported(String methodName) {
-		throw new UnsupportedOperationException("The class [" + this.getClass().getSimpleName() + "] must override the [" + methodName + "] method to use this method.");
+		throw new UnsupportedOperationException("The class [" + this.getClass().getSimpleName() + "] must override [" + methodName + "] method to use this method.");
 	}
 
 	@Override
 	default void set(ControlMode Mode, double demand0, double demand1) {
-		throwUnsupported("set(Mode, demand0, demand1)");
+		throwUnsupported("set(ControlMode Mode, double demand0, double demand1)");
 	}
-
+	
+	@Override
+	default void set(ControlMode Mode, double demand0, DemandType demand1Type, double demand1) {
+		throwUnsupported("set(ControlMode Mode, double demand0, DemandType demand1Type, double demand1)");
+	}
+	
 	@Override
 	default void neutralOutput() {
 		throwUnsupported("neutralOutput");
@@ -94,12 +112,6 @@ public interface SimulationMotorController extends IMotorController {
 	@Override
 	default double getBusVoltage() {
 		throwUnsupported("getBusVoltage");
-		return 0;
-	}
-
-	@Override
-	default double getOutputCurrent() {
-		throwUnsupported("getOutputCurrent");
 		return 0;
 	}
 
@@ -430,6 +442,30 @@ public interface SimulationMotorController extends IMotorController {
 		throwUnsupported("configGetParameter");
 		return 0;
 	}
+	
+	@Override
+	default ErrorCode configSelectedFeedbackCoefficient(double coefficient, int pidIdx, int timeoutMs) {
+		throwUnsupported("configSelectedFeedbackCoefficient");
+		return null;
+	}
+	
+	@Override
+	default ErrorCode configClosedLoopPeakOutput(int slotIdx, double percentOut, int timeoutMs) {
+		throwUnsupported("configClosedLoopPeakOutput");
+		return null;
+	}
+	
+	@Override
+	default ErrorCode configClosedLoopPeriod(int slotIdx, int loopTimeMs, int timeoutMs) {
+		throwUnsupported("configClosedLoopPeriod");
+		return null;
+	}
+	
+	@Override
+	default ErrorCode configAuxPIDPolarity(boolean invert, int timeoutMs) {
+		throwUnsupported("configAuxPIDPolarity");
+		return null;
+	}
 
 	@Override
 	default int getBaseID() {
@@ -451,6 +487,24 @@ public interface SimulationMotorController extends IMotorController {
 	@Override
 	default void valueUpdated() {
 		throwUnsupported("valueUpdated");
+	}
+
+	@Override
+	default double getClosedLoopTarget(int pidIdx) {
+		throwUnsupported("getClosedLoopTarget");
+		return 0;
+	}
+
+	@Override
+	default ErrorCode configMotionProfileTrajectoryPeriod(int baseTrajDurationMs, int timeoutMs) {
+		throwUnsupported("configMotionProfileTrajectoryPeriod");
+		return null;
+	}
+
+	@Override
+	default ControlMode getControlMode() {
+		throwUnsupported("getControlMode");
+		return null;
 	}
 
 }

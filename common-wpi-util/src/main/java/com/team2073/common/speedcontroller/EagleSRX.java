@@ -7,7 +7,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.team2073.common.ctx.RobotContext;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.common.periodic.SmartDashboardAware;
 import com.team2073.common.util.EnumUtil;
 import com.team2073.common.util.Timer;
@@ -20,11 +20,12 @@ import java.util.concurrent.TimeUnit;
 
 import static com.team2073.common.util.ClassUtil.*;
 
-public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardAware {
+public class EagleSRX extends TalonSRX implements AsyncPeriodicRunnable, SmartDashboardAware {
 
     // TODO: Change case to EagleSrx (same with EagleSPX)
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final RobotContext robotContext = RobotContext.getInstance();
     private String name;
     private boolean isTestingEnabled = false;
     private double safePercentage = .5;
@@ -86,9 +87,8 @@ public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardA
 
                     }
                 });
-        // TODO: Do we want this to be async or nah?
-        RobotContext.getInstance().getPeriodicRunner().registerAsync(this, simpleName(this) + "[" + deviceNumber + "]");
-        RobotContext.getInstance().getSmartDashboardRunner().registerInstance(this);
+        autoRegisterWithPeriodicRunner(simpleName(this) + "[" + deviceNumber + "]");
+        robotContext.getSmartDashboardRunner().registerInstance(this);
 
         logger.info("[{}] Talon has been initialized on port [{}].", name, deviceNumber);
     }
@@ -257,7 +257,7 @@ public class EagleSRX extends TalonSRX implements PeriodicAware, SmartDashboardA
     }
 
     @Override
-    public void onPeriodic() {
+    public void onPeriodicAsync() {
         super.set(getNextControlMode(), getNextOutputValue());
     }
 

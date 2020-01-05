@@ -5,7 +5,7 @@ import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.datarecorder.model.DataRecord;
 import com.team2073.common.datarecorder.model.DataRecordRow;
 import com.team2073.common.datarecorder.model.DataRecordTable;
-import com.team2073.common.smartdashboard.adapter.SmartDashboardAdapter;
+import com.team2073.common.robot.adapter.SmartDashboardAdapter;
 
 import java.util.List;
 

@@ -17,7 +17,7 @@ plugins {
     id "java"
     id "eclipse"
     id "idea"
-    id "jaci.openrio.gradle.GradleRIO" version "2018.03.06"
+    id "edu.wpi.first.GradleRIO" version "2020.1.2"
     id "maven-publish"
 //    id 'org.asciidoctor.convert' version '1.5.8.1'
 }
@@ -25,6 +25,7 @@ plugins {
 apply plugin: 'org.asciidoctor.convert'
 
 group 'com.team2073'
+
 version commonVersion
 
 repositories {
@@ -32,8 +33,8 @@ repositories {
     mavenLocal()
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
+wrapper {
+    gradleVersion = '5.0'
 }
 
 task sourceJar(type: Jar) {
@@ -102,10 +103,10 @@ publishToMavenLocal {
 //}
 subprojects {
 
+// Project name defined in settings.gradle > rootProject.name
     group 'com.team2073'
     version commonVersion
     sourceCompatibility = 1.8
-// Project name defined in settings.gradle > rootProject.name
 
     repositories {
         mavenCentral()
@@ -126,8 +127,8 @@ subprojects {
         testCompile("org.junit.jupiter:junit-jupiter-engine:5.2.0")
     }
 
-    task wrapper(type: Wrapper) {
-        gradleVersion = '4.4'
+    wrapper {
+        gradleVersion = '5.0'
     }
 
     task sourceJar(type: Jar) {

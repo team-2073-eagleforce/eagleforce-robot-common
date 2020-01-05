@@ -1,5 +1,6 @@
 package com.team2073.common.simulation.speedcontroller;
 
+import com.ctre.phoenix.ErrorCode;
 import com.team2073.common.datarecorder.model.DataPointIgnore;
 import com.team2073.common.simulation.model.SimulationMechanism;
 
@@ -35,5 +36,10 @@ public class SimulationEagleSRX extends BaseSimulationMotorController implements
 	@Override
 	public void selectProfileSlot(int slotIdx, int pidIdx) {
 		// I needed this for testing PositionalMechanismController: motor.selectProfileSlot(slotIdx, pidIdx)
+	}
+
+	@Override
+	public ErrorCode configMotionSCurveStrength(int curveStrength, int timeoutMs) {
+		return null;
 	}
 }

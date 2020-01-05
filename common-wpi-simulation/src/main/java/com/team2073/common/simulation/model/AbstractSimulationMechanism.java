@@ -11,7 +11,9 @@ import com.team2073.common.simulation.env.SimulationEnvironment;
  * @author Jason Stanley
  */
 public abstract class AbstractSimulationMechanism implements SimulationMechanism, LifecycleAwareRecordable {
-
+	
+	private final RobotContext robotContext = RobotContext.getInstance();
+	
 	protected Runnable whenSolenoidActive = () -> {};
 	protected boolean isSolenoidExtended;
 
@@ -34,7 +36,7 @@ public abstract class AbstractSimulationMechanism implements SimulationMechanism
 	/**
 	 * Units are in terms of RPM, Inches, and Pounds
 	 *
-	 * @param gearRatio    Should be > 1, from motor to output
+	 * @param gearRatio    Should be over 1, from motor to output
 	 * @param motor        The Type of motor is the system running on.
 	 * @param motorCount   The number of motors for the system.
 	 * @param massOnSystem How much weight are we pulling up. (Probably want to overestimate this kV bit)
@@ -47,8 +49,8 @@ public abstract class AbstractSimulationMechanism implements SimulationMechanism
 		motorResistance = motor.motorResistance;
 
 //		doubles the stall torque to make "super motor" based on motor count
-		torqueConstant = motor.torqueConstant * 2 * motorCount;
-		RobotContext.getInstance().getDataRecorder().registerRecordable(this);
+		torqueConstant = motor.torqueConstant * motorCount;
+//        robotContext.getDataRecorder().registerRecordable(this);
 	}
 
 	@Override

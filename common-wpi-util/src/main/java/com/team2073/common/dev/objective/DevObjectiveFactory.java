@@ -3,7 +3,6 @@ package com.team2073.common.dev.objective;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 
 //import com.google.inject.Inject;
 import com.team2073.common.dev.simulation.subsys.DevElevatorSubsystem;
@@ -63,7 +62,6 @@ public class DevObjectiveFactory {
 		init();
 	}
 
-	@PostConstruct
 	public void init() {
 		// Create Objectives
 //		elevatorToMax = new DevElevatorObjective(elevator, ElevatorHeight.MAX);

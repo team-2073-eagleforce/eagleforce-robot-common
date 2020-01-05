@@ -9,18 +9,15 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SmartDashboardAwareRunner implements PeriodicAware {
+public class SmartDashboardAwareRunner implements AsyncPeriodicRunnable {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private final RobotContext robotContext = RobotContext.getInstance();
 	private final List<SmartDashboardAware> instanceList = new LinkedList<>();
-	private final RobotContext robotCtx;
+	private boolean enabled = true;
 
 	public SmartDashboardAwareRunner() {
-		this(RobotContext.getInstance());
-	}
-
-	public SmartDashboardAwareRunner(RobotContext robotCtx) {
-		this.robotCtx = robotCtx;
+		autoRegisterWithPeriodicRunner(robotContext.getCommonProps().getSmartDashboardAsyncPeriod());
 	}
 
 	public void registerInstance(SmartDashboardAware instance) {
@@ -30,7 +27,12 @@ public class SmartDashboardAwareRunner implements PeriodicAware {
 	}
 
 	@Override
-	public void onPeriodic() {
+	public void onPeriodicAsync() {
+
+		if(!robotContext.getCommonProps().getSmartDashboardAwareRunnerEnabled() || !enabled) {
+			return;
+		}
+
 		updateAll();
 		readAll();
 	}
@@ -45,10 +47,14 @@ public class SmartDashboardAwareRunner implements PeriodicAware {
 				ExceptionUtil.suppressVoid(instance::readSmartDashboard, "SmartDashboardAware::readSmartDashboard"));
 	}
 
-	@Override
-	public void registerSelf(PeriodicRunner periodicRunner) {
-		periodicRunner.registerAsync(this, robotCtx.getCommonProps().getSmartDashboardAsyncPeriod());
-		periodicRunner.registerSmartDashboard(this);
+	public void enable() {
+		logger.info("SmartDashboardAwareRunner enabled");
+		enabled = true;
+	}
+
+	public void disable() {
+		logger.info("SmartDashboardAwareRunner disabled");
+		enabled = false;
 
 	}
 }

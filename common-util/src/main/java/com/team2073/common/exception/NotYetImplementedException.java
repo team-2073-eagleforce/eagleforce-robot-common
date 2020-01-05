@@ -22,6 +22,6 @@ public class NotYetImplementedException extends RuntimeException {
 	 * @see NotYetImplementedException
 	 */
 	public NotYetImplementedException(String methodName) {
-		super("The method [" + methodName + "] has not been implemented yet.");
+		super("The method/class [" + methodName + "] has not been implemented yet.");
 	}
 }

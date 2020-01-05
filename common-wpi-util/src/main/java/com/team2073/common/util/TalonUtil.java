@@ -2,6 +2,7 @@ package com.team2073.common.util;
 
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class TalonUtil {
 	private final static int TIMEOUT_MS = 100;
@@ -130,8 +131,6 @@ public class TalonUtil {
 		talon.configVoltageCompSaturation(0.0, TIMEOUT_MS);
 		talon.configVoltageMeasurementFilter(32, TIMEOUT_MS);
 		talon.enableVoltageCompensation(false);
-
-		talon.enableCurrentLimit(config.enableCurrentLimit);
 
 		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, config.generalStatusFrameRateMs, TIMEOUT_MS);
 		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, config.feedbackStatusFrameRateMs, TIMEOUT_MS);

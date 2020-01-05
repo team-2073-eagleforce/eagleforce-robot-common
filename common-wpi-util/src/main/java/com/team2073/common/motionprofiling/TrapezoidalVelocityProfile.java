@@ -39,7 +39,7 @@ public class TrapezoidalVelocityProfile {
         timeAtMaxVelocity = Math.abs(distanceTraveledAtMaxVelocity / maxVelocity);
         totalTime = timeAtMaxVelocity + 2 * timeToAccelerate;
         currentPosition += startingPosition;
-        if (distanceTraveledByAccelerating > 2 * Math.abs(relativeDesiredPosition)) {
+        if (distanceTraveledByAccelerating > .5 * Math.abs(relativeDesiredPosition)) {
             distanceTraveledByAccelerating = .5 * relativeDesiredPosition;
             timeToAccelerate = Math.sqrt(Math.abs(relativeDesiredPosition) / maxAcceleration);
             distanceTraveledAtMaxVelocity = 0;
@@ -66,7 +66,7 @@ public class TrapezoidalVelocityProfile {
                 currentVelocity = maxVelocity;
             currentPosition += currentVelocity * timeStep + (.5) * currentAcceleration * Math.pow(timeStep, 2);
         } else if (currentTime >= timeToAccelerate && currentTime <= totalTime - timeToAccelerate) {
-
+            currentAcceleration = 0;
             currentVelocity = maxVelocity;
             currentPosition += currentVelocity * timeStep;
         } else {

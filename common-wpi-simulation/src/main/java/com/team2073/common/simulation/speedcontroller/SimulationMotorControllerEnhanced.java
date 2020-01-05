@@ -1,7 +1,13 @@
 package com.team2073.common.simulation.speedcontroller;
 
 import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.SensorCollection;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 
 public interface SimulationMotorControllerEnhanced extends SimulationMotorController, IMotorControllerEnhanced {
 
@@ -47,27 +53,10 @@ public interface SimulationMotorControllerEnhanced extends SimulationMotorContro
         return null;
     }
 
-    @Override
-    default ErrorCode configPeakCurrentLimit(int amps, int timeoutMs) {
-        throwUnsupported("configPeakCurrentLimit");
-        return null;
-    }
-
-    @Override
-    default ErrorCode configPeakCurrentDuration(int milliseconds, int timeoutMs) {
-        throwUnsupported("configPeakCurrentDuration");
-        return null;
-    }
-
-    @Override
-    default ErrorCode configContinuousCurrentLimit(int amps, int timeoutMs) {
-        throwUnsupported("configContinuousCurrentLimit");
-        return null;
-    }
-
-    @Override
-    default void enableCurrentLimit(boolean enable) {
-        throwUnsupported("enableCurrentLimit");
-    }
+	@Override
+	default double getOutputCurrent() {
+		throwUnsupported("getOutputCurrent");
+		return 0;
+	}
 
 }

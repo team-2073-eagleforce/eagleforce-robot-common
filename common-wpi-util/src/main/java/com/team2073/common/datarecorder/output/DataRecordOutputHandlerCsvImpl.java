@@ -246,7 +246,6 @@ public class DataRecordOutputHandlerCsvImpl implements DataRecordOutputHandler {
 
     /** The root directory files will be output to. One sub directory (named via {@link #setOutFileDatePattern(String)})
      *  will be created inside this root directory for each instance of this class (usually only one per run of the JVM).
-     *  <br/>
      *  Defaults to "${system temp dir}/data-recorder". */
     public DataRecordOutputHandlerCsvImpl setOutDir(File outDir) {
         Assert.assertNotNull(outDir, "outDir");
@@ -258,8 +257,8 @@ public class DataRecordOutputHandlerCsvImpl implements DataRecordOutputHandler {
         return outFileDatePattern;
     }
 
-    /** The date pattern to be used when creating a new sub directory at startup.<br/><br/>
-     * See {@link SimpleDateFormat} for pattern information.<br/><br/>
+    /** The date pattern to be used when creating a new sub directory at startup.
+     * See {@link SimpleDateFormat} for pattern information.
      * Defaults to {@link #DEFAULT_OUT_FILE_DATE_PATTERN}. */
     public DataRecordOutputHandlerCsvImpl setOutFileDatePattern(String outFileDatePattern) {
         Assert.assertNotNull(outFileDatePattern, "outFileDatePattern");

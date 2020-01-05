@@ -1,7 +1,7 @@
 package com.team2073.common.objective;
 
 import com.team2073.common.objective.Objective.ConflictingStrategy;
-import com.team2073.common.periodic.PeriodicAware;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.util.LogUtil;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class AbstractSubsystemCoordinator implements PeriodicAware {
+public abstract class AbstractSubsystemCoordinator implements PeriodicRunnable {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private List<Deque<ObjectiveRequest>> objectiveRequestStacks = new LinkedList<>();
@@ -25,6 +25,7 @@ public abstract class AbstractSubsystemCoordinator implements PeriodicAware {
 	public AbstractSubsystemCoordinator() {
 		LogUtil.infoConstruct(getClass(), logger);
 		// TODO: Should we register with PeriodicRunner?
+		autoRegisterWithPeriodicRunner();
 	}
 	
 	/**
@@ -330,10 +331,6 @@ public abstract class AbstractSubsystemCoordinator implements PeriodicAware {
 	}
 	
 	public enum ErrorType {
-		/** An {@link Objective}'s {@link ObjectivePrecondition} failed and the resolution was the same as 
-		 * the initial Objective. This will cause an infinite loop of Objective queuing so instead, the
-		 * Objective stack is cleared. This will cause any currently running Objectives to end abruptly, first
-		 * calling interrupt on the Objective. */
 		CIRCULAR_QUEUING
 	}
 }
