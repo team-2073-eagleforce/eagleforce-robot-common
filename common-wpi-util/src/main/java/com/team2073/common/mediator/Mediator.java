@@ -101,7 +101,7 @@ public class Mediator implements PeriodicRunnable {
     /**
      * Resolves any conflicts with the Request and then moves the subsystem.
      *
-     * @param request the request to be fulfilled <br\>
+     * @param request the request to be fulfilled
      */
     public void execute(Request request) {
         Assert.assertNotNull(request, "request");

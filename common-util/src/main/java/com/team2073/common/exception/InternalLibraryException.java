@@ -5,12 +5,9 @@ import com.team2073.common.util.StringUtil;
 /**
  * An exception to be thrown by a library when the error is internal to the library and is
  * not the fault of the calling client. Denotes a bug in the library.
- * <br/>
- * <br/>
  * Libraries should extend this class and optionally override the getters to indicate steps
  * to report the bug.
- * <br/>
- * <br/>
+ *
  * The message will automatically be prefixed with 'INTERNAL LIBRARY EXCEPTION: '.
  *
  * @author Preston Briggs

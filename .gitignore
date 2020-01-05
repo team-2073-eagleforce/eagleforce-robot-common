@@ -28,7 +28,7 @@ out/
 #   From: spring initializer
 # .idea
 # *.iws
-# *.iml
+*.iml
 # *.ipr
 
 

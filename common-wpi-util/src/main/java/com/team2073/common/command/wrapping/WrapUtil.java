@@ -14,9 +14,9 @@ import edu.wpi.first.wpilibj.command.Command;
  * <i>Note: See {@link WrappableCommand} as the root of documentation for command wrapping.</i>
  * <p>
  * <h2>How to Use</h2>
- * 1) Create a CommandWrapperBuilder<br/>
- * 2) Add Command Wrappers<br/>
- * 3) Build <br/>
+ * 1) Create a CommandWrapperBuilder
+ * 2) Add Command Wrappers
+ * 3) Build 
  * <pre>
  * WrappableCommand moveMotorCommand = 
  * 	WrapUtil.create(new DevMoveMotorCommand())

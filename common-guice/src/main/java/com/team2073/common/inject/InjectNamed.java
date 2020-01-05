@@ -14,7 +14,7 @@ public @interface InjectNamed {
 	/**
 	 * Return the name of the binding to be injected.
 	 * <p>
-	 * Return an empty string to use the name of the annotated field. 
+	 * return an empty string to use the name of the annotated field.
 	 */
 	String value() default "";
 }

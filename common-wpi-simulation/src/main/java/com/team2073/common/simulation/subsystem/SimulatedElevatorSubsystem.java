@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 /**
  * An example elevator subsystem
- * <p>
+ *
  * The encoder is on the same shaft of the pulley, and the encoder has 1350 tics per inch of elevator travel.
- * <p/>
+ *
  */
 public class SimulatedElevatorSubsystem implements PeriodicRunnable {
     private IMotorControllerEnhanced talon;

@@ -2,6 +2,7 @@ package com.team2073.common.controlloop;
 
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.util.ConversionUtil;
+import com.team2073.common.util.MathUtil;
 import com.team2073.common.util.Throw;
 import edu.wpi.first.wpilibj.RobotController;
 import org.slf4j.Logger;
@@ -25,6 +26,8 @@ public class PidfControlLoop {
 	private final double d;
 	private final double f;
 
+	private double kg;
+    private double posParalleltoGround;
 	private double output;
 	private double maxOutput;
 	private double goal;
@@ -37,7 +40,7 @@ public class PidfControlLoop {
 	private PositionSupplier positionSupplier;
 	private Callable<Boolean> fCondition;
 	private int fConditionExceptionCount;
-	private double lastTime = ConversionUtil.microSecToSec(RobotController.getFPGATime());
+	private double lastTime = -100000;
 
 	public PidfControlLoop(double p, double i, double d, double f, double maxOutput) {
 		this.p = p;
@@ -45,8 +48,17 @@ public class PidfControlLoop {
 		this.d = d;
 		this.f = f;
 		this.maxOutput = maxOutput;
-//		robotContext.getDataRecorder().registerRecordable(this);
 	}
+
+    public PidfControlLoop(double p, double i, double d, double f, double maxOutput, double kg, double posParalleltoGround) {
+        this.p = p;
+        this.i = i;
+        this.d = d;
+        this.f = f;
+        this.maxOutput = maxOutput;
+        this.kg = kg;
+        this.posParalleltoGround = posParalleltoGround;
+    }
 
     public PidfControlLoop(double p, double i, double d, double f, double maxOutput, PositionSupplier positionSupplier) {
         this.p = p;
@@ -56,6 +68,17 @@ public class PidfControlLoop {
         this.maxOutput = maxOutput;
         this.positionSupplier = positionSupplier;
 //        robotContext.getDataRecorder().registerRecordable(this);
+    }
+    public PidfControlLoop(double p, double i, double d, double f, double maxOutput, PositionSupplier positionSupplier,
+                           double kg, double posParalleltoGround) {
+        this.p = p;
+        this.i = i;
+        this.d = d;
+        this.f = f;
+        this.maxOutput = maxOutput;
+        this.positionSupplier = positionSupplier;
+        this.kg = kg;
+        this.posParalleltoGround = posParalleltoGround;
     }
 
 	public void updatePID(double interval) {
@@ -87,6 +110,7 @@ public class PidfControlLoop {
 
 		output += d * errorVelocity;
 
+        output += kg == 0 ? 0 : kg * MathUtil.degreeCosine(position - posParalleltoGround);
 		accumulatedError += error * (interval);
 		errorVelocity = ((error - lastError) / (interval));
 		lastError = error;
@@ -108,6 +132,44 @@ public class PidfControlLoop {
 			updatePID(currentTime - lastTime);
 		}
 		lastTime = currentTime;
+	}
+
+	public void updatePID(double position, double interval){
+		error = goal - position;
+
+		output = 0;
+
+		try {
+			if(fCondition == null || fCondition.call()){
+				output += f;
+			}
+		} catch (Exception e) {
+			fConditionExceptionCount++;
+			if (fConditionExceptionCount < MAX_FCONDITION_EXCEPTIONS_TO_LOG)
+				log.warn("Exception calling fCondition: ", e);
+		}
+
+		output += p * error;
+
+		if (maxIContribution == null)
+			output += i * accumulatedError;
+		else
+			output += Math.min(i * accumulatedError, maxIContribution);
+
+		output += d * errorVelocity;
+
+		output += kg == 0 ? 0 : kg * MathUtil.degreeCosine(position - posParalleltoGround);
+		accumulatedError += error * (interval);
+		errorVelocity = ((error - lastError) / (interval));
+		lastError = error;
+
+		if (Math.abs(output) >= maxOutput) {
+			if (output > 0) {
+				output = maxOutput;
+			} else {
+				output = -maxOutput;
+			}
+		}
 	}
 
 	public double getOutput() {

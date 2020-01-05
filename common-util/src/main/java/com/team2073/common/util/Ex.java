@@ -7,27 +7,19 @@ import com.team2073.common.exception.NotYetImplementedException;
 import java.io.IOException;
 
 /**
- * Utility to construct common exceptions and automatically format Strings in their messages.<br/>
- * Accepts either logger notation "{}" or String.format notation "%s" (and friends). <br/>
+ * Utility to construct common exceptions and automatically format Strings in their messages.
+ * Accepts either logger notation "{}" or String.format notation "%s" (and friends).
  * Accepts a Throwable the same way a logger accepts it, as the last argument.
- * <br/>
  * <h3>Example usage:</h3>
  * <i>(Square brackets "[ ]" are a good habit but not required)</i>
- * <br/>
- * <br/>
- * <br/>
  * String.format syntax:
  * <pre>throw Ex.illegalState("Error writing data. File: [%s]. Data: [%s].", filePath, data);</pre>
- * <br/>
  * Logger syntax:
  * <pre>throw Ex.illegalState("Error writing data. File: [{}]. Data: [{}].", filePath, data);</pre>
- * <br/>
  * With exception:
- * <pre>
  * } catch (Exception e) {
  *     throw Ex.illegalState("Error writing data. File: [{}]. Data: [{}].", filePath, data, e);
- * </pre>
- * <br/>
+ *
  *
  * @author Preston Briggs
  */
@@ -71,10 +63,6 @@ public abstract class Ex {
         public final Object[] args;
         public final Throwable extractedThrowable;
 
-        /**
-         * Stolen from {@link LoggingEvent#extractThrowableAnRearrangeArguments(Object[])}. <br/><br/>
-         * shhhhh...
-         */
         public Args(String msg, Object[] args) {
             this.msg = LogUtil.convertLogToStrFmt(msg);
             this.extractedThrowable = EventArgUtil.extractThrowable(args);;

@@ -44,7 +44,7 @@ public class SimulationConstants {
             public static final double STALL_TORQUE = .71;
             public static final double STALL_CURRENT = 134;
             public static final double MOTOR_KT = STALL_TORQUE / STALL_CURRENT;
-            public static final double RESISTANCE = (12 / STALL_CURRENT) * .5;
+            public static final double RESISTANCE = (12 / STALL_CURRENT);
             public static final double MOTOR_KV = ((FREE_SPEED_RPM / 60) * 2* Math.PI)
                     / (12 - RESISTANCE * FREE_CURRENT);
             public static final double MOTOR_KV_IN_DEGREES = (FREE_SPEED_RPM * 60) / (12 - FREE_CURRENT * RESISTANCE);

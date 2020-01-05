@@ -26,10 +26,24 @@ public class Path {
 		go_left_pair_.right.setInvertedY(false);
 	}
 
+
+
 	public void goRight() {
 		go_left_ = false;
 		go_left_pair_.left.setInvertedY(true);
 		go_left_pair_.right.setInvertedY(true);
+	}
+
+	public Path cutPaths(int segments, boolean front, boolean end){
+		Trajectory.Pair pair = new Trajectory.Pair(go_left_pair_.left.cutPath(segments, front, end),
+				go_left_pair_.right.cutPath(segments, front, end),
+				go_left_pair_.center.cutPath(segments, front, end));
+		go_left_pair_ = pair;
+		Path path = new Path(name_, pair);
+		return path;
+	}
+	public Path getRightCopy() {
+		return new Path(name_, new Trajectory.Pair(go_left_pair_.right, go_left_pair_.left, go_left_pair_.center)) ;
 	}
 
 	public Trajectory getLeftWheelTrajectory() {

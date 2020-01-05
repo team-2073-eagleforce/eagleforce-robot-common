@@ -2,6 +2,7 @@ package com.team2073.common.controlloop;
 
 import com.team2073.common.motionprofiling.ProfileTrajectoryPoint;
 import com.team2073.common.util.ConversionUtil;
+import com.team2073.common.util.MathUtil;
 import edu.wpi.first.wpilibj.RobotController;
 
 import java.util.concurrent.Callable;
@@ -13,8 +14,9 @@ public class MotionProfileControlloop {
 	private double d;
 	private double kv;
 	private double ka;
-	private double kj;
+	private double kg;
 
+	private double posParalleltoGround;
 	private double output;
 	private double maxOutput;
 	private double error;
@@ -24,7 +26,7 @@ public class MotionProfileControlloop {
 	private Callable<ProfileTrajectoryPoint> dataPointUpdater;
 	private Callable<ProfileTrajectoryPoint> redundantDataPointUpdater;
 	private PositionSupplier positionUpdater;
-	private double lastTime = ConversionUtil.microSecToSec(RobotController.getFPGATime());
+	private double lastTime = -10000;
 
 	/**
 	 * @param p         proportional gain
@@ -33,26 +35,42 @@ public class MotionProfileControlloop {
 	 * @param ka        acceleration constant
 	 * @param maxOutput
 	 */
-	public MotionProfileControlloop(double p, double d, double kv, double ka, double kj, double maxOutput) {
-		this.p = p;
-		this.d = d;
-		this.kv = kv;
-		this.ka = ka;
-		this.kj = kj;
-		this.maxOutput = maxOutput;
-	}
 
 	public MotionProfileControlloop(double p, double d, double kv, double ka, double maxOutput) {
 		this.p = p;
 		this.d = d;
 		this.kv = kv;
 		this.ka = ka;
-		this.kj = 0;
+		this.kg = 0;
 		this.maxOutput = maxOutput;
+	}
+
+	/**
+	 * @param p         proportional gain
+	 * @param d         derivative gain
+	 * @param kv        velocity constant
+	 * @param ka        acceleration constant
+	 * @param maxOutput
+	 * @param kg		rotational mechanism force of gravity constant
+	 * @param posParalleltoGround degrees from where the sensor reads zero to parallel to the ground
+	 */
+
+	public MotionProfileControlloop(double p, double d, double kv, double ka, double maxOutput, double kg, double posParalleltoGround) {
+		this.p = p;
+		this.d = d;
+		this.kv = kv;
+		this.ka = ka;
+		this.kg = kg;
+		this.posParalleltoGround = posParalleltoGround;
+		this.maxOutput = maxOutput;
+
 	}
 
 	public void update() {
 		double currentTime = ConversionUtil.microSecToSec(RobotController.getFPGATime());
+		if(currentTime - lastTime > 1){
+			lastTime = currentTime - .01;
+		}
 		update(currentTime - lastTime);
 		lastTime = currentTime;
 	}
@@ -79,7 +97,7 @@ public class MotionProfileControlloop {
 		output += d * ((error - lastError) / interval);
 		output += kv * currentPoint.getVelocity();
 		output += ka * currentPoint.getAcceleration();
-		output += kj * currentPoint.getJerk();
+		output += kg == 0 ? 0 : kg * MathUtil.degreeCosine(position - posParalleltoGround);
 
 
 		if (Math.abs(output) >= maxOutput) {

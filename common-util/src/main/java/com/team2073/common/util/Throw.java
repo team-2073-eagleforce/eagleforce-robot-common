@@ -6,22 +6,12 @@ import com.team2073.common.util.Ex.Args;
 import java.io.IOException;
 
 /**
- * <b>Deprecated: Use {@link Ex} instead.</b><br/>
- * <br/>
- * Utility to throw common exceptions and automatically format Strings in their messages.<br/>
- * Accepts either logger notation "{}" or String.format notation "%s" (and friends). <br/>
+ * Deprecated: Use {@link Ex} instead.
+ *
+ * Utility to throw common exceptions and automatically format Strings in their messages.
+ * Accepts either logger notation "{}" or String.format notation "%s" (and friends).
  * Accepts a Throwable the same way a logger accepts it, as the last argument.
- * <br/>
- * <h3>Example usage (Square brackets "[ ]" not required):</h3>
- * String.format syntax:
- * <pre>Throw.ioEx("Error writing data. File: [%s]. Data: [%s].", filePath, data);</pre>
- * <br/>
- * Logger syntax:
- * <pre>Throw.ioEx("Error writing data. File: [{}]. Data: [{}].", filePath, data);</pre>
- * <br/>
- * With exception:
- * <pre>Throw.ioEx("Error writing data. File: [{}]. Data: [{}].", filePath, data, e);</pre>
- * <br/>
+ * Example usage (Square brackets "{@literal [} {@literal ]}" not required):
  *
  * @author Preston Briggs
  * @deprecated Use {@link Ex} instead
@@ -49,7 +39,6 @@ public abstract class Throw {
             throw new IllegalArgumentException(String.format(argMap.msg, argMap.args));
     }
 
-    /** @deprecated Use {@link Ex#notImplemented(String, Object...)} instead. */
     @Deprecated
     public static void notImplemented(String msg, Object... args) {
         Args argMap = new Args(msg, args);

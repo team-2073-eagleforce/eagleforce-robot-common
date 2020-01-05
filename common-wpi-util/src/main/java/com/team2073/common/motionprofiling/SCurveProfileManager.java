@@ -140,7 +140,7 @@ public class SCurveProfileManager {
 					e.printStackTrace();
 				}
 			} else {
-				output = controller.getOutput();
+				output = 0;
 			}
 		}
 		return output;

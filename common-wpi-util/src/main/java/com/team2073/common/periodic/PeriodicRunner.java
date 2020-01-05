@@ -90,7 +90,7 @@ public class PeriodicRunner {
 	// -Implement circuit breaker
 
 
-    public static final long DEFAULT_ASYNC_PERIOD = 20;
+    public static final long DEFAULT_ASYNC_PERIOD = 10;
     public static final long DEFAULT_SYNC_PERIOD = 20;
 
 	private static final Logger logger = LoggerFactory.getLogger(PeriodicRunner.class);
@@ -144,12 +144,10 @@ public class PeriodicRunner {
 
 	/**
 	 * Registers this {@link PeriodicRunnable} only if auto register in enabled (controlled via
-	 * {@link CommonProperties#getPeriodicRunnerAutoRegister()}). <br/>
-	 * <br/>
+	 * {@link CommonProperties#getPeriodicRunnerAutoRegister()}).
 	 * This is meant to be called from the constructor of every {@link PeriodicRunnable}. This way, instances
 	 * do not need to be registered manually but if for some reason, manual registration is preferred, the property
-	 * can be set to false and these auto registrations will be ignored so you can register manually.<br/>
-	 * <br/>
+	 * can be set to false and these auto registrations will be ignored so you can register manually.
 	 * There is a convenience method to handle this: {@link PeriodicRunnable#autoRegisterWithPeriodicRunner()}.
 	 */
 	public void autoRegister(PeriodicRunnable instance, String name) {
@@ -205,7 +203,7 @@ public class PeriodicRunner {
 	/** See {@link #autoRegister(PeriodicRunnable, String)} */
 	public void autoRegisterAsync(AsyncPeriodicRunnable instance, String name, long period) {
 		if (robotContext.getCommonProps().getPeriodicRunnerAutoRegister())
-			registerAsync(instance, name);
+			registerAsync(instance, name, period);
 		else
 			logger.debug("Periodic Runner Auto Register is disabled. Ignoring registering [{}].", simpleNameSafe(instance));
 	}
