@@ -1,7 +1,7 @@
 = Eagleforce Common - Reference Guide
 Jason Stanley; Minh Nguyen; Gabe Bui; Preston Briggs <pbriggs28@gmail.com>;
 //Version 0.3.0-SNAPSHOT, 11/14/2018: Alpha
-:revnumber: 0.3.0-SNAPSHOT
+:revnumber: 0.4.0-Final
 :revdate: 11/14/2018
 :revremark: Alpha
 :sectnums:
