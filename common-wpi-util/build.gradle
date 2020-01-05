@@ -12,10 +12,6 @@ apply plugin: 'kotlin'
 dependencies {
 
     // WPI/vendor dependencies
-    compile wpi.deps.wpilib()
-    compile wpi.deps.vendor.java()
-    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
-    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
 
     // Other dependencies
     compile project(":common-util")
@@ -31,4 +27,11 @@ dependencies {
     testCompile project(":common-wpi-simulation")
     testCompile project(":common-wpi-util-test")
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+
+    compile wpi.deps.wpilib()
+    compile wpi.deps.vendor.java()
+
+    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
 }

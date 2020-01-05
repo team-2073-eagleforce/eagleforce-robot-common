@@ -28,12 +28,6 @@ public interface SimulationMotorControllerEnhanced extends SimulationMotorContro
         throwUnsupported("getStatusFramePeriod");
         return 0;
     }
-    
-    @Override
-    default SensorCollection getSensorCollection() {
-        throwUnsupported("SensorCollection");
-        return null;
-    }
 
     @Override
     default ErrorCode configVelocityMeasurementPeriod(VelocityMeasPeriod period, int timeoutMs) {
@@ -57,29 +51,6 @@ public interface SimulationMotorControllerEnhanced extends SimulationMotorContro
     default ErrorCode configReverseLimitSwitchSource(LimitSwitchSource type, LimitSwitchNormal normalOpenOrClose, int timeoutMs) {
         throwUnsupported("configReverseLimitSwitchSource");
         return null;
-    }
-
-    @Override
-    default ErrorCode configPeakCurrentLimit(int amps, int timeoutMs) {
-        throwUnsupported("configPeakCurrentLimit");
-        return null;
-    }
-
-    @Override
-    default ErrorCode configPeakCurrentDuration(int milliseconds, int timeoutMs) {
-        throwUnsupported("configPeakCurrentDuration");
-        return null;
-    }
-
-    @Override
-    default ErrorCode configContinuousCurrentLimit(int amps, int timeoutMs) {
-        throwUnsupported("configContinuousCurrentLimit");
-        return null;
-    }
-
-    @Override
-    default void enableCurrentLimit(boolean enable) {
-        throwUnsupported("enableCurrentLimit");
     }
 
 	@Override

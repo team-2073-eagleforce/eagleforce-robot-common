@@ -20,4 +20,8 @@ public class SimulationEagleSPX extends BaseSimulationMotorController {
 		super(name, mechanism);
 	}
 
+	@Override
+	public ErrorCode configMotionSCurveStrength(int curveStrength, int timeoutMs) {
+		return null;
+	}
 }
