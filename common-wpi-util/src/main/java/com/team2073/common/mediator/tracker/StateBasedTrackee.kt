@@ -1,6 +1,4 @@
-package com.team2073.common.mediator.Tracker
-
-import com.team2073.common.mediator.subsys.SubsystemStateCondition
+package com.team2073.common.mediator.tracker
 
 interface StateBasedTrackee: SubsystemTrackee{
     override fun <SubsystemStateCondition> updateTracker(): SubsystemStateCondition

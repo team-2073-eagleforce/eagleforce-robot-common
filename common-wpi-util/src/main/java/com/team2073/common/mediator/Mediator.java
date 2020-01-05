@@ -1,7 +1,7 @@
 package com.team2073.common.mediator;
 
 import com.team2073.common.assertion.Assert;
-import com.team2073.common.mediator.Tracker.Tracker;
+import com.team2073.common.mediator.tracker.Tracker;
 import com.team2073.common.mediator.condition.Condition;
 import com.team2073.common.mediator.conflict.Conflict;
 import com.team2073.common.mediator.conflict.ConflictMap;

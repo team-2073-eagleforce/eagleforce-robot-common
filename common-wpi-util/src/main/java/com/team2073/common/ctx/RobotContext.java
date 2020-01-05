@@ -152,9 +152,9 @@ public class RobotContext {
         this.simulationMode = simulationMode;
     }
     
-//    private void close() {
-//        instance.getDataRecorder().requestShutdown();
-//    }
+    private void close() {
+        instance.getDataRecorder().requestShutdown();
+    }
     
     public void registerPeriodicInstances() {
         log.info("Registering Periodic instances...");
@@ -219,10 +219,10 @@ public class RobotContext {
         return dataRecorder;
     }
 
-//    public RobotContext setDataRecorder(DataRecorder dataRecorder) {
-//        this.dataRecorder = dataRecorder;
-//        return this;
-//    }
+    public RobotContext setDataRecorder(DataRecorder dataRecorder) {
+        this.dataRecorder = dataRecorder;
+        return this;
+    }
 
     public RobotEventPublisher getEventPublisher() {
         if (eventPublisher == null)

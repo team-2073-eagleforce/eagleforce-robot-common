@@ -3,6 +3,7 @@ package com.team2073.common.robot;
 import com.team2073.common.CommonConstants;
 import com.team2073.common.config.CommonProperties;
 import com.team2073.common.ctx.RobotContext;
+import com.team2073.common.datarecorder.DataRecorder;
 import com.team2073.common.event.RobotEventPublisher;
 import com.team2073.common.event.RobotEventPublisher.RobotStateEvent;
 import com.team2073.common.periodic.PeriodicRunner;
@@ -91,7 +92,7 @@ public class RobotRunner implements RobotDelegate {
 
 		CommonProperties commonProps;
 		PeriodicRunner periodicRunner;
-//		DataRecorder dataRecorder;
+		DataRecorder dataRecorder;
 		RobotEventPublisher eventPublisher;
 		PropertyLoader propertyLoader;
 		DriverStationAdapter driverStation;
@@ -107,8 +108,8 @@ public class RobotRunner implements RobotDelegate {
 		if ((eventPublisher = robot.createEventPublisher()) != null)
 			robotContext.setEventPublisher(eventPublisher);
 
-//		if ((dataRecorder = robot.createDataRecorder()) != null)
-//			robotContext.setDataRecorder(dataRecorder);
+		if ((dataRecorder = robot.createDataRecorder()) != null)
+			robotContext.setDataRecorder(dataRecorder);
 		
 		if ((propertyLoader = robot.createPropertyLoader()) != null)
 			robotContext.setPropertyLoader(propertyLoader);
