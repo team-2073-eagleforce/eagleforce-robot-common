@@ -53,7 +53,7 @@ public class SCurveProfile {
 	private double currentTime;
 
 	/**
-	 * Creates a series of 7-segment piecewise functions for each of Position, Velocity, Acceleration, and Jerk. <br/>
+	 * Creates a series of 7-segment piecewise functions for each of Position, Velocity, Acceleration, and Jerk.
 	 * On construction, calculates each point of domain change for the various piecewise sections. \(ax^2 + bx + c\)
 	 */
 	public SCurveProfile(double startingPosition, double goalPosition, ProfileConfiguration configuration) {

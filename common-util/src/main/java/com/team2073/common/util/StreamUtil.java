@@ -16,9 +16,8 @@ public abstract class StreamUtil {
 
     /**
      * Allows running distinct on a specific property while still returning the root object (unlike
-     * {@link Stream#distinct()}). Use in combination with {@link Stream#filter(Predicate)}. <br/>
-     * <br/>
-     * Ex: stream.filter(StreamUtils.distinctByKey(e -> e.authorName))
+     * {@link Stream#distinct()}). Use in combination with {@link Stream#filter(Predicate)}.
+     * Ex: stream.filter(StreamUtils.distinctByKey(e -{@literal >} e.authorName))
      */
     public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();

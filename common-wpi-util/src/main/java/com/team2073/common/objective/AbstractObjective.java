@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * TODO
  * @author Preston Briggs
  *
- * @param <T> The enum defining the state.
+ * param T The enum defining the state.
  */
 public abstract class AbstractObjective implements Objective {
 

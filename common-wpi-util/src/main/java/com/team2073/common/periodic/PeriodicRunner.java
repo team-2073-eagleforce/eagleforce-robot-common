@@ -144,12 +144,10 @@ public class PeriodicRunner {
 
 	/**
 	 * Registers this {@link PeriodicRunnable} only if auto register in enabled (controlled via
-	 * {@link CommonProperties#getPeriodicRunnerAutoRegister()}). <br/>
-	 * <br/>
+	 * {@link CommonProperties#getPeriodicRunnerAutoRegister()}).
 	 * This is meant to be called from the constructor of every {@link PeriodicRunnable}. This way, instances
 	 * do not need to be registered manually but if for some reason, manual registration is preferred, the property
-	 * can be set to false and these auto registrations will be ignored so you can register manually.<br/>
-	 * <br/>
+	 * can be set to false and these auto registrations will be ignored so you can register manually.
 	 * There is a convenience method to handle this: {@link PeriodicRunnable#autoRegisterWithPeriodicRunner()}.
 	 */
 	public void autoRegister(PeriodicRunnable instance, String name) {

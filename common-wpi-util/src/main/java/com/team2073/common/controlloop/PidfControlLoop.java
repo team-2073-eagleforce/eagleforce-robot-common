@@ -134,6 +134,44 @@ public class PidfControlLoop {
 		lastTime = currentTime;
 	}
 
+	public void updatePID(double position, double interval){
+		error = goal - position;
+
+		output = 0;
+
+		try {
+			if(fCondition == null || fCondition.call()){
+				output += f;
+			}
+		} catch (Exception e) {
+			fConditionExceptionCount++;
+			if (fConditionExceptionCount < MAX_FCONDITION_EXCEPTIONS_TO_LOG)
+				log.warn("Exception calling fCondition: ", e);
+		}
+
+		output += p * error;
+
+		if (maxIContribution == null)
+			output += i * accumulatedError;
+		else
+			output += Math.min(i * accumulatedError, maxIContribution);
+
+		output += d * errorVelocity;
+
+		output += kg == 0 ? 0 : kg * MathUtil.degreeCosine(position - posParalleltoGround);
+		accumulatedError += error * (interval);
+		errorVelocity = ((error - lastError) / (interval));
+		lastError = error;
+
+		if (Math.abs(output) >= maxOutput) {
+			if (output > 0) {
+				output = maxOutput;
+			} else {
+				output = -maxOutput;
+			}
+		}
+	}
+
 	public double getOutput() {
 		return output;
 	}

@@ -47,4 +47,16 @@ public abstract class MathUtil {
 		return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	}
 
+	public static double wrap(double angle, double range, double center){
+		double theta = angle;
+		while (theta > center + range/2d) {
+			theta -= range;
+		}
+
+		while (theta < center - range/2d) {
+			theta += range;
+		}
+		return theta;
+	}
+
 }

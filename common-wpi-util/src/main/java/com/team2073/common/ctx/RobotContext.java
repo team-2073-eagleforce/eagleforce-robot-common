@@ -62,7 +62,7 @@ public class RobotContext {
     }
     
     /**
-     * Call this before every test (In your {@literal @}BeforeEach mehtod). (Extending BaseWpiTest will do this for you).<br/>
+     * Call this before every test (In your {@literal @}BeforeEach mehtod). (Extending BaseWpiTest will do this for you).
      * Do not call this more than once per test. This will initialize a brand new instance.
      * Everywhere else should just call {@link #getInstance()} which will return a simulation
      * version after this has been called.
@@ -102,7 +102,7 @@ public class RobotContext {
     /**
      * Call this at the end of every test (in your {@literal @}AfterEach method).
      *
-     * @return
+     * 
      */
     public static void shutdownSimulationInstance() {
         if (instance == null) {

@@ -14,11 +14,11 @@ public interface PeriodicRunnable {
 
 	/**
 	 * Automatically registers this instance with the {@link PeriodicRunner} provided by the {@link RobotContext}.
-	 * <br/>
-	 * <br/>
+	 * 
+	 * 
 	 * Generally only meant to be called internally from implementations of this interface from their contructor.
-	 * <br/>
-	 * <br/>
+	 * 
+	 * 
 	 * Ex:
 	 * <pre>
 	 *

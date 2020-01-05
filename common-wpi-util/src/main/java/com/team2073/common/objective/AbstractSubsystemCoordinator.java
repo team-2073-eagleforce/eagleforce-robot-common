@@ -331,10 +331,6 @@ public abstract class AbstractSubsystemCoordinator implements PeriodicRunnable {
 	}
 	
 	public enum ErrorType {
-		/** An {@link Objective}'s {@link ObjectivePrecondition} failed and the resolution was the same as 
-		 * the initial Objective. This will cause an infinite loop of Objective queuing so instead, the
-		 * Objective stack is cleared. This will cause any currently running Objectives to end abruptly, first
-		 * calling interrupt on the Objective. */
 		CIRCULAR_QUEUING
 	}
 }

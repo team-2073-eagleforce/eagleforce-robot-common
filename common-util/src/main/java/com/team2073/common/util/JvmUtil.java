@@ -59,8 +59,7 @@ public abstract class JvmUtil {
 
     /**
      * Returns whether the current JVM is running from a jar or from .class files (as is the case when running from an
-     * IDE for example).<br/>
-     * <br/>
+     * IDE for example).
      * One example use of this is to determine how to copy files from the classpath to an external directory since special
      * handling is required if classpath files exist inside a jar.
      *

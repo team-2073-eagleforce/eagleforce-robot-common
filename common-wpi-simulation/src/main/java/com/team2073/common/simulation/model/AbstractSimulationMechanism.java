@@ -36,7 +36,7 @@ public abstract class AbstractSimulationMechanism implements SimulationMechanism
 	/**
 	 * Units are in terms of RPM, Inches, and Pounds
 	 *
-	 * @param gearRatio    Should be > 1, from motor to output
+	 * @param gearRatio    Should be over 1, from motor to output
 	 * @param motor        The Type of motor is the system running on.
 	 * @param motorCount   The number of motors for the system.
 	 * @param massOnSystem How much weight are we pulling up. (Probably want to overestimate this kV bit)

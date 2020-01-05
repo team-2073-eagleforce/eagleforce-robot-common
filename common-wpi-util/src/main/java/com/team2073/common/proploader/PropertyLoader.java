@@ -307,10 +307,10 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
     
     /**
      * Set the path to the classpath directory to load properties files from (defaults to
-     * {@link #DEFAULT_CONF_DIR_NAME}). <br/>
-     * This path is relative to the resource directory which in a default gradle project is src/main/resources. <br/>
-     * <br/>
-     * Assuming this is a default gradle project: <br/>
+     * {@link #DEFAULT_CONF_DIR_NAME}). 
+     * This path is relative to the resource directory which in a default gradle project is src/main/resources. 
+     * 
+     * Assuming this is a default gradle project: 
      * "/foo/bar" results in src/main/resources/foo/bar"
      *
      * @param propDir the path to the classpath directory to load properties files from
@@ -332,12 +332,12 @@ public class PropertyLoader implements AsyncPeriodicRunnable {
     
     /**
      * Set the external (onboard RIO) directory path to load properties files from (defaults to
-     * {@link #DEFAULT_CONF_DIR_NAME}). <br/>
+     * {@link #DEFAULT_CONF_DIR_NAME}). 
      * If propDir starts with a forwardslash (/) the path will be considered absolute and used as is. If not,
-     * the path will be created relative to the user directory.<br/>
-     * <br/>
-     * "/foo/bar" results in "/foo/bar"<br/>
-     * TODO: Verify the below is correct when running on the RIO<br/>
+     * the path will be created relative to the user directory.
+     * 
+     * "/foo/bar" results in "/foo/bar"
+     * TODO: Verify the below is correct when running on the RIO
      * "foo/bar" results in "/home/lvuser/foo/bar" or "C:/Users/YourUsernameHere/foo/bar" (depending on operating
      * system/user)
      *
