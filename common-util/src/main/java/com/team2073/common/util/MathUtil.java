@@ -1,5 +1,7 @@
 package com.team2073.common.util;
 
+import org.apache.commons.lang3.Range;
+
 public abstract class MathUtil {
 
 	public static double degreeCosine(double degrees) {
@@ -57,6 +59,11 @@ public abstract class MathUtil {
 			theta += range;
 		}
 		return theta;
+	}
+
+	public static boolean isInRange(double value, double target, double offset) {
+		Range<Double> range = Range.between(target - offset, target + offset);
+		return range.contains(value);
 	}
 
 }
