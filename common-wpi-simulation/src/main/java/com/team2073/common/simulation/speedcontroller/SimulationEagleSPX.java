@@ -3,6 +3,7 @@ package com.team2073.common.simulation.speedcontroller;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.team2073.common.exception.NotYetImplementedException;
 import com.team2073.common.simulation.model.SimulationMechanism;
 import com.team2073.common.util.EnumUtil;
@@ -18,6 +19,11 @@ public class SimulationEagleSPX extends BaseSimulationMotorController {
 	 */
 	public SimulationEagleSPX(String name, SimulationMechanism mechanism) {
 		super(name, mechanism);
+	}
+
+	@Override
+	public ErrorCode configRemoteFeedbackFilter(CANCoder canCoderRef, int remoteOrdinal, int timeoutMs) {
+		return null;
 	}
 
 	@Override

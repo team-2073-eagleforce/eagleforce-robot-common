@@ -18,7 +18,7 @@ plugins {
     id "java"
     id "eclipse"
     id "idea"
-    id "edu.wpi.first.GradleRIO" version "2020.1.2"
+    id "edu.wpi.first.GradleRIO" version "2020.2.2"
     id "maven-publish"
 //    id 'org.asciidoctor.convert' version '1.5.8.1'
 }

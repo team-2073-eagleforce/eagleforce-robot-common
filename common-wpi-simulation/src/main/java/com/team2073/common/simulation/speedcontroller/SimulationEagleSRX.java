@@ -1,6 +1,7 @@
 package com.team2073.common.simulation.speedcontroller;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.team2073.common.datarecorder.model.DataPointIgnore;
 import com.team2073.common.simulation.model.SimulationMechanism;
 
@@ -21,6 +22,11 @@ public class SimulationEagleSRX extends BaseSimulationMotorController implements
 	public SimulationEagleSRX(String name, SimulationMechanism mechanism, int encoderTicsPerUnitOfMechanism) {
 		super(name, mechanism);
 		this.encoderTicsPerUnitOfMechanism = encoderTicsPerUnitOfMechanism;
+	}
+
+	@Override
+	public ErrorCode configRemoteFeedbackFilter(CANCoder canCoderRef, int remoteOrdinal, int timeoutMs) {
+		return null;
 	}
 
 	@Override
