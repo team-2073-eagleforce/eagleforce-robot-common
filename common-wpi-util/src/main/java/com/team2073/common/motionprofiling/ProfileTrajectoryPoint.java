@@ -17,6 +17,24 @@ public class ProfileTrajectoryPoint {
 		this.currentTime = currentTime;
 	}
 
+	/**
+	 * ProfileTrajectoryPoint that neglects position in creation.
+	 *
+	 * @param velocity  Current velocity
+	 * @param acceleration Current acceleration
+	 * @param jerk Current jerk
+	 * @param timeStep  dt
+	 * @param currentTime Current time
+	 */
+
+	public ProfileTrajectoryPoint(double velocity, double acceleration, double jerk, double timeStep, double currentTime) {
+		this.velocity = velocity;
+		this.acceleration = acceleration;
+		this.jerk = jerk;
+		this.timeStep = timeStep;
+		this.currentTime = currentTime;
+	}
+
 	public double getPosition() {
 		return position;
 	}

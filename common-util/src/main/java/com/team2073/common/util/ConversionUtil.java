@@ -53,6 +53,13 @@ public abstract class ConversionUtil {
 		return inches * 0.0254;
 	}
 
+	public static double feetToMeters(double feet){
+		return feet * 0.3048;
+	}
+
+	public static double metersToFeet(double meters){
+	return meters * 3.28084;
+	}
 	public static double radiansToDegrees(double radians) {
 		return radians * (180d / PI);
 	}
