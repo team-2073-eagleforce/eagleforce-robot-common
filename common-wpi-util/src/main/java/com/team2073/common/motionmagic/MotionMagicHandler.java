@@ -2,23 +2,24 @@ package com.team2073.common.motionmagic;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2073.common.position.converter.PositionConverter;
 
 public class MotionMagicHandler {
 
-    private TalonSRX talonSRX;
+    private BaseTalon talon;
     private double setpoint;
     private PositionConverter positionConverter;
 
-    public MotionMagicHandler(TalonSRX talonSRX, PositionConverter positionConverter, int SCurveStrength,
+    public MotionMagicHandler(BaseTalon talon, PositionConverter positionConverter, int SCurveStrength,
                               double maxVelocity, double maxAcceleration) {
 
-        this.talonSRX = talonSRX;
+        this.talon = talon;
         this.positionConverter = positionConverter;
-        talonSRX.configMotionCruiseVelocity((int) (positionConverter.asTics(maxVelocity) * 0.1), 100);
-        talonSRX.configMotionAcceleration((int) (positionConverter.asTics(maxAcceleration) * 0.1), 100);
-        talonSRX.configMotionSCurveStrength(SCurveStrength);
+        this.talon.configMotionCruiseVelocity((int) (positionConverter.asTics(maxVelocity) * 0.1), 100);
+        this.talon.configMotionAcceleration((int) (positionConverter.asTics(maxAcceleration) * 0.1), 100);
+        this.talon.configMotionSCurveStrength(SCurveStrength);
     }
 
     /**
@@ -29,12 +30,12 @@ public class MotionMagicHandler {
 
     public void update(double setpoint, double feedForward) {
         this.setpoint = setpoint;
-        talonSRX.set(ControlMode.MotionMagic, positionConverter.asTics(setpoint), DemandType.ArbitraryFeedForward, feedForward);
+        talon.set(ControlMode.MotionMagic, positionConverter.asTics(setpoint), DemandType.ArbitraryFeedForward, feedForward);
     }
 
     public void update(double setpoint) {
         this.setpoint = setpoint;
-        talonSRX.set(ControlMode.MotionMagic, positionConverter.asTics(setpoint));
+        talon.set(ControlMode.MotionMagic, positionConverter.asTics(setpoint));
     }
 
     public double getSetpoint() {
@@ -42,11 +43,11 @@ public class MotionMagicHandler {
     }
 
     public double currentPosition() {
-        return positionConverter.asPosition(talonSRX.getSelectedSensorPosition());
+        return positionConverter.asPosition(talon.getSelectedSensorPosition());
     }
 
     public double currentVelocity() {
-        return positionConverter.asPosition(talonSRX.getSelectedSensorVelocity()*10);
+        return positionConverter.asPosition(talon.getSelectedSensorVelocity()*10);
     }
 
 
