@@ -33,6 +33,15 @@ public class MotionMagicHandler {
         talon.set(ControlMode.MotionMagic, positionConverter.asTics(setpoint), DemandType.ArbitraryFeedForward, feedForward);
     }
 
+    /**
+     *
+     * @param kp
+     * @param kv in % out per human readable velocity unit
+     */
+    public void setGains(double kp, double kv){
+        talon.config_kF(0, (1023*kv)/(positionConverter.asTics(1)/10d));
+        talon.config_kP(0, (1023d*kp)/positionConverter.asTics(1));
+    }
     public void update(double setpoint) {
         this.setpoint = setpoint;
         talon.set(ControlMode.MotionMagic, positionConverter.asTics(setpoint));
@@ -49,6 +58,5 @@ public class MotionMagicHandler {
     public double currentVelocity() {
         return positionConverter.asPosition(talon.getSelectedSensorVelocity()*10);
     }
-
 
 }
