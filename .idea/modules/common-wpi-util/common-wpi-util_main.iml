@@ -107,5 +107,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Gradle: commons-io:commons-io:2.5" level="project" />
+    <orderEntry type="library" name="Gradle: com.ctre.phoenix:api-java:5.17.6" level="project" />
   </component>
 </module>
