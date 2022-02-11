@@ -35,6 +35,7 @@
       <module name="common-wpi-util-test_test" target="1.8" />
       <module name="common-wpi-util_main" target="1.8" />
       <module name="common-wpi-util_test" target="1.8" />
+      <module name="eagleforce-robot-common" target="11" />
       <module name="eagleforce-robot-common-common-guice_main" target="1.8" />
       <module name="eagleforce-robot-common-common-guice_test" target="1.8" />
       <module name="eagleforce-robot-common-common-util-test_main" target="1.8" />
@@ -49,6 +50,29 @@
       <module name="eagleforce-robot-common-common-wpi-util-test_test" target="1.8" />
       <module name="eagleforce-robot-common-common-wpi-util_main" target="1.8" />
       <module name="eagleforce-robot-common-common-wpi-util_test" target="1.8" />
+      <module name="eagleforce-robot-common.common-guice" target="1.8" />
+      <module name="eagleforce-robot-common.common-guice.main" target="1.8" />
+      <module name="eagleforce-robot-common.common-guice.test" target="1.8" />
+      <module name="eagleforce-robot-common.common-util" target="1.8" />
+      <module name="eagleforce-robot-common.common-util-test" target="1.8" />
+      <module name="eagleforce-robot-common.common-util-test.main" target="1.8" />
+      <module name="eagleforce-robot-common.common-util-test.test" target="1.8" />
+      <module name="eagleforce-robot-common.common-util.main" target="1.8" />
+      <module name="eagleforce-robot-common.common-util.test" target="1.8" />
+      <module name="eagleforce-robot-common.common-wpi-simulation" target="1.8" />
+      <module name="eagleforce-robot-common.common-wpi-simulation-stubs" target="1.8" />
+      <module name="eagleforce-robot-common.common-wpi-simulation-stubs.main" target="1.8" />
+      <module name="eagleforce-robot-common.common-wpi-simulation-stubs.test" target="1.8" />
+      <module name="eagleforce-robot-common.common-wpi-simulation.main" target="1.8" />
+      <module name="eagleforce-robot-common.common-wpi-simulation.test" target="1.8" />
+      <module name="eagleforce-robot-common.common-wpi-util" target="1.8" />
+      <module name="eagleforce-robot-common.common-wpi-util-test" target="1.8" />
+      <module name="eagleforce-robot-common.common-wpi-util-test.main" target="1.8" />
+      <module name="eagleforce-robot-common.common-wpi-util-test.test" target="1.8" />
+      <module name="eagleforce-robot-common.common-wpi-util.main" target="1.8" />
+      <module name="eagleforce-robot-common.common-wpi-util.test" target="1.8" />
+      <module name="eagleforce-robot-common.main" target="11" />
+      <module name="eagleforce-robot-common.test" target="11" />
       <module name="eagleforce-robot-common_main" target="11" />
       <module name="eagleforce-robot-common_test" target="11" />
       <module name="git-eagleforce-robot-common_main" target="11" />
