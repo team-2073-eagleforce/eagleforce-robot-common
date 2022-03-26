@@ -9,9 +9,9 @@ apply plugin: 'org.junit.platform.gradle.plugin'
 apply plugin: 'kotlin'
 
 dependencies {
-    compile project(":common-util")
-    compile "com.google.inject:guice:4.1.0"
-    compile "com.google.inject.extensions:guice-assistedinject:4.1.0"
-    compile "com.google.inject.extensions:guice-throwingproviders:4.1.0"
-    compile "com.mycila.guice.extensions:mycila-guice-jsr250:4.0.rc1"
+    implementation project(":common-util")
+    implementation "com.google.inject:guice:4.1.0"
+    implementation "com.google.inject.extensions:guice-assistedinject:4.1.0"
+    implementation "com.google.inject.extensions:guice-throwingproviders:4.1.0"
+    implementation "com.mycila.guice.extensions:mycila-guice-jsr250:4.0.rc1"
 }

@@ -11,17 +11,17 @@ apply plugin: 'kotlin'
 dependencies {
 
     // Simulation stubs must load prior to the WPI classes it is shading
-    compile project(":common-wpi-simulation-stubs")
+    implementation project(":common-wpi-simulation-stubs")
 
     // WPI/vendor dependencies
-    compile wpi.deps.wpilib()
-    compile wpi.deps.vendor.java()
-    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
-    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+    implementation wpi.java.deps.wpilib()
+    implementation wpi.java.vendor.java()
+    nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
+    nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
 
     // Other dependencies
-    compile project(":common-wpi-util")
+    implementation project(":common-wpi-util")
 
     // Test dependencies
-    testCompile project(":common-wpi-util-test")
+    testImplementation project(":common-wpi-util-test")
 }
