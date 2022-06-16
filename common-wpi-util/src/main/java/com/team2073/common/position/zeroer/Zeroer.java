@@ -443,7 +443,7 @@ public class Zeroer implements PeriodicRunnable {
 	 * 0 for Primary closed-loop. 1 for cascaded closed-loop. See Phoenix-Documentation for how to interpret.
 	 *
 	 * @see IMotorController#getSelectedSensorPosition(int)
-	 * @see IMotorController#setSelectedSensorPosition(double, int, int) 
+	 * @see IMotorController#setSelectedSensorPosition(double, int, int)
 	 */
 	public Zeroer setPidIdx(int pidIdx) {
 		this.pidIdx = pidIdx;

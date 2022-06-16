@@ -6,7 +6,7 @@ plugins {
     id "edu.wpi.first.GradleRIO"
     id 'org.jetbrains.kotlin.jvm'
 }
-apply plugin: 'org.junit.platform.gradle.plugin'
+//apply plugin: 'org.junit.platform.gradle.plugin'
 apply plugin: 'kotlin'
 
 dependencies {
@@ -14,19 +14,19 @@ dependencies {
     // WPI/vendor dependencies
 
     // Other dependencies
-    compile project(":common-util")
-    compile 'org.apache.commons:commons-configuration2:2.4'
-    compile 'commons-io:commons-io:2.5'
-    compile 'org.apache.commons:commons-math3:3.6.1'
-    compile 'javax.validation:validation-api:2.0.0.Final'
-    compile 'org.reflections:reflections:0.9.11'
-    compile 'com.google.guava:guava:19.0'
+    implementation project(":common-util")
+    implementation 'org.apache.commons:commons-configuration2:2.4'
+    implementation 'commons-io:commons-io:2.5'
+    implementation 'org.apache.commons:commons-math3:3.6.1'
+    implementation 'javax.validation:validation-api:2.0.0.Final'
+    implementation 'org.reflections:reflections:0.9.11'
+    implementation 'com.google.guava:guava:19.0'
 
     // Test dependencies
-    testCompile project(":common-util-test")
-    testCompile project(":common-wpi-simulation")
-    testCompile project(":common-wpi-util-test")
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    testImplementation project(":common-util-test")
+    testImplementation project(":common-wpi-simulation")
+    testImplementation project(":common-wpi-util-test")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
 
     implementation wpi.java.deps.wpilib()
