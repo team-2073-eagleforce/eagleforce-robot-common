@@ -207,7 +207,7 @@ public class Zeroer implements PeriodicRunnable {
 	 * should not use this to get the current position. Use {@link #currentTicsCached()}
 	 * instead. */
 	protected int currentTics() {
-		return motor.getSelectedSensorPosition(pidIdx);
+		return (int)motor.getSelectedSensorPosition(pidIdx);
 	}
 
 	protected final int currentTicsCached() {
@@ -443,7 +443,7 @@ public class Zeroer implements PeriodicRunnable {
 	 * 0 for Primary closed-loop. 1 for cascaded closed-loop. See Phoenix-Documentation for how to interpret.
 	 *
 	 * @see IMotorController#getSelectedSensorPosition(int)
-	 * @see IMotorController#setSelectedSensorPosition(int, int, int)
+	 * @see IMotorController#setSelectedSensorPosition(double, int, int) 
 	 */
 	public Zeroer setPidIdx(int pidIdx) {
 		this.pidIdx = pidIdx;

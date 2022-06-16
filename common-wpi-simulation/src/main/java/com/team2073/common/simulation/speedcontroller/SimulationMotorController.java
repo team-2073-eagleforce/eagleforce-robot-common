@@ -27,8 +27,8 @@ public interface SimulationMotorController extends IMotorController {
 	}
 
 	@Override
-	default void set(ControlMode Mode, double demand0, double demand1) {
-		throwUnsupported("set(ControlMode Mode, double demand0, double demand1)");
+	default void set(ControlMode Mode, double demand) {
+		throwUnsupported("set(ControlMode Mode, double demand)");
 	}
 	
 	@Override
@@ -140,7 +140,7 @@ public interface SimulationMotorController extends IMotorController {
 	}
 
 	@Override
-	default ErrorCode setSelectedSensorPosition(int sensorPos, int pidIdx, int timeoutMs) {
+	default ErrorCode setSelectedSensorPosition(double sensorPos, int pidIdx, int timeoutMs) {
 		throwUnsupported("setSelectedSensorPosition");
 		return null;
 	}
@@ -182,13 +182,13 @@ public interface SimulationMotorController extends IMotorController {
 	}
 
 	@Override
-	default ErrorCode configForwardSoftLimitThreshold(int forwardSensorLimit, int timeoutMs) {
+	default ErrorCode configForwardSoftLimitThreshold(double forwardSensorLimit, int timeoutMs) {
 		throwUnsupported("configForwardSoftLimitThreshhold");
 		return null;
 	}
 
 	@Override
-	default ErrorCode configReverseSoftLimitThreshold(int reverseSensorLimit, int timeoutMs) {
+	default ErrorCode configReverseSoftLimitThreshold(double reverseSensorLimit, int timeoutMs) {
 		throwUnsupported("configReverseSoftLimitThreshold");
 		return null;
 	}
@@ -235,13 +235,13 @@ public interface SimulationMotorController extends IMotorController {
 	}
 
 	@Override
-	default ErrorCode config_IntegralZone(int slotIdx, int izone, int timeoutMs) {
+	default ErrorCode config_IntegralZone(int slotIdx, double izone, int timeoutMs) {
 		throwUnsupported("config_IntegralZone");
 		return null;
 	}
 
 	@Override
-	default ErrorCode configAllowableClosedloopError(int slotIdx, int allowableCloseLoopError, int timeoutMs) {
+	default ErrorCode configAllowableClosedloopError(int slotIdx, double allowableCloseLoopError, int timeoutMs) {
 		throwUnsupported("configAllowableClosedloopError");
 		return null;
 	}
@@ -260,7 +260,7 @@ public interface SimulationMotorController extends IMotorController {
 	}
 
 	@Override
-	default int getClosedLoopError(int pidIdx) {
+	default double getClosedLoopError(int pidIdx) {
 		throwUnsupported("getClosedLoopError");
 		return 0;
 	}
@@ -283,43 +283,43 @@ public interface SimulationMotorController extends IMotorController {
 	}
 
 	@Override
-	default int getSelectedSensorPosition(int pidIdx) {
+	default double getSelectedSensorPosition(int pidIdx) {
 		throwUnsupported("getSelectedSensorPosition");
 		return 0;
 	}
 
 	@Override
-	default int getSelectedSensorVelocity(int pidIdx) {
+	default double getSelectedSensorVelocity(int pidIdx) {
 		throwUnsupported("getSelectedSensorVelocity");
 		return 0;
 	}
 
 	@Override
-	default int getActiveTrajectoryPosition() {
+	default double getActiveTrajectoryPosition() {
 		throwUnsupported("getActiveTrajectoryPosition");
 		return 0;
 	}
 
 	@Override
-	default int getActiveTrajectoryVelocity() {
+	default double getActiveTrajectoryVelocity() {
 		throwUnsupported("getActiveTrajectoryVelocity");
 		return 0;
 	}
 
-	@Override
-	default double getActiveTrajectoryHeading() {
-		throwUnsupported("getActiveTrajectoryHeading");
-		return 0;
-	}
+//	@Override
+//	default double getActiveTrajectoryHeading() {
+//		throwUnsupported("getActiveTrajectoryHeading");
+//		return 0;
+//	}
 
 	@Override
-	default ErrorCode configMotionCruiseVelocity(int sensorUnitsPer100ms, int timeoutMs) {
+	default ErrorCode configMotionCruiseVelocity(double sensorUnitsPer100ms, int timeoutMs) {
 		throwUnsupported("configMotionCruiseVelocity");
 		return null;
 	}
 
 	@Override
-	default ErrorCode configMotionAcceleration(int sensorUnitsPer100msPerSec, int timeoutMs) {
+	default ErrorCode configMotionAcceleration(double sensorUnitsPer100msPerSec, int timeoutMs) {
 		throwUnsupported("configMotionAcceleration");
 		return null;
 	}

@@ -2,7 +2,7 @@ package com.team2073.common.camera;
 
 //import com.google.inject.Inject;
 //import com.google.inject.Provider;
-import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cscore.UsbCamera;
 
 /**
  * @author pbriggs

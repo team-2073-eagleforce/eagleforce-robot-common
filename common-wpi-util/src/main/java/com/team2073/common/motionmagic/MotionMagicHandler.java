@@ -52,11 +52,11 @@ public class MotionMagicHandler {
     }
 
     public double currentPosition() {
-        return positionConverter.asPosition(talon.getSelectedSensorPosition());
+        return positionConverter.asPosition((int)talon.getSelectedSensorPosition());
     }
 
     public double currentVelocity() {
-        return positionConverter.asPosition(talon.getSelectedSensorVelocity()*10);
+        return positionConverter.asPosition((int)talon.getSelectedSensorVelocity()*10);
     }
 
 }

@@ -1,7 +1,11 @@
 package com.team2073.common.simulation.speedcontroller;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
 import com.team2073.common.datarecorder.model.DataPointIgnore;
 import com.team2073.common.simulation.model.SimulationMechanism;
 
@@ -30,12 +34,12 @@ public class SimulationEagleSRX extends BaseSimulationMotorController implements
 	}
 
 	@Override
-	public int getSelectedSensorPosition(int pidIdx) {
+	public double getSelectedSensorPosition(int pidIdx) {
 		return (int) Math.round(mechanism.position() * encoderTicsPerUnitOfMechanism);
 	}
 
 	@Override
-	public int getSelectedSensorVelocity(int pidIdx) {
+	public double getSelectedSensorVelocity(int pidIdx) {
 		return (int) Math.round(mechanism.velocity() * encoderTicsPerUnitOfMechanism);
 	}
 
@@ -47,5 +51,25 @@ public class SimulationEagleSRX extends BaseSimulationMotorController implements
 	@Override
 	public ErrorCode configMotionSCurveStrength(int curveStrength, int timeoutMs) {
 		return null;
+	}
+
+	@Override
+	public ErrorCode configSupplyCurrentLimit(SupplyCurrentLimitConfiguration currLimitCfg, int timeoutMs) {
+		return null;
+	}
+
+	@Override
+	public ErrorCode configVelocityMeasurementPeriod(SensorVelocityMeasPeriod period, int timeoutMs) {
+		return null;
+	}
+
+	@Override
+	public ErrorCode configRemoteFeedbackFilter(BaseTalon talonRef, int remoteOrdinal, int timeoutMs) {
+		return null;
+	}
+
+	@Override
+	public void setInverted(InvertType invertType) {
+
 	}
 }

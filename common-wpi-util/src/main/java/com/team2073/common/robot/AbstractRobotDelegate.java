@@ -2,7 +2,7 @@ package com.team2073.common.robot;
 
 import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -17,12 +17,12 @@ public abstract class AbstractRobotDelegate implements RobotDelegate {
 	// Static
 	// ============================================================
 
-	/** See {@link IterativeRobot#isSimulation()} */
+	/** See {@link IterativeRobotBase#isSimulation()} */
 	static boolean isSimulation() {
 		return !isReal();
 	}
 
-	/** See {@link IterativeRobot#isReal()} */
+	/** See {@link IterativeRobotBase#isReal()} */
 	static boolean isReal() {
 		return HALUtil.getHALRuntimeType() == 0;
 	}
@@ -43,32 +43,32 @@ public abstract class AbstractRobotDelegate implements RobotDelegate {
 
 	// IterativeRobot utility methods
 	// ==========================================
-	/** See {@link IterativeRobot#isDisabled()} */
+	/** See {@link IterativeRobotBase#isDisabled()} */
 	public final boolean isDisabled() {
 		return ds.isDisabled();
 	}
 
-	/** See {@link IterativeRobot#isEnabled()} */
+	/** See {@link IterativeRobotBase#isEnabled()} */
 	public final boolean isEnabled() {
 		return ds.isEnabled();
 	}
 
-	/** See {@link IterativeRobot#isAutonomous()} */
+	/** See {@link IterativeRobotBase#isAutonomous()} */
 	public final boolean isAutonomous() {
 		return ds.isAutonomous();
 	}
 
-	/** See {@link IterativeRobot#isTest()} */
+	/** See {@link IterativeRobotBase#isTest()} */
 	public final boolean isTest() {
 		return ds.isTest();
 	}
 
-	/** See {@link IterativeRobot#isOperatorControl()} */
+	/** See {@link IterativeRobotBase#isOperatorControl()} */
 	public final boolean isOperatorControl() {
 		return ds.isOperatorControl();
 	}
 
-	/** See {@link IterativeRobot#isNewDataAvailable()} */
+	/** See {@link IterativeRobotBase#isNewDataAvailable()} */
 	public final boolean isNewDataAvailable() {
 		return ds.isNewControlData();
 	}

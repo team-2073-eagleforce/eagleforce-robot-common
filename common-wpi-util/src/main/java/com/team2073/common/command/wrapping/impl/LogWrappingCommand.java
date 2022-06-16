@@ -9,7 +9,7 @@ import com.team2073.common.command.wrapping.WrappableCommand;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableBuilder;
 
 /**
  * Wraps a {@link WrappableCommand} to add logging before and after method execution. Messages that

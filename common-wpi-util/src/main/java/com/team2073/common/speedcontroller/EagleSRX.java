@@ -114,7 +114,7 @@ public class EagleSRX extends TalonSRX implements AsyncPeriodicRunnable, SmartDa
      * use requestSelectedSensorPosition instead
      */
     private int getSelectedSensorPositionInternal(int pidIdx) {
-        return super.getSelectedSensorPosition(pidIdx);
+        return (int)super.getSelectedSensorPosition(pidIdx);
     }
 
     private double getMotorOutputVoltageInternal() {
@@ -126,11 +126,11 @@ public class EagleSRX extends TalonSRX implements AsyncPeriodicRunnable, SmartDa
     }
 
     private int getSelectedSensorVelocityInternal(int pidIdx) {
-        return super.getSelectedSensorVelocity(pidIdx);
+        return (int)super.getSelectedSensorVelocity(pidIdx);
     }
 
     @Override
-    public int getSelectedSensorPosition(int pidIdx) {
+    public double getSelectedSensorPosition(int pidIdx) {
         this.currentPidIdx = pidIdx;
         try {
             return (int) Math.round(talonDataCache.get(DataType.POSITION));
@@ -141,7 +141,7 @@ public class EagleSRX extends TalonSRX implements AsyncPeriodicRunnable, SmartDa
     }
 
     @Override
-    public int getSelectedSensorVelocity(int pidIdx) {
+    public double getSelectedSensorVelocity(int pidIdx) {
         this.currentPidIdx = pidIdx;
         try {
             return (int) Math.round(talonDataCache.get(DataType.VELOCITY));

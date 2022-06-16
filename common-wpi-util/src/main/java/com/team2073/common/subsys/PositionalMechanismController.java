@@ -470,7 +470,7 @@ public class PositionalMechanismController<T extends Enum<T> & PositionContainer
 			
 			/** To be called once per periodic to cache the current position. This reduces CAN bus utilization leading to less CAN errors. */
 			public void updateCurrentPosition() {
-				currentPosition = converter.asPosition(getMainMotor().getSelectedSensorPosition(pidIdx));
+				currentPosition = converter.asPosition((int)getMainMotor().getSelectedSensorPosition(pidIdx));
 			}
 			
 			public double getRequestedPosition() {

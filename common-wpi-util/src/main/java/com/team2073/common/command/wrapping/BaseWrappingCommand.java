@@ -5,7 +5,7 @@ import com.team2073.common.assertion.Assert;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableBuilder;
 
 /**
  * <i>Note: See {@link WrappableCommand} as the root of documentation for
@@ -120,12 +120,6 @@ public abstract class BaseWrappingCommand extends WrappableCommand {
 		return innerCommand;
 	}
 
-	/**
-	 * This method is an alternative to {@link Command#isParented()}. See
-	 * {@link WrappableCommand#internalJavaDocs} for more info.
-	 * 
-	 * @return True if the command has a parent.
-	 */
 	public synchronized boolean isParentedCopy() {
 		return getGroup() != null;
 	}
