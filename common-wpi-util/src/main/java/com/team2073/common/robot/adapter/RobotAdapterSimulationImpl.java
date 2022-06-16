@@ -18,6 +18,8 @@ public class RobotAdapterSimulationImpl implements RobotAdapter {
     public void robotInit() {
         robotRunner.robotInit();
     }
+
+
     
     @Override
     public void disabledInit() {

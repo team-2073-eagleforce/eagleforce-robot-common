@@ -86,7 +86,9 @@ public class RobotRunner implements RobotDelegate {
 		robot.registerPeriodicInstance(robotContext.getPeriodicRunner());
 		resetLastCheckedTime();
 	}
-	
+
+
+
 	private void initializeDelegator() {
 
 		CommonProperties commonProps;
@@ -149,6 +151,12 @@ public class RobotRunner implements RobotDelegate {
 	}
 
 	@Override
+	public void simulationInit() {
+		ExceptionUtil.suppressVoid(robot::simulationInit, "robot::simulationInit");
+		robotContext.getEventPublisher().setCurrentEvent(RobotStateEvent.SIMULATION_START);
+	}
+
+	@Override
 	public void robotPeriodic() {
 		robotContext.getEventPublisher().setCurrentEvent(RobotStateEvent.PERIODIC);
 		// scheduler was at the end but I feel like it needs to be before we run all subsystems
@@ -160,6 +168,13 @@ public class RobotRunner implements RobotDelegate {
 	@Override
 	public void disabledPeriodic() {
 		ExceptionUtil.suppressVoid(robot::disabledPeriodic, "robot::disabledPeriodic");
+		robotContext.getEventPublisher().setCurrentEvent(RobotStateEvent.PERIODIC);
+	}
+
+
+	@Override
+	public void simulationPeriodic() {
+		ExceptionUtil.suppressVoid(robot::simulationPeriodic, "robot::simulationPeriodic");
 		robotContext.getEventPublisher().setCurrentEvent(RobotStateEvent.PERIODIC);
 	}
 

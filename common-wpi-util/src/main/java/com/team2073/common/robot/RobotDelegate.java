@@ -24,6 +24,14 @@ public interface RobotDelegate {
 	default void robotInit() {
 	}
 
+	/**See {@link IterativeRobotBase #simulationPeriodic()} */
+	default void simulationPeriodic() {
+	}
+
+	/**See {@link IterativeRobotBase #simulationPeriodic()} */
+	default void simulationInit() {}
+
+
 	/** See {@link IterativeRobotBase#disabledInit()} */
 	default void disabledInit() {
 	}
