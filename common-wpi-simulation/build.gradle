@@ -12,6 +12,8 @@ dependencies {
 
     // Simulation stubs must load prior to the WPI classes it is shading
     implementation project(":common-wpi-simulation-stubs")
+    implementation project(":common-util")
+    implementation 'com.google.guava:guava:19.0'
 
     // WPI/vendor dependencies
     implementation wpi.java.deps.wpilib()
