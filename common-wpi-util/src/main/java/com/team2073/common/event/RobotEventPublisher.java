@@ -42,7 +42,9 @@ public class RobotEventPublisher implements PeriodicRunnable {
         TELEOP_START(5),
         TELEOP_END(6),
         TEST_START(7),
-        TEST_END(8);
+        TEST_END(8),
+        SIMULATION_START(9),
+        SIMULATION_END(10);
 
         private int eventNumber;
 

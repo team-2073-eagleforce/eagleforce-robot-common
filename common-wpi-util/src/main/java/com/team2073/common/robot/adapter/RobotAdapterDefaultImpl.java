@@ -35,7 +35,17 @@ public class RobotAdapterDefaultImpl extends TimedRobot implements RobotAdapter 
     public void robotInit() {
         robotRunner.robotInit();
     }
-    
+
+    @Override
+    public void simulationPeriodic() {
+        robotRunner.simulationPeriodic();
+    }
+
+    @Override
+    public void simulationInit() {
+        robotRunner.simulationInit();
+    }
+
     @Override
     public void disabledInit() {
         robotRunner.disabledInit();
