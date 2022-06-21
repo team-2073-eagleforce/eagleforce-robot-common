@@ -21,9 +21,9 @@ public class PidfControlLoop {
 
 	private boolean active;
 
-	private final double p;
-	private final double i;
-	private final double d;
+	private double p;
+	private double i;
+	private double d;
 	private final double f;
 
 	private double kg;
@@ -171,6 +171,19 @@ public class PidfControlLoop {
 			}
 		}
 	}
+
+	public void setP(double p) { this.p = p; }
+
+	public void setI(double i) { this.i = i; }
+
+	public void setD(double d) { this.d = d; }
+
+	public void setPID(double p, double i, double d) {
+		this.p = p;
+		this.i = i;
+		this.d = d;
+	}
+
 
 	public double getOutput() {
 		return output;
