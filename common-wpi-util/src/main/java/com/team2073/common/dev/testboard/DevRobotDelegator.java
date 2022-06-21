@@ -16,9 +16,13 @@ public class DevRobotDelegator extends TimedRobot {
 
 	@Override
 	public void simulationPeriodic() {
-		robot.simulationPeriodic();
+		ExceptionUtil.suppressVoid(robot::simulationPeriodic, "robot::simulationPeriodic");
 	}
 
+	@Override
+	public void simulationInit() {
+		ExceptionUtil.suppressVoid(robot::simulationInit, "robot::simulationInit");
+	}
 
 	@Override
 	public void disabledInit() {
