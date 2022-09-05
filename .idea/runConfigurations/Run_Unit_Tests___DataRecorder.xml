@@ -3,7 +3,7 @@
     <module name="common-wpi-util_test" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="com.team2073.common.datarecorder.*" />
+        <option name="PATTERN" value="com.team2073.common.datarecorder.datalogtool.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
