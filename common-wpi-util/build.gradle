@@ -21,6 +21,7 @@ dependencies {
     implementation 'javax.validation:validation-api:2.0.0.Final'
     implementation 'org.reflections:reflections:0.9.11'
     implementation 'com.google.guava:guava:19.0'
+    implementation 'org.apache.commons:commons-csv:1.9.0'
 
     // Test dependencies
     testImplementation project(":common-util-test")
