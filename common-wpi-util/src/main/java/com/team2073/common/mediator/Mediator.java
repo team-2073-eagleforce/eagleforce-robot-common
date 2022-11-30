@@ -9,7 +9,6 @@ import com.team2073.common.mediator.request.Request;
 import com.team2073.common.mediator.subsys.ColleagueSubsystem;
 import com.team2073.common.mediator.subsys.SubsystemMap;
 import com.team2073.common.periodic.PeriodicRunnable;
-import com.team2073.common.util.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +49,6 @@ public class Mediator implements PeriodicRunnable {
         this.subsystemMap = subsystemMap;
         this.conflictMap = conflictMap;
         this.subsystemTracker = subsystemTracker;
-        LogUtil.infoInit(this.getClass(), logger);
         autoRegisterWithPeriodicRunner();
     }
 

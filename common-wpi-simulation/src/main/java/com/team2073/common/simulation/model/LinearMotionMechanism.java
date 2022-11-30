@@ -6,7 +6,6 @@ import com.team2073.common.motionprofiling.SCurveProfileManager;
 import com.team2073.common.motionprofiling.lib.trajectory.Trajectory;
 import com.team2073.common.simulation.SimulationConstants.MotorType;
 import com.team2073.common.simulation.env.SimulationEnvironment;
-import com.team2073.common.util.GraphCSVUtil;
 
 import static com.team2073.common.util.ConversionUtil.*;
 
@@ -27,8 +26,6 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 
 	public static void main(String[] args) {
 		LinearMotionMechanism lmm = new LinearMotionMechanism(25, MotorType.PRO, 3, 1, 1.75 / 2);
-		GraphCSVUtil graph = new GraphCSVUtil("ElevatorSimulation", "time", "ProfilePosition",
-				"ProfileVelocity", "ProfileAcceleration", "ProfileJerk", "actual position", "actual velocity");
 		SCurveProfileManager manager = new SCurveProfileManager(new MotionProfileControlloop(.05, 0, .01, .15 / 800, 1),
 				new ProfileConfiguration(100, 800, 8000, .01), () -> lmm.dank(30, .30));
 		double time = 0;
@@ -37,8 +34,6 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 			lmm.manualUpdate(10);
 			manager.newOutput();
 			Trajectory.Segment seg = manager.getProfile().getSegment((int) Math.round(time / .01));
-			graph.updateMainFile(time, seg.pos, seg.vel,
-					seg.acc, seg.jerk, lmm.position(), lmm.velocity(), manager.getOutput());
 			time += .01;
 		}
 		double t1 = time;
@@ -47,13 +42,8 @@ public class LinearMotionMechanism extends AbstractSimulationMechanism {
 		while (!manager.isCurrentProfileFinished()) {
 			manager.newOutput();
 			Trajectory.Segment seg = manager.getProfile().getSegment((int) Math.round((time - t1) / .01));
-			graph.updateMainFile(time, seg.pos, seg.vel,
-					seg.acc, seg.jerk, lmm.position(), lmm.velocity(), manager.getOutput());
 			time += .01;
 		}
-
-		graph.writeToFile();
-
 	}
 
 	public double dank(double posofT1, double timeOfT1) {

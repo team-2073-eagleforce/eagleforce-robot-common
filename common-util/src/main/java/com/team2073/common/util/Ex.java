@@ -64,7 +64,7 @@ public abstract class Ex {
         public final Throwable extractedThrowable;
 
         public Args(String msg, Object[] args) {
-            this.msg = LogUtil.convertLogToStrFmt(msg);
+            this.msg = msg;
             this.extractedThrowable = EventArgUtil.extractThrowable(args);;
             if (EventArgUtil.successfulExtraction(this.extractedThrowable))
                 this.args = EventArgUtil.trimmedCopy(args);

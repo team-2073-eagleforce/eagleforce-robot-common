@@ -2,7 +2,6 @@ package com.team2073.common.objective;
 
 import com.team2073.common.objective.Objective.ConflictingStrategy;
 import com.team2073.common.periodic.PeriodicRunnable;
-import com.team2073.common.util.LogUtil;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.slf4j.Logger;
@@ -23,7 +22,6 @@ public abstract class AbstractSubsystemCoordinator implements PeriodicRunnable {
 	private boolean waiting = false;
 
 	public AbstractSubsystemCoordinator() {
-		LogUtil.infoConstruct(getClass(), logger);
 		// TODO: Should we register with PeriodicRunner?
 		autoRegisterWithPeriodicRunner();
 	}

@@ -1,11 +1,11 @@
 package com.team2073.common.controller;
 
 import com.team2073.common.sim.ComponentType;
-import com.team2073.common.trigger.DPadTrigger;
 import com.team2073.common.trigger.ControllerTriggerTrigger;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.POVButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
 public class EagleController implements UsbController {
@@ -30,10 +30,10 @@ public class EagleController implements UsbController {
 
     public EagleController(int port) {
         controller = new Joystick(port);
-        leftDPad = new DPadTrigger(controller, 270);
-        upDPad = new DPadTrigger(controller, 0);
-        rightDPad = new DPadTrigger(controller, 90);
-        downDPad = new DPadTrigger(controller, 180);
+        leftDPad = new POVButton(controller, 270);
+        upDPad = new POVButton(controller, 0);
+        rightDPad = new POVButton(controller, 90);
+        downDPad = new POVButton(controller, 180);
         leftTrigger = new ControllerTriggerTrigger(controller, 2);
         rightTrigger = new ControllerTriggerTrigger(controller, 3);
         a = new JoystickButton(controller, 1);
