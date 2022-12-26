@@ -67,7 +67,7 @@ public interface RobotDelegate {
 	/** See {@link IterativeRobotBase#testPeriodic()} */
 	default void testPeriodic() {
 	}
-	
+
 	default CommonProperties createCommonProperties() {
 		return null;
 	}
@@ -87,19 +87,19 @@ public interface RobotDelegate {
 	default RobotEventPublisher createEventPublisher() {
 		return null;
 	}
-	
+
 	default DataRecorder createDataRecorder() {
 		return null;
 	}
-	
+
 	default PropertyLoader createPropertyLoader() {
 		return null;
 	}
-	
+
 	default DriverStationAdapter createDriverStationAdapter() {
 		return null;
 	}
-	
+
 	default SchedulerAdapter createSchedulerAdapter() {
 		return null;
 	}
@@ -107,6 +107,6 @@ public interface RobotDelegate {
 	default void registerPeriodicInstance(PeriodicRunner periodicRunner) {
 
 	}
-	
+
 	double getPeriod();
 }

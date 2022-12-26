@@ -10,7 +10,6 @@ import com.team2073.common.proploader.PropertyLoader;
 import com.team2073.common.robot.adapter.DriverStationAdapter;
 import com.team2073.common.robot.adapter.SchedulerAdapter;
 import com.team2073.common.robot.module.DiagnosticLoggingModule;
-import com.team2073.common.robot.module.LoggingLevelModule;
 import com.team2073.common.util.ExceptionUtil;
 import edu.wpi.first.wpilibj.RobotController;
 
@@ -60,7 +59,6 @@ public class RobotRunner implements RobotDelegate {
 	private RobotContext robotContext;
 	
 	// Modules
-	private LoggingLevelModule loggingLevelModule;
 	private DiagnosticLoggingModule diagnosticLoggingModule;
 
 	public RobotRunner(RobotDelegate robot) {

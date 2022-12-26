@@ -21,41 +21,41 @@ public class DriverStationAdapterDefaultImpl implements DriverStationAdapter {
 
     @Override
     public boolean isEnabled() {
-        return DriverStation.getInstance().isEnabled();
+        return DriverStation.isEnabled();
     }
 
     @Override
     public boolean isDSAttached() {
-        return DriverStation.getInstance().isDSAttached();
+        return DriverStation.isDSAttached();
     }
 
     @Override
     public boolean isFMSAttached() {
-        return DriverStation.getInstance().isFMSAttached();
+        return DriverStation.isFMSAttached();
     }
 
     @Override
     public Alliance getAlliance() {
-        return DriverStation.getInstance().getAlliance();
+        return DriverStation.getAlliance();
     }
 
     @Override
     public int getLocation() {
-        return DriverStation.getInstance().getLocation();
+        return DriverStation.getLocation();
     }
 
     @Override
     public MatchType getMatchType() {
-        return DriverStation.getInstance().getMatchType();
+        return DriverStation.getMatchType();
     }
 
     @Override
     public int getMatchNumber() {
-        return DriverStation.getInstance().getMatchNumber();
+        return DriverStation.getMatchNumber();
     }
 
     @Override
     public double getMatchTime() {
-        return DriverStation.getInstance().getMatchTime();
+        return DriverStation.getMatchTime();
     }
 }

@@ -1,5 +1,6 @@
 package com.team2073.common.command;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

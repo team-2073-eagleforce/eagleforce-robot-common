@@ -4,11 +4,12 @@ import com.team2073.common.robot.RobotDelegate;
 import com.team2073.common.robot.RobotRunner;
 import com.team2073.common.util.Ex;
 import edu.wpi.first.wpilibj.TimedRobot;
+import org.littletonrobotics.junction.LoggedRobot;
 
 /**
  * @author Preston Briggs
  */
-public class RobotAdapterDefaultImpl extends TimedRobot implements RobotAdapter {
+public class RobotAdapterDefaultImpl extends LoggedRobot implements RobotAdapter {
     
     private static RobotAdapterDefaultImpl instance;
     

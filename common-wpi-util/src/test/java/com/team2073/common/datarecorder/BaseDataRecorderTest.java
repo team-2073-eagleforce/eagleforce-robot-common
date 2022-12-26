@@ -9,7 +9,7 @@ import com.team2073.common.datarecorder.model.DataRecordRow;
 import com.team2073.common.datarecorder.model.DataRecordTable;
 import com.team2073.common.datarecorder.model.FieldMapping;
 import com.team2073.common.datarecorder.model.LifecycleAwareRecordable;
-import com.team2073.common.util.LogUtil;
+
 import com.team2073.common.util.StreamUtil;
 import com.team2073.common.wpitest.BaseWpiTest;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +55,6 @@ public class BaseDataRecorderTest extends BaseWpiTest {
     @BeforeEach
     void baseDataRecorderInit() {
         log.info("");
-        LogUtil.infoConstruct(this, log);
         log.info("");
 
         cleanRecorder = new DataRecorder();
@@ -67,7 +66,6 @@ public class BaseDataRecorderTest extends BaseWpiTest {
         cleanProps = robotContext.getCommonProps();
 
         log.info("");
-        LogUtil.infoConstructEnd(this, log);
         log.info("");
     }
 

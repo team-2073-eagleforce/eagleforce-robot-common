@@ -4,6 +4,7 @@ import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.RobotBase;
+import org.littletonrobotics.junction.LoggedRobot;
 
 /**
  * A simple implementation of {@link RobotDelegate} that provides the
@@ -12,24 +13,24 @@ import edu.wpi.first.wpilibj.RobotBase;
  *
  * @author Preston Briggs
  */
-public abstract class AbstractRobotDelegate implements RobotDelegate {
+public class AbstractRobotDelegate implements RobotDelegate{
 
 	// Static
 	// ============================================================
 
-	/** See {@link IterativeRobotBase#isSimulation()} */
-	static boolean isSimulation() {
-		return !isReal();
-	}
-
-	/** See {@link IterativeRobotBase#isReal()} */
-	static boolean isReal() {
-		return HALUtil.getHALRuntimeType() == 0;
-	}
+//	/** See {@link IterativeRobotBase#isSimulation()} */
+//	static boolean isSimulation() {
+//		return !isReal();
+//	}
+//
+//	/** See {@link IterativeRobotBase#isReal()} */
+//	static boolean isReal() {
+//		return HALUtil.getHALRuntimeType() == 0;
+//	}
 
 	// Instance
 	// ============================================================
-	protected final DriverStation ds;
+
 	private final double period;
 
 	public AbstractRobotDelegate() {
@@ -38,40 +39,40 @@ public abstract class AbstractRobotDelegate implements RobotDelegate {
 	
 	public AbstractRobotDelegate(double period) {
 		this.period = period;
-		ds = DriverStation.getInstance();
+
 	}
 
 	// IterativeRobot utility methods
 	// ==========================================
 	/** See {@link IterativeRobotBase#isDisabled()} */
 	public final boolean isDisabled() {
-		return ds.isDisabled();
+		return DriverStation.isDisabled();
 	}
 
 	/** See {@link IterativeRobotBase#isEnabled()} */
 	public final boolean isEnabled() {
-		return ds.isEnabled();
+		return DriverStation.isEnabled();
 	}
 
 	/** See {@link IterativeRobotBase#isAutonomous()} */
 	public final boolean isAutonomous() {
-		return ds.isAutonomous();
+		return DriverStation.isAutonomous();
 	}
 
 	/** See {@link IterativeRobotBase#isTest()} */
 	public final boolean isTest() {
-		return ds.isTest();
+		return DriverStation.isTest();
 	}
 
-	/** See {@link IterativeRobotBase#isOperatorControl()} */
-	public final boolean isOperatorControl() {
-		return ds.isOperatorControl();
-	}
-
-	/** See {@link IterativeRobotBase#isNewDataAvailable()} */
-	public final boolean isNewDataAvailable() {
-		return ds.isNewControlData();
-	}
+//	/** See {@link IterativeRobotBase#isOperatorControl()} */
+//	public final boolean isOperatorControl() {
+//		return ds.isOperatorControl();
+//	}
+//
+//	/** See {@link IterativeRobotBase#isNewDataAvailable()} */
+//	public final boolean isNewDataAvailable() {
+//		return ds.isNewControlData();
+//	}
 	
 	@Override
 	public double getPeriod() {

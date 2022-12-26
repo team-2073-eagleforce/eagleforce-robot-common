@@ -58,7 +58,7 @@ public enum DetailedRobotState {
         TELEOP {
             @Override
             public boolean isCurrentState() {
-                return RobotState.isOperatorControl();
+                return RobotState.isTeleop();
             }
         },
         TEST {

@@ -11,7 +11,7 @@ public abstract class ControllerUtil {
     public static int findJoystickPortByName(String name) {
         Assert.assertNotNull(name, "name");
         for (int port = 0; port < DriverStation.kJoystickPorts; port++) {
-            if (name.equals(DriverStation.getInstance().getJoystickName(port))) {
+            if (name.equals(DriverStation.getJoystickName(port))) {
                 return port;
             }
         }
