@@ -4,14 +4,15 @@ import com.team2073.common.sim.ComponentType;
 import com.team2073.common.trigger.MultiTrigger;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.buttons.Trigger;
+//import edu.wpi.first.wpilibj.buttons.JoystickButton;
+//import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class EagleWheel implements UsbController{
 	private Joystick wheel;
 	private JoystickButton leftPaddle;
 	private JoystickButton rightPaddle;
-	private Trigger bothPaddles;
+	private MultiTrigger bothPaddles;
 
 	public EagleWheel(int port) {
 		this.wheel = new Joystick(port);
@@ -20,11 +21,11 @@ public class EagleWheel implements UsbController{
 		bothPaddles = new MultiTrigger(leftPaddle, rightPaddle);
 	}
 
-	public Trigger getBothPaddles() {
+	public MultiTrigger getBothPaddles() {
 		return bothPaddles;
 	}
 
-	public void setBothPaddles(Trigger bothPaddles) {
+	public void setBothPaddles(MultiTrigger bothPaddles) {
 		this.bothPaddles = bothPaddles;
 	}
 

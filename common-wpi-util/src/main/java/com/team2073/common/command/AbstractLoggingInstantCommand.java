@@ -1,14 +1,11 @@
 package com.team2073.common.command;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.InstantCommand;
 
 /**
- * See JavaDocs of {@link AbstractLoggingCommand}. This class is the
- * same but for {@link CommandGroup}s.
  * 
  * @see AbstractLoggingCommand
  * @author Preston Briggs
@@ -23,10 +20,10 @@ public abstract class AbstractLoggingInstantCommand extends InstantCommand {
 		super();
 		logger.debug("Constructing [{}] command.", className);
 	}
-	public AbstractLoggingInstantCommand(String name) {
-		super(name);
-		logger.debug("Constructing [{}] command.", className);
-	}
+//	public AbstractLoggingInstantCommand(String name) {
+//		super(name);
+//		logger.debug("Constructing [{}] command.", className);
+//	}
 	
 
 	/*
@@ -38,7 +35,7 @@ public abstract class AbstractLoggingInstantCommand extends InstantCommand {
 	// START - Copy from AbstractLoggingCommand
 	// ================================================================================
 	@Override
-	protected final void initialize() {
+	public final void initialize() {
 		logger.debug("[{}] command initializing...", className);
 		initializeDelegate();
 		logger.debug("[{}] command initialized successfully.", className);
@@ -49,7 +46,7 @@ public abstract class AbstractLoggingInstantCommand extends InstantCommand {
 	}
 
 	@Override
-	protected final void execute() {
+	public final void execute() {
 		logger.trace("[{}] command executing...", className);
 		executeDelegate();
 		logger.trace("[{}] command executed successfully.", className);
@@ -60,29 +57,29 @@ public abstract class AbstractLoggingInstantCommand extends InstantCommand {
 	}
 
 	@Override
-	protected final void end() {
+	public final void end(boolean interruptible) {
 		logger.debug("[{}] command ending...", className);
-		endDelegate();
+		endDelegate(interruptible);
 		logger.debug("[{}] command ended successfully.", className);
 	}
 
-	protected void endDelegate() {
-		super.end();
+	protected void endDelegate(boolean interruptible) {
+		super.end(interruptible);
 	}
 
-	@Override
-	protected final void interrupted() {
-		logger.debug("[{}] command interrupting...", className);
-		interruptedDelegate();
-		logger.debug("[{}] command interrupted successfully.", className);
-	}
-
-	protected void interruptedDelegate() {
-		super.interrupted();
-	}
+//	@Override
+//	public final void interrupted() {
+//		logger.debug("[{}] command interrupting...", className);
+//		interruptedDelegate();
+//		logger.debug("[{}] command interrupted successfully.", className);
+//	}
+//
+//	protected void interruptedDelegate() {
+//		super.interrupted();
+//	}
 	
 	@Override
-	protected final boolean isFinished() {
+	public final boolean isFinished() {
 		logger.trace("[{}] command checking finished status...", className);
 		boolean isFinished = isFinishedDelegate();
 		if(!isFinished)

@@ -2,8 +2,9 @@ package com.team2073.common.objective;
 
 import com.team2073.common.objective.Objective.ConflictingStrategy;
 import com.team2073.common.periodic.PeriodicRunnable;
-import edu.wpi.first.wpilibj.command.Subsystem;
+//import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

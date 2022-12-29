@@ -1,7 +1,8 @@
 package com.team2073.common.trigger;
 
 import com.team2073.common.robot.DetailedRobotState.RobotMode;
-import edu.wpi.first.wpilibj.buttons.Trigger;
+//import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotModeTrigger extends Trigger {
 
@@ -18,7 +19,7 @@ public class RobotModeTrigger extends Trigger {
 	}
 
 	@Override
-	public boolean get() {
+	public boolean getAsBoolean() {
 		return checkEnabled ? mode.isCurrentState() : !mode.isCurrentState();
 	}
 }

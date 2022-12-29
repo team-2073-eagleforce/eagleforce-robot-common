@@ -25,10 +25,10 @@ public abstract class AbstractObjectiveCommand extends AbstractLoggingCommand {
 	public AbstractObjectiveCommand(AbstractSubsystemCoordinator coordinator) {
 		setCoordinator(coordinator);
 	}
-
-	public AbstractObjectiveCommand(String name) {
-		super(name);
-	}
+//
+//	public AbstractObjectiveCommand(String name) {
+//		super(name);
+//	}
 
 	@Override
 	protected void initializeDelegate() {
@@ -46,19 +46,19 @@ public abstract class AbstractObjectiveCommand extends AbstractLoggingCommand {
 	}
 
 	@Override
-	protected void endDelegate() {
+	protected void endDelegate(boolean interruptible) {
 		request = null;
 	}
 	
-	@Override
-	protected void interruptedDelegate() {
-		if(request == null) {
-			Exception forLoggingOnly = new IllegalStateException("request must not be null");
-			logger.warn("Request was null during interrupt [{}].", getClass().getSimpleName(), forLoggingOnly);
-			return;
-		}
-		request.setInterrupted();
-	}
+//	@Override
+//	protected void interruptedDelegate() {
+//		if(request == null) {
+//			Exception forLoggingOnly = new IllegalStateException("request must not be null");
+//			logger.warn("Request was null during interrupt [{}].", getClass().getSimpleName(), forLoggingOnly);
+//			return;
+//		}
+//		request.setInterrupted();
+//	}
 	
 	protected AbstractSubsystemCoordinator getCoordinator() {
 		if(coordinator == null)

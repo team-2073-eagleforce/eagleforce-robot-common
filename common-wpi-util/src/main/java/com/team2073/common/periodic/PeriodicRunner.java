@@ -11,8 +11,8 @@ import com.team2073.common.util.ExceptionUtil;
 import com.team2073.common.util.Throw;
 import com.team2073.common.util.Timer;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+//import edu.wpi.first.wpilibj.command.Command;
+//import edu.wpi.first.wpilibj.command.Subsystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,13 +47,6 @@ import static com.team2073.common.util.ThreadUtil.*;
  *         </ul>
  *     </li>
  * </ol>
- *
- * This runner is preferred over normal periodic methods such as {@link Subsystem#periodic()} for the following features:
- *
- * <h3>Exception Handling</h3>
- * Any exceptions thrown by instances will be caught, logged and the loop will continue running. Exceptions thrown during
- * {@link Subsystem#periodic()} ()} (the alternative to using this class) are not handled and
- * will cause the robot to stop abruptly requiring a restart.
  *
  * <h3>Elapsed Time Logging</h3>
  * The total elapsed time of a {@link PeriodicRunnable#onPeriodic()} iteration is captured and instances consuming too much

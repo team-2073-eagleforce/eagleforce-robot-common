@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Commands can extend this class (or one of it's siblings listed in
@@ -14,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
  * 
  * <h3>How to Use this Class</h3> To add this logging, simply extend this class
  * and override the *delegate(...) methods instead of the standard
- * {@link Command} methods. For example, instead of overriding execute(), the
+ * {@link edu.wpi.first.wpilibj2.command.Command} methods. For example, instead of overriding execute(), the
  * subclass should override executeDelegate().
  * 
  * <h3>Message Frequency</h3> Repetitive messages (messages called continuously
@@ -44,7 +43,7 @@ import edu.wpi.first.wpilibj.command.Command;
  * @author Gabe Bui and Preston Briggs
  *
  */
-public abstract class AbstractLoggingCommand extends Command {
+public abstract class AbstractLoggingCommand extends CommandBase {
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	protected String className = getClass().getSimpleName();
 
@@ -61,20 +60,20 @@ public abstract class AbstractLoggingCommand extends Command {
 		logger.debug("Constructing [{}] command.", className);
 	}
 
-	public AbstractLoggingCommand(double timeout) {
-		super(timeout);
-		logger.debug("Constructing [{}] command. timeout=[{}].", className, timeout);
-	}
-
-	public AbstractLoggingCommand(String name, double timeout) {
-		super(name, timeout);
-		logger.debug("Constructing [{}] command. timeout=[{}].", className, timeout);
-	}
-
-	public AbstractLoggingCommand(String name) {
-		super(name);
-		logger.debug("Constructing [{}] command.", className);
-	}
+//	public AbstractLoggingCommand(double timeout) {
+//		super(timeout);
+//		logger.debug("Constructing [{}] command. timeout=[{}].", className, timeout);
+//	}
+//
+//	public AbstractLoggingCommand(String name, double timeout) {
+//		super(name, timeout);
+//		logger.debug("Constructing [{}] command. timeout=[{}].", className, timeout);
+//	}
+//
+//	public AbstractLoggingCommand(String name) {
+//		super(name);
+//		logger.debug("Constructing [{}] command.", className);
+//	}
 
 	protected void setLoggingName(String name) {
 		logger.trace("Renaming command from [{}] to [{}]", this.className, name);
@@ -82,7 +81,7 @@ public abstract class AbstractLoggingCommand extends Command {
 	}
 
 	@Override
-	protected final void initialize() {
+	public final void initialize() {
 		logger.debug("[{}] command initializing...", className);
 		initializeDelegate();
 		logger.debug("[{}] command initialized successfully.", className);
@@ -93,7 +92,7 @@ public abstract class AbstractLoggingCommand extends Command {
 	}
 
 	@Override
-	protected final void execute() {
+	public final void execute() {
 		logger.trace("[{}] command executing...", className);
 		executeDelegate();
 		logger.trace("[{}] command executed successfully.", className);
@@ -104,29 +103,29 @@ public abstract class AbstractLoggingCommand extends Command {
 	}
 
 	@Override
-	protected final void end() {
+	public final void end(boolean interruptible) {
 		logger.debug("[{}] command ending...", className);
-		endDelegate();
+		endDelegate(interruptible);
 		logger.debug("[{}] command ended successfully.", className);
 	}
 
-	protected void endDelegate() {
-		super.end();
+	protected void endDelegate(boolean interruptible) {
+		super.end(interruptible);
 	}
 
+//	@Override
+//	protected final void interrupted() {
+//		logger.debug("[{}] command interrupting...", className);
+//		interruptedDelegate();
+//		logger.debug("[{}] command interrupted successfully.", className);
+//	}
+//
+//	protected void interruptedDelegate() {
+//		super.interrupted();
+//	}
+//
 	@Override
-	protected final void interrupted() {
-		logger.debug("[{}] command interrupting...", className);
-		interruptedDelegate();
-		logger.debug("[{}] command interrupted successfully.", className);
-	}
-
-	protected void interruptedDelegate() {
-		super.interrupted();
-	}
-	
-	@Override
-	protected final boolean isFinished() {
+	public final boolean isFinished() {
 		logger.trace("[{}] command checking finished status...", className);
 		boolean isFinished = isFinishedDelegate();
 		if(isFinished)

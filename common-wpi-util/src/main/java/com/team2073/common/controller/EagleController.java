@@ -4,9 +4,12 @@ import com.team2073.common.sim.ComponentType;
 import com.team2073.common.trigger.ControllerTriggerTrigger;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.buttons.POVButton;
-import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+//import edu.wpi.first.wpilibj.buttons.JoystickButton;
+//import edu.wpi.first.wpilibj.buttons.POVButton;
+//import edu.wpi.first.wpilibj.buttons.Trigger;
 
 public class EagleController implements UsbController {
 

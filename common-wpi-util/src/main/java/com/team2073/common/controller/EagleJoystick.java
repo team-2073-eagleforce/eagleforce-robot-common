@@ -2,7 +2,8 @@ package com.team2073.common.controller;
 
 import com.team2073.common.sim.ComponentType;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
+//import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class EagleJoystick implements UsbController{
 

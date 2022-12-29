@@ -3,9 +3,10 @@ package com.team2073.common.dev.simulation.subsys;
 import com.team2073.common.dev.simulation.io.FakeTalon;
 import com.team2073.common.objective.StatusChecker;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+//import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class DevShooterPivotSubsystem extends Subsystem {
+public class DevShooterPivotSubsystem extends SubsystemBase {
 
 	public enum ShooterAngle {
 
@@ -70,10 +71,10 @@ public class DevShooterPivotSubsystem extends Subsystem {
 		ERROR;
 	}
 
-	@Override
-	protected void initDefaultCommand() {
-
-	}
+//	@Override
+//	protected void initDefaultCommand() {
+//
+//	}
 	
 	@Override
 	public void periodic() {

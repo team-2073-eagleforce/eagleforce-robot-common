@@ -3,9 +3,10 @@ package com.team2073.common.dev.simulation.subsys;
 import com.team2073.common.dev.simulation.io.FakeTalon;
 import com.team2073.common.objective.StatusChecker;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+//import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class DevShooterSubsystem extends Subsystem {
+public class DevShooterSubsystem extends SubsystemBase {
 
 	public enum ShooterAngle {
 
@@ -59,10 +60,10 @@ public class DevShooterSubsystem extends Subsystem {
 	private StatusChecker goalStatus = null;
 	private FakeTalon talon = new FakeTalon(ShooterAngle.FORWARD_STRAIGHT.lowerBound);
 
-	@Override
-	protected void initDefaultCommand() {
-
-	}
+//	@Override
+//	protected void initDefaultCommand() {
+//
+//	}
 	
 	@Override
 	public void periodic() {

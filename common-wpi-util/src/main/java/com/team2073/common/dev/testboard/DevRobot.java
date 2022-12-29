@@ -2,7 +2,8 @@ package com.team2073.common.dev.testboard;
 
 import com.team2073.common.dev.util.DevUtils;
 import com.team2073.common.robot.AbstractRobotDelegate;
-import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+//import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
  * A simple Robot to use for dev/testing. Use the run config: <b>PWRUP-5 [TestBoard]</b>
@@ -40,7 +41,7 @@ public class DevRobot extends AbstractRobotDelegate {
 
 	@Override
 	public void robotPeriodic() {
-		Scheduler.getInstance().run();
+		CommandScheduler.getInstance().run();
 	}
 
 	@Override

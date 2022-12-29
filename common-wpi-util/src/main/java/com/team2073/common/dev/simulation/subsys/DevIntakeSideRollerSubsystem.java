@@ -2,9 +2,10 @@ package com.team2073.common.dev.simulation.subsys;
 
 import com.team2073.common.objective.StatusChecker;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+//import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class DevIntakeSideRollerSubsystem extends Subsystem {
+public class DevIntakeSideRollerSubsystem extends SubsystemBase {
 	public enum IntakeSideRollerState {
 		STOP, INTAKE, OUTTAKE
 	}
@@ -12,10 +13,10 @@ public class DevIntakeSideRollerSubsystem extends Subsystem {
 	private IntakeSideRollerState state = IntakeSideRollerState.STOP;
 	private StatusChecker status = null;
 
-	@Override
-	protected void initDefaultCommand() {
-		
-	}
+//	@Override
+//	protected void initDefaultCommand() {
+//
+//	}
 	
 	@Override
 	public void periodic() {

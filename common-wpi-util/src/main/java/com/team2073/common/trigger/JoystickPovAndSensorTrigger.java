@@ -2,7 +2,8 @@ package com.team2073.common.trigger;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.POVButton;
+//import edu.wpi.first.wpilibj.buttons.POVButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 public class JoystickPovAndSensorTrigger extends MultiTrigger {
 

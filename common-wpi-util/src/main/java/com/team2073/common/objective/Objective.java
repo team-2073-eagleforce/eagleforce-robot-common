@@ -3,7 +3,8 @@ package com.team2073.common.objective;
 import java.util.List;
 import java.util.Set;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+//import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public interface Objective {
 

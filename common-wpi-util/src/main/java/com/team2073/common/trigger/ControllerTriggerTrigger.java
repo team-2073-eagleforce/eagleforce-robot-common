@@ -1,7 +1,8 @@
 package com.team2073.common.trigger;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Trigger;
+//import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class ControllerTriggerTrigger extends Trigger {
 
@@ -13,9 +14,9 @@ public class ControllerTriggerTrigger extends Trigger {
 		this.axis = axis;
 	}
 	
-	@Override
-	public boolean get() {
-		return Math.abs(controller.getRawAxis(axis)) > .1;
-	}
+//	@Override
+//	public boolean get() {
+//		return Math.abs(controller.getRawAxis(axis)) > .1;
+//	}
 
 }

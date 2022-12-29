@@ -3,9 +3,11 @@ package com.team2073.common.dev.simulation.subsys;
 import com.team2073.common.dev.simulation.io.FakeTalon;
 import com.team2073.common.objective.StatusChecker;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+//import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class DevElevatorSubsystem extends Subsystem {
+public class DevElevatorSubsystem extends SubsystemBase {
 	
 	public enum ElevatorHeight {
 		ZERO(0, -1, 1),
@@ -70,9 +72,9 @@ public class DevElevatorSubsystem extends Subsystem {
 	private StatusChecker goalStatus = null;
 	private FakeTalon talon = new FakeTalon();
 
-	@Override
-	protected void initDefaultCommand() {
-	}
+//	@Override
+//	protected void initDefaultCommand() {
+//	}
 	
 	@Override
 	public void periodic() {

@@ -3,14 +3,15 @@ package com.team2073.common.dev.testboard;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+//import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * A simple subsystem to use for dev/testing.
  *
  * @author Preston Briggs
  */
-public class DevMotorSubsystem extends Subsystem {
+public class DevMotorSubsystem extends SubsystemBase {
 
 	private final TalonSRX talonMotorController;
 	
@@ -19,9 +20,9 @@ public class DevMotorSubsystem extends Subsystem {
 		this.talonMotorController = talonMotorController;
 	}
 	
-	@Override
-	protected void initDefaultCommand() {
-	}
+//	@Override
+//	protected void initDefaultCommand() {
+//	}
 	
 	/**
 	 * Move at a constant rate of 30%. Use {@link #move(double)} to control

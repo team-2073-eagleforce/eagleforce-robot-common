@@ -1,6 +1,7 @@
 package com.team2073.common.trigger;
 
-import edu.wpi.first.wpilibj.buttons.Trigger;
+//import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,9 +18,9 @@ public class MultiTrigger extends Trigger {
 		this(Arrays.asList(triggers));
 	}
 
-	@Override
-	public boolean get() {
-		// TODO: Creating a stream is probably pretty expensive here and this gets called a lot
-		return triggers.stream().allMatch(Trigger::get);
-	}
+//	@Override
+//	public boolean get() {
+//		// TODO: Creating a stream is probably pretty expensive here and this gets called a lot
+//		return triggers.stream().allMatch(Trigger::get);
+//	}
 }

@@ -1,5 +1,6 @@
 package com.team2073.common.dev.simulation;
 
+import com.team2073.common.command.AbstractLoggingCommand;
 import com.team2073.common.dev.cmd.DevElevatorToHeightCommand;
 import com.team2073.common.dev.cmd.DevIntakeSideRollerRandomStateCommand;
 import com.team2073.common.dev.cmd.DevShooterToAngleCommand;
@@ -9,10 +10,13 @@ import com.team2073.common.dev.simulation.subsys.DevShooterPivotSubsystem.Shoote
 import com.team2073.common.dev.simulation.subsys.DevSubsystemCoordinatorImpl;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.buttons.POVButton;
-import edu.wpi.first.wpilibj.buttons.Trigger;
-import edu.wpi.first.wpilibj.command.Command;
+//import edu.wpi.first.wpilibj.buttons.JoystickButton;
+//import edu.wpi.first.wpilibj.buttons.POVButton;
+//import edu.wpi.first.wpilibj.buttons.Trigger;
+//import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class SimulationOperatorInterface {
 	
@@ -54,11 +58,11 @@ public class SimulationOperatorInterface {
 		a.whileHeld(new DevIntakeSideRollerRandomStateCommand(subsysCrd, factory));
 	}
 	
-	private static Command createElevatorCommand(ElevatorHeight height) {
+	private static AbstractLoggingCommand createElevatorCommand(ElevatorHeight height) {
 		return new DevElevatorToHeightCommand(subsysCrd, factory, height);
 	}
 	
-	private static Command createShooterPivotCommand(ShooterAngle angle) {
+	private static AbstractLoggingCommand createShooterPivotCommand(ShooterAngle angle) {
 		return new DevShooterToAngleCommand(subsysCrd, factory, angle);
 	}
 

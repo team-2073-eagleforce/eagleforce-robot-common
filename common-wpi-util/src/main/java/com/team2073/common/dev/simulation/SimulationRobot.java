@@ -8,7 +8,7 @@ import com.team2073.common.dev.simulation.subsys.DevIntakeSideRollerSubsystem;
 import com.team2073.common.dev.simulation.subsys.DevShooterPivotSubsystem;
 import com.team2073.common.dev.simulation.subsys.DevSubsystemCoordinatorImpl;
 import com.team2073.common.robot.AbstractRobotDelegate;
-import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.slf4j.LoggerFactory;
 
 public class SimulationRobot extends AbstractRobotDelegate {
@@ -27,7 +27,7 @@ public class SimulationRobot extends AbstractRobotDelegate {
 	
 	@Override
 	public void robotPeriodic() {
-		Scheduler.getInstance().run();
+		CommandScheduler.getInstance().run();
 		subsysCrd.onPeriodic();
 	}
 }
