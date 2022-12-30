@@ -25,6 +25,10 @@ configurations.all {
 }
 
 dependencies {
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
     implementation 'commons-io:commons-io:2.5'
