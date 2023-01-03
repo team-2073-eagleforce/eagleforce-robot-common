@@ -5,6 +5,7 @@ import com.team2073.common.util.ConversionUtil;
 import com.team2073.common.util.MathUtil;
 import com.team2073.common.util.Throw;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,7 +126,7 @@ public class PidfControlLoop {
 	}
 
 	public void updatePID(){
-		double currentTime = ConversionUtil.microSecToSec(RobotController.getFPGATime());
+		double currentTime = Timer.getFPGATimestamp();
 		if(currentTime - lastTime > LONG_PID_INTERVAL){
 			updatePID(DEFAULT_INTERVAL);
 		}else{
