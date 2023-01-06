@@ -126,11 +126,12 @@ public class PidfControlLoop {
 	}
 
 	public void updatePID(){
-		double currentTime = Timer.getFPGATimestamp();
+		double currentTime = org.littletonrobotics.junction.Logger.getInstance().getRealTimestamp();
 		if(currentTime - lastTime > LONG_PID_INTERVAL){
 			updatePID(DEFAULT_INTERVAL);
 		}else{
-			updatePID(currentTime - lastTime);
+			if(currentTime-lastTime != 0)
+				updatePID(currentTime - lastTime);
 		}
 		lastTime = currentTime;
 	}
