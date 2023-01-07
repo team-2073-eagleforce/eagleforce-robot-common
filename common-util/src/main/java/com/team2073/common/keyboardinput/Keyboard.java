@@ -30,6 +30,9 @@ public class Keyboard  {
 
     public void setup() {
         for (String key : availableKeys) {
+            nt.getEntry(key).delete();
+        }
+        for (String key : availableKeys) {
             keys.put(key, nt.getEntry(key));
         }
     }
