@@ -4,17 +4,27 @@ import com.team2073.common.mediator.condition.Condition
 import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 
-abstract class Conflict<O : Condition, C : Condition, Z : ColleagueSubsystem>(var originSubsystem: Class<Z>,
-                                                                              var originCondition: O,
-                                                                              var conflictingSubsystem: Class<Z>,
-                                                                              var conflictingCondition: C) {
-    abstract fun invert(): Conflict<C, O, Z>
+abstract class Conflict<OT, CT>(
+        val originSubsystem: Class<out ColleagueSubsystem<OT>>,
+        val originCondition: Condition<OT>,
+        val conflictingSubsystem: Class<out ColleagueSubsystem<CT>>,
+        val conflictingCondition: Condition<CT>,
+        val canInvert: Boolean,
+        val parallelism: Boolean) {
 
-    abstract fun isConflicting(conflict: Conflict<C, O, Z>, request: Request<C, Z>, currentCondition: Condition): Boolean
+    abstract fun invert(): Conflict<CT, OT>
 
-    abstract fun getResolution(currentCondition: Condition, subsystem: ColleagueSubsystem): Condition
+    abstract fun canOverrideConflict(originSubsystem: ColleagueSubsystem<OT>, conflictingSubsystem: ColleagueSubsystem<CT>): Boolean
+
+    abstract fun isRequestConflicting(request: Request<OT>, currentConflictingCondition: Condition<CT>, currentOriginCondition: Condition<OT>): Boolean
+
+    abstract fun isConditionConflicting(originCondition: Condition<OT>, conflictingCondition: Condition<CT>): Boolean
+
+    abstract fun getResolution(currentCondition: Condition<CT>, subsystem: ColleagueSubsystem<CT>): Condition<CT>
 
     fun getName(): String {
         return "ORIGIN SUBSYSTEM: ${originSubsystem.simpleName} IN $originCondition conflicts with ${conflictingSubsystem.simpleName} IN $conflictingCondition"
     }
+
+    abstract fun getOriginParallelResolution(originSubsystem: ColleagueSubsystem<OT>, conflictingSubsystem: ColleagueSubsystem<CT>): Condition<OT>
 }

@@ -1,8 +1,12 @@
 package com.team2073.common.mediator.subsys
 
-abstract class PositionBasedSubsystem : ColleagueSubsystem() {
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D
 
-    abstract override fun <Double> set(place: Double)
+interface PositionBasedSubsystem : ColleagueSubsystem<Double> {
 
-    abstract fun getSafetyRange(): Double
+    fun getSafetyRange(): Double
+
+    fun positionToPoint(position: Double): Vector2D
+
+    fun pointToPosition(point: Vector2D): Double
 }

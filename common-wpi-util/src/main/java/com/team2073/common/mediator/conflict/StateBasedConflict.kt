@@ -6,21 +6,38 @@ import com.team2073.common.mediator.request.Request
 import com.team2073.common.mediator.subsys.ColleagueSubsystem
 import com.team2073.common.mediator.subsys.SubsystemStateCondition
 
-class StateBasedConflict<O : Condition, C : Condition, Z : ColleagueSubsystem>(var originSubsystemS: Class<Z>,
-                                                                               var originConditionS: O,
-                                                                               var conflictingSubsystemS: Class<Z>,
-                                                                               var conflictingConditionS: C,
-                                                                               var resolveState: SubsystemStateCondition) :
-		Conflict<O, C, Z>(originSubsystemS, originConditionS, conflictingSubsystemS, conflictingConditionS) {
-    override fun getResolution(currentCondition: Condition, subsystem: ColleagueSubsystem): Condition {
+class StateBasedConflict<OT : Enum<OT>, CT : Enum<CT>>(
+        val originSubsystemS: Class<ColleagueSubsystem<SubsystemStateCondition<OT>>>,
+        val originConditionS: Condition<SubsystemStateCondition<OT>>,
+        val conflictingSubsystemS: Class<ColleagueSubsystem<SubsystemStateCondition<CT>>>,
+        val conflictingConditionS: Condition<SubsystemStateCondition<CT>>,
+        val resolveState: SubsystemStateCondition<CT>?,
+        val inverseResolveState: SubsystemStateCondition<OT>?,
+        val canInvertS: Boolean,
+        val parallelismS: Boolean) :
+        Conflict<SubsystemStateCondition<OT>, SubsystemStateCondition<CT>>(originSubsystemS, originConditionS, conflictingSubsystemS, conflictingConditionS, canInvertS, parallelismS) {
+
+    override fun canOverrideConflict(originSubsystem: ColleagueSubsystem<SubsystemStateCondition<OT>>, conflictingSubsystem: ColleagueSubsystem<SubsystemStateCondition<CT>>): Boolean {
+        return false
+    }
+
+    override fun getOriginParallelResolution(originSubsystem: ColleagueSubsystem<SubsystemStateCondition<OT>>, conflictingSubsystem: ColleagueSubsystem<SubsystemStateCondition<CT>>): Condition<SubsystemStateCondition<OT>> {
+        return StateBasedCondition(originSubsystem.getCurrentCondition().getConditionValue())
+    }
+
+    override fun invert(): Conflict<SubsystemStateCondition<CT>, SubsystemStateCondition<OT>> {
+        return StateBasedConflict(conflictingSubsystemS, conflictingConditionS, originSubsystemS, originConditionS, inverseResolveState, resolveState, canInvertS, parallelismS)
+    }
+
+    override fun isRequestConflicting(request: Request<SubsystemStateCondition<OT>>, currentConflictingCondition: Condition<SubsystemStateCondition<CT>>, currentOriginCondition: Condition<SubsystemStateCondition<OT>>): Boolean {
+        return originCondition.isInCondition(request.condition) && currentConflictingCondition.isInCondition(conflictingConditionS)
+    }
+
+    override fun isConditionConflicting(originCondition: Condition<SubsystemStateCondition<OT>>, conflictingCondition: Condition<SubsystemStateCondition<CT>>): Boolean {
+        return originCondition == originConditionS && conflictingCondition == conflictingConditionS
+    }
+
+    override fun getResolution(currentCondition: Condition<SubsystemStateCondition<CT>>, subsystem: ColleagueSubsystem<SubsystemStateCondition<CT>>): Condition<SubsystemStateCondition<CT>> {
         return StateBasedCondition(resolveState)
-    }
-
-    override fun isConflicting(conflict: Conflict<C, O, Z>, request: Request<C, Z>, currentCondition: Condition): Boolean {
-        return conflict.originCondition.isInCondition(request.condition) && currentCondition.isInCondition(conflict.conflictingCondition)
-    }
-
-    override fun invert(): Conflict<C, O, Z> {
-        return StateBasedConflict(conflictingSubsystemS, conflictingConditionS, originSubsystemS, originConditionS, resolveState)
     }
 }
