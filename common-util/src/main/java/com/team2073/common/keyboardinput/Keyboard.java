@@ -6,6 +6,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -19,7 +21,9 @@ public class Keyboard  {
 
     private HashMap<String, NetworkTableEntry> keys = new HashMap<>();
 
-    public String[] availableKeys = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N" , "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+    public String[] availableKeys = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N" , "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "<", ">"};
+
+    private ArrayList<String> allKeys = new ArrayList<>();
     NetworkTableInstance ntinstance = NetworkTableInstance.getDefault();
     NetworkTable nt;
 
@@ -29,19 +33,28 @@ public class Keyboard  {
     }
 
     public void setup() {
-        for (String key : availableKeys) {
-            nt.getEntry(key).delete();
+        allKeys.addAll(Arrays.asList(availableKeys));
+
+        for (int i = 0; i <=9; i++) {
+            allKeys.add(Integer.toString(i));
         }
-        for (String key : availableKeys) {
-            keys.put(key, nt.getEntry(key));
+        for(int i  = 0; i< allKeys.size(); i++) {
+            nt.getEntry(allKeys.get(i)).delete();
+        }
+        for(int i  = 0; i< allKeys.size(); i++) {
+            keys.put(allKeys.get(i), nt.getEntry(allKeys.get(i)));
         }
     }
     public boolean isAllowedKey(String k) {
         k = k.toUpperCase();
-        for (String key: availableKeys) {
-            if (key.equals(k))
+        for(int i  = 0; i< allKeys.size(); i++) {
+            if (allKeys.get(i).equals(k))
                 return true;
         }
         return false;
+    }
+
+    public HashMap<String, NetworkTableEntry> getKeys() {
+        return keys;
     }
 }
