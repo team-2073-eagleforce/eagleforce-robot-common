@@ -1,14 +1,13 @@
 package com.team2073.common.simulation.model;
 
 import com.team2073.common.util.ConversionUtil;
+import com.team2073.common.util.LoggedTunableNumber;
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-
 
 public class AngledElevatorSim {
 
-    private double length;
+    private static double numberOfAngledElevatorSims = 0;
+    protected boolean tuningMode;
     private double revsPerMeter;
     private double angleOfElevator;
     private double sideElevatorIsOn;
@@ -17,6 +16,13 @@ public class AngledElevatorSim {
     private Pose2d basePose;
     private Pose3d elevatorPose;
     private double beginningElevatorHeightInMeters;
+    private boolean isInverted;
+
+    LoggedTunableNumber x = new LoggedTunableNumber("AngledElevatorSim" + numberOfAngledElevatorSims + "/X");
+    LoggedTunableNumber y = new LoggedTunableNumber("AngledElevatorSim" + numberOfAngledElevatorSims + "/Y");
+    LoggedTunableNumber beginningHeight = new LoggedTunableNumber("AngledElevatorSim" + numberOfAngledElevatorSims + "/beginningHeight");
+    LoggedTunableNumber revsTuning = new LoggedTunableNumber("AngledElevatorSim" + numberOfAngledElevatorSims + "/revs");
+
 
     /**
      * Constructs an Angled Elevator Sim
@@ -33,12 +39,20 @@ public class AngledElevatorSim {
      * @param elevatorPoseInRobot Location of the robot within the chassis
      * @param sideElevatorIsOn An angle representing where the elevator is facing i.e. 0 degrees is front, 180 is back, etc...
      */
-    public AngledElevatorSim(double revsPerMeter, double angleOfElevator, Translation2d elevatorPoseInRobot, double sideElevatorIsOn, double beginningElevatorHeightInMeters) {
+    public AngledElevatorSim(double revsPerMeter, double angleOfElevator, Translation2d elevatorPoseInRobot, double sideElevatorIsOn, double beginningElevatorHeightInMeters, boolean isInverted, boolean tuningMode) {
+        this.tuningMode = tuningMode;
+        numberOfAngledElevatorSims++;
         this.revsPerMeter = revsPerMeter;
         this.angleOfElevator = angleOfElevator;
         this.elevatorPoseInRobot = elevatorPoseInRobot;
         this.sideElevatorIsOn = sideElevatorIsOn;
         this.beginningElevatorHeightInMeters = beginningElevatorHeightInMeters;
+        this.isInverted = isInverted;
+        setTuningMode(tuningMode);
+        x.initDefault(0);
+        y.initDefault(0);
+        revsTuning.initDefault(0);
+        beginningHeight.initDefault(0);
     }
 
     /**
@@ -50,17 +64,39 @@ public class AngledElevatorSim {
      *                                                    Else figure it out
      */
     public void updatePosition(Pose2d robotPose, double yaw, double revs) {
+        if ((x.hasChanged() || y.hasChanged() || beginningHeight.hasChanged()) && tuningMode) {
+            elevatorPoseInRobot = new Translation2d(x.get(), y.get());
+            beginningElevatorHeightInMeters = beginningHeight.get();
+        }
+
         Translation2d elevatorPositionFromChasis = elevatorPoseInRobot
                 .rotateBy(Rotation2d.fromDegrees(Math.IEEEremainder(yaw, 360)))
                 .plus(robotPose.getTranslation());
-        basePose = new Pose2d(elevatorPositionFromChasis, Rotation2d.fromDegrees(sideElevatorIsOn + elevatorPositionFromChasis.getAngle().getDegrees()));
+        basePose = new Pose2d(elevatorPositionFromChasis, Rotation2d.fromDegrees(robotPose.getRotation().getDegrees() + sideElevatorIsOn));
 
-        double length = revs/ revsPerMeter;
-        elevatorPose = new Pose3d(basePose.getX() + length * Math.cos(ConversionUtil.degreesToRadians(angleOfElevator)),
-                basePose.getY(),
-                beginningElevatorHeightInMeters + length * Math.sin(ConversionUtil.degreesToRadians(angleOfElevator)),
-                new Rotation3d(0, 0, yaw));
+        double length = tuningMode ? revsTuning.get() / revsPerMeter : revs/ revsPerMeter;
+
+        double floorHyp = length * Math.cos(ConversionUtil.degreesToRadians(angleOfElevator));
+
+        if (!isInverted) {
+            elevatorPose = new Pose3d(basePose.getX() + floorHyp * Math.cos(ConversionUtil.degreesToRadians(yaw)),
+                    basePose.getY() + floorHyp * Math.sin(ConversionUtil.degreesToRadians(yaw)),
+                    beginningElevatorHeightInMeters + length * Math.sin(ConversionUtil.degreesToRadians(angleOfElevator)),
+                    new Rotation3d(0, 0, basePose.getRotation().getRadians()));
+        } else {
+            elevatorPose = new Pose3d(basePose.getX() + floorHyp * Math.cos(ConversionUtil.degreesToRadians(yaw)),
+                    basePose.getY() + floorHyp * Math.sin(ConversionUtil.degreesToRadians(yaw)),
+                    beginningElevatorHeightInMeters - length * Math.sin(ConversionUtil.degreesToRadians(angleOfElevator)),
+                    new Rotation3d(0, 0, basePose.getRotation().getRadians()));
+        }
     }
 
-    public Pose3d getElevatorPose() {return elevatorPose; }
+    private void setTuningMode(boolean tuningMode) {
+        x.setTuningMode(tuningMode);
+        y.setTuningMode(tuningMode);
+        beginningHeight.setTuningMode(tuningMode);
+        revsTuning.setTuningMode(tuningMode);
+    }
+
+    public Pose3d getElevatorPose() {return  elevatorPose; }
 }
