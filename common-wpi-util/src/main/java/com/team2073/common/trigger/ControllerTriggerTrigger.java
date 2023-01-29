@@ -14,9 +14,9 @@ public class ControllerTriggerTrigger extends Trigger {
 		this.axis = axis;
 	}
 	
-//	@Override
-//	public boolean get() {
-//		return Math.abs(controller.getRawAxis(axis)) > .1;
-//	}
+	@Override
+	public boolean getAsBoolean() {
+		return Math.abs(controller.getRawAxis(axis)) > .1;
+	}
 
 }
