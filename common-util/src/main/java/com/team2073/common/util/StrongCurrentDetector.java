@@ -1,19 +1,20 @@
 package com.team2073.common.util;
 
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
-import edu.wpi.first.wpilibj.CAN;
-import lombok.Getter;
 
 import java.util.ArrayList;
 
-public class CANSparkMaxManager {
+public class StrongCurrentDetector {
     private static ArrayList<CANSparkMax> neoArray = new ArrayList<>();
     private static ArrayList<CANSparkMax> neo550Array = new ArrayList<>();
+    private static ArrayList<TalonFX> falconArray = new ArrayList<>();
     private static ArrayList<Integer> stallingNeoIDs = new ArrayList<>();
     private static ArrayList<Integer> stallingNeo550IDs = new ArrayList<>();
-    private static final double STALL_CURRENT_NEO = 181d;//@TODO Add an actual current.
-    private static final double STALL_CURRENT_NEO_550 = 12d;//@TODO Add an actual current.
+    private static ArrayList<Integer> stallingFalcons = new ArrayList<>();
+    private static final double STALL_CURRENT_NEO = 181d;
+    private static final double STALL_CURRENT_NEO_550 = 12d;
+    private static final double STALL_CURRENT_FALCON = 257d;
     private static boolean isStalling;
     /**
      * @param sparkMaxes takes in an infinite number of
@@ -53,8 +54,8 @@ public class CANSparkMaxManager {
      */
     public static void addNeo550s(CANSparkMax...sparkMaxes) {
         for (CANSparkMax sparkMax : sparkMaxes) {
-            if (!neoArray.contains(sparkMax)) {
-                neoArray.add(sparkMax);
+            if (!neo550Array.contains(sparkMax)) {
+                neo550Array.add(sparkMax);
             }
         }
     }
@@ -67,10 +68,35 @@ public class CANSparkMaxManager {
      */
     public static void removeNeo550s(CANSparkMax...sparkMaxes){
         for (CANSparkMax sparkMax : sparkMaxes) {
-            neoArray.remove(sparkMax);
+            neo550Array.remove(sparkMax);
         }
     }
-
+    /**
+     * @param talons takes in an infinite number of
+     *               TalonFX objects that should
+     *               only be routed Falcons
+     * Checks to make sure that the id is not already in use and
+     * adds it to the ArrayList of Falcons.
+     */
+    public static void addFalcons(TalonFX...talons) {
+        for (TalonFX talon : talons) {
+            if (!falconArray.contains(talon)) {
+                falconArray.add(talon);
+            }
+        }
+    }
+    /**
+     * @param talons takes in an infinite number of
+     *               TalonFX objects that should
+     *               only be routed Falcons
+     * Checks to make sure that the id is in use and
+     * removes it to the ArrayList of Falcons.
+     */
+    public static void removeFalcons(TalonFX...talons){
+        for (TalonFX talon : talons) {
+            falconArray.remove(talon);
+        }
+    }
     /**
      * Checks each array to make sure that they are
      * below the current limit for their respective
@@ -95,7 +121,15 @@ public class CANSparkMaxManager {
                 count++;
             }
         }
-        if(count == (neo550Array.size() + neoArray.size())){
+        for (TalonFX talon : falconArray){
+            if(talon.getSupplyCurrent() >= STALL_CURRENT_FALCON){
+                isStalling = true;
+                stallingFalcons.add(talon.getDeviceID());
+            } else {
+                count++;
+            }
+        }
+        if(count == (neo550Array.size() + neoArray.size() + falconArray.size())){
             isStalling = false;
         }
     }
