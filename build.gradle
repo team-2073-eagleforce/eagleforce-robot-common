@@ -74,10 +74,10 @@ evaluationDependsOnChildren()
 publishToMavenLocal {
     dependsOn project(":common-util").tasks.publishToMavenLocal
 //    dependsOn project(":common-wpi-util").tasks.publishToMavenLocal
-//    dependsOn project(":common-wpi-simulation").tasks.publishToMavenLocal
+    dependsOn project(":common-wpi-simulation").tasks.publishToMavenLocal
 }
 
-// TODO: Get the transitive dependencies to work properly. Currently the IntelliJ run configs are handling this for us
+//// TODO: Get the transitive dependencies to work properly. Currently the IntelliJ run configs are handling this for us
 //project(":common-wpi-simulation").tasks.publishToMavenLocal {
 //    dependsOn project(":common-wpi-util").tasks.publishToMavenLocal
 //}
