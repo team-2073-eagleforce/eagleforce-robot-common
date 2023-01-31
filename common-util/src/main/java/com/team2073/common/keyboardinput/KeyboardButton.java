@@ -3,6 +3,8 @@ package com.team2073.common.keyboardinput;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import com.team2073.common.keyboardinput.NetworkButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
 
@@ -10,6 +12,7 @@ import java.util.ArrayList;
  * @author Ethan See
  */
 public class KeyboardButton extends NetworkButton {
+
 
     private static ArrayList<String> allowedKeys = new ArrayList<>();
     /**
@@ -32,4 +35,5 @@ public class KeyboardButton extends NetworkButton {
         SmartDashboard.putData("AllowedKeys", builder ->
                 builder.addStringArrayProperty("Keys", () -> c, null));
     }
+
 }
