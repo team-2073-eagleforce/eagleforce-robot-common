@@ -11,7 +11,6 @@ import java.util.ArrayList;
 /**
  * @author Ethan See
  */
-@AutoLog
 public class KeyboardButton extends NetworkButton {
 
 
