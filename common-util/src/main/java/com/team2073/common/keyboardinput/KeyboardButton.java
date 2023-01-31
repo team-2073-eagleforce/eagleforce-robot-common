@@ -28,7 +28,6 @@ public class KeyboardButton extends NetworkButton {
             throw new RuntimeException("Invalid Key. A-Z only");
         }
         keyboard.getKeys().get(key).setBoolean(false);
-        Logger.getInstance().recordOutput("keyboard input", key);
     }
 
     public static void addCommandsAndAllowedCharacters() {
