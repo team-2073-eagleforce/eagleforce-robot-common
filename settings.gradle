@@ -6,4 +6,6 @@ include 'common-wpi-simulation'
 include 'common-wpi-simulation-stubs'
 include 'common-wpi-util-test'
 include 'common-util-test'
+include 'NetworkAlerts'
+include 'KeyboardInputStatus'
 

@@ -31,6 +31,9 @@ dependencies {
     implementation project(":common-util")
     implementation 'com.google.guava:guava:19.0'
 
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
     // WPI/vendor dependencies
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
