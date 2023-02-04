@@ -4,7 +4,7 @@ import com.team2073.common.util.ConversionUtil;
 import com.team2073.common.util.LoggedTunableNumber;
 import edu.wpi.first.math.geometry.*;
 
-public class AngledElevatorSim {
+public class AngledElevatorVisualizer {
 
     private static double numberOfAngledElevatorSims = 0;
     protected boolean tuningMode;
@@ -39,7 +39,7 @@ public class AngledElevatorSim {
      * @param elevatorPoseInRobot Location of the robot within the chassis
      * @param sideElevatorIsOn An angle representing where the elevator is facing i.e. 0 degrees is front, 180 is back, etc...
      */
-    public AngledElevatorSim(double revsPerMeter, double angleOfElevator, Translation2d elevatorPoseInRobot, double sideElevatorIsOn, double beginningElevatorHeightInMeters, boolean isInverted, boolean tuningMode) {
+    public AngledElevatorVisualizer(double revsPerMeter, double angleOfElevator, Translation2d elevatorPoseInRobot, double sideElevatorIsOn, double beginningElevatorHeightInMeters, boolean isInverted, boolean tuningMode) {
         this.tuningMode = tuningMode;
         numberOfAngledElevatorSims++;
         this.revsPerMeter = revsPerMeter;

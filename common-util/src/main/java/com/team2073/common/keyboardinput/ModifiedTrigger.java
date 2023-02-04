@@ -21,6 +21,7 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.graalvm.compiler.loop.MathUtil;
 
 /**
  * A Modified version of {@link Trigger} to add keyboard inputs to a Smartdashboard array to be
@@ -33,6 +34,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class ModifiedTrigger implements BooleanSupplier {
 
     private static ArrayList<String> listOfCommands = new ArrayList<>();
+
+    private static ArrayList<String> typeOfCommand = new ArrayList<>();
     private final BooleanSupplier m_condition;
     private final EventLoop m_loop;
 
@@ -68,6 +71,10 @@ public class ModifiedTrigger implements BooleanSupplier {
         String[] c = listOfCommands.toArray(new String[listOfCommands.size()]);
         SmartDashboard.putData("Commands", builder ->
                 builder.addStringArrayProperty("ListOfCommands", () -> c, null));
+
+        String[] typeOfCom = typeOfCommand.toArray(new String[typeOfCommand.size()]);
+        SmartDashboard.putData("Commands", builder ->
+                builder.addStringArrayProperty("TypeOfCommands", () -> typeOfCom, null));
     }
 
     /**
@@ -78,6 +85,7 @@ public class ModifiedTrigger implements BooleanSupplier {
      */
     public ModifiedTrigger onTrue(Command command) {
         listOfCommands.add(command.getName());
+        typeOfCommand.add("onTrue");
         requireNonNullParam(command, "command", "onRising");
         m_loop.bind(
                 new Runnable() {
@@ -105,6 +113,7 @@ public class ModifiedTrigger implements BooleanSupplier {
      */
     public ModifiedTrigger onFalse(Command command) {
         listOfCommands.add(command.getName());
+        typeOfCommand.add("onFalse");
         requireNonNullParam(command, "command", "onFalling");
         m_loop.bind(
                 new Runnable() {
@@ -136,6 +145,7 @@ public class ModifiedTrigger implements BooleanSupplier {
      */
     public ModifiedTrigger whileTrue(Command command) {
         listOfCommands.add(command.getName());
+        typeOfCommand.add("whileTrue");
         requireNonNullParam(command, "command", "whileHigh");
         m_loop.bind(
                 new Runnable() {
@@ -169,6 +179,7 @@ public class ModifiedTrigger implements BooleanSupplier {
      */
     public ModifiedTrigger whileFalse(Command command) {
         listOfCommands.add(command.getName());
+        typeOfCommand.add("whileFalse");
         requireNonNullParam(command, "command", "whileLow");
         m_loop.bind(
                 new Runnable() {
@@ -198,6 +209,7 @@ public class ModifiedTrigger implements BooleanSupplier {
      */
     public ModifiedTrigger toggleOnTrue(Command command) {
         listOfCommands.add(command.getName());
+        typeOfCommand.add("toggleOnTrue");
         requireNonNullParam(command, "command", "toggleOnRising");
         m_loop.bind(
                 new Runnable() {
@@ -229,6 +241,7 @@ public class ModifiedTrigger implements BooleanSupplier {
      */
     public ModifiedTrigger toggleOnFalse(Command command) {
         listOfCommands.add(command.getName());
+        typeOfCommand.add("toggleOnFalse");
         requireNonNullParam(command, "command", "toggleOnFalling");
         m_loop.bind(
                 new Runnable() {
@@ -259,9 +272,9 @@ public class ModifiedTrigger implements BooleanSupplier {
      * @return this ModifiedTrigger, so calls can be chained
      * @deprecated Use {@link #onTrue(Command)} instead.
      */
-    @Deprecated
     public ModifiedTrigger whenActive(final Command command) {
         listOfCommands.add(command.getName());
+        typeOfCommand.add("whenActive");
         requireNonNullParam(command, "command", "whenActive");
 
         m_loop.bind(
@@ -311,6 +324,7 @@ public class ModifiedTrigger implements BooleanSupplier {
     @Deprecated
     public ModifiedTrigger whileActiveContinuous(final Command command) {
         listOfCommands.add(command.getName());
+        listOfCommands.add("whileActiveContinuous");
         requireNonNullParam(command, "command", "whileActiveContinuous");
 
         m_loop.bind(
@@ -358,6 +372,7 @@ public class ModifiedTrigger implements BooleanSupplier {
     @Deprecated
     public ModifiedTrigger whileActiveOnce(final Command command) {
         listOfCommands.add(command.getName());
+        typeOfCommand.add("whileActiveOnce");
         requireNonNullParam(command, "command", "whileActiveOnce");
 
         m_loop.bind(
@@ -390,6 +405,7 @@ public class ModifiedTrigger implements BooleanSupplier {
     @Deprecated
     public ModifiedTrigger whenInactive(final Command command) {
         listOfCommands.add(command.getName());
+        typeOfCommand.add("whenInactive");
         requireNonNullParam(command, "command", "whenInactive");
 
         m_loop.bind(
@@ -434,6 +450,7 @@ public class ModifiedTrigger implements BooleanSupplier {
     @Deprecated
     public ModifiedTrigger toggleWhenActive(final Command command) {
         listOfCommands.add(command.getName());
+        typeOfCommand.add("toggleWhenActive");
         requireNonNullParam(command, "command", "toggleWhenActive");
 
         m_loop.bind(
@@ -469,6 +486,7 @@ public class ModifiedTrigger implements BooleanSupplier {
     @Deprecated
     public ModifiedTrigger cancelWhenActive(final Command command) {
         listOfCommands.add(command.getName());
+        typeOfCommand.add("cancelWhenActive");
         requireNonNullParam(command, "command", "cancelWhenActive");
 
         m_loop.bind(
