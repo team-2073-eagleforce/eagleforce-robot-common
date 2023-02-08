@@ -10,6 +10,7 @@ public class ControllerTriggerTrigger extends Trigger {
 	private int axis;
 	
 	public ControllerTriggerTrigger(Joystick controller, int axis) {
+		super(() -> Math.abs(controller.getRawAxis(axis)) > 0.1);
 		this.controller = controller;
 		this.axis = axis;
 	}
