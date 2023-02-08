@@ -10,6 +10,7 @@ public class RobotModeTrigger extends Trigger {
 	private final boolean checkEnabled;
 
 	public RobotModeTrigger(RobotMode mode, boolean checkEnabled) {
+		super(() -> checkEnabled ? mode.isCurrentState() : !mode.isCurrentState());
 		this.mode = mode;
 		this.checkEnabled = checkEnabled;
 	}

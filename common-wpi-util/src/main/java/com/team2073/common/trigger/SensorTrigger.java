@@ -9,6 +9,7 @@ public class SensorTrigger extends Trigger {
 	private final DigitalInput sensor;
 
 	public SensorTrigger(DigitalInput sensor) {
+		super(() -> sensor.get());
 		this.sensor = sensor;
 	}
 

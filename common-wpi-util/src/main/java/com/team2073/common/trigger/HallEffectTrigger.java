@@ -9,6 +9,7 @@ public class HallEffectTrigger extends Trigger {
 	private DigitalInput sensor;
 	
 	public HallEffectTrigger(DigitalInput sensor) {
+		super(() -> !sensor.get());
 		this.sensor = sensor;
 	}
 	

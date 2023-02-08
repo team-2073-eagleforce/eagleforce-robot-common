@@ -9,6 +9,7 @@ public class LimitSwitchTrigger extends Trigger {
 	private DigitalInput sensor;
 	
 	public LimitSwitchTrigger(DigitalInput sensor) {
+		super(() -> !sensor.get());
 		this.sensor = sensor;
 	}
 	

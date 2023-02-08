@@ -8,6 +8,7 @@ public class BannerSensor extends Trigger {
 	private DigitalInput sensor;
 	
 	public BannerSensor(DigitalInput sensor) {
+		super(() -> sensor.get());
 		this.sensor = sensor;
 	}
 	
