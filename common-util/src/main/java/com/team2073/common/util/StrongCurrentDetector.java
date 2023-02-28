@@ -11,7 +11,7 @@ public class StrongCurrentDetector {
     private static ArrayList<TalonFX> falconArray = new ArrayList<>();
     private static ArrayList<Integer> stallingNeoIDs = new ArrayList<>();
     private static ArrayList<Integer> stallingNeo550IDs = new ArrayList<>();
-    private static ArrayList<Integer> stallingFalcons = new ArrayList<>();
+    private static ArrayList<Integer> stallingFalconIDs = new ArrayList<>();
     private static final double STALL_CURRENT_NEO = 181d;
     private static final double STALL_CURRENT_NEO_550 = 12d;
     private static final double STALL_CURRENT_FALCON = 257d;
@@ -105,32 +105,73 @@ public class StrongCurrentDetector {
      */
     public static void manage(){
         int count = 0;
-        for(CANSparkMax sparkMax : neoArray){
-            if(sparkMax.getOutputCurrent() >= STALL_CURRENT_NEO){
+        for(CANSparkMax sparkMax : neoArray) {
+            if (sparkMax.getOutputCurrent() >= STALL_CURRENT_NEO && !stallingNeoIDs.contains(sparkMax.getDeviceId())) {
                 isStalling = true;
                 stallingNeoIDs.add(sparkMax.getDeviceId());
+            } else if(sparkMax.getOutputCurrent() < STALL_CURRENT_NEO && stallingNeoIDs.contains(sparkMax.getDeviceId())){
+                stallingNeoIDs.remove((Integer) sparkMax.getDeviceId());
+                count++;
             }else{
                 count++;
             }
         }
         for (CANSparkMax sparkMax : neo550Array) {
-            if (sparkMax.getOutputCurrent() >= STALL_CURRENT_NEO_550) {
+            if (sparkMax.getOutputCurrent() >= STALL_CURRENT_NEO_550 && !stallingNeo550IDs.contains(sparkMax.getDeviceId())) {
                 isStalling = true;
                 stallingNeo550IDs.add(sparkMax.getDeviceId());
+            } else if(sparkMax.getOutputCurrent() < STALL_CURRENT_NEO_550 && stallingNeo550IDs.contains(sparkMax.getDeviceId())){
+                stallingNeo550IDs.remove((Integer) sparkMax.getDeviceId());
+                count++;
             } else {
                 count++;
             }
         }
         for (TalonFX talon : falconArray){
-            if(talon.getSupplyCurrent() >= STALL_CURRENT_FALCON){
+            if(talon.getSupplyCurrent() >= STALL_CURRENT_FALCON && !stallingFalconIDs.contains(talon.getDeviceID())){
                 isStalling = true;
-                stallingFalcons.add(talon.getDeviceID());
-            } else {
+                stallingFalconIDs.add(talon.getDeviceID());
+            } else if (talon.getSupplyCurrent() < STALL_CURRENT_FALCON && stallingFalconIDs.contains(talon.getDeviceID())) {
+                stallingFalconIDs.remove((Integer) talon.getDeviceID());
+                count++;
+            }else{
                 count++;
             }
         }
         if(count == (neo550Array.size() + neoArray.size() + falconArray.size())){
             isStalling = false;
         }
+    }
+
+    /**
+     * Returns the boolean isStalling that turns true
+     * if there is at least 1 motor stalling.
+     */
+    public static boolean getIsStalling(){
+        return isStalling;
+    }
+
+    /**
+     * Returns an ArrayList with the IDs of stalling
+     * Neos.
+     */
+    public static ArrayList<Integer> getStallingNeoIDs(){
+        return stallingNeoIDs;
+    }
+
+    /**
+     * Returns an ArrayList with the IDs of stalling
+     * Neo550s.
+     */
+    public static ArrayList<Integer> getStallingNeo550IDs(){
+        return stallingNeo550IDs;
+    }
+
+    /**
+     * Returns an ArrayList with the IDs of stalling
+     * Falcons.
+     */
+    public static ArrayList<Integer> getStallingFalconIDs(){
+        return stallingFalconIDs;
     }
 }
