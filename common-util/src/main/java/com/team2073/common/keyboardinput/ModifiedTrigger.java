@@ -241,7 +241,7 @@ public class ModifiedTrigger implements BooleanSupplier {
      */
     public ModifiedTrigger toggleOnFalse(Command command) {
         listOfCommands.add(command.getName());
-        typeOfCommand.add("toggleOnFalse");
+
         requireNonNullParam(command, "command", "toggleOnFalling");
         m_loop.bind(
                 new Runnable() {

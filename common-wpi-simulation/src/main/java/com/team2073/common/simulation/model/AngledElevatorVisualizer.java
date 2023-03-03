@@ -91,7 +91,7 @@ public class AngledElevatorVisualizer {
         }
     }
 
-    private void setTuningMode(boolean tuningMode) {
+    protected void setTuningMode(boolean tuningMode) {
         x.setTuningMode(tuningMode);
         y.setTuningMode(tuningMode);
         beginningHeight.setTuningMode(tuningMode);
