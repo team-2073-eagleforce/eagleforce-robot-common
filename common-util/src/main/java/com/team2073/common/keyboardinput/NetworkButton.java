@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
  * May need to be updated every year
  */
 @SuppressWarnings("deprecation")
-public class NetworkButton extends ModifiedButton {
+public class NetworkButton extends ModifiedTrigger {
   /**
    * Creates a NetworkButton that commands can be bound to.
    *
@@ -28,6 +28,9 @@ public class NetworkButton extends ModifiedButton {
   public NetworkButton(BooleanTopic topic) {
     this(topic.subscribe(false));
   }
+
+
+
 
   /**
    * Creates a NetworkButton that commands can be bound to.
