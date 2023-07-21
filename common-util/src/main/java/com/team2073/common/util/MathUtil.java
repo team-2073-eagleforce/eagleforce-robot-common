@@ -36,6 +36,38 @@ public abstract class MathUtil {
 		return degrees * (Math.PI / 180.);
 	}
 
+	public static double pythagoreanTheoremHypotenuse(double a, double b){
+		return Math.sqrt((a*a) + (b*b));
+	}
+
+	public static double pythagoreanTheoremLeg(double a, double c){
+		if(c >= a) {
+			return Math.sqrt((c * c) - (a * a));
+		} else {
+			return -1;
+		}
+	}
+
+	public static double gridAngle(double centerX, double centerY, double pointX, double pointY){
+		double xDiff = pointX - centerX;
+		double yDiff = pointY - centerY;
+		if(xDiff != 0) {
+			double referenceAngle = MathUtil.degreesToRadians(Math.atan(Math.abs(yDiff) / Math.abs(xDiff)));
+			if (xDiff < 0 && yDiff > 0) {
+				return 180 - referenceAngle;
+			} else if (xDiff < 0 && yDiff < 0) {
+				return 180 + referenceAngle;
+			} else if (xDiff > 0 && yDiff < 0) {
+				return 360 - referenceAngle;
+			} else if (yDiff == 0 && xDiff < 0){
+				return 180;
+			}
+		} else if (yDiff < 0){
+			return 270;
+		}
+		return 90;
+	}
+
 	public static double average(double... inputs) {
 		double total = 0;
 		for (double input : inputs) {
