@@ -48,24 +48,39 @@ public abstract class MathUtil {
 		}
 	}
 
-	public static double gridAngle(double centerX, double centerY, double pointX, double pointY){
+	public double gridAngle(double centerX, double centerY, double pointX, double pointY, double rotation, double defaultValue){
 		double xDiff = pointX - centerX;
 		double yDiff = pointY - centerY;
+		double angle = 0;
+		boolean doDefault = false;
 		if(xDiff != 0) {
-			double referenceAngle = MathUtil.degreesToRadians(Math.atan(Math.abs(yDiff) / Math.abs(xDiff)));
+			double referenceAngle = ConversionUtil.radiansToDegrees(Math.atan(Math.abs(yDiff) / Math.abs(xDiff)));
 			if (xDiff < 0 && yDiff > 0) {
-				return 180 - referenceAngle;
+				angle = 180 - referenceAngle;
 			} else if (xDiff < 0 && yDiff < 0) {
-				return 180 + referenceAngle;
+				angle = 180 + referenceAngle;
 			} else if (xDiff > 0 && yDiff < 0) {
-				return 360 - referenceAngle;
+				angle = 360 - referenceAngle;
+			} else if (xDiff > 0 && yDiff > 0){
+				angle = referenceAngle;
 			} else if (yDiff == 0 && xDiff < 0){
-				return 180;
+				angle = 180;
+			} else if (yDiff == 0 && xDiff > 0){
+				angle = 0;
 			}
 		} else if (yDiff < 0){
-			return 270;
+			angle = 270;
+		} else if (yDiff > 0){
+			angle = 90;
+		} else if (yDiff == 0){
+			angle = 0;
+			doDefault = true;
 		}
-		return 90;
+		if(doDefault) {
+			angle = defaultValue;
+		}
+		angle += rotation;
+		return angle%360;
 	}
 
 	public static double average(double... inputs) {
