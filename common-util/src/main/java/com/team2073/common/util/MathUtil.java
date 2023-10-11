@@ -48,7 +48,7 @@ public abstract class MathUtil {
 		}
 	}
 
-	public double gridAngle(double centerX, double centerY, double pointX, double pointY, double rotation, double defaultValue){
+	public static double gridAngle(double centerX, double centerY, double pointX, double pointY, double rotation, double defaultValue){
 		double xDiff = pointX - centerX;
 		double yDiff = pointY - centerY;
 		double angle = 0;
