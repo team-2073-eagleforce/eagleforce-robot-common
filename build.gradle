@@ -1,13 +1,13 @@
 buildscript {
 
-    ext.kotlin_version = '1.5.10'
+    ext.kotlin_version = '1.9.20'
     repositories {
         mavenCentral()
     }
     dependencies {
 //        classpath ("org.junit.platform:junit-platform-gradle-plugin:1.2.0")
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2'
+//        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2'
 ////        classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.6'
 //        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.15'
     }
@@ -22,7 +22,7 @@ plugins {
 //    id 'org.asciidoctor.convert' version '1.5.8.1'
 }
 
-apply plugin: 'org.asciidoctor.convert'
+//apply plugin: 'org.asciidoctor.convert'
 
 group 'com.team2073'
 
@@ -34,7 +34,7 @@ repositories {
 }
 
 wrapper {
-    gradleVersion = '7.5.1'
+    gradleVersion = '8.5'
 }
 
 task sourceJar(type: Jar) {
@@ -49,9 +49,9 @@ publishing {
 //            artifactId 'eagleforce-robot-common'
 //            version commonVersion
 
-            artifact sourceJar {
-                classifier "sources"
-            }
+//            artifact sourceJar {
+//                classifier "sources"
+//            }
 
             from components.java
         }
@@ -106,7 +106,7 @@ subprojects {
 // Project name defined in settings.gradle > rootProject.name
     group 'com.team2073'
     version commonVersion
-    sourceCompatibility = 1.8
+    sourceCompatibility = 11
 
     repositories {
         mavenCentral()
@@ -128,7 +128,7 @@ subprojects {
     }
 
     wrapper {
-        gradleVersion = '7.5.1'
+        gradleVersion = '8.5'
     }
 
     task sourceJar(type: Jar) {
@@ -143,9 +143,9 @@ subprojects {
 //            artifactId 'eagleforce-robot-common'
 //            version commonVersion
 
-                artifact sourceJar {
-                    classifier "sources"
-                }
+//                artifact sourceJar {
+//                    classifier "sources"
+//                }
 
                 from components.java
             }
@@ -154,12 +154,12 @@ subprojects {
 
     compileKotlin {
         kotlinOptions {
-            jvmTarget = "1.8"
+            jvmTarget = "11"
         }
     }
     compileTestKotlin {
         kotlinOptions {
-            jvmTarget = "1.8"
+            jvmTarget = "11"
         }
     }
 }
