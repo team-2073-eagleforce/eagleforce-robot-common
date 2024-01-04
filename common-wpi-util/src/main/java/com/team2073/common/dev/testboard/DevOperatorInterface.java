@@ -18,8 +18,8 @@ public class DevOperatorInterface {
 		System.out.println("DevOperatorInterface init() start");
 //		moveMotorCommand = WrapUtil.wrapAllAndBuild(new DevMoveMotorCommand(RobotMap.motorSubsystem));
 //		timeBombCommand = WrapUtil.wrapAllAndBuild(new TimeBombCommand());
-		a.whenPressed(moveMotorCommand);
-		x.whenPressed(timeBombCommand);
+		a.onTrue(moveMotorCommand);
+		x.onTrue(timeBombCommand);
 		System.out.println("DevOperatorInterface init() complete");
 	}
 

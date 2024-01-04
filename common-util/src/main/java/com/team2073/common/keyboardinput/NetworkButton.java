@@ -11,10 +11,9 @@ import edu.wpi.first.networktables.BooleanTopic;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.button.Button;
 
 /**
- * Exact copy of NetworkButton but extends ModifiedTrigger instead of {@link Button}
+ * Exact copy of NetworkButton but extends ModifiedTrigger instead of Button (Button now Deprecated)
  *
  * May need to be updated every year
  */

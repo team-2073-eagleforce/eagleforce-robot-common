@@ -48,14 +48,14 @@ public class SimulationOperatorInterface {
 //		x.whenPressed(shooterToFront);
 //		b.whenPressed(shooterToBack);
 		
-		dpadDown.whenActive(createElevatorCommand(ElevatorHeight.ZERO));
-		dpadRight.whenActive(createElevatorCommand(ElevatorHeight.SWITCH));
-		dpadLeft.whenActive(createElevatorCommand(ElevatorHeight.PIVOT));
-		dpadUp.whenActive(createElevatorCommand(ElevatorHeight.MAX));
-		x.whenPressed(createShooterPivotCommand(ShooterAngle.FORWARD_STRAIGHT));
-		y.whenPressed(createShooterPivotCommand(ShooterAngle.FORWARD_UP));
-		b.whenPressed(createShooterPivotCommand(ShooterAngle.BACKWARD));
-		a.whileHeld(new DevIntakeSideRollerRandomStateCommand(subsysCrd, factory));
+		dpadDown.whileTrue(createElevatorCommand(ElevatorHeight.ZERO));
+		dpadRight.whileTrue(createElevatorCommand(ElevatorHeight.SWITCH));
+		dpadLeft.whileTrue(createElevatorCommand(ElevatorHeight.PIVOT));
+		dpadUp.whileTrue(createElevatorCommand(ElevatorHeight.MAX));
+		x.onTrue(createShooterPivotCommand(ShooterAngle.FORWARD_STRAIGHT));
+		y.onTrue(createShooterPivotCommand(ShooterAngle.FORWARD_UP));
+		b.onTrue(createShooterPivotCommand(ShooterAngle.BACKWARD));
+		a.whileTrue(new DevIntakeSideRollerRandomStateCommand(subsysCrd, factory));
 	}
 	
 	private static AbstractLoggingCommand createElevatorCommand(ElevatorHeight height) {

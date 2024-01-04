@@ -1,6 +1,6 @@
 package com.team2073.common.command;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @author Gabe Bui and Preston Briggs
  *
  */
-public abstract class AbstractLoggingCommand extends CommandBase {
+public abstract class AbstractLoggingCommand extends Command {
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	protected String className = getClass().getSimpleName();
 
