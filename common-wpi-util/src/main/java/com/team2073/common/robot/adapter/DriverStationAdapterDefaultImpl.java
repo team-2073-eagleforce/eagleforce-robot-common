@@ -3,6 +3,7 @@ package com.team2073.common.robot.adapter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
+import edu.wpi.first.wpilibj.util.WPILibVersion;
 
 /**
  * @author pbriggs
@@ -36,12 +37,12 @@ public class DriverStationAdapterDefaultImpl implements DriverStationAdapter {
 
     @Override
     public Alliance getAlliance() {
-        return DriverStation.getAlliance();
+        return DriverStation.getAlliance().get();
     }
 
     @Override
     public int getLocation() {
-        return DriverStation.getLocation();
+        return DriverStation.getLocation().getAsInt();
     }
 
     @Override

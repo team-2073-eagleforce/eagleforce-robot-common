@@ -13,7 +13,7 @@ import org.littletonrobotics.junction.LoggedRobot;
  *
  * @author Preston Briggs
  */
-public class AbstractRobotDelegate implements RobotDelegate{
+public class AbstractRobotDelegate extends LoggedRobot implements RobotDelegate {
 
 	// Static
 	// ============================================================

@@ -31,26 +31,48 @@
       <module name="com.team2073-eagleforce-robot-common_test" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-guice" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-guice.main" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-guice.main~1" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-guice.main~2" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-guice.test" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-guice.test~1" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-guice.test~2" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-util" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-util-test" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-util-test.main" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-util-test.test" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-util-test.test~1" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-util-test.test~2" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-util.main" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-util.test" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-util.test~1" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-util.test~2" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-wpi-simulation" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-wpi-simulation-stubs" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-wpi-simulation-stubs.main" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-wpi-simulation-stubs.test" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-wpi-simulation-stubs.test~1" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-wpi-simulation-stubs.test~2" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-wpi-simulation.main" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-wpi-simulation.test" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-wpi-util" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-wpi-util-test" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-wpi-util-test.main" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-wpi-util-test.main~1" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-wpi-util-test.main~2" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-wpi-util-test.test" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-wpi-util-test.test~1" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-wpi-util-test.test~2" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-wpi-util.main" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-wpi-util.main~1" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.common-wpi-util.main~2" target="11" />
       <module name="com.team2073.eagleforce-robot-common.common-wpi-util.test" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.KeyboardInputStatus" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.KeyboardInputStatus.main" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.KeyboardInputStatus.test" target="11" />
       <module name="com.team2073.eagleforce-robot-common.main" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.NetworkAlerts" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.NetworkAlerts.main" target="11" />
+      <module name="com.team2073.eagleforce-robot-common.NetworkAlerts.test" target="11" />
       <module name="com.team2073.eagleforce-robot-common.test" target="11" />
       <module name="common-guice_main" target="1.8" />
       <module name="common-guice_test" target="1.8" />

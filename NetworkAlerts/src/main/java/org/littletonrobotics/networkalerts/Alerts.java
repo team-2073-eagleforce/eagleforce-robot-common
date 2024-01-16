@@ -9,7 +9,8 @@ import java.util.Map;
 /**
  * Represents a list of alerts.
  */
-public final class Alerts extends ComplexData<Alerts> {
+public final class
+Alerts extends ComplexData<Alerts> {
 
   private final String[] errors;
   private final String[] warnings;

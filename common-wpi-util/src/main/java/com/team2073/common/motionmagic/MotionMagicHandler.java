@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2073.common.position.converter.PositionConverter;
+import edu.wpi.first.wpilibj.util.WPILibVersion;
 
 public class MotionMagicHandler {
 
@@ -14,7 +15,6 @@ public class MotionMagicHandler {
 
     public MotionMagicHandler(BaseTalon talon, PositionConverter positionConverter, int SCurveStrength,
                               double maxVelocity, double maxAcceleration) {
-
         this.talon = talon;
         this.positionConverter = positionConverter;
         this.talon.configMotionCruiseVelocity((int) (positionConverter.asTics(maxVelocity) * 0.1), 100);

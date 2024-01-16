@@ -50,8 +50,8 @@ tasks.register('installPlugin', Copy) {
     group = "Shuffleboard Plugin"
 }
 
-configurations.all {
-    exclude group: "edu.wpi.first.wpilibj"
-}
+//configurations.all {
+//    exclude group: "edu.wpi.first.wpilibj"
+//}
 
 build.dependsOn installPlugin
